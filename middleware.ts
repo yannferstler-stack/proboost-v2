@@ -1,0 +1,72 @@
+import { createServerClient } from '@supabase/ssr'
+import { NextResponse } from 'next/server'
+import type { NextRequest } from 'next/server'
+
+const SITE_PASSWORD = process.env.SITE_PASSWORD ?? 'proboost2024'
+const COOKIE_NAME = 'site_access'
+
+export async function middleware(request: NextRequest) {
+  const response = NextResponse.next()
+  const { pathname } = request.nextUrl
+
+  // ── 1. Protection mot de passe site entier ──
+  // Routes exemptées de la protection mot de passe
+  const passwordFreeRoutes = ['/acces', '/api/acces']
+  const isPasswordFree = passwordFreeRoutes.some(r => pathname === r || pathname.startsWith(r))
+
+  if (!isPasswordFree) {
+    const cookie = request.cookies.get(COOKIE_NAME)
+    if (cookie?.value !== SITE_PASSWORD) {
+      const url = request.nextUrl.clone()
+      url.pathname = '/acces'
+      url.searchParams.set('redirect', pathname)
+      return NextResponse.redirect(url)
+    }
+  }
+
+  // ── 2. Auth Supabase (dashboard) ──
+  const publicRoutes = ['/login', '/signup', '/pricing', '/', '/api']
+  if (publicRoutes.some(r => pathname === r || pathname.startsWith('/api'))) {
+    return response
+  }
+
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        get: (name) => request.cookies.get(name)?.value,
+        set: (name, value, options) => response.cookies.set({ name, value, ...options }),
+        remove: (name, options) => response.cookies.set({ name, value: '', ...options }),
+      },
+    }
+  )
+
+  const { data: { user } } = await supabase.auth.getUser()
+
+  if (!user) {
+    return NextResponse.redirect(new URL('/login', request.url))
+  }
+
+  if (!pathname.startsWith('/dashboard/pricing')) {
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('plan')
+      .eq('id', user.id)
+      .single()
+
+    const planActif = profile?.plan && ['starter', 'premium', 'pro'].includes(profile.plan)
+
+    if (!planActif && pathname.startsWith('/dashboard')) {
+      return NextResponse.redirect(new URL('/dashboard/pricing', request.url))
+    }
+  }
+
+  return response
+}
+
+export const config = {
+  matcher: [
+    '/((?!_next/static|_next/image|favicon.ico|logo.jpg|.*\\.png|.*\\.svg).*)',
+  ],
+}
