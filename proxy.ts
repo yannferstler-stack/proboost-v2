@@ -9,22 +9,22 @@ export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
 
   // ── 1. Protection mot de passe site entier ──
-  const passwordFreeRoutes = ['/acces', '/api/acces']
-  const isPasswordFree = passwordFreeRoutes.some(r => pathname === r || pathname.startsWith(r))
-
-  if (!isPasswordFree) {
-    const cookie = request.cookies.get(COOKIE_NAME)
-    if (cookie?.value !== SITE_PASSWORD) {
-      const url = request.nextUrl.clone()
-      url.pathname = '/acces'
-      url.searchParams.set('redirect', pathname)
-      return NextResponse.redirect(url)
-    }
+  // Ces routes ne nécessitent pas de mot de passe
+  if (pathname === '/acces' || pathname.startsWith('/api/acces') || 
+      pathname.startsWith('/_next') || pathname.includes('.')) {
+    return NextResponse.next()
   }
 
-  // ── 2. Auth Supabase (dashboard) ──
-  const publicRoutes = ['/login', '/signup', '/pricing', '/', '/api']
-  if (publicRoutes.some(r => pathname === r || pathname.startsWith('/api'))) {
+  const cookie = request.cookies.get(COOKIE_NAME)
+  if (cookie?.value !== SITE_PASSWORD) {
+    const url = request.nextUrl.clone()
+    url.pathname = '/acces'
+    url.searchParams.set('redirect', pathname)
+    return NextResponse.redirect(url)
+  }
+
+  // ── 2. Auth Supabase (dashboard uniquement) ──
+  if (!pathname.startsWith('/dashboard')) {
     return NextResponse.next()
   }
 
@@ -73,7 +73,5 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: [
-    '/((?!_next/static|_next/image|favicon.ico|logo.jpg|.*\\.png|.*\\.svg).*)',
-  ],
+  matcher: ['/((?!_next/static|_next/image|favicon.ico|logo.jpg|.*\\.png|.*\\.svg|.*\\.ico).*)'],
 }
