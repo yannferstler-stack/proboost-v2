@@ -226,7 +226,6 @@ export default function SettingsPage() {
               </span>
             </div>
 
-            {/* Starter : fixe non modifiable */}
             {!isPremiumOrPro && (
               <>
                 <div style={{ background: '#FFF7ED', border: '1px solid #FED7AA', borderRadius: 10, padding: '12px 16px', marginBottom: 20, display: 'flex', alignItems: 'center', gap: 10 }}>
@@ -253,15 +252,14 @@ export default function SettingsPage() {
               </>
             )}
 
-            {/* Premium / Pro : modifiable */}
             {isPremiumOrPro && (
               <div style={{ display: 'flex', flexDirection: 'column' }}>
                 {[
-                  { label: 'Relance 1', value: seqJ1, set: setSeqJ1, locked: false },
-                  { label: 'Relance 2', value: seqJ2, set: setSeqJ2, locked: false },
-                  { label: 'Relance 3', value: seqJ3, set: setSeqJ3, locked: false },
-                  { label: 'Relance 4 (optionnelle)', value: seqJ4, set: setSeqJ4, locked: !isPro, optional: true },
-                  { label: 'Relance 5 (optionnelle)', value: seqJ5, set: setSeqJ5, locked: !isPro, optional: true },
+                  { label: 'Relance 1', value: seqJ1, set: setSeqJ1 as (v: number | null) => void, locked: false },
+                  { label: 'Relance 2', value: seqJ2, set: setSeqJ2 as (v: number | null) => void, locked: false },
+                  { label: 'Relance 3', value: seqJ3, set: setSeqJ3 as (v: number | null) => void, locked: false },
+                  { label: 'Relance 4 (optionnelle)', value: seqJ4, set: setSeqJ4 as (v: number | null) => void, locked: !isPro, optional: true },
+                  { label: 'Relance 5 (optionnelle)', value: seqJ5, set: setSeqJ5 as (v: number | null) => void, locked: !isPro, optional: true },
                 ].map((r, i) => {
                   const isOptional = r.optional
                   const isLocked = r.locked
@@ -296,7 +294,7 @@ export default function SettingsPage() {
                           disabled={isLocked || (isOptional && r.value === null)}
                           onChange={(e) => !isLocked && r.set(parseInt(e.target.value) || null)}
                           className="delai-input"
-                          style={delaiInputStyle(isLocked || (isOptional && r.value === null))}
+                          style={delaiInputStyle(!!(isLocked || (isOptional && r.value === null)))}
                         />
                         <span style={{ fontSize: 13, color: '#9CA3AF' }}>jours</span>
                       </div>
@@ -313,7 +311,6 @@ export default function SettingsPage() {
               </div>
             )}
 
-            {/* Canal de relance */}
             <div style={{ marginTop: 28, paddingTop: 24, borderTop: '1px solid #EAECEF' }}>
               <p style={{ fontSize: 13, fontWeight: 600, color: '#111', marginBottom: 4 }}>Canal de relance par défaut</p>
               <p style={{ fontSize: 12, color: '#9CA3AF', marginBottom: 14 }}>Choisissez comment ProBoost relance vos clients par défaut</p>

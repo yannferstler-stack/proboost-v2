@@ -5,12 +5,10 @@ import type { NextRequest } from 'next/server'
 const SITE_PASSWORD = process.env.SITE_PASSWORD ?? 'proboost2024'
 const COOKIE_NAME = 'site_access'
 
-export async function middleware(request: NextRequest) {
-  const response = NextResponse.next()
+export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
 
   // ── 1. Protection mot de passe site entier ──
-  // Routes exemptées de la protection mot de passe
   const passwordFreeRoutes = ['/acces', '/api/acces']
   const isPasswordFree = passwordFreeRoutes.some(r => pathname === r || pathname.startsWith(r))
 
@@ -27,17 +25,26 @@ export async function middleware(request: NextRequest) {
   // ── 2. Auth Supabase (dashboard) ──
   const publicRoutes = ['/login', '/signup', '/pricing', '/', '/api']
   if (publicRoutes.some(r => pathname === r || pathname.startsWith('/api'))) {
-    return response
+    return NextResponse.next()
   }
+
+  let response = NextResponse.next()
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
       cookies: {
-        get: (name) => request.cookies.get(name)?.value,
-        set: (name, value, options) => response.cookies.set({ name, value, ...options }),
-        remove: (name, options) => response.cookies.set({ name, value: '', ...options }),
+        getAll() {
+          return request.cookies.getAll()
+        },
+        setAll(cookiesToSet) {
+          cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value))
+          response = NextResponse.next({ request })
+          cookiesToSet.forEach(({ name, value, options }) =>
+            response.cookies.set(name, value, options)
+          )
+        },
       },
     }
   )
