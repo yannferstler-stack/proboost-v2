@@ -16,7 +16,7 @@ function useInView() {
 function Reveal({ children, delay = 0 }: { children: React.ReactNode, delay?: number }) {
   const { ref, inView } = useInView()
   return (
-    <div ref={ref} style={{ opacity: inView ? 1 : 0, transform: inView ? 'translateY(0)' : 'translateY(20px)', transition: `opacity 0.55s ease ${delay}s, transform 0.55s ease ${delay}s` }}>
+    <div ref={ref} style={{ opacity: inView ? 1 : 0, transform: inView ? 'translateY(0)' : 'translateY(20px)', transition: `opacity 0.55s ease ${delay}s, transform 0.55s ease ${delay}s`, height: '100%' }}>
       {children}
     </div>
   )
@@ -26,19 +26,19 @@ const PLANS = [
   {
     nom: 'Starter', prix: '19,99', couleur: '#16A34A', bg: '#F0FDF4', border: '#BBF7D0', commission: '10%',
     description: 'Idéal pour les indépendants et petites structures',
-    features: ['10 factures / mois', '3 relances par facture', 'Email uniquement', 'Délais fixes J+7, J+15, J+30', 'Commission 10% (min 5€)', 'Dashboard complet', 'Import CSV & PDF'],
+    features: ['10 factures / mois', '3 relances par facture', 'Email uniquement', 'Délais fixes J+7, J+15, J+30', 'Commission 10% (min 5€)', 'Dashboard complet', 'Import CSV & PDF', '', '', ''],
     popular: false, popularLabel: '',
   },
   {
     nom: 'Premium', prix: '49,99', couleur: '#3B82F6', bg: '#EFF6FF', border: '#BFDBFE', commission: '8%',
     description: 'Pour les PME avec un volume de factures régulier',
-    features: ['50 factures / mois', '5 relances par facture', 'Email uniquement', 'Délais personnalisables', 'Commission 8% (min 5€)', 'Dashboard complet', 'Import CSV & PDF', 'Historique des relances'],
+    features: ['50 factures / mois', '5 relances par facture', 'Email uniquement', 'Délais personnalisables', 'Commission 8% (min 5€)', 'Dashboard complet', 'Import CSV & PDF', 'Historique des relances', '', ''],
     popular: false, popularLabel: '',
   },
   {
     nom: 'Pro', prix: '249,99', couleur: '#7C3AED', bg: '#F5F3FF', border: '#DDD6FE', commission: '7%',
     description: 'Pour les cabinets et entreprises à fort volume',
-    features: ['Factures illimitées', '5 relances par facture', 'Email + SMS', 'Délais personnalisables', 'Commission 7% (min 5€)', 'Dashboard complet', 'Import CSV & PDF', 'Historique des relances', 'Support prioritaire'],
+    features: ['Factures illimitées', '5 relances par facture', 'Email + SMS', 'Délais personnalisables', 'Commission 7% (min 5€)', 'Dashboard complet', 'Import CSV & PDF', 'Historique des relances', 'Support prioritaire', ''],
     popular: true, popularLabel: '🏆 Recommandé pour les PME',
   },
 ]
@@ -77,8 +77,8 @@ export default function Home() {
   }, [])
 
   const steps = [
-    { n: '01', Icon: IconImport, title: 'Importez', desc: 'Toutes les informations sont détectées et organisées automatiquement — vous n'avez rien à saisir.' },
-    { n: '02', Icon: IconBolt, title: 'ProBoost relance', desc: 'Relances email et SMS automatiques, au bon moment, avec le bon ton — sans que vous ayez à intervenir.' },
+    { n: '01', Icon: IconImport, title: 'Importez', desc: 'Importez vos factures en CSV ou PDF. Toutes les informations sont détectées et organisées automatiquement — vous n\'avez rien à saisir.' },
+    { n: '02', Icon: IconBolt, title: 'ProBoost relance', desc: 'Nous prenons le relais. Relances email et SMS automatiques, au bon moment, avec le bon ton — sans que vous ayez à intervenir.' },
     { n: '03', Icon: IconEuro, title: 'Vous encaissez', desc: 'Vous récupérez votre argent. Nous prélevons une commission uniquement sur les fonds réellement recouvrés. Zéro risque, zéro avance.' },
   ]
 
@@ -108,12 +108,14 @@ export default function Home() {
         .nav-a { transition: color 0.15s; cursor: pointer; }
         .stat-card { transition: transform 0.2s; }
         .stat-card:hover { transform: translateY(-4px); }
-        .step-card { transition: box-shadow 0.2s, transform 0.2s; }
+        .step-card { transition: box-shadow 0.2s, transform 0.2s; height: 100%; }
         .step-card:hover { box-shadow: 0 8px 32px rgba(0,0,0,0.08) !important; transform: translateY(-2px); }
-        .plan-card { transition: box-shadow 0.2s, transform 0.2s; }
+        .plan-card { transition: box-shadow 0.2s, transform 0.2s; height: 100%; }
         .plan-card:hover { transform: translateY(-3px); box-shadow: 0 12px 36px rgba(0,0,0,0.10) !important; }
         .step-number { font-family: Manrope, sans-serif; font-weight: 900; font-size: 48px; color: #f0f0f0; line-height: 1; letter-spacing: -2px; transition: color 0.2s; }
         .step-card:hover .step-number { color: #e8fef0; }
+        .steps-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 24px; position: relative; align-items: stretch; }
+        .plans-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 24px; max-width: 1000px; margin: 0 auto; align-items: stretch; }
       `}</style>
 
       <div style={{ fontFamily: 'Inter, sans-serif', color: '#111', background: '#fff' }}>
@@ -153,21 +155,18 @@ export default function Home() {
               <span style={{ color: '#1DB954' }}>nous gérons vos impayés.</span>
             </h1>
           </Reveal>
-
           <Reveal delay={0.1}>
             <p style={{ fontSize: 18, color: '#6B7280', lineHeight: 1.75, marginBottom: 40, maxWidth: 500, fontWeight: 300 }}>
               Nous vous aidons à piloter votre trésorerie en toute simplicité.
             </p>
           </Reveal>
-
           <Reveal delay={0.15}>
             <div style={{ display: 'flex', gap: 10, justifyContent: 'center', marginBottom: 48 }}>
-              <button className="btn-connexion" onClick={() => router.push('/comment-ca-marche')} style={{ background: 'transparent', color: '#374151', border: '1.5px solid #e5e7eb', borderRadius: 12, padding: '12px 28px', fontSize: 15, fontWeight: 600, boxShadow: 'none', letterSpacing: 0 }}>
+              <button onClick={() => router.push('/comment-ca-marche')} style={{ background: 'transparent', color: '#374151', border: '1.5px solid #e5e7eb', borderRadius: 12, padding: '12px 28px', fontSize: 15, fontWeight: 600, cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}>
                 Comment ça marche ? →
               </button>
             </div>
           </Reveal>
-
           <Reveal delay={0.2}>
             <div style={{ display: 'flex', gap: 28, justifyContent: 'center' }}>
               {['Dès 19,99€/mois', 'Commission au succès', 'Email + SMS'].map((t, i) => (
@@ -177,7 +176,6 @@ export default function Home() {
               ))}
             </div>
           </Reveal>
-
           <div style={{ position: 'absolute', bottom: 0, left: '50%', transform: 'translateX(-50%)', width: '1px', height: 80, background: 'linear-gradient(to bottom, transparent, #e5e7eb)' }} />
         </section>
 
@@ -207,28 +205,51 @@ export default function Home() {
           </div>
         </section>
 
+        {/* ── ENCART E-INVOICING ── */}
+        <section style={{ background: '#fff', padding: '48px 40px 0' }}>
+          <Reveal>
+            <div style={{ maxWidth: 960, margin: '0 auto', background: 'linear-gradient(135deg, #f0fdf4, #e8fef0)', border: '1.5px solid #bbf7d0', borderRadius: 20, padding: '28px 36px', display: 'flex', alignItems: 'center', gap: 24 }}>
+              <div style={{ width: 48, height: 48, background: '#1DB954', borderRadius: 14, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/>
+                  <polyline points="13 2 13 9 20 9"/>
+                </svg>
+              </div>
+              <div style={{ flex: 1 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
+                  <span style={{ fontSize: 11, background: '#1DB954', color: 'white', borderRadius: 6, padding: '2px 8px', fontWeight: 700, letterSpacing: '0.5px' }}>SEPTEMBRE 2026</span>
+                  <span style={{ fontSize: 13, color: '#15803d', fontWeight: 600 }}>Facturation électronique obligatoire en France</span>
+                </div>
+                <p style={{ fontSize: 14, color: '#374151', lineHeight: 1.7 }}>
+                  La réforme e-invoicing obligera toutes les entreprises à émettre leurs factures dans un format numérique standardisé. Pour vous, TPE et PME, cela signifie que vos factures impayées seront transmissibles à ProBoost en un clic — plus de ressaisie, traitement instantané.
+                </p>
+              </div>
+            </div>
+          </Reveal>
+        </section>
+
         {/* ── 3 ÉTAPES ── */}
         <section style={{ background: '#fff', padding: '100px 40px' }}>
           <div style={{ maxWidth: 960, margin: '0 auto' }}>
             <Reveal>
               <div style={{ marginBottom: 64, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12 }}>
                 <span style={{ fontSize: 11, color: '#1DB954', fontWeight: 700, letterSpacing: '3px', textTransform: 'uppercase' }}>Processus</span>
-                <h2 style={{ fontFamily: 'Manrope', fontWeight: 900, fontSize: 44, color: '#0a0a0a', letterSpacing: '-2px', textAlign: 'center' }}>Opérationnel en 3 minutes.</h2>
+                <h2 style={{ fontFamily: 'Manrope', fontWeight: 900, fontSize: 44, color: '#0a0a0a', letterSpacing: '-2px', textAlign: 'center' }}>3 étapes pour récupérer vos impayés.</h2>
               </div>
             </Reveal>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 24, position: 'relative' }}>
+            <div className="steps-grid">
               <div style={{ position: 'absolute', top: 48, left: '16.5%', right: '16.5%', height: '1px', background: 'linear-gradient(to right, #1DB954, #e5e7eb, #1DB954)', zIndex: 0 }} />
               {steps.map((s, i) => (
                 <Reveal key={i} delay={i * 0.1}>
-                  <div className="step-card" style={{ border: '1px solid #f0f0f0', borderRadius: 20, padding: '36px 28px 32px', background: '#fff', boxShadow: '0 2px 8px rgba(0,0,0,0.04)', position: 'relative', zIndex: 1 }}>
+                  <div className="step-card" style={{ border: '1px solid #f0f0f0', borderRadius: 20, padding: '36px 28px 32px', background: '#fff', boxShadow: '0 2px 8px rgba(0,0,0,0.04)', position: 'relative', zIndex: 1, display: 'flex', flexDirection: 'column' }}>
                     <div style={{ position: 'absolute', top: 16, right: 20 }}>
                       <span className="step-number">{s.n}</span>
                     </div>
-                    <div style={{ width: 52, height: 52, background: '#f0fdf4', border: '1.5px solid #bbf7d0', borderRadius: 16, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 24 }}>
+                    <div style={{ width: 52, height: 52, background: '#f0fdf4', border: '1.5px solid #bbf7d0', borderRadius: 16, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 24, flexShrink: 0 }}>
                       <s.Icon />
                     </div>
                     <h3 style={{ fontFamily: 'Manrope', fontWeight: 800, fontSize: 20, color: '#0a0a0a', marginBottom: 10 }}>{s.title}</h3>
-                    <p style={{ fontSize: 14, color: '#6B7280', lineHeight: 1.75 }}>{s.desc}</p>
+                    <p style={{ fontSize: 14, color: '#6B7280', lineHeight: 1.75, flex: 1 }}>{s.desc}</p>
                   </div>
                 </Reveal>
               ))}
@@ -248,10 +269,10 @@ export default function Home() {
                 </p>
               </div>
             </Reveal>
-            <div style={{ display: 'flex', gap: 24, justifyContent: 'center', flexWrap: 'wrap', alignItems: 'stretch' }}>
+            <div className="plans-grid">
               {PLANS.map((plan, i) => (
                 <Reveal key={plan.nom} delay={i * 0.08}>
-                  <div className="plan-card" style={{ background: 'white', borderRadius: 20, padding: '36px 28px', width: 300, border: plan.popular ? `2px solid ${plan.couleur}` : '1px solid #e5e7eb', boxShadow: plan.popular ? `0 8px 40px ${plan.couleur}22` : '0 2px 8px rgba(0,0,0,0.06)', position: 'relative', display: 'flex', flexDirection: 'column' }}>
+                  <div className="plan-card" style={{ background: 'white', borderRadius: 20, padding: '36px 28px', border: plan.popular ? `2px solid ${plan.couleur}` : '1px solid #e5e7eb', boxShadow: plan.popular ? `0 8px 40px ${plan.couleur}22` : '0 2px 8px rgba(0,0,0,0.06)', position: 'relative', display: 'flex', flexDirection: 'column' }}>
                     {plan.popular && (
                       <div style={{ position: 'absolute', top: -14, left: '50%', transform: 'translateX(-50%)', background: plan.couleur, color: 'white', borderRadius: 20, padding: '4px 16px', fontSize: 12, fontWeight: 700, whiteSpace: 'nowrap' }}>
                         {plan.popularLabel}
@@ -270,12 +291,16 @@ export default function Home() {
                     </div>
                     <div style={{ borderTop: '1px solid #F3F4F6', paddingTop: 24, flex: 1 }}>
                       {plan.features.map((f, j) => (
-                        <div key={j} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
-                          <div style={{ width: 20, height: 20, background: plan.bg, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                            <span style={{ fontSize: 11, color: plan.couleur, fontWeight: 700 }}>✓</span>
+                        f ? (
+                          <div key={j} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
+                            <div style={{ width: 20, height: 20, background: plan.bg, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                              <span style={{ fontSize: 11, color: plan.couleur, fontWeight: 700 }}>✓</span>
+                            </div>
+                            <span style={{ fontSize: 14, color: '#374151' }}>{f}</span>
                           </div>
-                          <span style={{ fontSize: 14, color: '#374151' }}>{f}</span>
-                        </div>
+                        ) : (
+                          <div key={j} style={{ height: 28 }} />
+                        )
                       ))}
                     </div>
                   </div>
