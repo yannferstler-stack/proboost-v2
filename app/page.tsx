@@ -31,7 +31,7 @@ const PLANS = [
   },
   {
     nom: 'Premium', prix: '49,99', couleur: '#3B82F6', bg: '#EFF6FF', border: '#BFDBFE', commission: '8%',
-    description: 'Pour les PME avec un volume de factures régulier',
+    description: 'Pour les TPE avec un volume de factures régulier',
     features: ['50 factures / mois', '5 relances par facture', 'Email uniquement', 'Délais personnalisables', 'Commission 8% (min 5€)', 'Dashboard complet', 'Import CSV & PDF', 'Historique des relances', '', ''],
     popular: false, popularLabel: '',
   },
@@ -46,23 +46,23 @@ const PLANS = [
 function IconImport() {
   return (
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1DB954" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-      <polyline points="7 10 12 15 17 10" />
-      <line x1="12" y1="15" x2="12" y2="3" />
+      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+      <polyline points="7 10 12 15 17 10"/>
+      <line x1="12" y1="15" x2="12" y2="3"/>
     </svg>
   )
 }
 function IconBolt() {
   return (
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1DB954" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+      <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
     </svg>
   )
 }
 function IconEuro() {
   return (
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1DB954" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M4 10h12M4 14h12M19.5 6.5A7.5 7.5 0 1 0 19.5 17.5" />
+      <path d="M4 10h12M4 14h12M19.5 6.5A7.5 7.5 0 1 0 19.5 17.5"/>
     </svg>
   )
 }
@@ -138,9 +138,9 @@ export default function Home() {
             <span className="nav-a" onClick={() => router.push('/comment-ca-marche')} style={{ fontSize: 14, color: '#6B7280', fontWeight: 500 }}>Comment ca marche ?</span>
             <button className="btn-connexion" onClick={() => router.push('/login')}>
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
-                <polyline points="10 17 15 12 10 7" />
-                <line x1="15" y1="12" x2="3" y2="12" />
+                <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+                <polyline points="10 17 15 12 10 7"/>
+                <line x1="15" y1="12" x2="3" y2="12"/>
               </svg>
               Connexion
             </button>
@@ -151,7 +151,7 @@ export default function Home() {
         <section style={{ minHeight: '100vh', background: '#fff', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '80px 24px 60px', textAlign: 'center', position: 'relative' }}>
           <Reveal>
             <h1 style={{ fontFamily: 'Manrope', fontWeight: 900, fontSize: 'clamp(42px, 6vw, 76px)', color: '#0a0a0a', letterSpacing: '-3px', lineHeight: 1.06, marginBottom: 24, maxWidth: 820 }}>
-              Concentrez-vous sur l&apos;essentiel,<br />
+              Concentrez-vous sur l&apos;essentiel,<br/>
               <span style={{ color: '#1DB954' }}>nous gérons vos impayés.</span>
             </h1>
           </Reveal>
@@ -183,14 +183,14 @@ export default function Home() {
         <section style={{ background: '#0a0a0a', padding: '80px 40px' }}>
           <Reveal>
             <p style={{ textAlign: 'center', fontSize: 11, color: 'rgba(255,255,255,0.3)', fontWeight: 600, letterSpacing: '3px', textTransform: 'uppercase', marginBottom: 56 }}>
-              La realite des impayes en France
+              La réalite des impayés en France
             </p>
           </Reveal>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 0, maxWidth: 960, margin: '0 auto' }}>
             {[
               { value: '42', unit: 'jours', label: 'Retard moyen de paiement des TPE', accent: '#1DB954' },
-              { value: '+16', unit: '%', label: 'Augmentation des impayes pour les TPE et PME en 2024', accent: '#fff' },
-              { value: '80', unit: '%', label: 'Des fonds recuperes grace a une relance efficace', accent: '#1DB954' },
+              { value: '+16', unit: '%', label: 'Augmentation des impayés pour les TPE et PME en 2024', accent: '#fff' },
+              { value: '80', unit: '%', label: 'Des fonds récupérés grace a une relance efficace', accent: '#1DB954' },
             ].map((s, i) => (
               <Reveal key={i} delay={i * 0.1}>
                 <div className="stat-card" style={{ padding: '40px 36px', borderRight: i < 2 ? '1px solid rgba(255,255,255,0.08)' : 'none', textAlign: 'center' }}>
@@ -211,8 +211,8 @@ export default function Home() {
             <div style={{ maxWidth: 960, margin: '0 auto', background: 'linear-gradient(135deg, #f0fdf4, #e8fef0)', border: '1.5px solid #bbf7d0', borderRadius: 20, padding: '28px 36px', display: 'flex', alignItems: 'center', gap: 24 }}>
               <div style={{ width: 48, height: 48, background: '#1DB954', borderRadius: 14, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z" />
-                  <polyline points="13 2 13 9 20 9" />
+                  <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/>
+                  <polyline points="13 2 13 9 20 9"/>
                 </svg>
               </div>
               <div style={{ flex: 1 }}>
@@ -221,7 +221,7 @@ export default function Home() {
                   <span style={{ fontSize: 13, color: '#15803d', fontWeight: 600 }}>Facturation electronique obligatoire en France</span>
                 </div>
                 <p style={{ fontSize: 14, color: '#374151', lineHeight: 1.7 }}>
-                  La reforme e-invoicing obligera toutes les entreprises a emettre leurs factures dans un format numerique standardise. Pour vous, TPE et PME, cela signifie que vos factures impayees seront transmissibles a ProBoost en un clic — plus de ressaisie, traitement instantane.
+                  La réforme e-invoicing obligera toutes les entreprises à émettre leurs factures dans un format numérique standardisé. Pour vous, TPE et PME, cela signifie que vos factures impayées seront transmissibles à ProBoost en un clic — plus de ressaisie, traitement instantané.
                 </p>
               </div>
             </div>
@@ -234,7 +234,7 @@ export default function Home() {
             <Reveal>
               <div style={{ marginBottom: 64, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12 }}>
                 <span style={{ fontSize: 11, color: '#1DB954', fontWeight: 700, letterSpacing: '3px', textTransform: 'uppercase' }}>Processus</span>
-                <h2 style={{ fontFamily: 'Manrope', fontWeight: 900, fontSize: 44, color: '#0a0a0a', letterSpacing: '-2px', textAlign: 'center' }}>3 etapes pour recuperer vos impayes.</h2>
+                <h2 style={{ fontFamily: 'Manrope', fontWeight: 900, fontSize: 44, color: '#0a0a0a', letterSpacing: '-2px', textAlign: 'center' }}>3 étapes pour récupérer vos impayés.</h2>
               </div>
             </Reveal>
             <div className="steps-grid">
@@ -264,7 +264,7 @@ export default function Home() {
                 <span style={{ fontSize: 11, color: '#1DB954', fontWeight: 700, letterSpacing: '2px', textTransform: 'uppercase', display: 'block', marginBottom: 10 }}>Tarifs</span>
                 <h2 style={{ fontFamily: 'Manrope', fontWeight: 900, fontSize: 38, color: '#0a0a0a', letterSpacing: '-1.5px', marginBottom: 20 }}>Simple et transparent.</h2>
                 <p style={{ fontSize: 16, color: '#374151', lineHeight: 1.8, maxWidth: 640, margin: '0 auto', fontWeight: 400 }}>
-                  Vous n&apos;aurez plus a courir apres le temps et l&apos;argent. Nous serons votre allie pour la gestion de vos impayes et serons remuneres uniquement sur les fonds recuperes. Vous pourrez ensuite preserver votre tresorerie ou investir pour developper votre activite.
+                  Vous n&apos;aurez plus à courir apres le temps et l&apos;argent. Nous serons votre allié pour la gestion de vos impayés et serons rémunérés uniquement sur les fonds récupérés. Vous pourrez ensuite préserver votre trésorerie ou investir pour développer votre activité.
                 </p>
               </div>
             </Reveal>
@@ -315,7 +315,7 @@ export default function Home() {
             <div style={{ maxWidth: 680, margin: '0 auto', textAlign: 'center' }}>
               <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.3)', fontWeight: 600, letterSpacing: '3px', textTransform: 'uppercase', marginBottom: 24 }}>Notre engagement</p>
               <h2 style={{ fontFamily: 'Manrope', fontWeight: 900, fontSize: 'clamp(32px, 4vw, 48px)', color: 'white', letterSpacing: '-2px', lineHeight: 1.15, marginBottom: 24 }}>
-                Vous n&apos;aurez plus a courir apres<br />
+                Vous n&apos;aurez plus a courir apres<br/>
                 <span style={{ color: '#1DB954' }}>le temps et l&apos;argent.</span>
               </h2>
               <p style={{ fontSize: 17, color: 'rgba(255,255,255,0.5)', lineHeight: 1.8, fontWeight: 300, maxWidth: 560, margin: '0 auto' }}>
