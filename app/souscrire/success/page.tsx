@@ -1,8 +1,7 @@
 'use client'
 import { useState, useEffect, Suspense } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
-import { createClient } from '../../../lib/supabase'
-
+import { createClient } from '../../lib/supabase'
 const PLAN_LABELS: Record<string, string> = { starter: 'Starter', premium: 'Premium', pro: 'Pro' }
 const PLAN_COLORS: Record<string, string> = { starter: '#16A34A', premium: '#3B82F6', pro: '#7C3AED' }
 
