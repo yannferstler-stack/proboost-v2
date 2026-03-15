@@ -32,8 +32,8 @@ const PLANS = [
       { label: 'Import CSV & PDF', ok: true, bold: false },
       { label: 'Dashboard complet', ok: true, bold: false },
       { label: 'Relances email uniquement', ok: true, bold: false },
-      { label: 'Historique des relances', ok: true, bold: false },
       { label: 'Délais personnalisables', ok: false, bold: false },
+      { label: 'Historique des relances', ok: false, bold: false },
       { label: 'Support prioritaire', ok: false, bold: false },
     ],
     popular: false, popularLabel: '',
@@ -47,23 +47,22 @@ const PLANS = [
       { label: 'Import CSV & PDF', ok: true, bold: false },
       { label: 'Dashboard complet', ok: true, bold: false },
       { label: 'Relances email uniquement', ok: true, bold: false },
-      { label: 'Historique des relances', ok: true, bold: false },
       { label: 'Délais personnalisables', ok: true, bold: true },
+      { label: 'Historique des relances', ok: true, bold: true },
       { label: 'Support prioritaire', ok: false, bold: false },
     ],
     popular: false, popularLabel: '',
   },
   {
-    nom: 'Pro', prix: '99,99', couleur: '#7C3AED', bg: '#F5F3FF', border: '#DDD6FE', commission: '10%',
+    nom: 'Pro', prix: '149,99', couleur: '#7C3AED', bg: '#F5F3FF', border: '#DDD6FE', commission: '10%',
     description: 'Pour les cabinets et entreprises à fort volume',
     features: [
-      { label: '200 factures', ok: true, bold: true },
-      { label: '5 relances par facture', ok: true, bold: true },
+{ label: "Jusqu'à 200 factures / mois", ok: true, bold: true },      { label: '5 relances par facture', ok: true, bold: false },
       { label: 'Import CSV & PDF', ok: true, bold: false },
       { label: 'Dashboard complet', ok: true, bold: false },
       { label: 'Relances Email + SMS', ok: true, bold: true },
+      { label: 'Délais personnalisables', ok: true, bold: false },
       { label: 'Historique des relances', ok: true, bold: false },
-      { label: 'Délais personnalisables', ok: true, bold: true },
       { label: 'Support prioritaire', ok: true, bold: true },
     ],
     popular: true, popularLabel: 'Recommandé pour les PME',
@@ -131,13 +130,39 @@ export default function Home() {
           transform: translateY(-2px);
           box-shadow: 0 8px 24px rgba(29,185,84,0.45) !important;
         }
+        .btn-hero-primary {
+          background: linear-gradient(135deg, #1DB954, #15a347);
+          color: white; border: none; cursor: pointer;
+          font-family: Inter, sans-serif; font-weight: 700;
+          transition: all 0.2s; border-radius: 14px;
+          padding: 14px 32px; font-size: 15px;
+          display: inline-flex; align-items: center; gap: 8px;
+          box-shadow: 0 4px 20px rgba(29,185,84,0.40);
+          letter-spacing: 0.1px; white-space: nowrap;
+        }
+        .btn-hero-primary:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 10px 30px rgba(29,185,84,0.50) !important;
+        }
+        .btn-hero-secondary {
+          background: transparent; color: #374151;
+          border: 1.5px solid #e5e7eb; border-radius: 14px;
+          padding: 14px 28px; font-size: 15px; font-weight: 600;
+          cursor: pointer; font-family: Inter, sans-serif;
+          display: inline-flex; align-items: center; gap: 8px;
+          transition: all 0.2s; white-space: nowrap;
+        }
+        .btn-hero-secondary:hover {
+          border-color: #9CA3AF; background: #F9FAFB;
+          transform: translateY(-1px);
+        }
         .nav-a:hover { color: #1DB954 !important; }
         .nav-a { transition: color 0.15s; cursor: pointer; }
         .stat-card { transition: transform 0.2s; }
         .stat-card:hover { transform: translateY(-4px); }
         .step-card { transition: box-shadow 0.2s, transform 0.2s; height: 100%; }
         .step-card:hover { box-shadow: 0 8px 32px rgba(0,0,0,0.08) !important; transform: translateY(-2px); }
-        .plan-card { transition: box-shadow 0.2s, transform 0.2s; height: 100%; }
+        .plan-card { transition: box-shadow 0.2s, transform 0.2s; height: 100%; cursor: pointer; }
         .plan-card:hover { transform: translateY(-3px); box-shadow: 0 12px 36px rgba(0,0,0,0.10) !important; }
         .step-number { font-family: Manrope, sans-serif; font-weight: 900; font-size: 48px; color: #f0f0f0; line-height: 1; letter-spacing: -2px; transition: color 0.2s; }
         .step-card:hover .step-number { color: #e8fef0; }
@@ -188,9 +213,14 @@ export default function Home() {
             </p>
           </Reveal>
           <Reveal delay={0.15}>
-            <div style={{ display: 'flex', gap: 10, justifyContent: 'center', marginBottom: 48 }}>
-              <button onClick={() => router.push('/comment-ca-marche')} style={{ background: 'transparent', color: '#374151', border: '1.5px solid #e5e7eb', borderRadius: 12, padding: '12px 28px', fontSize: 15, fontWeight: 600, cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}>
-                Comment ça marche ? →
+            <div style={{ display: 'flex', gap: 12, justifyContent: 'center', alignItems: 'center', marginBottom: 48, flexWrap: 'wrap' }}>
+              <button className="btn-hero-primary" onClick={() => router.push('/souscrire')}>
+                Souscrire un abonnement
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+              </button>
+              <button className="btn-hero-secondary" onClick={() => router.push('/comment-ca-marche')}>
+                Comment ça marche ?
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
               </button>
             </div>
           </Reveal>
@@ -216,7 +246,7 @@ export default function Home() {
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 0, maxWidth: 960, margin: '0 auto' }}>
             {[
               { value: '42', unit: 'jours', label: 'Retard moyen de paiement des TPE', accent: '#1DB954' },
-              { value: '+16', unit: '%', label: "Augmentation des impayés pour les TPE et PME en 2024", accent: '#fff' },
+              { value: '+16', unit: '%', label: 'Augmentation des impayés pour les TPE et PME en 2024', accent: '#fff' },
               { value: '80', unit: '%', label: 'Des fonds récupérés grâce à une relance efficace', accent: '#1DB954' },
             ].map((s, i) => (
               <Reveal key={i} delay={i * 0.1}>
@@ -291,14 +321,16 @@ export default function Home() {
                 <span style={{ fontSize: 11, color: '#1DB954', fontWeight: 700, letterSpacing: '2px', textTransform: 'uppercase', display: 'block', marginBottom: 10 }}>Tarifs</span>
                 <h2 style={{ fontFamily: 'Manrope', fontWeight: 900, fontSize: 38, color: '#0a0a0a', letterSpacing: '-1.5px', marginBottom: 20 }}>Simple et transparent.</h2>
                 <p style={{ fontSize: 16, color: '#374151', lineHeight: 1.8, maxWidth: 640, margin: '0 auto', fontWeight: 400 }}>
-                  Vous n&apos;aurez plus à courir après le temps et l&apos;argent. Nous serons votre allié pour la gestion de vos impayés et serons rémunérés uniquement sur les fonds récupérés. Vous pourrez ensuite préserver votre trésorerie ou investir pour développer votre activité.
+                  Vous n&apos;aurez plus à courir après le temps et l&apos;argent. Nous serons votre allié pour la gestion de vos impayés et serons rémunérés uniquement sur les fonds récupérés.
                 </p>
               </div>
             </Reveal>
             <div className="plans-grid">
               {PLANS.map((plan, i) => (
                 <Reveal key={plan.nom} delay={i * 0.08}>
-                  <div className="plan-card" style={{ background: 'white', borderRadius: 20, padding: '36px 28px', border: plan.popular ? `2px solid ${plan.couleur}` : '1px solid #e5e7eb', boxShadow: plan.popular ? `0 8px 40px ${plan.couleur}22` : '0 2px 8px rgba(0,0,0,0.06)', position: 'relative', display: 'flex', flexDirection: 'column' }}>
+                  <div className="plan-card"
+                    onClick={() => router.push(`/souscrire?plan=${plan.nom.toLowerCase()}`)}
+                    style={{ background: 'white', borderRadius: 20, padding: '36px 28px', border: plan.popular ? `2px solid ${plan.couleur}` : '1px solid #e5e7eb', boxShadow: plan.popular ? `0 8px 40px ${plan.couleur}22` : '0 2px 8px rgba(0,0,0,0.06)', position: 'relative', display: 'flex', flexDirection: 'column' }}>
                     {plan.popular && (
                       <div style={{ position: 'absolute', top: -14, left: '50%', transform: 'translateX(-50%)', background: plan.couleur, color: 'white', borderRadius: 20, padding: '4px 16px', fontSize: 12, fontWeight: 700, whiteSpace: 'nowrap' }}>
                         {plan.popularLabel}
@@ -315,7 +347,7 @@ export default function Home() {
                         <span style={{ fontSize: 13, color: plan.couleur, fontWeight: 600 }}>{plan.commission} prélevé sur chaque facture recouvrée</span>
                       </div>
                     </div>
-                    <div style={{ borderTop: '1px solid #F3F4F6', paddingTop: 24, flex: 1 }}>
+                    <div style={{ borderTop: '1px solid #F3F4F6', paddingTop: 24, flex: 1, marginBottom: 24 }}>
                       {plan.features.map((f, j) => (
                         <div key={j} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
                           <div style={{ width: 22, height: 22, borderRadius: '50%', background: f.ok ? plan.bg : '#F3F4F6', border: f.ok ? `1px solid ${plan.border}` : '1px solid #E5E7EB', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
@@ -324,6 +356,12 @@ export default function Home() {
                           <span style={{ fontSize: 14, color: f.ok ? '#374151' : '#9CA3AF', fontWeight: f.bold ? 700 : 400 }}>{f.label}</span>
                         </div>
                       ))}
+                    </div>
+                    {/* CTA dans la carte */}
+                    <div style={{ marginTop: 'auto', background: plan.popular ? plan.couleur : plan.bg, border: `1.5px solid ${plan.border}`, borderRadius: 12, padding: '12px', textAlign: 'center' }}>
+                      <span style={{ fontSize: 14, fontWeight: 700, color: plan.popular ? 'white' : plan.couleur }}>
+                        Choisir {plan.nom} →
+                      </span>
                     </div>
                   </div>
                 </Reveal>
@@ -338,12 +376,16 @@ export default function Home() {
             <div style={{ maxWidth: 680, margin: '0 auto', textAlign: 'center' }}>
               <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.3)', fontWeight: 600, letterSpacing: '3px', textTransform: 'uppercase', marginBottom: 24 }}>Notre engagement</p>
               <h2 style={{ fontFamily: 'Manrope', fontWeight: 900, fontSize: 'clamp(32px, 4vw, 48px)', color: 'white', letterSpacing: '-2px', lineHeight: 1.15, marginBottom: 24 }}>
-                Impayés ?<br/>
-                <span style={{ color: '#1DB954' }}>Plus jamais un frein.</span>
+                Vous n&apos;aurez plus à courir après<br/>
+                <span style={{ color: '#1DB954' }}>le temps et l&apos;argent.</span>
               </h2>
-              <p style={{ fontSize: 17, color: 'rgba(255,255,255,0.5)', lineHeight: 1.8, fontWeight: 300, maxWidth: 560, margin: '0 auto' }}>
+              <p style={{ fontSize: 17, color: 'rgba(255,255,255,0.5)', lineHeight: 1.8, fontWeight: 300, maxWidth: 560, margin: '0 auto 40px' }}>
                 Nous serons votre allié pour la gestion de vos impayés et serons rémunérés uniquement sur les fonds récupérés.
               </p>
+              <button className="btn-hero-primary" onClick={() => router.push('/souscrire')} style={{ fontSize: 16, padding: '16px 40px' }}>
+                Souscrire maintenant
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+              </button>
             </div>
           </Reveal>
         </section>
