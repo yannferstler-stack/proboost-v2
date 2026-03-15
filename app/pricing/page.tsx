@@ -96,7 +96,7 @@ export default function PricingPage() {
         {/* Navbar */}
         <nav style={{ background: 'white', borderBottom: '1px solid #EAECEF', padding: '0 40px', height: 64, display: 'flex', alignItems: 'center', justifyContent: 'space-between', position: 'sticky', top: 0, zIndex: 100 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }} onClick={() => window.location.href = '/'}>
-            <img src="/logo.jpg" style={{ width: 36, height: 36, objectFit: 'contain' }} />
+            <img src="/logo.png" style={{ width: 36, height: 36, objectFit: 'contain' }} />
             <span style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 800, fontSize: 17, color: '#111' }}>ProBoost</span>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 32 }}>

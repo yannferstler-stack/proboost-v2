@@ -57,7 +57,8 @@ const PLANS = [
     nom: 'Pro', prix: '149,99', couleur: '#7C3AED', bg: '#F5F3FF', border: '#DDD6FE', commission: '10%',
     description: 'Pour les cabinets et entreprises à fort volume',
     features: [
-{ label: "Jusqu'à 200 factures / mois", ok: true, bold: true },      { label: '5 relances par facture', ok: true, bold: false },
+      { label: "Jusqu'à 200 factures / mois", ok: true, bold: true },
+      { label: '5 relances par facture', ok: true, bold: false },
       { label: 'Import CSV & PDF', ok: true, bold: false },
       { label: 'Dashboard complet', ok: true, bold: false },
       { label: 'Relances Email + SMS', ok: true, bold: true },
@@ -138,12 +139,9 @@ export default function Home() {
           padding: 14px 32px; font-size: 15px;
           display: inline-flex; align-items: center; gap: 8px;
           box-shadow: 0 4px 20px rgba(29,185,84,0.40);
-          letter-spacing: 0.1px; white-space: nowrap;
+          white-space: nowrap;
         }
-        .btn-hero-primary:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 10px 30px rgba(29,185,84,0.50) !important;
-        }
+        .btn-hero-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(29,185,84,0.50) !important; }
         .btn-hero-secondary {
           background: transparent; color: #374151;
           border: 1.5px solid #e5e7eb; border-radius: 14px;
@@ -152,10 +150,7 @@ export default function Home() {
           display: inline-flex; align-items: center; gap: 8px;
           transition: all 0.2s; white-space: nowrap;
         }
-        .btn-hero-secondary:hover {
-          border-color: #9CA3AF; background: #F9FAFB;
-          transform: translateY(-1px);
-        }
+        .btn-hero-secondary:hover { border-color: #9CA3AF; background: #F9FAFB; transform: translateY(-1px); }
         .nav-a:hover { color: #1DB954 !important; }
         .nav-a { transition: color 0.15s; cursor: pointer; }
         .stat-card { transition: transform 0.2s; }
@@ -175,16 +170,16 @@ export default function Home() {
         {/* NAV */}
         <nav style={{
           position: 'fixed', top: 0, left: 0, right: 0, zIndex: 300,
-          height: 60, display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-          padding: '0 40px',
+          height: 80, display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          padding: '0 40px', overflow: 'visible',
           background: scrollY > 20 ? 'rgba(255,255,255,0.95)' : 'transparent',
           backdropFilter: scrollY > 20 ? 'blur(14px)' : 'none',
           borderBottom: scrollY > 20 ? '1px solid #f0f0f0' : 'none',
           transition: 'all 0.3s'
         }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }} onClick={() => router.push('/')}>
-            <img src="/logo.jpg" style={{ width: 30, height: 30, objectFit: 'contain', borderRadius: 6 }} />
-            <span style={{ fontFamily: 'Manrope', fontWeight: 800, fontSize: 16, color: '#111' }}>ProBoost</span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, cursor: 'pointer' }} onClick={() => router.push('/')}>
+            <img src="/logo.png" style={{ width: 56, height: 56, objectFit: 'contain' }} />
+            <span style={{ fontFamily: 'Manrope', fontWeight: 800, fontSize: 24, color: '#111' }}>ProBoost</span>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
             <span className="nav-a" onClick={() => router.push('/comment-ca-marche')} style={{ fontSize: 14, color: '#6B7280', fontWeight: 500 }}>Comment ça marche ?</span>
@@ -357,11 +352,8 @@ export default function Home() {
                         </div>
                       ))}
                     </div>
-                    {/* CTA dans la carte */}
                     <div style={{ marginTop: 'auto', background: plan.popular ? plan.couleur : plan.bg, border: `1.5px solid ${plan.border}`, borderRadius: 12, padding: '12px', textAlign: 'center' }}>
-                      <span style={{ fontSize: 14, fontWeight: 700, color: plan.popular ? 'white' : plan.couleur }}>
-                        Choisir {plan.nom} →
-                      </span>
+                      <span style={{ fontSize: 14, fontWeight: 700, color: plan.popular ? 'white' : plan.couleur }}>Choisir {plan.nom} →</span>
                     </div>
                   </div>
                 </Reveal>
@@ -392,9 +384,9 @@ export default function Home() {
 
         {/* FOOTER */}
         <footer style={{ background: '#fafafa', borderTop: '1px solid #f0f0f0', padding: '28px 40px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }} onClick={() => router.push('/')}>
-            <img src="/logo.jpg" style={{ width: 24, height: 24, objectFit: 'contain', borderRadius: 5 }} />
-            <span style={{ fontFamily: 'Manrope', fontWeight: 800, fontSize: 13, color: '#111' }}>ProBoost</span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, cursor: 'pointer' }} onClick={() => router.push('/')}>
+            <img src="/logo.png" style={{ width: 72, height: 72, objectFit: 'contain' }} />
+<span style={{ fontFamily: 'Manrope', fontWeight: 800, fontSize: 26, color: '#111' }}>ProBoost</span>
           </div>
           <p style={{ fontSize: 12, color: '#9CA3AF' }}>© 2025 ProBoost — Tous droits réservés</p>
           <div style={{ display: 'flex', gap: 20 }}>

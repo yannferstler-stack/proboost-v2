@@ -61,7 +61,7 @@ export default function FacturationPage() {
         {/* SIDEBAR */}
         <aside style={{ width: 240, background: 'white', borderRight: '1px solid #EAECEF', display: 'flex', flexDirection: 'column', padding: '24px 16px', position: 'fixed', top: 0, left: 0, height: '100vh' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '0 8px', marginBottom: 36 }}>
-            <img src="/logo.jpg" alt="ProBoost" onClick={() => window.location.href = '/'} style={{ width: 42, height: 42, objectFit: 'contain', cursor: 'pointer' }} />
+            <img src="/logo.png" alt="ProBoost" onClick={() => window.location.href = '/'} style={{ width: 42, height: 42, objectFit: 'contain', cursor: 'pointer' }} />
             <span onClick={() => window.location.href = '/'} style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 800, fontSize: 17, color: '#111', cursor: 'pointer' }}>ProBoost</span>
           </div>
           <nav style={{ display: 'flex', flexDirection: 'column', gap: 4, flex: 1 }}>

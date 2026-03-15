@@ -96,7 +96,7 @@ function SouscrireContent() {
         {/* NAV */}
         <nav style={{ background: 'white', borderBottom: '1px solid #EAECEF', height: 60, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 40px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }} onClick={() => router.push('/')}>
-            <img src="/logo.jpg" style={{ width: 28, height: 28, objectFit: 'contain', borderRadius: 6 }} />
+            <img src="/logo.png" style={{ width: 28, height: 28, objectFit: 'contain', borderRadius: 6 }} />
             <span style={{ fontFamily: 'Manrope', fontWeight: 800, fontSize: 16, color: '#111' }}>ProBoost</span>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>

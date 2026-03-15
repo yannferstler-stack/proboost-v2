@@ -23,7 +23,7 @@ export default function CommentCaMarchePage() {
         {/* ── NAV ── */}
         <nav style={{ position: 'sticky', top: 0, zIndex: 300, height: 60, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 40px', background: 'rgba(255,255,255,0.95)', backdropFilter: 'blur(14px)', borderBottom: '1px solid #f0f0f0' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }} onClick={() => router.push('/')}>
-            <img src="/logo.jpg" style={{ width: 30, height: 30, objectFit: 'contain', borderRadius: 6 }} />
+            <img src="/logo.png" style={{ width: 184, height: 184, objectFit: 'contain', borderRadius: 16 }} />
             <span style={{ fontFamily: 'Manrope', fontWeight: 800, fontSize: 16, color: '#111' }}>ProBoost</span>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 28 }}>
@@ -130,8 +130,8 @@ export default function CommentCaMarchePage() {
         {/* ── FOOTER ── */}
         <footer style={{ background: '#fafafa', borderTop: '1px solid #f0f0f0', padding: '28px 40px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }} onClick={() => router.push('/')}>
-            <img src="/logo.jpg" style={{ width: 24, height: 24, objectFit: 'contain', borderRadius: 5 }} />
-            <span style={{ fontFamily: 'Manrope', fontWeight: 800, fontSize: 13, color: '#111' }}>ProBoost</span>
+            <img src="/logo.png" style={{ width: 24, height: 24, objectFit: 'contain', borderRadius: 5 }} />
+            <span style={{ fontFamily: 'Manrope', fontWeight: 800, fontSize: 30, color: '#111' }}>ProBoost</span>
           </div>
           <p style={{ fontSize: 12, color: '#9CA3AF' }}>© 2025 ProBoost — Tous droits réservés</p>
           <div style={{ display: 'flex', gap: 20 }}>
