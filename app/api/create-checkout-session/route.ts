@@ -9,7 +9,7 @@ function getStripe() {
 const PLAN_CONFIG: Record<string, { amount: number, name: string, commission: string }> = {
   starter:  { amount: 1999,  name: 'ProBoost Starter',  commission: '14%' },
   premium:  { amount: 4999,  name: 'ProBoost Premium',  commission: '12%' },
-  pro:      { amount: 24999, name: 'ProBoost Pro',       commission: '10%' },
+  pro:      { amount: 14999, name: 'ProBoost Pro',       commission: '10%' },
 }
 
 export async function POST(req: NextRequest) {

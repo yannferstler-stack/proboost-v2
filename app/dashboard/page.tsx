@@ -31,6 +31,7 @@ export default function Dashboard() {
   const [sortBy, setSortBy] = useState<'date' | 'relances' | 'ouvertes' | 'recouvrees'>('date')
   const [selectedFacture, setSelectedFacture] = useState<Facture | null>(null)
   const [historyFacture, setHistoryFacture] = useState<Facture | null>(null)
+  const [confirmDelete, setConfirmDelete] = useState<string | null>(null)
   const supabase = createClient()
 
   useEffect(() => {
@@ -49,12 +50,9 @@ export default function Dashboard() {
 
   const isPro = profile?.plan === 'pro'
   const isPremiumOrPro = profile?.plan === 'premium' || profile?.plan === 'pro'
-
   const getLimiteRelances = () => profile?.plan === 'starter' ? 3 : 5
-
   const getCanalForFacture = (factureId: string) => canaux[factureId] || profile?.canal_relance || 'email'
 
-  // Stats : total relances = somme de toutes les relances (email + sms)
   const totalRelances = factures.reduce((sum, f) => sum + (f.nombre_relances || 0), 0)
   const totalFactures = factures.length
   const montantRecupere = factures.filter(f => f.statut === 'payée').reduce((sum, f) => sum + Number(f.montant), 0)
@@ -126,7 +124,14 @@ export default function Dashboard() {
     if (!error) setFactures(prev => prev.map(f => f.id === facture.id ? { ...f, sequence_active: false, next_relance_date: null } : f))
   }
 
-  // Mock historique relances pour affichage
+  const handleSupprimerFacture = async (factureId: string) => {
+    const { error } = await supabase.from('factures').delete().eq('id', factureId)
+    if (!error) {
+      setFactures(prev => prev.filter(f => f.id !== factureId))
+      setConfirmDelete(null)
+    }
+  }
+
   const getMockHistory = (facture: Facture): Relance[] => {
     const nb = facture.nombre_relances || 0
     const types: ('email' | 'sms')[] = ['email', 'sms', 'email', 'email', 'sms']
@@ -143,11 +148,12 @@ export default function Dashboard() {
 
   if (loading) return (
     <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#F4F6F8' }}>
-      <div style={{ width: 36, height: 36, border: '3px solid #E0E0E0', borderTop: '3px solid #1DB954', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
+      <div style={{ width: 36, height: 36, border: '3px solid #E0E0E0', borderTop: '3px solid #a855f7', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
     </div>
   )
 
   const sortedFactures = getSortedFactures()
+  const factureToDelete = factures.find(f => f.id === confirmDelete)
 
   return (
     <>
@@ -160,15 +166,15 @@ export default function Dashboard() {
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
         @keyframes modalIn { from { opacity: 0; transform: scale(0.96); } to { opacity: 1; transform: scale(1); } }
         .card { transition: box-shadow 0.2s, transform 0.2s; }
-        .card:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(0,0,0,0.10) !important; }
+        .card:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(168,85,247,0.10) !important; }
         .row-hover { transition: background 0.12s; cursor: pointer; }
-        .row-hover:hover { background: #F9FAFB !important; }
-        .btn-main { transition: all 0.15s; }
-        .btn-main:hover { background: #18a34a !important; transform: translateY(-1px); }
+        .row-hover:hover { background: #FAFAFA !important; }
+        .btn-main { transition: all 0.15s; background: linear-gradient(135deg, #a855f7, #ec4899); }
+        .btn-main:hover { opacity: 0.9; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(168,85,247,0.35) !important; }
         .sidebar-link { transition: all 0.15s; border-radius: 8px; cursor: pointer; }
-        .sidebar-link:hover { background: rgba(29,185,84,0.08) !important; color: #1DB954 !important; }
+        .sidebar-link:hover { background: rgba(168,85,247,0.08) !important; color: #a855f7 !important; }
         .canal-btn { transition: all 0.15s; border: 1.5px solid #D1D5DB; border-radius: 6px; padding: 4px 8px; font-size: 12px; cursor: pointer; background: white; color: #6B7280; font-family: Inter, sans-serif; font-weight: 500; }
-        .canal-btn.active { border-color: #1DB954; background: #F0FDF4; color: #15803d; font-weight: 600; }
+        .canal-btn.active { border-color: #a855f7; background: #F5F3FF; color: #7c3aed; font-weight: 600; }
         .canal-btn.disabled { opacity: 0.45; cursor: not-allowed; }
         .canal-btn:hover:not(.disabled):not(.active) { border-color: #9CA3AF; background: #F9FAFB; }
         .tooltip-wrap { position: relative; display: inline-block; }
@@ -176,13 +182,16 @@ export default function Dashboard() {
         .tooltip-wrap:hover .tooltip { visibility: visible; }
         .toggle { width: 36px; height: 20px; border-radius: 10px; position: relative; transition: background 0.2s; flex-shrink: 0; cursor: pointer; }
         .toggle-knob { width: 14px; height: 14px; background: white; border-radius: 50%; position: absolute; top: 3px; transition: left 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.2); }
-        .btn-activer { background: #1DB954; color: white; border: none; border-radius: 8px; padding: 6px 14px; font-size: 12px; font-weight: 600; cursor: pointer; font-family: Inter, sans-serif; white-space: nowrap; transition: all 0.15s; }
-        .btn-activer:hover { background: #18a34a; transform: translateY(-1px); }
+        .btn-activer { background: linear-gradient(135deg, #a855f7, #ec4899); color: white; border: none; border-radius: 8px; padding: 6px 14px; font-size: 12px; font-weight: 600; cursor: pointer; font-family: Inter, sans-serif; white-space: nowrap; transition: all 0.15s; box-shadow: 0 2px 10px rgba(168,85,247,0.30); }
+        .btn-activer:hover { opacity: 0.9; transform: translateY(-1px); }
         .sort-btn { border: 1.5px solid #E5E7EB; background: white; border-radius: 8px; padding: 6px 14px; font-size: 13px; font-weight: 500; color: #6B7280; cursor: pointer; font-family: Inter, sans-serif; transition: all 0.15s; }
-        .sort-btn.active { border-color: #1DB954; background: #F0FDF4; color: #15803d; font-weight: 600; }
+        .sort-btn.active { border-color: #a855f7; background: #F5F3FF; color: #7c3aed; font-weight: 600; }
         .sort-btn:hover:not(.active) { border-color: #9CA3AF; background: #F9FAFB; }
+        .btn-delete { background: none; border: none; cursor: pointer; color: #D1D5DB; font-size: 18px; padding: 4px 6px; border-radius: 6px; transition: all 0.15s; line-height: 1; }
+        .btn-delete:hover { color: #EF4444; background: #FEF2F2; }
         .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 200; display: flex; align-items: center; justify-content: center; }
         .modal { background: white; border-radius: 20px; padding: 32px; max-width: 520px; width: 90%; animation: modalIn 0.2s ease; max-height: 80vh; overflow-y: auto; }
+        .modal-confirm { background: white; border-radius: 16px; padding: 28px; max-width: 400px; width: 90%; animation: modalIn 0.2s ease; }
         .history-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid #F3F4F6; }
         .history-row:last-child { border-bottom: none; }
         .badge-type { border-radius: 6px; padding: 3px 10px; font-size: 11px; font-weight: 700; }
@@ -193,7 +202,7 @@ export default function Dashboard() {
         {/* SIDEBAR */}
         <aside style={{ width: 240, background: 'white', borderRight: '1px solid #EAECEF', display: 'flex', flexDirection: 'column', padding: '24px 16px', position: 'fixed', top: 0, left: 0, height: '100vh' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '0 8px', marginBottom: 36 }}>
-            <div style={{ width: 36, height: 36, background: 'linear-gradient(135deg, #1DB954, #15803d)', borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+            <div style={{ width: 36, height: 36, background: 'linear-gradient(135deg, #a855f7, #ec4899)', borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, boxShadow: '0 2px 10px rgba(168,85,247,0.35)' }}>
               <span style={{ color: 'white', fontFamily: 'Manrope, sans-serif', fontWeight: 800, fontSize: 16 }}>P</span>
             </div>
             <span onClick={() => window.location.href = '/'} style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 800, fontSize: 17, color: '#111', cursor: 'pointer' }}>ProBoost</span>
@@ -207,14 +216,14 @@ export default function Dashboard() {
             ].map(item => (
               <div key={item.label} className="sidebar-link"
                 onClick={() => window.location.href = item.href}
-                style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 12px', color: item.active ? '#1DB954' : '#6B7280', fontSize: 14, fontWeight: item.active ? 600 : 400, background: item.active ? 'rgba(29,185,84,0.10)' : 'transparent' }}>
+                style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 12px', color: item.active ? '#a855f7' : '#6B7280', fontSize: 14, fontWeight: item.active ? 600 : 400, background: item.active ? 'rgba(168,85,247,0.08)' : 'transparent' }}>
                 {item.label}
               </div>
             ))}
           </nav>
           <div style={{ borderTop: '1px solid #EAECEF', paddingTop: 16 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 12px' }}>
-              <div style={{ width: 32, height: 32, background: 'linear-gradient(135deg, #1DB954, #15803d)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+              <div style={{ width: 32, height: 32, background: 'linear-gradient(135deg, #a855f7, #ec4899)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                 <span style={{ fontSize: 13, color: 'white', fontWeight: 700 }}>{user?.email?.[0]?.toUpperCase()}</span>
               </div>
               <div style={{ flex: 1, overflow: 'hidden' }}>
@@ -235,24 +244,24 @@ export default function Dashboard() {
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 32, animation: 'fadeUp 0.4s ease both' }}>
             <h1 style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 800, fontSize: 24, color: '#111' }}>Tableau de bord</h1>
             <button className="btn-main" onClick={() => window.location.href = '/dashboard/importer'}
-              style={{ background: '#1DB954', color: 'white', border: 'none', borderRadius: 10, padding: '11px 22px', fontSize: 14, fontWeight: 600, cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}>
+              style={{ color: 'white', border: 'none', borderRadius: 10, padding: '11px 22px', fontSize: 14, fontWeight: 600, cursor: 'pointer', fontFamily: 'Inter, sans-serif', boxShadow: '0 4px 16px rgba(168,85,247,0.35)' }}>
               + Importer des factures
             </button>
           </div>
 
-          {/* STATS - 3 encarts uniquement */}
+          {/* STATS */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 20, marginBottom: 28, animation: 'fadeUp 0.4s ease 0.1s both' }}>
-            <div className="card" style={{ background: 'white', borderRadius: 16, padding: '24px 24px', boxShadow: '0 1px 4px rgba(0,0,0,0.06)', border: '1px solid #EAECEF' }}>
+            <div className="card" style={{ background: 'white', borderRadius: 16, padding: '24px', boxShadow: '0 1px 4px rgba(0,0,0,0.06)', border: '1px solid #EAECEF' }}>
               <p style={{ fontSize: 11, color: '#9CA3AF', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: 12 }}>Relances effectuées</p>
-              <span style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 800, fontSize: 36, color: '#1DB954' }}>{totalRelances}</span>
+              <span style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 800, fontSize: 36, color: '#a855f7' }}>{totalRelances}</span>
               <p style={{ fontSize: 12, color: '#9CA3AF', marginTop: 6 }}>emails + SMS cumulés</p>
             </div>
-            <div className="card" style={{ background: 'white', borderRadius: 16, padding: '24px 24px', boxShadow: '0 1px 4px rgba(0,0,0,0.06)', border: '1px solid #EAECEF' }}>
+            <div className="card" style={{ background: 'white', borderRadius: 16, padding: '24px', boxShadow: '0 1px 4px rgba(0,0,0,0.06)', border: '1px solid #EAECEF' }}>
               <p style={{ fontSize: 11, color: '#9CA3AF', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: 12 }}>Total factures</p>
-              <span style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 800, fontSize: 36, color: '#3B82F6' }}>{totalFactures}</span>
+              <span style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 800, fontSize: 36, color: '#ec4899' }}>{totalFactures}</span>
               <p style={{ fontSize: 12, color: '#9CA3AF', marginTop: 6 }}>factures importées</p>
             </div>
-            <div className="card" style={{ background: 'linear-gradient(135deg, #1DB954, #15803d)', borderRadius: 16, padding: '24px 24px', boxShadow: '0 4px 20px rgba(29,185,84,0.30)', border: 'none' }}>
+            <div className="card" style={{ background: 'linear-gradient(135deg, #a855f7, #ec4899)', borderRadius: 16, padding: '24px', boxShadow: '0 4px 20px rgba(168,85,247,0.30)', border: 'none' }}>
               <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.7)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: 12 }}>Montant récupéré</p>
               <div style={{ display: 'flex', alignItems: 'baseline', gap: 4 }}>
                 <span style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 800, fontSize: 36, color: 'white' }}>{montantRecupere.toLocaleString('fr-FR')}</span>
@@ -274,10 +283,10 @@ export default function Dashboard() {
           )}
 
           {!isPro && (
-            <div style={{ background: 'linear-gradient(135deg, #7C3AED, #5B21B6)', borderRadius: 12, padding: '14px 20px', marginBottom: 20, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div style={{ background: 'linear-gradient(135deg, #a855f7, #7c3aed)', borderRadius: 12, padding: '14px 20px', marginBottom: 20, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <p style={{ fontSize: 13, color: 'white' }}>Les relances SMS multiplient les taux de recouvrement — disponibles en <strong>Plan Pro</strong></p>
-              <button onClick={() => window.location.href = '/pricing'}
-                style={{ background: 'white', color: '#7C3AED', border: 'none', borderRadius: 8, padding: '7px 14px', fontSize: 13, fontWeight: 700, cursor: 'pointer', fontFamily: 'Inter, sans-serif', whiteSpace: 'nowrap' }}>
+              <button onClick={() => window.location.href = '/souscrire?plan=pro'}
+                style={{ background: 'white', color: '#7c3aed', border: 'none', borderRadius: 8, padding: '7px 14px', fontSize: 13, fontWeight: 700, cursor: 'pointer', fontFamily: 'Inter, sans-serif', whiteSpace: 'nowrap' }}>
                 Passer Pro →
               </button>
             </div>
@@ -285,13 +294,13 @@ export default function Dashboard() {
 
           {/* EMPTY STATE */}
           {factures.length === 0 && (
-            <div style={{ background: 'linear-gradient(135deg, #1DB954, #15803d)', borderRadius: 16, padding: '32px 36px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div style={{ background: 'linear-gradient(135deg, #a855f7, #ec4899)', borderRadius: 16, padding: '32px 36px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', boxShadow: '0 4px 24px rgba(168,85,247,0.30)' }}>
               <div>
                 <h2 style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 800, fontSize: 20, color: 'white', marginBottom: 6 }}>Commencez maintenant</h2>
                 <p style={{ color: 'rgba(255,255,255,0.75)', fontSize: 14 }}>Importez votre premier fichier CSV et automatisez vos relances</p>
               </div>
               <button onClick={() => window.location.href = '/dashboard/importer'}
-                style={{ background: 'white', color: '#1DB954', border: 'none', borderRadius: 10, padding: '12px 24px', fontSize: 14, fontWeight: 700, cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}>
+                style={{ background: 'white', color: '#a855f7', border: 'none', borderRadius: 10, padding: '12px 24px', fontSize: 14, fontWeight: 700, cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}>
                 Importer maintenant
               </button>
             </div>
@@ -300,14 +309,11 @@ export default function Dashboard() {
           {/* TABLE */}
           {factures.length > 0 && (
             <div style={{ background: 'white', borderRadius: 16, overflow: 'hidden', boxShadow: '0 1px 4px rgba(0,0,0,0.06)', border: '1px solid #EAECEF', animation: 'fadeUp 0.4s ease 0.2s both' }}>
-
-              {/* TABLE HEADER */}
               <div style={{ padding: '18px 24px', borderBottom: '1px solid #EAECEF', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                   <h2 style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 700, fontSize: 15, color: '#111' }}>Factures</h2>
                   <span style={{ fontSize: 12, color: '#9CA3AF', background: '#F4F6F8', padding: '3px 10px', borderRadius: 20, fontWeight: 500 }}>{factures.length}</span>
                 </div>
-                {/* TRI */}
                 <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
                   <span style={{ fontSize: 12, color: '#9CA3AF', marginRight: 4 }}>Trier par</span>
                   {([
@@ -326,7 +332,7 @@ export default function Dashboard() {
               <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                 <thead>
                   <tr style={{ background: '#F9FAFB' }}>
-                    {['N° Facture', 'Montant', 'Échéance', 'Statut', 'Canal', 'Relances'].map(h => (
+                    {['N° Facture', 'Montant', 'Échéance', 'Statut', 'Canal', 'Relances', ''].map(h => (
                       <th key={h} style={{ textAlign: 'left', padding: '10px 16px', fontSize: 11, color: '#9CA3AF', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px', borderBottom: '1px solid #EAECEF' }}>{h}</th>
                     ))}
                   </tr>
@@ -345,12 +351,9 @@ export default function Dashboard() {
                         onClick={() => setSelectedFacture(f)}
                         style={{ borderBottom: i < sortedFactures.length - 1 ? '1px solid #F3F4F6' : 'none', background: 'white' }}>
 
-                        {/* N° FACTURE */}
                         <td style={{ padding: '14px 16px' }} onClick={e => e.stopPropagation()}>
                           <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                            <span style={{ fontWeight: 700, color: '#111', fontSize: 13, fontFamily: 'Manrope, sans-serif' }}>
-                              {f.numero_facture || '—'}
-                            </span>
+                            <span style={{ fontWeight: 700, color: '#111', fontSize: 13, fontFamily: 'Manrope, sans-serif' }}>{f.numero_facture || '—'}</span>
                             <span style={{ fontSize: 11, color: '#9CA3AF' }}>{f.client_nom}</span>
                           </div>
                         </td>
@@ -392,7 +395,7 @@ export default function Dashboard() {
                             <div>
                               <span style={{ fontSize: 12, color: '#9CA3AF', fontWeight: 500 }}>Limite atteinte ({nbRelances}/{limite})</span>
                               {!isPremiumOrPro && (
-                                <p style={{ fontSize: 11, color: '#7C3AED', cursor: 'pointer', marginTop: 2, fontWeight: 600 }} onClick={() => window.location.href = '/pricing'}>
+                                <p style={{ fontSize: 11, color: '#a855f7', cursor: 'pointer', marginTop: 2, fontWeight: 600 }} onClick={() => window.location.href = '/souscrire'}>
                                   Passer Premium →
                                 </p>
                               )}
@@ -401,8 +404,8 @@ export default function Dashboard() {
                             <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                               <div>
                                 <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 2 }}>
-                                  <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#1DB954', animation: 'pulse 1.5s infinite' }} />
-                                  <span style={{ fontSize: 12, fontWeight: 600, color: '#15803d' }}>Active ({nbRelances}/{limite})</span>
+                                  <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#a855f7', animation: 'pulse 1.5s infinite' }} />
+                                  <span style={{ fontSize: 12, fontWeight: 600, color: '#7c3aed' }}>Active ({nbRelances}/{limite})</span>
                                 </div>
                                 {nextRelance && (
                                   <p style={{ fontSize: 11, color: '#9CA3AF', cursor: 'pointer', textDecoration: 'underline' }}
@@ -411,7 +414,7 @@ export default function Dashboard() {
                                   </p>
                                 )}
                               </div>
-                              <div className="toggle" style={{ background: '#1DB954' }} onClick={() => handleStopperSequence(f)}>
+                              <div className="toggle" style={{ background: '#a855f7' }} onClick={() => handleStopperSequence(f)}>
                                 <div className="toggle-knob" style={{ left: 18 }} />
                               </div>
                             </div>
@@ -427,6 +430,13 @@ export default function Dashboard() {
                             </div>
                           )}
                         </td>
+
+                        {/* SUPPRIMER */}
+                        <td style={{ padding: '14px 12px', textAlign: 'center' }} onClick={e => e.stopPropagation()}>
+                          <button className="btn-delete" onClick={() => setConfirmDelete(f.id)} title="Supprimer cette facture">
+                            ×
+                          </button>
+                        </td>
                       </tr>
                     )
                   })}
@@ -436,6 +446,36 @@ export default function Dashboard() {
           )}
         </div>
       </div>
+
+      {/* MODAL CONFIRMATION SUPPRESSION */}
+      {confirmDelete && factureToDelete && (
+        <div className="overlay" onClick={() => setConfirmDelete(null)}>
+          <div className="modal-confirm" onClick={e => e.stopPropagation()}>
+            <div style={{ width: 48, height: 48, background: '#FEF2F2', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px', fontSize: 22 }}>
+              🗑️
+            </div>
+            <h3 style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 800, fontSize: 18, color: '#111', textAlign: 'center', marginBottom: 8 }}>
+              Supprimer cette facture ?
+            </h3>
+            <p style={{ fontSize: 13, color: '#6B7280', textAlign: 'center', marginBottom: 6, lineHeight: 1.6 }}>
+              <strong>{factureToDelete.numero_facture || 'Facture'}</strong> — {factureToDelete.client_nom}
+            </p>
+            <p style={{ fontSize: 13, color: '#9CA3AF', textAlign: 'center', marginBottom: 24 }}>
+              Cette action est irréversible.
+            </p>
+            <div style={{ display: 'flex', gap: 10 }}>
+              <button onClick={() => setConfirmDelete(null)}
+                style={{ flex: 1, background: '#F3F4F6', color: '#374151', border: 'none', borderRadius: 10, padding: '12px', fontSize: 14, fontWeight: 600, cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}>
+                Annuler
+              </button>
+              <button onClick={() => handleSupprimerFacture(confirmDelete)}
+                style={{ flex: 1, background: '#EF4444', color: 'white', border: 'none', borderRadius: 10, padding: '12px', fontSize: 14, fontWeight: 600, cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}>
+                Supprimer
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* MODAL DETAIL FACTURE */}
       {selectedFacture && (
@@ -466,7 +506,7 @@ export default function Dashboard() {
               ))}
             </div>
             <button onClick={() => { setHistoryFacture(selectedFacture); setSelectedFacture(null) }}
-              style={{ marginTop: 20, width: '100%', background: '#F0FDF4', color: '#15803d', border: '1.5px solid #BBF7D0', borderRadius: 10, padding: '11px', fontSize: 14, fontWeight: 600, cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}>
+              style={{ marginTop: 20, width: '100%', background: '#F5F3FF', color: '#7c3aed', border: '1.5px solid #DDD6FE', borderRadius: 10, padding: '11px', fontSize: 14, fontWeight: 600, cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}>
               Voir l&apos;historique des relances →
             </button>
           </div>
@@ -486,8 +526,8 @@ export default function Dashboard() {
               </div>
               <button onClick={() => setHistoryFacture(null)} style={{ background: '#F3F4F6', border: 'none', borderRadius: 8, width: 32, height: 32, cursor: 'pointer', fontSize: 16, color: '#6B7280', fontFamily: 'Inter, sans-serif' }}>×</button>
             </div>
-            <div style={{ background: '#F0FDF4', border: '1px solid #BBF7D0', borderRadius: 10, padding: '12px 16px', marginBottom: 20, display: 'flex', gap: 20 }}>
-              <span style={{ fontSize: 13, color: '#15803d', fontWeight: 600 }}>{historyFacture.nombre_relances || 0} relances envoyées</span>
+            <div style={{ background: '#F5F3FF', border: '1px solid #DDD6FE', borderRadius: 10, padding: '12px 16px', marginBottom: 20, display: 'flex', gap: 20 }}>
+              <span style={{ fontSize: 13, color: '#7c3aed', fontWeight: 600 }}>{historyFacture.nombre_relances || 0} relances envoyées</span>
               <span style={{ fontSize: 13, color: '#9CA3AF' }}>Limite : {getLimiteRelances()}</span>
             </div>
             {getMockHistory(historyFacture).length === 0 ? (
@@ -495,13 +535,13 @@ export default function Dashboard() {
             ) : (
               getMockHistory(historyFacture).map((r, i) => (
                 <div key={i} className="history-row">
-                  <div style={{ width: 32, height: 32, background: r.type === 'sms' ? '#EFF6FF' : '#F0FDF4', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <div style={{ width: 32, height: 32, background: r.type === 'sms' ? '#F5F3FF' : '#F0FDF4', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                     <span style={{ fontSize: 14 }}>{r.type === 'sms' ? '📱' : '✉️'}</span>
                   </div>
                   <div style={{ flex: 1 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 2 }}>
                       <span style={{ fontSize: 13, fontWeight: 600, color: '#111' }}>Relance #{r.numero}</span>
-                      <span className="badge-type" style={{ background: r.type === 'sms' ? '#EFF6FF' : '#F0FDF4', color: r.type === 'sms' ? '#3B82F6' : '#16A34A' }}>
+                      <span className="badge-type" style={{ background: r.type === 'sms' ? '#F5F3FF' : '#F0FDF4', color: r.type === 'sms' ? '#7c3aed' : '#16A34A' }}>
                         {r.type === 'sms' ? 'SMS' : 'Email'}
                       </span>
                     </div>

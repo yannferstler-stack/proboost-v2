@@ -14,14 +14,12 @@ type FacturePreview = {
   date_echeance?: string
   montant_total?: string
   montant_restant?: string
-  // aliases CSV
   nom?: string
   client_nom?: string
   email?: string
   client_email?: string
   client_telephone?: string
   montant?: string
-  // PDF
   fichier?: string
   erreur?: boolean
   doublonWarning?: boolean
@@ -49,7 +47,6 @@ export default function ImporterPage() {
       const debutMois = new Date(); debutMois.setDate(1); debutMois.setHours(0, 0, 0, 0)
       const { count } = await supabase.from('factures').select('*', { count: 'exact', head: true }).eq('user_id', user.id).gte('created_at', debutMois.toISOString())
       setFacturesCeMois(count || 0)
-      // Charger tous les numéros de factures existants
       const { data: facturesExistantes } = await supabase.from('factures').select('numero_facture').eq('user_id', user.id)
       setNumerosExistants((facturesExistantes || []).map((f: any) => f.numero_facture).filter(Boolean))
     }
@@ -83,8 +80,7 @@ export default function ImporterPage() {
   const downloadTemplate = () => {
     const headers = 'raison_sociale,adresse,email_facturation,telephone,numero_facture,date_facture,date_echeance,montant_total,montant_restant'
     const example = 'SARL Dupont,12 rue de la Paix 75001 Paris,compta@dupont.fr,0600000000,FACT-2024-001,2024-11-01,2024-12-31,5000.00,3500.00'
-    const csv = headers + '\n' + example
-    const blob = new Blob([csv], { type: 'text/csv' })
+    const blob = new Blob([headers + '\n' + example], { type: 'text/csv' })
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = url; a.download = 'template-proboost.csv'; a.click()
@@ -95,22 +91,13 @@ export default function ImporterPage() {
     if (!user) return
     const { data } = await supabase.from('factures').select('*').eq('user_id', user.id).order('created_at', { ascending: false })
     if (!data) return
-
     const rows = [
       ['N° Facture', 'Raison sociale', 'Adresse', 'Email', 'Téléphone', 'Date facture', 'Échéance', 'Montant total', 'Montant restant', 'Statut', 'Relances effectuées', 'Canal relance', 'Séquence active', 'Prochaine relance'].join(','),
       ...(data as any[]).map(f => [
-        f.numero_facture || '',
-        f.client_nom || '',
-        f.adresse || '',
-        f.client_email || '',
-        f.client_telephone || '',
-        f.date_facture || '',
-        f.date_echeance || '',
-        f.montant_total || f.montant || '',
-        f.montant_restant || f.montant || '',
-        f.statut || '',
-        f.nombre_relances || 0,
-        f.canal_relance || 'email',
+        f.numero_facture || '', f.client_nom || '', f.adresse || '', f.client_email || '',
+        f.client_telephone || '', f.date_facture || '', f.date_echeance || '',
+        f.montant_total || f.montant || '', f.montant_restant || f.montant || '',
+        f.statut || '', f.nombre_relances || 0, f.canal_relance || 'email',
         f.sequence_active ? 'Oui' : 'Non',
         f.next_relance_date ? new Date(f.next_relance_date).toLocaleDateString('fr-FR') : '—',
       ].map(v => `"${v}"`).join(','))
@@ -136,17 +123,9 @@ export default function ImporterPage() {
         headers.forEach((h, i) => { obj[h] = values[i] })
         return obj
       }).filter(r => r.raison_sociale || r.nom || r.client_nom)
-
-      // Marquer les doublons
-      const marques = rows.map(r => ({
-        ...r,
-        doublonWarning: isDublon(r.numero_facture),
-      }))
-
+      const marques = rows.map(r => ({ ...r, doublonWarning: isDublon(r.numero_facture) }))
       const limitees = placesRestantes === Infinity ? marques : marques.slice(0, placesRestantes)
-      if (rows.length > limitees.length) {
-        setMessage(`Seulement ${placesRestantes} facture${placesRestantes > 1 ? 's' : ''} importable${placesRestantes > 1 ? 's' : ''} ce mois-ci (limite ${getLimiteFactures()} — plan ${profile?.plan || 'starter'})`)
-      }
+      if (rows.length > limitees.length) setMessage(`Seulement ${placesRestantes} facture${placesRestantes > 1 ? 's' : ''} importable${placesRestantes > 1 ? 's' : ''} ce mois-ci`)
       setFactures(limitees)
     }
     reader.readAsText(file)
@@ -173,16 +152,12 @@ export default function ImporterPage() {
   }
 
   const importerFactures = async () => {
-    if (limiteAtteinte) { setMessage(`Limite de ${getLimiteFactures()} factures/mois atteinte pour le plan ${profile?.plan || 'Starter'}`); return }
+    if (limiteAtteinte) { setMessage(`Limite de ${getLimiteFactures()} factures/mois atteinte`); return }
     const doublons = factures.filter(f => f.doublonWarning && !f.erreur)
-    if (doublons.length > 0) {
-      setMessage(`Impossible d'importer : ${doublons.length} numéro(s) de facture déjà existant(s) dans le système. Veuillez les corriger avant d'importer.`)
-      return
-    }
+    if (doublons.length > 0) { setMessage(`Impossible d'importer : ${doublons.length} numéro(s) de facture déjà existant(s). Corrigez avant d'importer.`); return }
     setImporting(true)
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) { window.location.href = '/login'; return }
-
     const valides = factures.filter(f => !f.erreur && !f.doublonWarning)
     const { error } = await supabase.from('factures').insert(
       valides.map(f => {
@@ -208,15 +183,14 @@ export default function ImporterPage() {
         }
       })
     )
-
     if (error) setMessage('Erreur : ' + error.message)
     else { setMessage('Factures importées avec succès !'); setTimeout(() => window.location.href = '/dashboard', 1500) }
     setImporting(false)
   }
 
   const resetMode = () => { setMode(null); setFactures([]); setFiles([]); setFileName(''); setMessage('') }
-
   const hasDublon = factures.some(f => f.doublonWarning && !f.erreur)
+  const pctMois = getLimiteFactures() === Infinity ? 0 : Math.min(100, (facturesCeMois / getLimiteFactures()) * 100)
 
   return (
     <>
@@ -224,17 +198,21 @@ export default function ImporterPage() {
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@700;800&display=swap');
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         body { background: #F4F6F8; }
-        .btn-main { transition: all 0.2s; }
-        .btn-main:hover:not(:disabled) { background: #18a34a !important; transform: translateY(-1px); }
-        .mode-card { transition: all 0.2s; cursor: pointer; border: 2px solid #E5E7EB; border-radius: 16px; padding: 28px; background: white; }
-        .mode-card:hover { border-color: #1DB954; box-shadow: 0 4px 20px rgba(29,185,84,0.12); }
-        .drop-zone { border: 2px dashed #E5E7EB; border-radius: 12px; padding: 40px; text-align: center; cursor: pointer; transition: all 0.2s; }
-        .drop-zone:hover { border-color: #1DB954; background: #F0FDF4; }
+        @keyframes fadeUp { from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)} }
         .sidebar-link { transition: all 0.15s; border-radius: 8px; cursor: pointer; }
-        .sidebar-link:hover { background: rgba(29,185,84,0.08) !important; color: #1DB954 !important; }
+        .sidebar-link:hover { background: rgba(168,85,247,0.08) !important; color: #a855f7 !important; }
+        .mode-card { transition: all 0.2s; cursor: pointer; border: 2px solid #E5E7EB; border-radius: 18px; padding: 28px; background: white; }
+        .mode-card:hover { border-color: #a855f7; box-shadow: 0 4px 24px rgba(168,85,247,0.12); transform: translateY(-2px); }
+        .mode-card.disabled { opacity: 0.5; cursor: not-allowed; }
+        .drop-zone { border: 2px dashed rgba(168,85,247,0.25); border-radius: 14px; padding: 40px; text-align: center; cursor: pointer; transition: all 0.2s; background: rgba(168,85,247,0.03); }
+        .drop-zone:hover { border-color: #a855f7; background: rgba(168,85,247,0.06); }
         .row-dublon { background: #FFF7ED !important; }
+        .btn-import { background: linear-gradient(135deg, #a855f7, #ec4899); color: white; border: none; border-radius: 12px; padding: 14px; font-size: 14px; font-weight: 700; cursor: pointer; font-family: Inter, sans-serif; width: 100%; transition: all 0.2s; box-shadow: 0 4px 16px rgba(168,85,247,0.35); }
+        .btn-import:hover:not(:disabled) { opacity: 0.9; transform: translateY(-1px); }
+        .btn-import:disabled { background: #F3F4F6; color: #9CA3AF; cursor: not-allowed; box-shadow: none; }
         .export-btn { transition: all 0.15s; }
-        .export-btn:hover { background: #F0FDF4 !important; border-color: #1DB954 !important; color: #15803d !important; }
+        .export-btn:hover { background: rgba(168,85,247,0.08) !important; border-color: #a855f7 !important; color: #7c3aed !important; }
+        .step-num { width: 32px; height: 32px; background: rgba(168,85,247,0.12); border: 1px solid rgba(168,85,247,0.25); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 700; color: #a855f7; font-size: 14px; flex-shrink: 0; }
       `}</style>
 
       <div style={{ display: 'flex', minHeight: '100vh', fontFamily: 'Inter, sans-serif', background: '#F4F6F8' }}>
@@ -242,7 +220,7 @@ export default function ImporterPage() {
         {/* SIDEBAR */}
         <aside style={{ width: 240, background: 'white', borderRight: '1px solid #EAECEF', display: 'flex', flexDirection: 'column', padding: '24px 16px', position: 'fixed', top: 0, left: 0, height: '100vh' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '0 8px', marginBottom: 36 }}>
-            <div style={{ width: 36, height: 36, background: 'linear-gradient(135deg, #1DB954, #15803d)', borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+            <div style={{ width: 36, height: 36, background: 'linear-gradient(135deg, #a855f7, #ec4899)', borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, boxShadow: '0 2px 10px rgba(168,85,247,0.35)' }}>
               <span style={{ color: 'white', fontFamily: 'Manrope, sans-serif', fontWeight: 800, fontSize: 16 }}>P</span>
             </div>
             <span onClick={() => window.location.href = '/'} style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 800, fontSize: 17, color: '#111', cursor: 'pointer' }}>ProBoost</span>
@@ -256,7 +234,7 @@ export default function ImporterPage() {
             ].map(item => (
               <div key={item.label} className="sidebar-link"
                 onClick={() => window.location.href = item.href}
-                style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 12px', color: item.active ? '#1DB954' : '#6B7280', fontSize: 14, fontWeight: item.active ? 600 : 400, background: item.active ? 'rgba(29,185,84,0.10)' : 'transparent' }}>
+                style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 12px', color: item.active ? '#a855f7' : '#6B7280', fontSize: 14, fontWeight: item.active ? 600 : 400, background: item.active ? 'rgba(168,85,247,0.08)' : 'transparent' }}>
                 {item.label}
               </div>
             ))}
@@ -267,8 +245,8 @@ export default function ImporterPage() {
         <div style={{ marginLeft: 240, flex: 1, padding: '32px 32px' }}>
 
           {/* HEADER */}
-          <div style={{ marginBottom: 28, display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+          <div style={{ marginBottom: 28, display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', animation: 'fadeUp 0.4s ease both' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
               {mode && (
                 <button onClick={resetMode} style={{ background: '#F3F4F6', border: 'none', borderRadius: 8, padding: '8px 12px', cursor: 'pointer', fontSize: 13, color: '#6B7280', fontFamily: 'Inter, sans-serif' }}>← Retour</button>
               )}
@@ -283,24 +261,21 @@ export default function ImporterPage() {
             </div>
 
             <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
-              {/* Bouton export CSV */}
               <button className="export-btn" onClick={exporterCSV}
                 style={{ background: 'white', color: '#374151', border: '1.5px solid #E5E7EB', borderRadius: 10, padding: '10px 18px', fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: 'Inter, sans-serif', whiteSpace: 'nowrap' }}>
                 Exporter tout en CSV
               </button>
-
-              {/* Compteur factures du mois */}
               {profile && (
                 <div style={{ background: limiteAtteinte ? '#FEF2F2' : 'white', border: `1px solid ${limiteAtteinte ? '#FECACA' : '#EAECEF'}`, borderRadius: 12, padding: '10px 16px', textAlign: 'right', minWidth: 140 }}>
                   <p style={{ fontSize: 11, color: '#9CA3AF', fontWeight: 600, textTransform: 'uppercase', marginBottom: 4 }}>Ce mois</p>
                   <p style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 800, fontSize: 18, color: limiteAtteinte ? '#DC2626' : '#111' }}>
                     {facturesCeMois}
                     {getLimiteFactures() !== Infinity && <span style={{ fontSize: 12, color: '#9CA3AF', fontWeight: 500 }}>/{getLimiteFactures()}</span>}
-                    {getLimiteFactures() === Infinity && <span style={{ fontSize: 12, color: '#16A34A', fontWeight: 500 }}> illimité</span>}
+                    {getLimiteFactures() === Infinity && <span style={{ fontSize: 12, color: '#a855f7', fontWeight: 500 }}> illimité</span>}
                   </p>
                   {getLimiteFactures() !== Infinity && (
                     <div style={{ marginTop: 6, height: 3, background: '#F3F4F6', borderRadius: 2, width: 100 }}>
-                      <div style={{ height: '100%', borderRadius: 2, width: `${Math.min(100, (facturesCeMois / getLimiteFactures()) * 100)}%`, background: limiteAtteinte ? '#DC2626' : '#1DB954', transition: 'width 0.3s' }} />
+                      <div style={{ height: '100%', borderRadius: 2, width: `${pctMois}%`, background: limiteAtteinte ? '#DC2626' : 'linear-gradient(135deg, #a855f7, #ec4899)', transition: 'width 0.3s' }} />
                     </div>
                   )}
                 </div>
@@ -312,78 +287,82 @@ export default function ImporterPage() {
           {limiteAtteinte && (
             <div style={{ background: '#FEF2F2', border: '1px solid #FECACA', borderRadius: 12, padding: '14px 20px', marginBottom: 20, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <p style={{ fontSize: 13, fontWeight: 600, color: '#DC2626' }}>Limite de {getLimiteFactures()} factures/mois atteinte — passez au plan supérieur pour continuer.</p>
-              <button onClick={() => window.location.href = '/pricing'} style={{ background: '#DC2626', color: 'white', border: 'none', borderRadius: 8, padding: '8px 16px', fontSize: 13, fontWeight: 700, cursor: 'pointer', fontFamily: 'Inter, sans-serif', whiteSpace: 'nowrap' }}>Changer de plan →</button>
+              <button onClick={() => window.location.href = '/souscrire'} style={{ background: '#DC2626', color: 'white', border: 'none', borderRadius: 8, padding: '8px 16px', fontSize: 13, fontWeight: 700, cursor: 'pointer', fontFamily: 'Inter, sans-serif', whiteSpace: 'nowrap' }}>Changer de plan →</button>
             </div>
           )}
 
           {!limiteAtteinte && getLimiteFactures() !== Infinity && facturesCeMois >= getLimiteFactures() * 0.8 && (
             <div style={{ background: '#FFF7ED', border: '1px solid #FED7AA', borderRadius: 12, padding: '12px 20px', marginBottom: 20, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <p style={{ fontSize: 13, color: '#EA580C' }}>Il vous reste <strong>{placesRestantes} facture{placesRestantes > 1 ? 's' : ''}</strong> importable{placesRestantes > 1 ? 's' : ''} ce mois-ci</p>
-              <button onClick={() => window.location.href = '/pricing'} style={{ background: '#EA580C', color: 'white', border: 'none', borderRadius: 8, padding: '7px 14px', fontSize: 12, fontWeight: 700, cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}>Upgrader →</button>
+              <button onClick={() => window.location.href = '/souscrire'} style={{ background: '#EA580C', color: 'white', border: 'none', borderRadius: 8, padding: '7px 14px', fontSize: 12, fontWeight: 700, cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}>Upgrader →</button>
             </div>
           )}
 
           {hasDublon && (
             <div style={{ background: '#FFF7ED', border: '1px solid #FED7AA', borderRadius: 12, padding: '14px 20px', marginBottom: 20 }}>
               <p style={{ fontSize: 13, fontWeight: 700, color: '#EA580C', marginBottom: 4 }}>Numéros de facture en doublon détectés</p>
-              <p style={{ fontSize: 13, color: '#92400E' }}>Les lignes surlignées en orange contiennent un numéro de facture déjà présent dans le système. Il est impossible de les importer. Corrigez le fichier source avant d'importer.</p>
+              <p style={{ fontSize: 13, color: '#92400E' }}>Les lignes surlignées en orange contiennent un numéro déjà présent. Corrigez le fichier avant d'importer.</p>
             </div>
           )}
 
           {mode !== null && !limiteAtteinte && (
-            <div style={{ background: '#F0FDF4', border: '1px solid #BBF7D0', borderRadius: 12, padding: '12px 20px', marginBottom: 20 }}>
-              <p style={{ fontSize: 13, color: '#15803d', fontWeight: 500 }}>Après l'import, activez les relances depuis le tableau de bord pour chaque facture.</p>
+            <div style={{ background: 'rgba(168,85,247,0.06)', border: '1px solid rgba(168,85,247,0.20)', borderRadius: 12, padding: '12px 20px', marginBottom: 20 }}>
+              <p style={{ fontSize: 13, color: '#7c3aed', fontWeight: 500 }}>Après l'import, activez les relances depuis le tableau de bord pour chaque facture.</p>
             </div>
           )}
 
           {/* CHOIX MODE */}
           {mode === null && (
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, maxWidth: 680 }}>
-              <div className="mode-card" onClick={() => !limiteAtteinte && setMode('csv')} style={{ opacity: limiteAtteinte ? 0.5 : 1, cursor: limiteAtteinte ? 'not-allowed' : 'pointer' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, maxWidth: 680, animation: 'fadeUp 0.4s ease 0.1s both' }}>
+              <div className={`mode-card${limiteAtteinte ? ' disabled' : ''}`} onClick={() => !limiteAtteinte && setMode('csv')}>
+                <div style={{ width: 48, height: 48, background: 'rgba(168,85,247,0.10)', border: '1px solid rgba(168,85,247,0.25)', borderRadius: 14, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 16 }}>
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#a855f7" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                </div>
                 <h3 style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 700, fontSize: 18, color: '#111', marginBottom: 8 }}>Import CSV</h3>
-                <p style={{ fontSize: 14, color: '#6B7280', lineHeight: 1.6 }}>Téléchargez notre template, remplissez-le et importez-le en un clic.</p>
-                <div style={{ marginTop: 16, display: 'inline-flex', background: '#EFF6FF', borderRadius: 8, padding: '5px 12px' }}>
-                  <span style={{ fontSize: 12, color: '#3B82F6', fontWeight: 600 }}>Simple et rapide</span>
-                </div>
+                <p style={{ fontSize: 14, color: '#6B7280', lineHeight: 1.6, marginBottom: 16 }}>Téléchargez notre template, remplissez-le et importez-le en un clic.</p>
+                <span style={{ fontSize: 12, background: 'rgba(168,85,247,0.10)', color: '#7c3aed', borderRadius: 8, padding: '4px 12px', fontWeight: 600 }}>Simple et rapide</span>
               </div>
-              <div className="mode-card" onClick={() => !limiteAtteinte && setMode('pdf')} style={{ opacity: limiteAtteinte ? 0.5 : 1, cursor: limiteAtteinte ? 'not-allowed' : 'pointer' }}>
-                <h3 style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 700, fontSize: 18, color: '#111', marginBottom: 8 }}>Import PDF par IA</h3>
-                <p style={{ fontSize: 14, color: '#6B7280', lineHeight: 1.6 }}>Déposez vos factures PDF et l'IA détecte automatiquement toutes les informations.</p>
-                <div style={{ marginTop: 16, display: 'inline-flex', background: '#F0FDF4', borderRadius: 8, padding: '5px 12px' }}>
-                  <span style={{ fontSize: 12, color: '#16A34A', fontWeight: 600 }}>Zéro saisie manuelle</span>
+              <div className={`mode-card${limiteAtteinte ? ' disabled' : ''}`} onClick={() => !limiteAtteinte && setMode('pdf')}>
+                <div style={{ width: 48, height: 48, background: 'rgba(236,72,153,0.10)', border: '1px solid rgba(236,72,153,0.25)', borderRadius: 14, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 16 }}>
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ec4899" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
                 </div>
+                <h3 style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 700, fontSize: 18, color: '#111', marginBottom: 8 }}>Import PDF par IA</h3>
+                <p style={{ fontSize: 14, color: '#6B7280', lineHeight: 1.6, marginBottom: 16 }}>Déposez vos factures PDF et l'IA détecte automatiquement toutes les informations.</p>
+                <span style={{ fontSize: 12, background: 'rgba(236,72,153,0.10)', color: '#be185d', borderRadius: 8, padding: '4px 12px', fontWeight: 600 }}>Zéro saisie manuelle</span>
               </div>
             </div>
           )}
 
           {/* CSV */}
           {mode === 'csv' && (
-            <div style={{ maxWidth: 960 }}>
+            <div style={{ maxWidth: 960, animation: 'fadeUp 0.3s ease both' }}>
+              {/* Étape 1 */}
               <div style={{ background: 'white', borderRadius: 14, padding: '20px 24px', border: '1px solid #EAECEF', marginBottom: 12, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-                  <div style={{ width: 32, height: 32, background: '#EFF6FF', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, color: '#3B82F6', fontSize: 14 }}>1</div>
+                  <div className="step-num">1</div>
                   <div>
                     <p style={{ fontWeight: 600, color: '#111', marginBottom: 2 }}>Téléchargez le template CSV</p>
                     <p style={{ fontSize: 12, color: '#9CA3AF' }}>Colonnes : raison sociale, adresse, email, téléphone, n° facture, dates, montants</p>
                   </div>
                 </div>
-                <button onClick={downloadTemplate} style={{ background: 'white', color: '#3B82F6', border: '1.5px solid #BFDBFE', borderRadius: 10, padding: '9px 18px', fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: 'Inter, sans-serif', whiteSpace: 'nowrap' }}>
+                <button onClick={downloadTemplate} style={{ background: 'rgba(168,85,247,0.08)', color: '#7c3aed', border: '1.5px solid rgba(168,85,247,0.25)', borderRadius: 10, padding: '9px 18px', fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: 'Inter, sans-serif', whiteSpace: 'nowrap', transition: 'all 0.15s' }}>
                   Télécharger le template
                 </button>
               </div>
 
+              {/* Étape 2 */}
               <div style={{ background: 'white', borderRadius: 14, padding: '20px 24px', border: '1px solid #EAECEF', marginBottom: 20, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-                  <div style={{ width: 32, height: 32, background: '#EFF6FF', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, color: '#3B82F6', fontSize: 14 }}>2</div>
+                  <div className="step-num">2</div>
                   <div>
                     <p style={{ fontWeight: 600, color: '#111', marginBottom: 2 }}>Importez votre fichier rempli</p>
                     <p style={{ fontSize: 12, color: '#9CA3AF' }}>
-                      Format CSV uniquement {fileName && <span style={{ color: '#1DB954' }}>— {fileName} ✓</span>}
+                      Format CSV uniquement {fileName && <span style={{ color: '#a855f7', fontWeight: 600 }}>— {fileName} ✓</span>}
                       {placesRestantes !== Infinity && <span style={{ color: '#EA580C' }}> — {placesRestantes} place{placesRestantes > 1 ? 's' : ''} restante{placesRestantes > 1 ? 's' : ''}</span>}
                     </p>
                   </div>
                 </div>
-                <label style={{ background: '#F9FAFB', color: '#111', border: '1.5px solid #E5E7EB', borderRadius: 10, padding: '9px 18px', fontSize: 13, fontWeight: 600, cursor: 'pointer', whiteSpace: 'nowrap' }}>
+                <label style={{ background: 'linear-gradient(135deg, #a855f7, #ec4899)', color: 'white', border: 'none', borderRadius: 10, padding: '9px 18px', fontSize: 13, fontWeight: 600, cursor: 'pointer', whiteSpace: 'nowrap', boxShadow: '0 2px 10px rgba(168,85,247,0.30)' }}>
                   Choisir un fichier
                   <input type="file" accept=".csv" onChange={handleCSV} style={{ display: 'none' }} />
                 </label>
@@ -392,7 +371,7 @@ export default function ImporterPage() {
               {factures.length > 0 && (
                 <div style={{ background: 'white', borderRadius: 14, overflow: 'hidden', border: '1px solid #EAECEF' }}>
                   <div style={{ padding: '18px 24px', borderBottom: '1px solid #EAECEF', display: 'flex', alignItems: 'center', gap: 14 }}>
-                    <div style={{ width: 32, height: 32, background: '#EFF6FF', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, color: '#3B82F6', fontSize: 14 }}>3</div>
+                    <div className="step-num">3</div>
                     <div>
                       <p style={{ fontWeight: 600, color: '#111' }}>Vérifiez avant d'importer</p>
                       <p style={{ fontSize: 12, color: '#9CA3AF' }}>{factures.length} factures détectées{hasDublon ? ` — ${factures.filter(f => f.doublonWarning).length} doublon(s)` : ''}</p>
@@ -418,24 +397,18 @@ export default function ImporterPage() {
                               <td style={{ padding: '12px 14px', fontSize: 12, color: '#6B7280', whiteSpace: 'nowrap' }}>{f.email_facturation || f.email || f.client_email || '—'}</td>
                               <td style={{ padding: '12px 14px', fontSize: 12, color: '#6B7280', whiteSpace: 'nowrap' }}>{f.telephone || f.client_telephone || '—'}</td>
                               <td style={{ padding: '12px 14px', fontSize: 12, whiteSpace: 'nowrap' }}>
-                                {f.doublonWarning ? (
-                                  <span style={{ color: '#EA580C', fontWeight: 700 }}>
-                                    {f.numero_facture} — doublon
-                                  </span>
-                                ) : (
-                                  <span style={{ color: '#111', fontWeight: 600 }}>{f.numero_facture || '—'}</span>
-                                )}
+                                {f.doublonWarning
+                                  ? <span style={{ color: '#EA580C', fontWeight: 700 }}>{f.numero_facture} — doublon</span>
+                                  : <span style={{ color: '#111', fontWeight: 600 }}>{f.numero_facture || '—'}</span>}
                               </td>
                               <td style={{ padding: '12px 14px', fontSize: 12, color: '#6B7280', whiteSpace: 'nowrap' }}>{f.date_facture || '—'}</td>
                               <td style={{ padding: '12px 14px', fontSize: 12, color: '#6B7280', whiteSpace: 'nowrap' }}>{f.date_echeance || '—'}</td>
                               <td style={{ padding: '12px 14px', fontWeight: 700, color: '#111', fontSize: 13, whiteSpace: 'nowrap' }}>{f.montant_total ? `${parseFloat(f.montant_total).toFixed(2)} €` : '—'}</td>
-                              <td style={{ padding: '12px 14px', fontWeight: 700, color: '#1DB954', fontSize: 13, whiteSpace: 'nowrap' }}>{f.montant_restant ? `${parseFloat(f.montant_restant).toFixed(2)} €` : '—'}</td>
+                              <td style={{ padding: '12px 14px', fontWeight: 700, color: '#a855f7', fontSize: 13, whiteSpace: 'nowrap' }}>{f.montant_restant ? `${parseFloat(f.montant_restant).toFixed(2)} €` : '—'}</td>
                               <td style={{ padding: '12px 14px', whiteSpace: 'nowrap' }}>
-                                {firstRelance ? (
-                                  <span style={{ fontSize: 12, fontWeight: 600, color: isToday ? '#DC2626' : '#16A34A' }}>
-                                    {isToday ? "Aujourd'hui" : firstRelance.toLocaleDateString('fr-FR')}
-                                  </span>
-                                ) : <span style={{ color: '#9CA3AF' }}>—</span>}
+                                {firstRelance
+                                  ? <span style={{ fontSize: 12, fontWeight: 600, color: isToday ? '#DC2626' : '#16A34A' }}>{isToday ? "Aujourd'hui" : firstRelance.toLocaleDateString('fr-FR')}</span>
+                                  : <span style={{ color: '#9CA3AF' }}>—</span>}
                               </td>
                             </tr>
                           )
@@ -445,13 +418,13 @@ export default function ImporterPage() {
                   </div>
                   <div style={{ padding: '20px 24px', borderTop: '1px solid #EAECEF' }}>
                     {message && (
-                      <div style={{ background: message.includes('succès') ? '#F0FDF4' : '#FEF2F2', border: `1px solid ${message.includes('succès') ? '#BBF7D0' : '#FECACA'}`, borderRadius: 10, padding: '12px 16px', marginBottom: 14 }}>
-                        <p style={{ color: message.includes('succès') ? '#15803d' : '#DC2626', fontSize: 13, fontWeight: 600 }}>{message}</p>
+                      <div style={{ background: message.includes('succès') ? 'rgba(168,85,247,0.08)' : '#FEF2F2', border: `1px solid ${message.includes('succès') ? 'rgba(168,85,247,0.25)' : '#FECACA'}`, borderRadius: 10, padding: '12px 16px', marginBottom: 14 }}>
+                        <p style={{ color: message.includes('succès') ? '#7c3aed' : '#DC2626', fontSize: 13, fontWeight: 600 }}>{message}</p>
                       </div>
                     )}
-                    <button className="btn-main" onClick={importerFactures} disabled={importing || limiteAtteinte || hasDublon}
-                      style={{ background: (limiteAtteinte || hasDublon) ? '#F3F4F6' : '#1DB954', color: (limiteAtteinte || hasDublon) ? '#9CA3AF' : 'white', border: 'none', borderRadius: 10, padding: '13px', fontSize: 14, fontWeight: 700, cursor: (limiteAtteinte || hasDublon) ? 'not-allowed' : 'pointer', fontFamily: 'Inter, sans-serif', width: '100%' }}>
-                      {importing ? 'Import en cours...' : hasDublon ? 'Corrigez les doublons avant d\'importer' : limiteAtteinte ? 'Limite atteinte' : `Importer ${factures.filter(f => !f.doublonWarning).length} facture${factures.filter(f => !f.doublonWarning).length > 1 ? 's' : ''}`}
+                    <button className="btn-import" onClick={importerFactures} disabled={importing || limiteAtteinte || hasDublon}
+                      style={{ background: (limiteAtteinte || hasDublon) ? undefined : undefined }}>
+                      {importing ? 'Import en cours...' : hasDublon ? "Corrigez les doublons avant d'importer" : limiteAtteinte ? 'Limite atteinte' : `Importer ${factures.filter(f => !f.doublonWarning).length} facture${factures.filter(f => !f.doublonWarning).length > 1 ? 's' : ''}`}
                     </button>
                   </div>
                 </div>
@@ -461,23 +434,26 @@ export default function ImporterPage() {
 
           {/* PDF */}
           {mode === 'pdf' && (
-            <div style={{ maxWidth: 800 }}>
+            <div style={{ maxWidth: 800, animation: 'fadeUp 0.3s ease both' }}>
               <div style={{ background: 'white', borderRadius: 14, padding: 28, border: '1px solid #EAECEF', marginBottom: 20 }}>
                 <label className="drop-zone" style={{ display: 'block' }}>
                   <input type="file" accept=".pdf" multiple onChange={(e) => setFiles(Array.from(e.target.files || []))} style={{ display: 'none' }} />
-                  <p style={{ fontWeight: 600, color: '#111', fontSize: 15, marginBottom: 8 }}>Cliquez ou glissez vos PDFs ici</p>
+                  <div style={{ width: 52, height: 52, background: 'rgba(236,72,153,0.10)', border: '1px solid rgba(236,72,153,0.25)', borderRadius: 14, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 14px' }}>
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ec4899" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                  </div>
+                  <p style={{ fontWeight: 600, color: '#111', fontSize: 15, marginBottom: 6 }}>Cliquez ou glissez vos PDFs ici</p>
                   <p style={{ color: '#9CA3AF', fontSize: 13 }}>Plusieurs fichiers acceptés — l'IA lit chaque facture automatiquement</p>
                 </label>
                 {files.length > 0 && (
                   <div style={{ marginTop: 20 }}>
                     <p style={{ fontSize: 13, color: '#6B7280', marginBottom: 10 }}>{files.length} fichier{files.length > 1 ? 's' : ''} sélectionné{files.length > 1 ? 's' : ''}</p>
                     {files.map((f, i) => (
-                      <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '8px 12px', background: '#F9FAFB', borderRadius: 8, marginBottom: 6 }}>
+                      <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 12px', background: 'rgba(168,85,247,0.05)', border: '1px solid rgba(168,85,247,0.15)', borderRadius: 8, marginBottom: 6 }}>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#a855f7" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
                         <span style={{ fontSize: 13, color: '#111' }}>{f.name}</span>
                       </div>
                     ))}
-                    <button className="btn-main" onClick={analyserPDFs} disabled={loading}
-                      style={{ background: '#1DB954', color: 'white', border: 'none', borderRadius: 10, padding: '12px 24px', fontSize: 14, fontWeight: 600, cursor: 'pointer', marginTop: 16, fontFamily: 'Inter, sans-serif', width: '100%' }}>
+                    <button className="btn-import" onClick={analyserPDFs} disabled={loading} style={{ marginTop: 16 }}>
                       {loading ? 'Analyse en cours...' : `Analyser ${files.length} PDF${files.length > 1 ? 's' : ''} avec l'IA`}
                     </button>
                   </div>
@@ -506,7 +482,7 @@ export default function ImporterPage() {
                             {f.doublonWarning ? <span style={{ color: '#EA580C', fontWeight: 700 }}>{f.numero_facture} — doublon</span> : <span style={{ color: '#111' }}>{f.numero_facture || '—'}</span>}
                           </td>
                           <td style={{ padding: '12px 16px', fontWeight: 700, color: '#111', fontSize: 13 }}>{f.montant_total ? `${f.montant_total} €` : f.montant ? `${f.montant} €` : '—'}</td>
-                          <td style={{ padding: '12px 16px', fontWeight: 700, color: '#1DB954', fontSize: 13 }}>{f.montant_restant ? `${f.montant_restant} €` : '—'}</td>
+                          <td style={{ padding: '12px 16px', fontWeight: 700, color: '#a855f7', fontSize: 13 }}>{f.montant_restant ? `${f.montant_restant} €` : '—'}</td>
                           <td style={{ padding: '12px 16px', fontSize: 12, color: '#6B7280' }}>{f.date_echeance || '—'}</td>
                         </tr>
                       ))}
@@ -514,12 +490,11 @@ export default function ImporterPage() {
                   </table>
                   <div style={{ padding: '20px 24px', borderTop: '1px solid #EAECEF' }}>
                     {message && (
-                      <div style={{ background: message.includes('succès') ? '#F0FDF4' : '#FEF2F2', border: `1px solid ${message.includes('succès') ? '#BBF7D0' : '#FECACA'}`, borderRadius: 10, padding: '12px 16px', marginBottom: 14 }}>
-                        <p style={{ color: message.includes('succès') ? '#15803d' : '#DC2626', fontSize: 13, fontWeight: 600 }}>{message}</p>
+                      <div style={{ background: message.includes('succès') ? 'rgba(168,85,247,0.08)' : '#FEF2F2', border: `1px solid ${message.includes('succès') ? 'rgba(168,85,247,0.25)' : '#FECACA'}`, borderRadius: 10, padding: '12px 16px', marginBottom: 14 }}>
+                        <p style={{ color: message.includes('succès') ? '#7c3aed' : '#DC2626', fontSize: 13, fontWeight: 600 }}>{message}</p>
                       </div>
                     )}
-                    <button className="btn-main" onClick={importerFactures} disabled={importing || limiteAtteinte || hasDublon}
-                      style={{ background: (limiteAtteinte || hasDublon) ? '#F3F4F6' : '#1DB954', color: (limiteAtteinte || hasDublon) ? '#9CA3AF' : 'white', border: 'none', borderRadius: 10, padding: '13px', fontSize: 14, fontWeight: 700, cursor: (limiteAtteinte || hasDublon) ? 'not-allowed' : 'pointer', fontFamily: 'Inter, sans-serif', width: '100%' }}>
+                    <button className="btn-import" onClick={importerFactures} disabled={importing || limiteAtteinte || hasDublon}>
                       {importing ? 'Import en cours...' : hasDublon ? "Corrigez les doublons avant d'importer" : limiteAtteinte ? 'Limite atteinte' : `Importer ${factures.filter(f => !f.erreur && !f.doublonWarning).length} facture${factures.filter(f => !f.erreur && !f.doublonWarning).length > 1 ? 's' : ''}`}
                     </button>
                   </div>
