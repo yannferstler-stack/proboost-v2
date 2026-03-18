@@ -26,8 +26,8 @@ const CAROUSEL_IMAGES = [
   '/carousel/img1.jpg',
   '/carousel/img2.jpg',
   '/carousel/img3.jpg',
-  '/carousel/img6.jpg',
-  '/carousel/img7.jpg',
+  '/carousel/img4.jpg',
+  '/carousel/img5.jpg',
 ]
 
 const PLANS = [
@@ -79,13 +79,13 @@ const PLANS = [
 ]
 
 function IconImport() {
-  return <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#c084fc" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+  return <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#c084fc" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" /></svg>
 }
 function IconBolt() {
-  return <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ec4899" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+  return <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ec4899" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" /></svg>
 }
 function IconEuro() {
-  return <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#a855f7" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 10h12M4 14h12M19.5 6.5A7.5 7.5 0 1 0 19.5 17.5"/></svg>
+  return <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#a855f7" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 10h12M4 14h12M19.5 6.5A7.5 7.5 0 1 0 19.5 17.5" /></svg>
 }
 
 export default function Home() {
@@ -156,7 +156,6 @@ export default function Home() {
         .slide-dot { width: 8px; height: 8px; border-radius: 50%; border: none; cursor: pointer; transition: all 0.3s; padding: 0; }
         .mobile-menu { animation: slideDown 0.2s ease; }
         .hamburger { display: none; background: none; border: none; cursor: pointer; padding: 4px; }
-
         @media (max-width: 768px) {
           .nav-links { display: none !important; }
           .hamburger { display: flex !important; flex-direction: column; gap: 5px; }
@@ -164,7 +163,6 @@ export default function Home() {
           .plans-grid { grid-template-columns: 1fr !important; }
           .stats-grid { grid-template-columns: 1fr !important; }
           .footer-inner { flex-direction: column !important; gap: 16px !important; align-items: center !important; text-align: center !important; }
-          .invoicing-inner { flex-direction: column !important; gap: 16px !important; }
           .invoicing-lire { display: none !important; }
         }
         @media (max-width: 480px) {
@@ -178,43 +176,34 @@ export default function Home() {
         {/* NAV */}
         <nav style={{
           position: 'fixed', top: 0, left: 0, right: 0, zIndex: 300,
-          height: 72, display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-          padding: '0 20px',
           background: scrollY > 20 || menuOpen ? 'rgba(13,6,32,0.95)' : 'transparent',
           backdropFilter: scrollY > 20 || menuOpen ? 'blur(20px)' : 'none',
           borderBottom: scrollY > 20 ? '1px solid rgba(255,255,255,0.06)' : 'none',
-          transition: 'all 0.3s', flexWrap: 'wrap',
+          transition: 'all 0.3s',
         }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
+          <div style={{ height: 72, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 20px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }} onClick={() => router.push('/')}>
               <img src="/logo.png" style={{ width: 40, height: 40, objectFit: 'contain' }} />
               <span style={{ fontFamily: 'Manrope', fontWeight: 800, fontSize: 20, color: 'white' }}>ProBoost</span>
             </div>
-
-            {/* Desktop nav */}
             <div className="nav-links" style={{ display: 'flex', alignItems: 'center', gap: 28 }}>
               <span className="nav-a" onClick={() => router.push('/blog')} style={{ fontSize: 14, fontWeight: 500 }}>Blog</span>
               <span className="nav-a" onClick={() => router.push('/comment-ca-marche')} style={{ fontSize: 14, fontWeight: 500 }}>Comment ça marche ?</span>
               <span className="nav-a" onClick={() => router.push('/nous-connaitre')} style={{ fontSize: 14, fontWeight: 500 }}>Nous connaître</span>
               <button className="btn-connexion" onClick={() => router.push('/login')}>
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" /><polyline points="10 17 15 12 10 7" /><line x1="15" y1="12" x2="3" y2="12" /></svg>
                 Connexion
               </button>
             </div>
-
-            {/* Hamburger */}
             <button className="hamburger" onClick={() => setMenuOpen(o => !o)} aria-label="Menu">
-              {menuOpen ? (
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-              ) : (
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-              )}
+              {menuOpen
+                ? <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
+                : <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round"><line x1="3" y1="6" x2="21" y2="6" /><line x1="3" y1="12" x2="21" y2="12" /><line x1="3" y1="18" x2="21" y2="18" /></svg>
+              }
             </button>
           </div>
-
-          {/* Mobile menu dropdown */}
           {menuOpen && (
-            <div className="mobile-menu" style={{ width: '100%', paddingBottom: 20, paddingTop: 8, borderTop: '1px solid rgba(255,255,255,0.08)', marginTop: 8, display: 'flex', flexDirection: 'column', gap: 4 }}>
+            <div className="mobile-menu" style={{ padding: '8px 20px 20px', borderTop: '1px solid rgba(255,255,255,0.08)', display: 'flex', flexDirection: 'column', gap: 4 }}>
               {[
                 { label: 'Blog', href: '/blog' },
                 { label: 'Comment ça marche ?', href: '/comment-ca-marche' },
@@ -226,7 +215,7 @@ export default function Home() {
                 </button>
               ))}
               <button className="btn-connexion" onClick={() => { router.push('/login'); setMenuOpen(false) }} style={{ marginTop: 8, justifyContent: 'center' }}>
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" /><polyline points="10 17 15 12 10 7" /><line x1="15" y1="12" x2="3" y2="12" /></svg>
                 Connexion
               </button>
             </div>
@@ -251,19 +240,17 @@ export default function Home() {
                 nous gérons vos impayés.
               </span>
             </h1>
-
             <p style={{ fontSize: isMobile ? 15 : 18, color: 'rgba(255,255,255,0.75)', marginBottom: 36, fontWeight: 300, textShadow: '0 1px 8px rgba(0,0,0,0.5)', maxWidth: 520 }}>
               Nous vous aidons à piloter votre trésorerie en toute simplicité.
             </p>
-
             <div className="hero-buttons" style={{ display: 'flex', gap: 12, justifyContent: 'center', alignItems: 'center', flexWrap: 'wrap', width: isMobile ? '100%' : 'auto', padding: isMobile ? '0 4px' : 0 }}>
               <button className="btn-primary" onClick={() => router.push('/souscrire')}>
                 Souscrire un abonnement
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" /></svg>
               </button>
               <button className="btn-secondary" onClick={() => router.push('/comment-ca-marche')}>
                 Comment ça marche ?
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" /></svg>
               </button>
             </div>
           </div>
@@ -305,10 +292,10 @@ export default function Home() {
         {/* ENCART E-INVOICING */}
         <section style={{ padding: isMobile ? '32px 20px 0' : '48px 40px 0' }}>
           <Reveal>
-            <div className="invoicing-card" onClick={() => router.push('/blog/facturation-electronique')}
+            <div className="invoicing-card" onClick={() => router.push('/blog')}
               style={{ maxWidth: 960, margin: '0 auto', background: 'rgba(168,85,247,0.08)', border: '1px solid rgba(168,85,247,0.20)', borderRadius: 20, padding: isMobile ? '20px' : '28px 36px', display: 'flex', alignItems: isMobile ? 'flex-start' : 'center', gap: 16 }}>
               <div style={{ width: 48, height: 48, background: 'linear-gradient(135deg, #a855f7, #ec4899)', borderRadius: 14, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z" /><polyline points="13 2 13 9 20 9" /></svg>
               </div>
               <div style={{ flex: 1 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6, flexWrap: 'wrap' }}>
@@ -334,7 +321,6 @@ export default function Home() {
           <div style={{ maxWidth: 960, margin: '0 auto' }}>
             <Reveal>
               <div style={{ marginBottom: isMobile ? 40 : 64, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12 }}>
-                <span style={{ fontSize: 11, color: '#a855f7', fontWeight: 700, letterSpacing: '3px', textTransform: 'uppercase' }}>Processus</span>
                 <h2 style={{ fontFamily: 'Manrope', fontWeight: 900, fontSize: isMobile ? 28 : 44, color: 'white', letterSpacing: '-1px', textAlign: 'center' }}>3 étapes pour récupérer vos impayés.</h2>
               </div>
             </Reveal>
@@ -418,7 +404,7 @@ export default function Home() {
             <div style={{ maxWidth: 680, margin: '0 auto', textAlign: 'center', position: 'relative', zIndex: 1 }}>
               <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.25)', fontWeight: 600, letterSpacing: '3px', textTransform: 'uppercase', marginBottom: 20 }}>Notre engagement</p>
               <h2 style={{ fontFamily: 'Manrope', fontWeight: 900, fontSize: 'clamp(26px, 4vw, 48px)', color: 'white', letterSpacing: '-1.5px', lineHeight: 1.15, marginBottom: 20 }}>
-                Vous n&apos;aurez plus à courir après{!isMobile && <br/>}
+                Vous n&apos;aurez plus à courir après{!isMobile && <br />}
                 {' '}<span style={{ background: 'linear-gradient(135deg, #a855f7, #ec4899)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>le temps et l&apos;argent.</span>
               </h2>
               <p style={{ fontSize: isMobile ? 15 : 17, color: 'rgba(255,255,255,0.45)', lineHeight: 1.8, fontWeight: 300, maxWidth: 480, margin: '0 auto 32px' }}>
@@ -426,7 +412,7 @@ export default function Home() {
               </p>
               <button className="btn-primary" onClick={() => router.push('/souscrire')} style={{ fontSize: 15, padding: '14px 32px' }}>
                 Souscrire maintenant
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" /></svg>
               </button>
             </div>
           </Reveal>

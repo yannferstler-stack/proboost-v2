@@ -1,6 +1,6 @@
 'use client'
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 const ARTICLES = [
   {
@@ -91,6 +91,15 @@ const ARTICLES = [
 export default function BlogPage() {
   const router = useRouter()
   const [selected, setSelected] = useState<string | null>(null)
+  const [isMobile, setIsMobile] = useState(false)
+  const [menuOpen, setMenuOpen] = useState(false)
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768)
+    check()
+    window.addEventListener('resize', check)
+    return () => window.removeEventListener('resize', check)
+  }, [])
 
   const article = ARTICLES.find(a => a.id === selected)
 
@@ -101,6 +110,7 @@ export default function BlogPage() {
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         body { background: #0d0620; }
         @keyframes fadeUp { from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)} }
+        @keyframes slideDown { from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)} }
         .card-article { transition: all 0.2s; border: 1px solid rgba(255,255,255,0.08); cursor: pointer; }
         .card-article:hover { border-color: rgba(168,85,247,0.4); transform: translateY(-3px); box-shadow: 0 12px 40px rgba(168,85,247,0.15) !important; }
         .nav-a { cursor: pointer; transition: color 0.15s; color: rgba(255,255,255,0.6); }
@@ -109,72 +119,108 @@ export default function BlogPage() {
         .btn-back:hover { background: rgba(168,85,247,0.10); border-color: rgba(168,85,247,0.3); color: #c084fc; }
         .btn-cta { background: linear-gradient(135deg, #a855f7, #ec4899); color: white; border: none; border-radius: 12px; padding: 14px 28px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: Inter, sans-serif; transition: all 0.2s; box-shadow: 0 4px 20px rgba(168,85,247,0.35); display: inline-flex; align-items: center; gap: 8px; }
         .btn-cta:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(168,85,247,0.50); }
+        .hamburger { display: none; background: none; border: none; cursor: pointer; padding: 4px; }
+        .nav-links { display: flex; align-items: center; gap: 28px; }
+        .mobile-menu { animation: slideDown 0.2s ease; }
+        @media (max-width: 768px) {
+          .nav-links { display: none !important; }
+          .hamburger { display: flex !important; }
+          .articles-grid { grid-template-columns: 1fr !important; }
+          .featured-card { flex-direction: column !important; padding: 24px !important; }
+          .featured-icon { display: none !important; }
+        }
       `}</style>
 
       <div style={{ minHeight: '100vh', background: 'linear-gradient(145deg, #0d0620 0%, #1a0533 35%, #0f0a2e 70%, #1a0320 100%)', fontFamily: 'Inter, sans-serif', color: 'white' }}>
 
         {/* NAV */}
-        <nav style={{ height: 72, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 40px', borderBottom: '1px solid rgba(255,255,255,0.06)', position: 'sticky', top: 0, zIndex: 100, background: 'rgba(13,6,32,0.90)', backdropFilter: 'blur(20px)' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }} onClick={() => router.push('/')}>
-            <img src="/logo.png" style={{ width: 36, height: 36, objectFit: 'contain' }} />
-            <span style={{ fontFamily: 'Manrope', fontWeight: 800, fontSize: 18, color: 'white' }}>ProBoost</span>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 28 }}>
-            <span className="nav-a" onClick={() => { setSelected(null); router.push('/') }} style={{ fontSize: 14 }}>Accueil</span>
-            <span className="nav-a" onClick={() => setSelected(null)} style={{ fontSize: 14, color: '#c084fc', fontWeight: 600 }}>Blog</span>
-            <button onClick={() => router.push('/login')} style={{ background: 'linear-gradient(135deg, #a855f7, #ec4899)', color: 'white', border: 'none', borderRadius: 10, padding: '9px 20px', fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}>
-              Connexion
+        <nav style={{ borderBottom: '1px solid rgba(255,255,255,0.06)', position: 'sticky', top: 0, zIndex: 100, background: 'rgba(13,6,32,0.90)', backdropFilter: 'blur(20px)' }}>
+          <div style={{ height: 72, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 20px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }} onClick={() => { setSelected(null); router.push('/') }}>
+              <img src="/logo.png" style={{ width: 36, height: 36, objectFit: 'contain' }} />
+              <span style={{ fontFamily: 'Manrope', fontWeight: 800, fontSize: 18, color: 'white' }}>ProBoost</span>
+            </div>
+
+            {/* Desktop */}
+            <div className="nav-links">
+              <span className="nav-a" onClick={() => { setSelected(null); router.push('/') }} style={{ fontSize: 14 }}>Accueil</span>
+              <span className="nav-a" onClick={() => setSelected(null)} style={{ fontSize: 14, color: '#c084fc', fontWeight: 600 }}>Blog</span>
+              <button onClick={() => router.push('/login')} style={{ background: 'linear-gradient(135deg, #a855f7, #ec4899)', color: 'white', border: 'none', borderRadius: 10, padding: '9px 20px', fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}>
+                Connexion
+              </button>
+            </div>
+
+            {/* Hamburger */}
+            <button className="hamburger" onClick={() => setMenuOpen(o => !o)} aria-label="Menu">
+              {menuOpen
+                ? <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                : <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+              }
             </button>
           </div>
+
+          {/* Mobile dropdown */}
+          {menuOpen && (
+            <div className="mobile-menu" style={{ padding: '8px 20px 20px', borderTop: '1px solid rgba(255,255,255,0.06)', display: 'flex', flexDirection: 'column', gap: 4 }}>
+              <button onClick={() => { router.push('/'); setMenuOpen(false) }} style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,0.80)', fontSize: 15, fontWeight: 500, padding: '12px 8px', cursor: 'pointer', fontFamily: 'Inter, sans-serif', textAlign: 'left' }}>Accueil</button>
+              <button onClick={() => { setSelected(null); setMenuOpen(false) }} style={{ background: 'none', border: 'none', color: '#c084fc', fontSize: 15, fontWeight: 600, padding: '12px 8px', cursor: 'pointer', fontFamily: 'Inter, sans-serif', textAlign: 'left' }}>Blog</button>
+              <button onClick={() => { router.push('/login'); setMenuOpen(false) }} style={{ background: 'linear-gradient(135deg, #a855f7, #ec4899)', color: 'white', border: 'none', borderRadius: 10, padding: '12px', fontSize: 14, fontWeight: 600, cursor: 'pointer', fontFamily: 'Inter, sans-serif', marginTop: 4 }}>
+                Connexion
+              </button>
+            </div>
+          )}
         </nav>
 
-        {/* LISTE DES ARTICLES */}
+        {/* LISTE */}
         {!selected && (
-          <div style={{ maxWidth: 1060, margin: '0 auto', padding: '64px 24px', animation: 'fadeUp 0.4s ease both' }}>
-            <div style={{ marginBottom: 56, textAlign: 'center' }}>
+          <div style={{ maxWidth: 1060, margin: '0 auto', padding: isMobile ? '40px 16px' : '64px 24px', animation: 'fadeUp 0.4s ease both' }}>
+            <div style={{ marginBottom: isMobile ? 36 : 56, textAlign: 'center' }}>
               <span style={{ fontSize: 11, color: '#a855f7', fontWeight: 700, letterSpacing: '3px', textTransform: 'uppercase', display: 'block', marginBottom: 12 }}>Blog</span>
-              <h1 style={{ fontFamily: 'Manrope', fontWeight: 900, fontSize: 42, color: 'white', letterSpacing: '-2px', marginBottom: 16 }}>
+              <h1 style={{ fontFamily: 'Manrope', fontWeight: 900, fontSize: isMobile ? 30 : 42, color: 'white', letterSpacing: '-1.5px', marginBottom: 12 }}>
                 Histoires & Réflexions
               </h1>
-              <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.45)', maxWidth: 520, margin: '0 auto', lineHeight: 1.7 }}>
+              <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.45)', maxWidth: 480, margin: '0 auto', lineHeight: 1.7 }}>
                 Des témoignages d'entrepreneurs et des éclairages sur la gestion des impayés et la trésorerie.
               </p>
             </div>
 
-            {/* Article vedette — facturation électronique */}
-            <div className="card-article" onClick={() => setSelected('facturation-electronique')}
-              style={{ background: 'rgba(236,72,153,0.08)', borderRadius: 20, padding: '40px 44px', marginBottom: 32, display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 32 }}>
+            {/* Article vedette */}
+            <div className="card-article featured-card" onClick={() => setSelected('facturation-electronique')}
+              style={{ background: 'rgba(236,72,153,0.08)', borderRadius: 20, padding: isMobile ? '24px 20px' : '40px 44px', marginBottom: 24, display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 24 }}>
               <div style={{ flex: 1 }}>
-                <span style={{ fontSize: 11, background: 'rgba(236,72,153,0.2)', color: '#ec4899', border: '1px solid rgba(236,72,153,0.3)', borderRadius: 6, padding: '3px 10px', fontWeight: 700, display: 'inline-block', marginBottom: 16 }}>Réglementation · À lire</span>
-                <h2 style={{ fontFamily: 'Manrope', fontWeight: 900, fontSize: 28, color: 'white', letterSpacing: '-1px', marginBottom: 12, lineHeight: 1.2 }}>
+                <span style={{ fontSize: 11, background: 'rgba(236,72,153,0.2)', color: '#ec4899', border: '1px solid rgba(236,72,153,0.3)', borderRadius: 6, padding: '3px 10px', fontWeight: 700, display: 'inline-block', marginBottom: 14 }}>Réglementation · À lire</span>
+                <h2 style={{ fontFamily: 'Manrope', fontWeight: 900, fontSize: isMobile ? 20 : 28, color: 'white', letterSpacing: '-0.5px', marginBottom: 10, lineHeight: 1.25 }}>
                   Facturation électronique : une échéance à anticiper
                 </h2>
-                <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.55)', lineHeight: 1.7, maxWidth: 560 }}>
-                  La facturation électronique va bientôt devenir une obligation pour toutes les entreprises françaises. Une réforme à ne pas prendre à la légère.
+                <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.55)', lineHeight: 1.7, maxWidth: 560 }}>
+                  La facturation électronique va bientôt devenir une obligation pour toutes les entreprises françaises.
                 </p>
+                {isMobile && <p style={{ fontSize: 13, color: '#ec4899', fontWeight: 600, marginTop: 12 }}>Lire l'article →</p>}
               </div>
-              <div style={{ flexShrink: 0, width: 56, height: 56, background: 'linear-gradient(135deg, #ec4899, #a855f7)', borderRadius: 16, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>
-              </div>
+              {!isMobile && (
+                <div className="featured-icon" style={{ flexShrink: 0, width: 56, height: 56, background: 'linear-gradient(135deg, #ec4899, #a855f7)', borderRadius: 16, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>
+                </div>
+              )}
             </div>
 
             {/* Grille témoignages */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 20 }}>
-              {ARTICLES.filter(a => a.id !== 'facturation-electronique').map((a, i) => (
+            <div className="articles-grid" style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(2, 1fr)', gap: 16 }}>
+              {ARTICLES.filter(a => a.id !== 'facturation-electronique').map((a) => (
                 <div key={a.id} className="card-article" onClick={() => setSelected(a.id)}
-                  style={{ background: 'rgba(255,255,255,0.04)', backdropFilter: 'blur(12px)', borderRadius: 16, padding: '28px 28px 24px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
-                    <div style={{ width: 40, height: 40, background: `rgba(168,85,247,0.15)`, border: `1px solid rgba(168,85,247,0.25)`, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  style={{ background: 'rgba(255,255,255,0.04)', backdropFilter: 'blur(12px)', borderRadius: 16, padding: '24px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
+                    <div style={{ width: 38, height: 38, background: 'rgba(168,85,247,0.15)', border: '1px solid rgba(168,85,247,0.25)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                       <span style={{ fontFamily: 'Manrope', fontWeight: 800, fontSize: 14, color: '#c084fc' }}>{a.prenom?.[0]}</span>
                     </div>
-                    <div>
+                    <div style={{ flex: 1, minWidth: 0 }}>
                       <p style={{ fontSize: 14, fontWeight: 700, color: 'white' }}>{a.prenom}{a.age ? `, ${a.age} ans` : ''}</p>
                       <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.40)' }}>{a.metier}</p>
                     </div>
-                    <span style={{ marginLeft: 'auto', fontSize: 11, background: 'rgba(168,85,247,0.15)', color: '#c084fc', border: '1px solid rgba(168,85,247,0.25)', borderRadius: 6, padding: '2px 8px', fontWeight: 600 }}>{a.tag}</span>
+                    <span style={{ fontSize: 11, background: 'rgba(168,85,247,0.15)', color: '#c084fc', border: '1px solid rgba(168,85,247,0.25)', borderRadius: 6, padding: '2px 8px', fontWeight: 600, flexShrink: 0 }}>{a.tag}</span>
                   </div>
-                  <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.55)', lineHeight: 1.7, marginBottom: 16 }}>{a.resume}</p>
-                  <span style={{ fontSize: 13, color: '#a855f7', fontWeight: 600 }}>Lire l'histoire →</span>
+                  <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.55)', lineHeight: 1.65, marginBottom: 14 }}>{a.resume}</p>
+                  <span style={{ fontSize: 13, color: '#a855f7', fontWeight: 600 }}>Lire l&apos;histoire →</span>
                 </div>
               ))}
             </div>
@@ -183,14 +229,14 @@ export default function BlogPage() {
 
         {/* ARTICLE DÉTAIL */}
         {selected && article && (
-          <div style={{ maxWidth: 720, margin: '0 auto', padding: '48px 24px 80px', animation: 'fadeUp 0.4s ease both' }}>
-            <button className="btn-back" onClick={() => setSelected(null)} style={{ marginBottom: 32 }}>
+          <div style={{ maxWidth: 720, margin: '0 auto', padding: isMobile ? '32px 16px 60px' : '48px 24px 80px', animation: 'fadeUp 0.4s ease both' }}>
+            <button className="btn-back" onClick={() => setSelected(null)} style={{ marginBottom: 28 }}>
               ← Retour au blog
             </button>
 
-            <div style={{ marginBottom: 32 }}>
-              <span style={{ fontSize: 11, background: article.id === 'facturation-electronique' ? 'rgba(236,72,153,0.2)' : 'rgba(168,85,247,0.15)', color: article.tagColor, border: `1px solid ${article.id === 'facturation-electronique' ? 'rgba(236,72,153,0.3)' : 'rgba(168,85,247,0.25)'}`, borderRadius: 6, padding: '3px 10px', fontWeight: 700, display: 'inline-block', marginBottom: 20 }}>{article.tag}</span>
-              <h1 style={{ fontFamily: 'Playfair Display', fontWeight: 700, fontStyle: 'italic', fontSize: 'clamp(28px, 4vw, 42px)', color: 'white', lineHeight: 1.2, marginBottom: 16, letterSpacing: '-0.5px' }}>
+            <div style={{ marginBottom: 28 }}>
+              <span style={{ fontSize: 11, background: article.id === 'facturation-electronique' ? 'rgba(236,72,153,0.2)' : 'rgba(168,85,247,0.15)', color: article.tagColor, border: `1px solid ${article.id === 'facturation-electronique' ? 'rgba(236,72,153,0.3)' : 'rgba(168,85,247,0.25)'}`, borderRadius: 6, padding: '3px 10px', fontWeight: 700, display: 'inline-block', marginBottom: 18 }}>{article.tag}</span>
+              <h1 style={{ fontFamily: 'Playfair Display', fontWeight: 700, fontStyle: 'italic', fontSize: 'clamp(24px, 4vw, 42px)', color: 'white', lineHeight: 1.25, marginBottom: 14, letterSpacing: '-0.5px' }}>
                 {article.titre}
               </h1>
               {article.metier && (
@@ -198,24 +244,23 @@ export default function BlogPage() {
               )}
             </div>
 
-            <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: 32, display: 'flex', flexDirection: 'column', gap: 20 }}>
+            <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: 28, display: 'flex', flexDirection: 'column', gap: 18 }}>
               {article.contenu.map((para, i) => (
-                <p key={i} style={{ fontSize: 16, color: 'rgba(255,255,255,0.75)', lineHeight: 1.85, fontWeight: 300 }}>{para}</p>
+                <p key={i} style={{ fontSize: isMobile ? 15 : 16, color: 'rgba(255,255,255,0.75)', lineHeight: 1.85, fontWeight: 300 }}>{para}</p>
               ))}
             </div>
 
             {/* CTA */}
-            <div style={{ marginTop: 56, background: 'rgba(168,85,247,0.08)', border: '1px solid rgba(168,85,247,0.20)', borderRadius: 16, padding: '32px', textAlign: 'center' }}>
-              <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.40)', fontWeight: 600, letterSpacing: '2px', textTransform: 'uppercase', marginBottom: 12 }}>ProBoost</p>
-              <h3 style={{ fontFamily: 'Manrope', fontWeight: 800, fontSize: 22, color: 'white', marginBottom: 10 }}>Récupérez vos impayés automatiquement</h3>
-              <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.45)', marginBottom: 24, lineHeight: 1.6 }}>Relances email et SMS automatiques. Commission uniquement sur les fonds récupérés.</p>
-              <button className="btn-cta" onClick={() => router.push('/souscrire')}>
+            <div style={{ marginTop: 48, background: 'rgba(168,85,247,0.08)', border: '1px solid rgba(168,85,247,0.20)', borderRadius: 16, padding: isMobile ? '24px 20px' : '32px', textAlign: 'center' }}>
+              <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.40)', fontWeight: 600, letterSpacing: '2px', textTransform: 'uppercase', marginBottom: 10 }}>ProBoost</p>
+              <h3 style={{ fontFamily: 'Manrope', fontWeight: 800, fontSize: isMobile ? 18 : 22, color: 'white', marginBottom: 10 }}>Récupérez vos impayés automatiquement</h3>
+              <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.45)', marginBottom: 20, lineHeight: 1.6 }}>Relances email et SMS automatiques. Commission uniquement sur les fonds récupérés.</p>
+              <button className="btn-cta" onClick={() => router.push('/souscrire')} style={{ width: isMobile ? '100%' : 'auto', justifyContent: 'center' }}>
                 Commencer maintenant →
               </button>
             </div>
           </div>
         )}
-
       </div>
     </>
   )
