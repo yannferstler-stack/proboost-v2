@@ -6,8 +6,6 @@ const ARTICLES = [
   {
     id: 'facturation-electronique',
     titre: 'Facturation électronique : une échéance à anticiper',
-    tag: 'Réglementation',
-    tagColor: '#ec4899',
     resume: 'La facturation électronique va bientôt devenir une obligation pour toutes les entreprises françaises. Une échéance à ne pas prendre à la légère.',
     image: null,
     contenu: [
@@ -22,8 +20,6 @@ const ARTICLES = [
   {
     id: 'sylvain',
     titre: 'Sylvain, 59 ans — Agence de communication',
-    tag: 'Témoignage',
-    tagColor: '#a855f7',
     resume: 'Près de 10 % de son chiffre d\'affaires est en retard de paiement. À un âge où il pourrait envisager une retraite bien méritée, cette trésorerie manquante l\'oblige à continuer.',
     image: '/blog/sylvain.jpg',
     contenu: [
@@ -31,33 +27,29 @@ const ARTICLES = [
       `Ses clients ne sont jamais devenus de simples lignes dans un fichier. Sylvain les connaît par leur prénom. Beaucoup sont, comme lui, des entrepreneurs. Des relations construites avec le temps et la confiance.`,
       `Mais ces dernières années, la réalité économique s'est durcie. Les loyers augmentent, les outils nécessaires au métier d'agence coûtent toujours plus cher. Pour rester à flot, Sylvain a dû réduire son équipe. Aujourd'hui, il gère presque tout lui-même : devis, factures, administratif.`,
       `Relancer les paiements ? Ce n'est pas dans son tempérament. Quand il prend enfin le temps d'appeler un client, la discussion mène souvent vers un nouveau projet… et parfois une nouvelle facture en attente.`,
-      `Pourtant, près de 10 % de son chiffre d'affaires est aujourd'hui en retard de paiement. À un âge où il pourrait envisager une retraite bien méritée, cette trésorerie manquante l'oblige à continuer. Avec de simples relances structurées, jusqu'à 80 % de ces impayés pourraient être récupérés. De quoi préserver son activité, garder son employée actuelle et continuer à exercer son métier de passion… jusqu'au jour où lui décidera de prendre sa retraite.`,
+      `Pourtant, près de 10 % de son chiffre d'affaires est aujourd'hui en retard de paiement. À un âge où il pourrait envisager une retraite bien méritée, cette trésorerie manquante l'oblige à continuer. Avec de simples relances structurées, jusqu'à 80 % de ces impayés pourraient être récupérés.`,
     ],
   },
   {
     id: 'laurent',
     titre: 'Laurent, 34 ans — Chauffagiste indépendant',
-    tag: 'Témoignage',
-    tagColor: '#a855f7',
     resume: 'Les clients appellent souvent en urgence quand la chaudière tombe en panne. Mais quand vient le moment de faire un virement, l\'urgence disparaît.',
     image: '/blog/laurent.jpg',
     contenu: [
-      `Laurent a 34 ans et il est chauffagiste dans l'Est de la France. Au départ, il avait suivi un parcours scolaire assez classique. Puis, presque naturellement, il a choisi un métier manuel, comme son père avant lui. Aujourd'hui, il ne regrette absolument rien. Être à son compte lui a permis de construire la vie qu'il voulait. Il choisit ses horaires, a développé un réseau de clients fidèles et gagne confortablement sa vie. Le métier est parfois physique, parfois dans le froid, parfois dans l'urgence… mais Laurent l'aime sincèrement.`,
+      `Laurent a 34 ans et il est chauffagiste dans l'Est de la France. Au départ, il avait suivi un parcours scolaire assez classique. Puis, presque naturellement, il a choisi un métier manuel, comme son père avant lui. Aujourd'hui, il ne regrette absolument rien. Être à son compte lui a permis de construire la vie qu'il voulait.`,
       `Quand il s'est installé, il a tout de suite adopté une solution digitale simple pour éditer ses devis et ses factures directement depuis son téléphone. En quelques minutes, tout est envoyé au client. Le problème arrive après.`,
-      `Les clients appellent souvent en urgence quand la chaudière tombe en panne. Mais quand vient le moment de faire un virement, l'urgence disparaît. Les paiements prennent du temps, et Laurent doit relancer régulièrement. Rien de conflictuel : en général, un message ou deux suffisent et la situation se règle rapidement. Il n'a jamais eu besoin d'engager de procédure juridique. Mais ces relances lui prennent du temps. Du temps qu'il préférerait consacrer à ses clients… ou à sa famille.`,
+      `Les clients appellent souvent en urgence quand la chaudière tombe en panne. Mais quand vient le moment de faire un virement, l'urgence disparaît. Les paiements prennent du temps, et Laurent doit relancer régulièrement. Rien de conflictuel : en général, un message ou deux suffisent et la situation se règle rapidement. Mais ces relances lui prennent du temps. Du temps qu'il préférerait consacrer à ses clients… ou à sa famille.`,
       `Et Laurent est loin d'être un cas isolé : les dirigeants de TPE et indépendants passent en moyenne 25 à 40 % de leur temps de travail sur des tâches administratives, soit 52 à 90 heures par mois.`,
     ],
   },
   {
     id: 'lisa',
     titre: 'Lisa — Fleuriste',
-    tag: 'Témoignage',
-    tagColor: '#a855f7',
     resume: 'Entre la boutique, les mariages et les saisons des fleurs, Lisa reste avant tout une artiste passionnée. Récupérer ses factures en attente lui permettrait de financer un projet qui lui tient à cœur.',
     image: '/blog/lisa.jpg',
     contenu: [
-      `Lisa est fleuriste. Dans sa boutique, au cœur d'une petite ville de l'Est de la France, les journées commencent tôt et sentent toujours un peu la rose, l'eucalyptus ou la pivoine. Mais une grande partie de son travail se passe aussi ailleurs : sur les lieux de mariage. Depuis plusieurs années, elle accompagne des couples dans l'un des plus beaux jours de leur vie. Les bouquets, les centres de table, les arches fleuries… Lisa partage avec eux des moments chargés d'émotion. Mais une fois la fête passée, elle redevient parfois… une facture parmi d'autres. Dans la longue liste des prestataires d'un mariage, il arrive qu'elle soit simplement oubliée.`,
-      `Lisa envoie pourtant ses factures depuis son ordinateur, parfois tard le soir après une journée passée à composer des bouquets. L'administratif n'est pas ce qui la fait vibrer. Elle le fait comme elle peut, souvent entre deux commandes. Et puis une autre réalité approche : la facturation électronique obligatoire qui va progressivement entrer en vigueur pour les entreprises en France. Une échéance qu'elle n'a pas vraiment vu arriver.`,
+      `Lisa est fleuriste. Dans sa boutique, au cœur d'une petite ville de l'Est de la France, les journées commencent tôt et sentent toujours un peu la rose, l'eucalyptus ou la pivoine. Mais une grande partie de son travail se passe aussi ailleurs : sur les lieux de mariage. Les bouquets, les centres de table, les arches fleuries… Lisa partage avec eux des moments chargés d'émotion. Mais une fois la fête passée, elle redevient parfois… une facture parmi d'autres.`,
+      `Lisa envoie pourtant ses factures depuis son ordinateur, parfois tard le soir après une journée passée à composer des bouquets. L'administratif n'est pas ce qui la fait vibrer. Elle le fait comme elle peut, souvent entre deux commandes.`,
       `Entre la boutique, les mariages et les saisons des fleurs, Lisa reste avant tout une artiste passionnée. Mais récupérer ses factures en attente lui permettrait de financer un projet qui lui tient à cœur : organiser des ateliers pour transmettre son amour des fleurs et apprendre à composer des bouquets.`,
       `Parce que parfois, quelques paiements récupérés suffisent à faire éclore une nouvelle idée.`,
     ],
@@ -65,13 +57,11 @@ const ARTICLES = [
   {
     id: 'christophe-sarah',
     titre: 'Christophe & Sarah — Traiteurs',
-    tag: 'Témoignage',
-    tagColor: '#a855f7',
     resume: 'Avec une gestion simple et efficace de leurs factures, leur projet pourrait changer d\'échelle : ouvrir un local, améliorer leurs packagings, acheter une voiture de société.',
     image: '/blog/christophe-sarah.jpg',
     contenu: [
-      `Au départ, c'était simplement pour la famille et les amis. Des repas d'anniversaire, des baptêmes, quelques fêtes improvisées où tout le monde disait la même chose : "Vous devriez en faire votre métier." Petit à petit, leur activité de traiteur a pris de la place. De plus en plus de week-ends, puis de plus en plus de soirées en semaine. Aujourd'hui, une grande partie de leur temps libre y passe. Lui s'occupe des livraisons, des courses et des stocks. Elle est en cuisine, mais aussi au téléphone avec les clients, à imaginer les menus et organiser les événements.`,
-      `L'activité se professionnalise… mais cette nouvelle dimension peut donner le vertige. Il faut comprendre les règles, suivre les factures, anticiper les nouvelles obligations administratives. Parfois, tout cela ressemble à une montagne. Pourtant, elle connaît très bien l'administratif. Elle est comptable de formation et travaille encore à mi-temps dans ce domaine. Mais justement : dans leur activité de traiteur, elle rêve de faire autre chose. Créer, cuisiner, recevoir. Pas courir après les paiements.`,
+      `Au départ, c'était simplement pour la famille et les amis. Des repas d'anniversaire, des baptêmes, quelques fêtes improvisées où tout le monde disait la même chose : "Vous devriez en faire votre métier." Petit à petit, leur activité de traiteur a pris de la place. Lui s'occupe des livraisons, des courses et des stocks. Elle est en cuisine, mais aussi au téléphone avec les clients, à imaginer les menus et organiser les événements.`,
+      `L'activité se professionnalise… mais cette nouvelle dimension peut donner le vertige. Pourtant, elle connaît très bien l'administratif. Elle est comptable de formation et travaille encore à mi-temps dans ce domaine. Mais justement : dans leur activité de traiteur, elle rêve de faire autre chose. Créer, cuisiner, recevoir. Pas courir après les paiements.`,
       `Alors les relances passent souvent au second plan.`,
       `Et pourtant, avec une gestion simple et efficace de leurs factures et de leurs paiements, leur projet pourrait changer d'échelle : ouvrir un petit local, améliorer leurs packagings, et même acheter une voiture de société pour les livraisons. Parfois, bien gérer ses factures, c'est simplement donner à une passion les moyens de grandir.`,
     ],
@@ -91,38 +81,29 @@ export default function BlogPage() {
     return () => window.removeEventListener('resize', check)
   }, [])
 
-  // Fermer en cliquant hors de l'article
-  const handleOverlayClick = () => setExpanded(null)
-
-  const articleExpanded = ARTICLES.find(a => a.id === expanded)
-
   return (
     <>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Manrope:wght@700;800;900&family=Playfair+Display:ital,wght@1,700&display=swap');
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         body { background: #0d0620; }
-        @keyframes fadeUp { from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)} }
+        @keyframes fadeUp { from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)} }
         @keyframes slideDown { from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)} }
-        @keyframes expandIn { from{opacity:0;max-height:0}to{opacity:1;max-height:2000px} }
         .nav-a { cursor: pointer; transition: color 0.15s; color: rgba(255,255,255,0.6); }
         .nav-a:hover { color: #c084fc !important; }
-        .article-row { transition: background 0.2s; cursor: pointer; }
-        .article-row:hover { background: rgba(168,85,247,0.04) !important; }
-        .arrow-btn { width: 52px; height: 52px; border-radius: 50%; border: 1.5px solid rgba(255,255,255,0.20); background: transparent; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; flex-shrink: 0; }
-        .arrow-btn:hover { border-color: #a855f7; background: rgba(168,85,247,0.12); }
-        .arrow-btn.active { border-color: #a855f7; background: rgba(168,85,247,0.15); transform: rotate(45deg); }
+        .article-row { transition: background 0.2s; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.08); }
+        .article-row:hover .arrow-circle { border-color: rgba(168,85,247,0.5); background: rgba(168,85,247,0.08); }
+        .arrow-circle { width: 44px; height: 44px; border-radius: 50%; border: 1.5px solid rgba(255,255,255,0.18); background: transparent; display: flex; align-items: center; justify-content: center; transition: all 0.25s; flex-shrink: 0; }
+        .arrow-circle.open { border-color: #a855f7; background: rgba(168,85,247,0.12); }
+        .expanded-content { animation: fadeUp 0.3s ease both; }
         .hamburger { display: none; background: none; border: none; cursor: pointer; padding: 4px; }
         .nav-links { display: flex; align-items: center; gap: 28px; }
         .mobile-menu { animation: slideDown 0.2s ease; }
-        .overlay-close { position: fixed; inset: 0; z-index: 10; }
-        .expanded-content { animation: fadeUp 0.3s ease both; }
         .btn-back-art { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); color: rgba(255,255,255,0.7); border-radius: 10px; padding: 8px 16px; font-size: 13px; font-family: Inter, sans-serif; cursor: pointer; transition: all 0.15s; display: inline-flex; align-items: center; gap: 6px; }
         .btn-back-art:hover { background: rgba(168,85,247,0.10); border-color: rgba(168,85,247,0.3); color: #c084fc; }
         @media (max-width: 768px) {
           .nav-links { display: none !important; }
           .hamburger { display: flex !important; }
-          .article-image { width: 90px !important; height: 90px !important; }
         }
       `}</style>
 
@@ -158,112 +139,94 @@ export default function BlogPage() {
         </nav>
 
         {/* HEADER */}
-        <div style={{ maxWidth: 800, margin: '0 auto', padding: isMobile ? '40px 20px 32px' : '56px 24px 40px', animation: 'fadeUp 0.4s ease both' }}>
-          <span style={{ fontSize: 11, color: '#a855f7', fontWeight: 700, letterSpacing: '3px', textTransform: 'uppercase', display: 'block', marginBottom: 10 }}>Blog</span>
-          <h1 style={{ fontFamily: 'Manrope', fontWeight: 900, fontSize: isMobile ? 28 : 40, color: 'white', letterSpacing: '-1.5px', marginBottom: 10 }}>
-            Histoires & Réflexions
+        <div style={{ maxWidth: 860, margin: '0 auto', padding: isMobile ? '40px 20px 32px' : '56px 24px 40px', animation: 'fadeUp 0.4s ease both' }}>
+          <span style={{ fontSize: 11, color: '#a855f7', fontWeight: 700, letterSpacing: '3px', textTransform: 'uppercase', display: 'block', marginBottom: 12 }}>Blog</span>
+          <h1 style={{ fontFamily: 'Manrope', fontWeight: 900, fontSize: isMobile ? 26 : 38, color: 'white', letterSpacing: '-1.5px', marginBottom: 16, lineHeight: 1.1 }}>
+            Des histoires qui vous ressemblent
           </h1>
-          <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.45)', lineHeight: 1.7 }}>
-            Des témoignages d'entrepreneurs et des éclairages sur la gestion des impayés et la trésorerie.
+          <p style={{ fontSize: isMobile ? 14 : 16, color: 'rgba(255,255,255,0.55)', lineHeight: 1.8, maxWidth: 680 }}>
+            Derrière chaque entreprise, il y a une réalité humaine. Les histoires que vous allez lire sont inspirées de situations bien réelles que nous avons rencontrées. Si elles vous parlent, ce n'est pas un hasard : elles pourraient être les vôtres. Notre objectif est simple — vous accompagner pour affronter les défis quotidiens des TPE françaises et favoriser votre développement, avec une solution simple.
           </p>
         </div>
 
-        {/* LISTE ARTICLES */}
-        <div style={{ maxWidth: 800, margin: '0 auto', padding: isMobile ? '0 16px 60px' : '0 24px 80px', position: 'relative' }}>
-
-          {/* Overlay pour fermer en cliquant dehors */}
-          {expanded && <div className="overlay-close" onClick={handleOverlayClick} />}
-
-          {ARTICLES.map((article, idx) => {
+        {/* LISTE */}
+        <div style={{ maxWidth: 860, margin: '0 auto', padding: isMobile ? '0 0 60px' : '0 24px 80px' }}>
+          {ARTICLES.map((article) => {
             const isOpen = expanded === article.id
             return (
-              <div key={article.id} style={{ position: 'relative', zIndex: isOpen ? 20 : 1 }}>
-                {/* LIGNE ARTICLE */}
+              <div key={article.id}>
+                {/* LIGNE */}
                 <div
                   className="article-row"
-                  style={{
-                    display: 'flex',
-                    alignItems: 'flex-start',
-                    gap: isMobile ? 14 : 24,
-                    padding: isMobile ? '24px 0' : '32px 0',
-                    borderBottom: '1px solid rgba(255,255,255,0.08)',
-                    background: isOpen ? 'rgba(168,85,247,0.04)' : 'transparent',
-                  }}
                   onClick={() => setExpanded(isOpen ? null : article.id)}
+                  style={{ display: 'flex', alignItems: 'stretch', minHeight: isMobile ? 150 : 200 }}
                 >
-                  {/* IMAGE ou icône */}
-                  <div style={{ flexShrink: 0 }}>
-                    {article.image ? (
+                  {/* IMAGE */}
+                  {article.image ? (
+                    <div style={{ width: isMobile ? '38%' : '42%', flexShrink: 0, overflow: 'hidden' }}>
                       <img
                         src={article.image}
                         alt={article.titre}
-                        className="article-image"
-                        style={{ width: isMobile ? 90 : 120, height: isMobile ? 90 : 120, objectFit: 'cover', borderRadius: 12, display: 'block' }}
+                        style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
                       />
-                    ) : (
-                      <div className="article-image" style={{ width: isMobile ? 90 : 120, height: isMobile ? 90 : 120, background: 'rgba(236,72,153,0.12)', border: '1px solid rgba(236,72,153,0.25)', borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#ec4899" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>
-                      </div>
-                    )}
-                  </div>
+                    </div>
+                  ) : (
+                    <div style={{ width: isMobile ? '38%' : '42%', flexShrink: 0, background: 'rgba(236,72,153,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#ec4899" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>
+                    </div>
+                  )}
 
-                  {/* CONTENU */}
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <span style={{ fontSize: 11, color: article.tagColor, fontWeight: 700, letterSpacing: '1.5px', textTransform: 'uppercase', display: 'inline-block', marginBottom: 8, background: article.id === 'facturation-electronique' ? 'rgba(236,72,153,0.10)' : 'rgba(168,85,247,0.10)', border: `1px solid ${article.id === 'facturation-electronique' ? 'rgba(236,72,153,0.20)' : 'rgba(168,85,247,0.20)'}`, borderRadius: 20, padding: '3px 10px' }}>
-                      {article.tag}
-                    </span>
-                    <h2 style={{ fontFamily: 'Manrope', fontWeight: 800, fontSize: isMobile ? 17 : 22, color: 'white', letterSpacing: '-0.5px', marginBottom: 8, lineHeight: 1.25 }}>
-                      {article.titre}
-                    </h2>
-                    <p style={{ fontSize: isMobile ? 13 : 14, color: 'rgba(255,255,255,0.50)', lineHeight: 1.65 }}>
-                      {article.resume}
-                    </p>
-                  </div>
+                  {/* TEXTE */}
+                  <div style={{ flex: 1, display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 10, padding: isMobile ? '16px 14px' : '28px 28px' }}>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <h2 style={{ fontFamily: 'Manrope', fontWeight: 800, fontSize: isMobile ? 14 : 20, color: 'white', letterSpacing: '-0.3px', marginBottom: 8, lineHeight: 1.25 }}>
+                        {article.titre}
+                      </h2>
+                      <p style={{ fontSize: isMobile ? 12 : 14, color: 'rgba(255,255,255,0.50)', lineHeight: 1.65 }}>
+                        {article.resume}
+                      </p>
+                    </div>
 
-                  {/* FLÈCHE */}
-                  <button
-                    className={`arrow-btn${isOpen ? ' active' : ''}`}
-                    onClick={e => { e.stopPropagation(); setExpanded(isOpen ? null : article.id) }}
-                    style={{ marginTop: isMobile ? 0 : 4 }}
-                  >
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={isOpen ? '#a855f7' : 'rgba(255,255,255,0.6)'} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <line x1="7" y1="17" x2="17" y2="7"/>
-                      <polyline points="7 7 17 7 17 17"/>
-                    </svg>
-                  </button>
+                    {/* FLÈCHE */}
+                    <div className={`arrow-circle${isOpen ? ' open' : ''}`} style={{ marginTop: 2, cursor: 'pointer' }}>
+                      <svg
+                        width="16" height="16"
+                        viewBox="0 0 24 24" fill="none"
+                        stroke={isOpen ? '#a855f7' : 'rgba(255,255,255,0.55)'}
+                        strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
+                        style={{ transition: 'transform 0.25s', transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)' }}
+                      >
+                        <polyline points="6 9 12 15 18 9"/>
+                      </svg>
+                    </div>
+                  </div>
                 </div>
 
                 {/* CONTENU DÉPLIÉ */}
                 {isOpen && (
                   <div
                     className="expanded-content"
+                    onClick={e => e.stopPropagation()}
                     style={{
                       background: 'rgba(255,255,255,0.03)',
-                      border: '1px solid rgba(168,85,247,0.15)',
-                      borderTop: 'none',
-                      borderRadius: '0 0 16px 16px',
+                      borderBottom: '1px solid rgba(168,85,247,0.15)',
+                      borderLeft: '2px solid rgba(168,85,247,0.30)',
                       padding: isMobile ? '24px 20px 28px' : '32px 36px 36px',
-                      marginBottom: 2,
                     }}
-                    onClick={e => e.stopPropagation()}
                   >
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 18, marginBottom: 28 }}>
                       {article.contenu.map((para, i) => (
-                        <p key={i} style={{ fontSize: isMobile ? 15 : 16, color: 'rgba(255,255,255,0.75)', lineHeight: 1.85, fontWeight: 300 }}>{para}</p>
+                        <p key={i} style={{ fontSize: isMobile ? 14 : 16, color: 'rgba(255,255,255,0.75)', lineHeight: 1.85, fontWeight: 300 }}>{para}</p>
                       ))}
                     </div>
 
-                    {/* CTA + bouton fermer */}
-                    <div style={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', alignItems: isMobile ? 'flex-start' : 'center', justifyContent: 'space-between', gap: 14, paddingTop: 24, borderTop: '1px solid rgba(255,255,255,0.08)' }}>
-                      <button
-                        className="btn-back-art"
-                        onClick={() => setExpanded(null)}
-                      >
-                        ← Réduire
+                    <div style={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', alignItems: isMobile ? 'flex-start' : 'center', justifyContent: 'space-between', gap: 12, paddingTop: 20, borderTop: '1px solid rgba(255,255,255,0.08)' }}>
+                      <button className="btn-back-art" onClick={() => setExpanded(null)}>
+                        ↑ Réduire
                       </button>
                       <button
                         onClick={() => router.push('/souscrire')}
-                        style={{ background: 'linear-gradient(135deg, #a855f7, #ec4899)', color: 'white', border: 'none', borderRadius: 12, padding: '12px 24px', fontSize: 14, fontWeight: 700, cursor: 'pointer', fontFamily: 'Inter, sans-serif', boxShadow: '0 4px 16px rgba(168,85,247,0.35)', whiteSpace: 'nowrap' }}>
+                        style={{ background: 'linear-gradient(135deg, #a855f7, #ec4899)', color: 'white', border: 'none', borderRadius: 12, padding: '12px 24px', fontSize: 14, fontWeight: 700, cursor: 'pointer', fontFamily: 'Inter, sans-serif', boxShadow: '0 4px 16px rgba(168,85,247,0.35)', whiteSpace: 'nowrap', width: isMobile ? '100%' : 'auto' }}>
                         Commencer avec ProBoost →
                       </button>
                     </div>
