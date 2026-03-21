@@ -34,7 +34,7 @@ function SuccessContent() {
     setError(''); setStep('password')
   }
 
-  // Étape 2 : crée le compte ProBoost immédiatement, puis passe à l'étape Stripe
+  // Étape 2 : crée le compte ManaFlow immédiatement, puis passe à l'étape Stripe
   const handleSubmitPassword = async (e: React.FormEvent) => {
     e.preventDefault()
     if (form.password.length < 8) { setError('Le mot de passe doit contenir au moins 8 caractères.'); return }
@@ -157,8 +157,8 @@ function SuccessContent() {
         {/* NAV */}
         <nav style={{ background: 'white', borderBottom: '1px solid #EAECEF', height: 60, display: 'flex', alignItems: 'center', padding: '0 40px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-            <img src="/logo.png" style={{ width: 36, height: 36, objectFit: 'contain', borderRadius: 8 }} />
-            <span style={{ fontFamily: 'Manrope', fontWeight: 800, fontSize: 16, color: '#111' }}>ProBoost</span>
+            <img src="/logo.png" style={{ width: 52, height: 52, objectFit: 'contain' }} />
+            <span style={{ fontFamily: 'Manrope', fontWeight: 800, fontSize: 22, color: '#111' }}>ManaFlow</span>
           </div>
         </nav>
 
@@ -311,7 +311,7 @@ function SuccessContent() {
                   <p style={{ fontSize: 13, fontWeight: 700, color: '#15803d', marginBottom: 10 }}>Comment ça fonctionne</p>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                     {[
-                      { icon: '📧', text: 'ProBoost envoie les relances avec un bouton "Payer maintenant"' },
+                      { icon: '📧', text: 'ManaFlow envoie les relances avec un bouton "Payer maintenant"' },
                       { icon: '💳', text: 'Votre client paie via une page Stripe sécurisée' },
                       { icon: '💶', text: 'Le montant arrive directement sur votre compte bancaire, moins notre commission' },
                       { icon: '✅', text: 'La facture est automatiquement marquée comme payée dans votre dashboard' },
@@ -327,7 +327,7 @@ function SuccessContent() {
                 <div style={{ background: '#FFFBEB', border: '1px solid #FDE68A', borderRadius: 10, padding: '10px 14px', marginBottom: 20, display: 'flex', gap: 8, alignItems: 'flex-start' }}>
                   <span style={{ flexShrink: 0, fontSize: 14 }}>ℹ️</span>
                   <p style={{ fontSize: 12, color: '#92400E', lineHeight: 1.6 }}>
-                    La création du compte Stripe Express prend environ <strong>3 minutes</strong>. Vous aurez besoin d'une pièce d'identité et d'un RIB. C'est Stripe qui gère la conformité, pas ProBoost.
+                    La création du compte Stripe Express prend environ <strong>3 minutes</strong>. Vous aurez besoin d'une pièce d'identité et d'un RIB. C'est Stripe qui gère la conformité, pas ManaFlow.
                   </p>
                 </div>
 
@@ -364,7 +364,7 @@ function SuccessContent() {
                   <span style={{ color: 'white', fontSize: 28, fontWeight: 700 }}>✓</span>
                 </div>
                 <h2 style={{ fontFamily: 'Manrope', fontWeight: 900, fontSize: 22, color: '#111', marginBottom: 8 }}>Compte créé !</h2>
-                <p style={{ fontSize: 14, color: '#6B7280', marginBottom: 6 }}>Bienvenue sur ProBoost, {form.prenom}.</p>
+                <p style={{ fontSize: 14, color: '#6B7280', marginBottom: 6 }}>Bienvenue sur ManaFlow, {form.prenom}.</p>
                 <p style={{ fontSize: 13, color: '#9CA3AF' }}>Redirection vers votre dashboard...</p>
                 <div style={{ marginTop: 20, width: 32, height: 32, border: '3px solid #E0E0E0', borderTop: '3px solid #1DB954', borderRadius: '50%', animation: 'spin 0.8s linear infinite', margin: '20px auto 0' }} />
               </div>

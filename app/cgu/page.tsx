@@ -5,32 +5,32 @@ import { useState, useEffect } from 'react'
 const SECTIONS = [
   {
     titre: 'Article 1 — Objet',
-    contenu: `Les présentes Conditions Générales d'Utilisation (CGU) ont pour objet de définir les modalités et conditions d'utilisation des services proposés par ProBoost, plateforme d'automatisation des relances de factures impayées, accessible à l'adresse proboost.fr.
+    contenu: `Les présentes Conditions Générales d'Utilisation (CGU) ont pour objet de définir les modalités et conditions d'utilisation des services proposés par ManaFlow, plateforme d'automatisation des relances de factures impayées, accessible à l'adresse manaflow.fr.
 
-En accédant à la plateforme et en utilisant les services ProBoost, l'utilisateur accepte sans réserve les présentes CGU. Si l'utilisateur n'accepte pas ces conditions, il doit cesser d'utiliser le service.`,
+En accédant à la plateforme et en utilisant les services ManaFlow, l'utilisateur accepte sans réserve les présentes CGU. Si l'utilisateur n'accepte pas ces conditions, il doit cesser d'utiliser le service.`,
   },
   {
     titre: 'Article 2 — Description du service',
-    contenu: `ProBoost est un service d'automatisation de relances de factures destiné aux professionnels (TPE, PME, indépendants, artisans). La plateforme permet :
+    contenu: `ManaFlow est un service d'automatisation de relances de factures destiné aux professionnels (TPE, PME, indépendants, artisans). La plateforme permet :
 
 • L'import de factures au format CSV ou PDF
 • L'envoi automatique de relances par email et/ou SMS selon le plan souscrit
 • Le suivi de l'état de recouvrement via un tableau de bord
 • La personnalisation des délais et séquences de relance (selon le plan)
 
-ProBoost n'agit pas en qualité d'huissier ou de société de recouvrement judiciaire. Le service se limite à des relances amiables automatisées.`,
+ManaFlow n'agit pas en qualité d'huissier ou de société de recouvrement judiciaire. Le service se limite à des relances amiables automatisées.`,
   },
   {
     titre: 'Article 3 — Accès et inscription',
-    contenu: `L'accès aux services ProBoost est réservé aux professionnels majeurs disposant d'un numéro SIRET valide. L'utilisateur s'engage à fournir des informations exactes, complètes et à jour lors de son inscription.
+    contenu: `L'accès aux services ManaFlow est réservé aux professionnels majeurs disposant d'un numéro SIRET valide. L'utilisateur s'engage à fournir des informations exactes, complètes et à jour lors de son inscription.
 
 Chaque compte est strictement personnel et ne peut être partagé. L'utilisateur est responsable de la confidentialité de ses identifiants de connexion. Tout accès frauduleux au compte d'un tiers est strictement interdit.
 
-ProBoost se réserve le droit de suspendre ou de résilier tout compte en cas de violation des présentes CGU.`,
+ManaFlow se réserve le droit de suspendre ou de résilier tout compte en cas de violation des présentes CGU.`,
   },
   {
     titre: 'Article 4 — Abonnements et facturation',
-    contenu: `L'accès aux services ProBoost est conditionné à la souscription d'un abonnement mensuel parmi les offres disponibles :
+    contenu: `L'accès aux services ManaFlow est conditionné à la souscription d'un abonnement mensuel parmi les offres disponibles :
 
 • Plan Starter (19,99 €/mois) — 10 factures/mois, 3 relances par facture, email uniquement
 • Plan Premium (49,99 €/mois) — 50 factures/mois, 5 relances par facture, délais personnalisables
@@ -40,7 +40,7 @@ Les abonnements sont facturés mensuellement par prélèvement automatique via S
   },
   {
     titre: 'Article 5 — Commission au succès',
-    contenu: `En complément de l'abonnement mensuel, ProBoost prélève une commission sur les factures effectivement recouvrées grâce à la plateforme :
+    contenu: `En complément de l'abonnement mensuel, ManaFlow prélève une commission sur les factures effectivement recouvrées grâce à la plateforme :
 
 • Plan Starter : 14% du montant recouvré (minimum 5€)
 • Plan Premium : 12% du montant recouvré (minimum 5€)
@@ -55,27 +55,27 @@ Aucune commission n'est due si la facture n'est pas réglée. La commission est 
 • N'importer que des factures légitimes pour lesquelles il est créancier
 • Vérifier l'exactitude des informations renseignées (montants, coordonnées)
 • Utiliser le service conformément à la législation en vigueur
-• Ne pas utiliser ProBoost à des fins de harcèlement ou d'intimidation
+• Ne pas utiliser ManaFlow à des fins de harcèlement ou d'intimidation
 • Respecter le RGPD concernant les données personnelles de ses débiteurs
 
 Tout usage abusif ou frauduleux du service entraîne la résiliation immédiate du compte sans remboursement.`,
   },
   {
     titre: 'Article 7 — Responsabilité',
-    contenu: `ProBoost s'engage à mettre en œuvre tous les moyens nécessaires pour assurer la disponibilité et le bon fonctionnement de la plateforme. Toutefois, ProBoost ne peut être tenu responsable :
+    contenu: `ManaFlow s'engage à mettre en œuvre tous les moyens nécessaires pour assurer la disponibilité et le bon fonctionnement de la plateforme. Toutefois, ManaFlow ne peut être tenu responsable :
 
 • Des résultats du recouvrement (le paiement dépend du débiteur)
 • Des interruptions de service dues à des causes extérieures (force majeure, défaillance des opérateurs tiers)
 • Des erreurs dans les informations fournies par l'utilisateur
 • Des conséquences d'une utilisation non conforme aux présentes CGU
 
-La responsabilité de ProBoost est limitée au montant des abonnements perçus sur les 3 derniers mois.`,
+La responsabilité de ManaFlow est limitée au montant des abonnements perçus sur les 3 derniers mois.`,
   },
   {
     titre: 'Article 8 — Résiliation',
     contenu: `L'utilisateur peut résilier son abonnement à tout moment depuis son espace client. La résiliation prend effet à la fin de la période d'abonnement en cours. Aucun remboursement ne sera effectué pour la période restante.
 
-ProBoost se réserve le droit de résilier unilatéralement tout compte en cas de :
+ManaFlow se réserve le droit de résilier unilatéralement tout compte en cas de :
 • Non-paiement de l'abonnement
 • Violation des présentes CGU
 • Usage frauduleux du service
@@ -84,7 +84,7 @@ En cas de résiliation, les données de l'utilisateur sont conservées 12 mois p
   },
   {
     titre: 'Article 9 — Propriété intellectuelle',
-    contenu: `L'ensemble des éléments de la plateforme ProBoost (logo, interface, algorithmes, textes, code source) est la propriété exclusive de ProBoost SAS et est protégé par le droit de la propriété intellectuelle.
+    contenu: `L'ensemble des éléments de la plateforme ManaFlow (logo, interface, algorithmes, textes, code source) est la propriété exclusive de ManaFlow SAS et est protégé par le droit de la propriété intellectuelle.
 
 Toute reproduction, modification ou exploitation non autorisée est strictement interdite. L'utilisateur conserve la propriété de ses données (factures, informations clients) qu'il importe sur la plateforme.`,
   },
@@ -94,7 +94,7 @@ Toute reproduction, modification ou exploitation non autorisée est strictement 
 
 À défaut d'accord amiable dans un délai de 30 jours, les tribunaux compétents de Paris seront seuls compétents pour connaître du litige.
 
-Pour toute réclamation : contact@proboost.fr`,
+Pour toute réclamation : contact@manaflow.fr`,
   },
 ]
 
@@ -138,8 +138,8 @@ export default function CguPage() {
         <nav style={{ position: 'sticky', top: 0, zIndex: 300, background: 'rgba(13,6,32,0.90)', backdropFilter: 'blur(20px)', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
           <div style={{ height: 72, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 20px', maxWidth: 1100, margin: '0 auto' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 2, cursor: 'pointer' }} onClick={() => router.push('/')}>
-              <img src="/logo.png" style={{ width: 36, height: 36, objectFit: 'contain', borderRadius: 8 }} />
-              <span style={{ fontFamily: 'Manrope', fontWeight: 800, fontSize: 18, color: 'white' }}>ProBoost</span>
+              <img src="/logo.png" style={{ width: 52, height: 52, objectFit: 'contain' }} />
+              <span style={{ fontFamily: 'Manrope', fontWeight: 800, fontSize: 22, color: 'white' }}>ManaFlow</span>
             </div>
             <div className="nav-links" style={{ display: 'flex', alignItems: 'center', gap: 28 }}>
               <span className="nav-a" onClick={() => router.push('/')} style={{ fontSize: 14 }}>Accueil</span>
@@ -162,7 +162,7 @@ export default function CguPage() {
             <span style={{ background: 'linear-gradient(135deg, #a855f7, #ec4899)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>d&apos;Utilisation</span>
           </h1>
           <p style={{ fontSize: isMobile ? 14 : 16, color: 'rgba(255,255,255,0.45)', maxWidth: 480, margin: '0 auto', fontWeight: 300, lineHeight: 1.7 }}>
-            Conditions régissant l&apos;accès et l&apos;utilisation des services ProBoost.
+            Conditions régissant l&apos;accès et l&apos;utilisation des services ManaFlow.
           </p>
         </div>
 
@@ -182,10 +182,10 @@ export default function CguPage() {
         <footer style={{ borderTop: '1px solid rgba(255,255,255,0.06)', padding: isMobile ? '24px 20px' : '28px 40px', position: 'relative', zIndex: 1 }}>
           <div className="footer-inner" style={{ maxWidth: 1100, margin: '0 auto', gap: isMobile ? 16 : 0 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }} onClick={() => router.push('/')}>
-              <img src="/logo.png" style={{ width: 36, height: 36, objectFit: 'contain', borderRadius: 8 }} />
-              <span style={{ fontFamily: 'Manrope', fontWeight: 800, fontSize: 15, color: 'white' }}>ProBoost</span>
+              <img src="/logo.png" style={{ width: 52, height: 52, objectFit: 'contain' }} />
+              <span style={{ fontFamily: 'Manrope', fontWeight: 800, fontSize: 15, color: 'white' }}>ManaFlow</span>
             </div>
-            <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.25)', textAlign: 'center' }}>© 2025 ProBoost — Tous droits réservés</p>
+            <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.25)', textAlign: 'center' }}>© 2025 ManaFlow — Tous droits réservés</p>
             <div style={{ display: 'flex', gap: 20 }}>
               <span className="nav-a" style={{ fontSize: 12, fontWeight: 700, color: '#c084fc' }}>CGU</span>
               <span className="nav-a" onClick={() => router.push('/confidentialite')} style={{ fontSize: 12 }}>Confidentialité</span>

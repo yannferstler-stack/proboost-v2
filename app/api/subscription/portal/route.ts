@@ -32,12 +32,12 @@ export async function POST(req: NextRequest) {
 
   if (!profile?.stripe_customer_id) {
     return NextResponse.json({
-      error: 'Client Stripe introuvable. Contactez contact@proboost.fr',
+      error: 'Client Stripe introuvable. Contactez contact@manaflow.fr',
     }, { status: 400 })
   }
 
   const stripe = getStripe()
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://proboost.fr'
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://manaflow.fr'
 
   const session = await stripe.billingPortal.sessions.create({
     customer: profile.stripe_customer_id,

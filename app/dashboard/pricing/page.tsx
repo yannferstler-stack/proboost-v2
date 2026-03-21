@@ -109,8 +109,8 @@ export default function DashboardPricingPage() {
         {/* Header */}
         <div style={{ background: 'white', borderBottom: '1px solid #EAECEF', padding: '16px 40px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-            <img src="/logo.png" style={{ width: 36, height: 36, objectFit: 'contain', borderRadius: 8 }} />
-            <span style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 800, fontSize: 17, color: '#111' }}>ProBoost</span>
+            <img src="/logo.png" style={{ width: 52, height: 52, objectFit: 'contain' }} />
+            <span style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 800, fontSize: 22, color: '#111' }}>ManaFlow</span>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
             <span style={{ fontSize: 13, color: '#6B7280' }}>Connecté : {user?.email}</span>
@@ -124,7 +124,7 @@ export default function DashboardPricingPage() {
         {/* Hero */}
         <div style={{ textAlign: 'center', padding: '56px 24px 40px', animation: 'fadeUp 0.4s ease both' }}>
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#F0FDF4', border: '1px solid #BBF7D0', borderRadius: 20, padding: '6px 16px', marginBottom: 20 }}>
-            <span style={{ fontSize: 12, color: '#16A34A', fontWeight: 600 }}>🎉 Bienvenue sur ProBoost, {user?.email?.split('@')[0]} !</span>
+            <span style={{ fontSize: 12, color: '#16A34A', fontWeight: 600 }}>🎉 Bienvenue sur ManaFlow, {user?.email?.split('@')[0]} !</span>
           </div>
           <h1 style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 800, fontSize: 34, color: '#111', marginBottom: 12 }}>
             Choisissez votre plan pour commencer
@@ -143,7 +143,7 @@ export default function DashboardPricingPage() {
               <p style={{ fontSize: 13, fontWeight: 700, color: '#EA580C', marginBottom: 2 }}>Paiement en cours de configuration</p>
               <p style={{ fontSize: 12, color: '#92400E' }}>
                 Notre système de paiement Stripe sera actif très prochainement. Pour accéder dès maintenant,{' '}
-                <a href="mailto:contact@proboost.fr" style={{ color: '#EA580C', fontWeight: 700, textDecoration: 'underline' }}>contactez-nous</a>.
+                <a href="mailto:contact@manaflow.fr" style={{ color: '#EA580C', fontWeight: 700, textDecoration: 'underline' }}>contactez-nous</a>.
               </p>
             </div>
           </div>
@@ -214,7 +214,7 @@ export default function DashboardPricingPage() {
         <div style={{ textAlign: 'center', paddingBottom: 48 }}>
           <p style={{ fontSize: 14, color: '#6B7280' }}>
             Vous souhaitez accéder maintenant ?{' '}
-            <a href="mailto:contact@proboost.fr" style={{ color: '#1DB954', fontWeight: 700, textDecoration: 'none' }}>
+            <a href="mailto:contact@manaflow.fr" style={{ color: '#1DB954', fontWeight: 700, textDecoration: 'none' }}>
               Contactez-nous →
             </a>
           </p>

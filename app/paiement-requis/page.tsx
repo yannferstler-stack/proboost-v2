@@ -20,7 +20,7 @@ export default function PaiementRequisPage() {
         setError(data.error || 'Erreur lors de la connexion au portail de paiement.')
       }
     } catch {
-      setError('Erreur réseau. Réessayez ou contactez contact@proboost.fr')
+      setError('Erreur réseau. Réessayez ou contactez contact@manaflow.fr')
     }
     setLoading(false)
   }
@@ -46,8 +46,8 @@ export default function PaiementRequisPage() {
         {/* NAV */}
         <nav style={{ height: 64, display: 'flex', alignItems: 'center', padding: '0 24px', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 2, cursor: 'pointer' }} onClick={() => router.push('/')}>
-            <img src="/logo.png" style={{ width: 36, height: 36, objectFit: 'contain', borderRadius: 8 }} />
-            <span style={{ fontFamily: 'Manrope', fontWeight: 800, fontSize: 18, color: 'white' }}>ProBoost</span>
+            <img src="/logo.png" style={{ width: 52, height: 52, objectFit: 'contain' }} />
+            <span style={{ fontFamily: 'Manrope', fontWeight: 800, fontSize: 22, color: 'white' }}>ManaFlow</span>
           </div>
         </nav>
 
@@ -73,7 +73,7 @@ export default function PaiementRequisPage() {
                 Abonnement suspendu
               </h1>
               <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.6)', lineHeight: 1.7, marginBottom: 28 }}>
-                Un paiement a échoué sur votre abonnement ProBoost.<br/>
+                Un paiement a échoué sur votre abonnement ManaFlow.<br/>
                 Merci de régulariser votre situation pour retrouver l&apos;accès à votre espace.
               </p>
 
@@ -116,10 +116,10 @@ export default function PaiementRequisPage() {
 
               <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: 20, display: 'flex', flexDirection: 'column', gap: 10 }}>
                 <a
-                  href="mailto:contact@proboost.fr"
+                  href="mailto:contact@manaflow.fr"
                   style={{ fontSize: 13, color: '#c084fc', textDecoration: 'none', fontWeight: 500 }}
                 >
-                  Un problème ? Contactez-nous → contact@proboost.fr
+                  Un problème ? Contactez-nous → contact@manaflow.fr
                 </a>
                 <button
                   onClick={handleLogout}

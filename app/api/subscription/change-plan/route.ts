@@ -63,14 +63,14 @@ export async function POST(req: NextRequest) {
     // Upgrade : application immédiate avec prorata (requiert stripe_subscription_id)
     if (!stripeData?.stripe_subscription_id) {
       return NextResponse.json({
-        error: 'Abonnement Stripe introuvable. Contactez contact@proboost.fr',
+        error: 'Abonnement Stripe introuvable. Contactez contact@manaflow.fr',
       }, { status: 400 })
     }
 
     const newPriceId = getPriceId(newPlan)
     if (!newPriceId) {
       return NextResponse.json({
-        error: 'Système de paiement en configuration. Contactez contact@proboost.fr',
+        error: 'Système de paiement en configuration. Contactez contact@manaflow.fr',
       }, { status: 503 })
     }
 

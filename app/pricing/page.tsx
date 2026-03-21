@@ -98,8 +98,8 @@ export default function PricingPage() {
         {/* Navbar */}
         <nav style={{ background: 'white', borderBottom: '1px solid #EAECEF', padding: '0 40px', height: 64, display: 'flex', alignItems: 'center', justifyContent: 'space-between', position: 'sticky', top: 0, zIndex: 100 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 2, cursor: 'pointer' }} onClick={() => router.push('/')}>
-            <img src="/logo.png" style={{ width: 36, height: 36, objectFit: 'contain', borderRadius: 8 }} />
-            <span style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 800, fontSize: 17, color: '#111' }}>ProBoost</span>
+            <img src="/logo.png" style={{ width: 52, height: 52, objectFit: 'contain' }} />
+            <span style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 800, fontSize: 22, color: '#111' }}>ManaFlow</span>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 32 }}>
             <span className="nav-link" onClick={() => router.push('/')} style={{ fontSize: 14, color: '#6B7280', fontWeight: 500 }}>Accueil</span>
@@ -196,7 +196,7 @@ export default function PricingPage() {
 
         {/* Footer */}
         <div style={{ background: '#0a0a0a', padding: '32px 40px', textAlign: 'center' }}>
-          <p style={{ color: 'rgba(255,255,255,0.3)', fontSize: 13 }}>© 2025 ProBoost — Tous droits réservés</p>
+          <p style={{ color: 'rgba(255,255,255,0.3)', fontSize: 13 }}>© 2025 ManaFlow — Tous droits réservés</p>
         </div>
 
       </div>

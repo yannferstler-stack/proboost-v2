@@ -62,7 +62,7 @@ export async function POST(req: NextRequest) {
           statut: 'payé',
         }).catch(() => {})
 
-        // Notifier l'utilisateur ProBoost par email (optionnel)
+        // Notifier l'utilisateur ManaFlow par email (optionnel)
         if (userId) {
           const { data: profile } = await supabase
             .from('profiles')
@@ -79,12 +79,12 @@ export async function POST(req: NextRequest) {
           if (profile?.email && facture) {
             const montantStr = Number(facture.montant).toLocaleString('fr-FR')
             await resend.emails.send({
-              from: 'ProBoost <noreply@proboost.fr>',
+              from: 'ManaFlow <noreply@manaflow.fr>',
               to: profile.email,
               subject: `✅ Paiement reçu — Facture ${facture.numero_facture || factureId}`,
               html: `
                 <div style="font-family:Inter,sans-serif;max-width:600px;margin:0 auto;padding:40px 20px;color:#111;">
-                  <p style="font-weight:800;font-size:20px;margin:0 0 32px;">ProBoost</p>
+                  <p style="font-weight:800;font-size:20px;margin:0 0 32px;">ManaFlow</p>
                   <div style="background:#F0FDF4;border:1px solid #BBF7D0;border-radius:12px;padding:16px 20px;margin-bottom:24px;">
                     <p style="margin:0;color:#16A34A;font-weight:700;font-size:15px;">✅ Paiement reçu avec succès</p>
                   </div>
@@ -98,7 +98,7 @@ export async function POST(req: NextRequest) {
                     dans votre dashboard.
                   </p>
                   <p style="color:#6B7280;line-height:1.7;">
-                    Cordialement,<br/>L'équipe ProBoost
+                    Cordialement,<br/>L'équipe ManaFlow
                   </p>
                 </div>
               `,
@@ -110,7 +110,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ received: true })
     }
 
-    // ── Cas 2 : souscription d'un abonnement ProBoost ──
+    // ── Cas 2 : souscription d'un abonnement ManaFlow ──
     const subscriptionId = session.subscription
     const customerId = session.customer
 
@@ -191,21 +191,21 @@ export async function POST(req: NextRequest) {
       if (profile?.email) {
         const deadline = new Date(now.getTime() + 3 * 24 * 60 * 60 * 1000)
         const deadlineStr = deadline.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })
-        const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://proboost.fr'
+        const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://manaflow.fr'
 
         await resend.emails.send({
-          from: 'ProBoost <noreply@proboost.fr>',
+          from: 'ManaFlow <noreply@manaflow.fr>',
           to: profile.email,
-          subject: '⚠️ Action requise : régularisez votre abonnement ProBoost',
+          subject: '⚠️ Action requise : régularisez votre abonnement ManaFlow',
           html: `
             <div style="font-family:Inter,sans-serif;max-width:600px;margin:0 auto;padding:40px 20px;color:#111;">
-              <p style="font-weight:800;font-size:20px;margin:0 0 32px;">ProBoost</p>
+              <p style="font-weight:800;font-size:20px;margin:0 0 32px;">ManaFlow</p>
               <div style="background:#FEF2F2;border:1px solid #FECACA;border-radius:12px;padding:16px 20px;margin-bottom:24px;">
                 <p style="margin:0;color:#DC2626;font-weight:700;font-size:15px;">⚠️ Échec de paiement de votre abonnement</p>
               </div>
               <p style="color:#6B7280;line-height:1.7;margin-bottom:16px;">Bonjour,</p>
               <p style="color:#6B7280;line-height:1.7;margin-bottom:16px;">
-                Nous n'avons pas pu encaisser le paiement de votre abonnement ProBoost.<br/>
+                Nous n'avons pas pu encaisser le paiement de votre abonnement ManaFlow.<br/>
                 Votre accès restera actif jusqu'au <strong style="color:#DC2626;">${deadlineStr}</strong>,
                 après quoi votre compte sera temporairement suspendu.
               </p>
@@ -217,7 +217,7 @@ export async function POST(req: NextRequest) {
                 Régulariser mon abonnement →
               </a>
               <p style="margin-top:40px;font-size:12px;color:#9CA3AF;">
-                Des questions ? Écrivez-nous à <a href="mailto:contact@proboost.fr" style="color:#a855f7;">contact@proboost.fr</a>
+                Des questions ? Écrivez-nous à <a href="mailto:contact@manaflow.fr" style="color:#a855f7;">contact@manaflow.fr</a>
               </p>
             </div>
           `,

@@ -2,7 +2,7 @@ import { createServerClient } from '@supabase/ssr'
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
-const SITE_PASSWORD = process.env.SITE_PASSWORD ?? 'proboost2024'
+const SITE_PASSWORD = process.env.SITE_PASSWORD ?? 'manaflow2024'
 const COOKIE_NAME = 'site_access'
 
 export async function proxy(request: NextRequest) {

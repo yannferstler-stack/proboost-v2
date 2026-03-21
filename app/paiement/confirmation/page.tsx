@@ -153,7 +153,7 @@ function ConfirmationContent() {
                 fontFamily: "Manrope, sans-serif", fontWeight: 800,
                 fontSize: 14, color: "#0a0a0a",
               }}>
-                ProBoost
+                ManaFlow
               </span>
             </div>
 

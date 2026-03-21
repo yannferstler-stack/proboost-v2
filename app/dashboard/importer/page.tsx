@@ -101,7 +101,7 @@ export default function ImporterPage() {
     const blob = new Blob([headers + '\n' + example], { type: 'text/csv' })
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
-    a.href = url; a.download = 'template-proboost.csv'; a.click()
+    a.href = url; a.download = 'template-manaflow.csv'; a.click()
   }
 
   const exporterCSV = async () => {
@@ -123,7 +123,7 @@ export default function ImporterPage() {
     const blob = new Blob([rows.join('\n')], { type: 'text/csv;charset=utf-8;' })
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
-    a.href = url; a.download = `export-proboost-${new Date().toISOString().split('T')[0]}.csv`; a.click()
+    a.href = url; a.download = `export-manaflow-${new Date().toISOString().split('T')[0]}.csv`; a.click()
   }
 
   const handleCSV = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -281,8 +281,8 @@ export default function ImporterPage() {
         {/* SIDEBAR DESKTOP */}
         <aside className="desktop-sidebar" style={{ width: 240, background: 'white', borderRight: '1px solid #EAECEF', flexDirection: 'column', padding: '24px 16px', position: 'fixed', top: 0, left: 0, height: '100vh' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 2, padding: '0 8px', marginBottom: 36 }}>
-            <img src="/logo.png" style={{ width: 36, height: 36, objectFit: 'contain', borderRadius: 8 }} />
-            <span onClick={() => window.location.href = '/'} style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 800, fontSize: 17, color: '#111', cursor: 'pointer' }}>ProBoost</span>
+            <img src="/logo.png" style={{ width: 52, height: 52, objectFit: 'contain' }} />
+            <span onClick={() => window.location.href = '/'} style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 800, fontSize: 22, color: '#111', cursor: 'pointer' }}>ManaFlow</span>
           </div>
           <nav style={{ display: 'flex', flexDirection: 'column', gap: 4, flex: 1 }}>
             {NAV_ITEMS.map(item => (
@@ -304,7 +304,7 @@ export default function ImporterPage() {
                   <div style={{ width: 32, height: 32, background: 'linear-gradient(135deg, #a855f7, #ec4899)', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     <span style={{ color: 'white', fontFamily: 'Manrope, sans-serif', fontWeight: 800, fontSize: 14 }}>P</span>
                   </div>
-                  <span style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 800, fontSize: 16, color: '#111' }}>ProBoost</span>
+                  <span style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 800, fontSize: 22, color: '#111' }}>ManaFlow</span>
                 </div>
                 <button onClick={() => setSidebarOpen(false)} style={{ background: '#F3F4F6', border: 'none', borderRadius: 8, width: 32, height: 32, cursor: 'pointer', fontSize: 18, color: '#6B7280' }}>×</button>
               </div>
