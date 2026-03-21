@@ -109,7 +109,7 @@ export default function DashboardPricingPage() {
         {/* Header */}
         <div style={{ background: 'white', borderBottom: '1px solid #EAECEF', padding: '16px 40px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-            <img src="/logo.png" style={{ width: 52, height: 52, objectFit: 'contain' }} />
+            <img src="/logo.png" style={{ height: 44, width: 'auto', objectFit: 'contain' }} />
             <span style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 800, fontSize: 22, color: '#111' }}>ManaFlow</span>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>

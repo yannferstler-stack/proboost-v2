@@ -46,7 +46,7 @@ export default function PaiementRequisPage() {
         {/* NAV */}
         <nav style={{ height: 64, display: 'flex', alignItems: 'center', padding: '0 24px', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 2, cursor: 'pointer' }} onClick={() => router.push('/')}>
-            <img src="/logo.png" style={{ width: 52, height: 52, objectFit: 'contain' }} />
+            <img src="/logo.png" style={{ height: 44, width: 'auto', objectFit: 'contain' }} />
             <span style={{ fontFamily: 'Manrope', fontWeight: 800, fontSize: 22, color: 'white' }}>ManaFlow</span>
           </div>
         </nav>
