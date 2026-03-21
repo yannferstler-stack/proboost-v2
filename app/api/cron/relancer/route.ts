@@ -3,7 +3,7 @@ import { createClient } from '@supabase/supabase-js'
 import { Resend } from 'resend'
 import { getEmailContent } from '../../../lib/email-templates'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
+const getResend = () => new Resend(process.env.RESEND_API_KEY)
 
 /**
  * Crée (ou réutilise) un lien de paiement Stripe Checkout pour une facture.
@@ -151,7 +151,7 @@ export async function GET(request: NextRequest) {
           numeroRelance,
           paymentUrl,
         })
-        await resend.emails.send({
+        await getResend().emails.send({
           from: `ManaFlow <onboarding@resend.dev>`,
           to: facture.client_email,
           subject,

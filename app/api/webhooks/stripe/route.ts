@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { Resend } from 'resend'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
+const getResend = () => new Resend(process.env.RESEND_API_KEY)
 
 function getStripe() {
   const Stripe = require('stripe')
@@ -78,7 +78,7 @@ export async function POST(req: NextRequest) {
 
           if (profile?.email && facture) {
             const montantStr = Number(facture.montant).toLocaleString('fr-FR')
-            await resend.emails.send({
+            await getResend().emails.send({
               from: 'ManaFlow <noreply@manaflow.fr>',
               to: profile.email,
               subject: `✅ Paiement reçu — Facture ${facture.numero_facture || factureId}`,
@@ -193,7 +193,7 @@ export async function POST(req: NextRequest) {
         const deadlineStr = deadline.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })
         const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://manaflow.fr'
 
-        await resend.emails.send({
+        await getResend().emails.send({
           from: 'ManaFlow <noreply@manaflow.fr>',
           to: profile.email,
           subject: '⚠️ Action requise : régularisez votre abonnement ManaFlow',
