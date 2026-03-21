@@ -70,7 +70,7 @@ export default function LoginPage() {
         {isMobile && (
           <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '40px 20px', position: 'relative', zIndex: 1 }}>
             {/* Logo */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: 2, cursor: 'pointer', marginBottom: 40 }} onClick={() => router.push('/')}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 20, cursor: 'pointer', marginBottom: 40 }} onClick={() => router.push('/')}>
               <img src="/logo.png" style={{ height: 44, width: 'auto', objectFit: 'contain' }} />
               <span style={{ fontFamily: 'Manrope', fontWeight: 800, fontSize: 22, color: 'white' }}>ManaFlow</span>
             </div>
@@ -136,7 +136,7 @@ export default function LoginPage() {
             {/* LEFT */}
             <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: '40px 48px', position: 'relative', zIndex: 1 }}>
               {/* Logo */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: 2, cursor: 'pointer' }} onClick={() => router.push('/')}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 20, cursor: 'pointer' }} onClick={() => router.push('/')}>
                 <img src="/logo.png" style={{ height: 44, width: 'auto', objectFit: 'contain' }} />
                 <span style={{ fontFamily: 'Manrope', fontWeight: 800, fontSize: 22, color: 'white' }}>ManaFlow</span>
               </div>
