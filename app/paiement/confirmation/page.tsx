@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, Suspense } from "react";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { loadStripe } from "@stripe/stripe-js";
 
 const stripePromise = loadStripe(
@@ -10,6 +10,7 @@ const stripePromise = loadStripe(
 
 function ConfirmationContent() {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const [status, setStatus] = useState<"loading" | "success" | "error">("loading");
   const [amount, setAmount] = useState<number | null>(null);
 
@@ -105,19 +106,20 @@ function ConfirmationContent() {
               Une erreur est survenue lors du traitement.<br />
               Vérifiez vos informations et réessayez.
             </p>
-            <a href="/paiement" style={{
+            <button onClick={() => router.push('/paiement')} style={{
               display: "inline-block",
               padding: "13px 28px",
               background: "#0a0a0a",
               color: "white",
+              border: "none",
               borderRadius: 10,
               fontSize: 14,
               fontWeight: 600,
-              textDecoration: "none",
+              cursor: "pointer",
               fontFamily: "Inter, sans-serif",
             }}>
               Réessayer
-            </a>
+            </button>
           </div>
         </div>
       )}
@@ -223,21 +225,22 @@ function ConfirmationContent() {
               Un reçu vous a été envoyé par email
             </div>
 
-            <a href="/" style={{
+            <button onClick={() => router.push('/')} style={{
               display: "inline-block",
               padding: "13px 32px",
               background: "#1DB954",
               color: "white",
+              border: "none",
               borderRadius: 10,
               fontSize: 14,
               fontWeight: 600,
-              textDecoration: "none",
+              cursor: "pointer",
               fontFamily: "Inter, sans-serif",
               boxShadow: "0 4px 16px rgba(29,185,84,0.25)",
               letterSpacing: "0.1px",
             }}>
-              Retour à l'accueil →
-            </a>
+              Retour à l&apos;accueil →
+            </button>
 
             {/* Badge Stripe */}
             <div style={{
