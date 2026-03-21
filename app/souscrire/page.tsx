@@ -111,8 +111,8 @@ function SouscrireContent() {
         {/* NAV */}
         <nav style={{ height: 64, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 20px', borderBottom: '1px solid rgba(255,255,255,0.06)', position: 'relative', zIndex: 10 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 2, cursor: 'pointer' }} onClick={() => router.push('/')}>
-            <img src="/logo.png" style={{ width: 36, height: 36, objectFit: 'contain', borderRadius: 8 }} />
-            <span style={{ fontFamily: 'Manrope', fontWeight: 800, fontSize: 18, color: 'white' }}>ProBoost</span>
+            <img src="/logo.png" style={{ width: 52, height: 52, objectFit: 'contain' }} />
+            <span style={{ fontFamily: 'Manrope', fontWeight: 800, fontSize: 22, color: 'white' }}>ManaFlow</span>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
             <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.35)' }}>Déjà client ?</span>
@@ -187,8 +187,8 @@ function SouscrireContent() {
               <h3 style={{ fontFamily: 'Manrope', fontWeight: 700, fontSize: 14, color: 'white', marginBottom: 12 }}>Acceptation des conditions</h3>
               <div className="scroll-box" style={{ background: 'rgba(0,0,0,0.2)', borderRadius: 10, padding: '12px 14px', marginBottom: 14, fontSize: 12, color: 'rgba(255,255,255,0.50)', lineHeight: 1.75, maxHeight: 140, overflowY: 'auto' }}>
                 <p style={{ fontWeight: 600, marginBottom: 6, color: 'rgba(255,255,255,0.70)' }}>Mandat de recouvrement et conditions d'utilisation</p>
-                <p style={{ marginBottom: 6 }}>En souscrivant à ProBoost, vous mandatez ProBoost pour effectuer, en votre nom et pour votre compte, des relances amiables auprès de vos débiteurs par email et/ou SMS.</p>
-                <p style={{ marginBottom: 6 }}>Vous reconnaissez que ProBoost agit en tant qu'intermédiaire et non en tant que mandataire judiciaire. Les relances effectuées restent dans le cadre amiable.</p>
+                <p style={{ marginBottom: 6 }}>En souscrivant à ManaFlow, vous mandatez ManaFlow pour effectuer, en votre nom et pour votre compte, des relances amiables auprès de vos débiteurs par email et/ou SMS.</p>
+                <p style={{ marginBottom: 6 }}>Vous reconnaissez que ManaFlow agit en tant qu'intermédiaire et non en tant que mandataire judiciaire. Les relances effectuées restent dans le cadre amiable.</p>
                 <p style={{ marginBottom: 6 }}>La commission de succès est prélevée uniquement sur les montants effectivement recouvrés. L'abonnement mensuel est dû indépendamment des résultats obtenus.</p>
                 <p>Vous pouvez résilier à tout moment depuis votre espace client, sans frais. La résiliation prend effet à la fin de la période en cours.</p>
               </div>
@@ -197,7 +197,7 @@ function SouscrireContent() {
                   {cgvAccepted && <span style={{ color: 'white', fontSize: 12, fontWeight: 700 }}>✓</span>}
                 </div>
                 <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.55)', lineHeight: 1.6 }}>
-                  J'accepte les <span style={{ color: '#c084fc', fontWeight: 600 }}>Conditions Générales de Vente</span> et le mandat de recouvrement amiable confié à ProBoost.
+                  J'accepte les <span style={{ color: '#c084fc', fontWeight: 600 }}>Conditions Générales de Vente</span> et le mandat de recouvrement amiable confié à ManaFlow.
                 </span>
               </label>
             </div>

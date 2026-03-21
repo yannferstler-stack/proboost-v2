@@ -5,11 +5,11 @@ import { useState, useEffect } from 'react'
 const SECTIONS = [
   {
     titre: '1. Qui sommes-nous ?',
-    contenu: `ProBoost est une plateforme d'automatisation de relances de factures impayées, éditée par ProBoost SAS, dont le siège social est en France.
+    contenu: `ManaFlow est une plateforme d'automatisation de relances de factures impayées, éditée par ManaFlow SAS, dont le siège social est en France.
 
-En tant que responsable de traitement au sens du Règlement Général sur la Protection des Données (RGPD — Règlement UE 2016/679), ProBoost s'engage à traiter vos données personnelles avec la plus grande transparence et dans le respect de la vie privée.
+En tant que responsable de traitement au sens du Règlement Général sur la Protection des Données (RGPD — Règlement UE 2016/679), ManaFlow s'engage à traiter vos données personnelles avec la plus grande transparence et dans le respect de la vie privée.
 
-Pour toute question relative à vos données : contact@proboost.fr`,
+Pour toute question relative à vos données : contact@manaflow.fr`,
   },
   {
     titre: '2. Données collectées',
@@ -29,7 +29,7 @@ Données d'utilisation de la plateforme
 Données transmises par vos débiteurs
 • Les coordonnées email et téléphoniques de vos clients que vous renseignez pour les relances
 
-ProBoost ne collecte aucune donnée bancaire directement — les paiements sont gérés par Stripe, certifié PCI-DSS.`,
+ManaFlow ne collecte aucune donnée bancaire directement — les paiements sont gérés par Stripe, certifié PCI-DSS.`,
   },
   {
     titre: '3. Finalités du traitement',
@@ -46,7 +46,7 @@ ProBoost ne collecte aucune donnée bancaire directement — les paiements sont 
     contenu: `Selon les cas, les traitements reposent sur :
 
 • L'exécution du contrat (CGU acceptées lors de l'inscription) : traitement des factures, envoi des relances, gestion de l'abonnement
-• L'intérêt légitime de ProBoost : amélioration du service, prévention de la fraude, sécurité
+• L'intérêt légitime de ManaFlow : amélioration du service, prévention de la fraude, sécurité
 • Le consentement : envoi de communications marketing (révocable à tout moment)
 • L'obligation légale : conservation des données comptables (10 ans)`,
   },
@@ -56,14 +56,14 @@ ProBoost ne collecte aucune donnée bancaire directement — les paiements sont 
 
 • Données de compte actif : pendant toute la durée de l'abonnement + 12 mois après résiliation
 • Factures et historique de relances : 5 ans à compter de leur création (prescription commerciale)
-• Données de facturation ProBoost : 10 ans (obligation comptable)
+• Données de facturation ManaFlow : 10 ans (obligation comptable)
 • Données de connexion (logs) : 12 mois
 
 À l'expiration de ces délais, vos données sont supprimées ou anonymisées de manière irréversible.`,
   },
   {
     titre: '6. Partage des données',
-    contenu: `ProBoost ne vend jamais vos données personnelles. Nous pouvons partager vos données uniquement avec :
+    contenu: `ManaFlow ne vend jamais vos données personnelles. Nous pouvons partager vos données uniquement avec :
 
 • Stripe (paiements) : certifié PCI-DSS, données chiffrées
 • Supabase (base de données) : hébergement en Europe, certifié ISO 27001
@@ -83,12 +83,12 @@ Tous nos sous-traitants sont liés par des contrats de traitement conformes au R
 • Droit d'opposition : vous opposer à certains traitements basés sur l'intérêt légitime
 • Droit à la limitation : restreindre temporairement un traitement
 
-Pour exercer vos droits : contact@proboost.fr
+Pour exercer vos droits : contact@manaflow.fr
 Vous pouvez également introduire une réclamation auprès de la CNIL (cnil.fr).`,
   },
   {
     titre: '8. Sécurité des données',
-    contenu: `ProBoost met en œuvre les mesures techniques et organisationnelles appropriées pour protéger vos données :
+    contenu: `ManaFlow met en œuvre les mesures techniques et organisationnelles appropriées pour protéger vos données :
 
 • Chiffrement en transit (TLS 1.3) et au repos (AES-256)
 • Accès aux données restreint aux seuls collaborateurs habilités
@@ -100,7 +100,7 @@ En cas de violation de données susceptible d'engendrer un risque pour vos droit
   },
   {
     titre: '9. Cookies',
-    contenu: `ProBoost utilise des cookies strictement nécessaires au fonctionnement du service (authentification, session). Aucun cookie publicitaire ou de tracking tiers n'est utilisé sans votre consentement préalable.
+    contenu: `ManaFlow utilise des cookies strictement nécessaires au fonctionnement du service (authentification, session). Aucun cookie publicitaire ou de tracking tiers n'est utilisé sans votre consentement préalable.
 
 Cookies utilisés :
 • Cookies de session : authentification, maintien de la connexion (durée : session)
@@ -110,9 +110,9 @@ Vous pouvez configurer votre navigateur pour refuser les cookies, ce qui peut af
   },
   {
     titre: '10. Modifications de cette politique',
-    contenu: `ProBoost se réserve le droit de modifier la présente politique de confidentialité à tout moment. Toute modification substantielle vous sera notifiée par email et/ou via une notification dans votre tableau de bord, au moins 15 jours avant son entrée en vigueur.
+    contenu: `ManaFlow se réserve le droit de modifier la présente politique de confidentialité à tout moment. Toute modification substantielle vous sera notifiée par email et/ou via une notification dans votre tableau de bord, au moins 15 jours avant son entrée en vigueur.
 
-La politique en vigueur est toujours accessible à l'adresse proboost.fr/confidentialite.
+La politique en vigueur est toujours accessible à l'adresse manaflow.fr/confidentialite.
 
 Dernière mise à jour : janvier 2025`,
   },
@@ -157,8 +157,8 @@ export default function ConfidentialitePage() {
         <nav style={{ position: 'sticky', top: 0, zIndex: 300, background: 'rgba(13,6,32,0.90)', backdropFilter: 'blur(20px)', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
           <div style={{ height: 72, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 20px', maxWidth: 1100, margin: '0 auto' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 2, cursor: 'pointer' }} onClick={() => router.push('/')}>
-              <img src="/logo.png" style={{ width: 36, height: 36, objectFit: 'contain', borderRadius: 8 }} />
-              <span style={{ fontFamily: 'Manrope', fontWeight: 800, fontSize: 18, color: 'white' }}>ProBoost</span>
+              <img src="/logo.png" style={{ width: 52, height: 52, objectFit: 'contain' }} />
+              <span style={{ fontFamily: 'Manrope', fontWeight: 800, fontSize: 22, color: 'white' }}>ManaFlow</span>
             </div>
             <div className="nav-links" style={{ display: 'flex', alignItems: 'center', gap: 28 }}>
               <span className="nav-a" onClick={() => router.push('/')} style={{ fontSize: 14 }}>Accueil</span>
@@ -204,7 +204,7 @@ export default function ConfidentialitePage() {
             </div>
             <div>
               <p style={{ fontFamily: 'Manrope', fontWeight: 700, color: 'white', fontSize: 14, marginBottom: 4 }}>Une question sur vos données ?</p>
-              <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)' }}>Contactez-nous à <span style={{ color: '#c084fc', fontWeight: 600 }}>contact@proboost.fr</span> — réponse sous 48h.</p>
+              <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)' }}>Contactez-nous à <span style={{ color: '#c084fc', fontWeight: 600 }}>contact@manaflow.fr</span> — réponse sous 48h.</p>
             </div>
           </div>
         </section>
@@ -213,10 +213,10 @@ export default function ConfidentialitePage() {
         <footer style={{ borderTop: '1px solid rgba(255,255,255,0.06)', padding: isMobile ? '24px 20px' : '28px 40px', position: 'relative', zIndex: 1 }}>
           <div className="footer-inner" style={{ maxWidth: 1100, margin: '0 auto', gap: isMobile ? 16 : 0 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }} onClick={() => router.push('/')}>
-              <img src="/logo.png" style={{ width: 36, height: 36, objectFit: 'contain', borderRadius: 8 }} />
-              <span style={{ fontFamily: 'Manrope', fontWeight: 800, fontSize: 15, color: 'white' }}>ProBoost</span>
+              <img src="/logo.png" style={{ width: 52, height: 52, objectFit: 'contain' }} />
+              <span style={{ fontFamily: 'Manrope', fontWeight: 800, fontSize: 15, color: 'white' }}>ManaFlow</span>
             </div>
-            <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.25)', textAlign: 'center' }}>© 2025 ProBoost — Tous droits réservés</p>
+            <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.25)', textAlign: 'center' }}>© 2025 ManaFlow — Tous droits réservés</p>
             <div style={{ display: 'flex', gap: 20 }}>
               <span className="nav-a" onClick={() => router.push('/cgu')} style={{ fontSize: 12 }}>CGU</span>
               <span className="nav-a" style={{ fontSize: 12, fontWeight: 700, color: '#c084fc' }}>Confidentialité</span>

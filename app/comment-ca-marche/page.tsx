@@ -16,12 +16,12 @@ export default function CommentCaMarchePage() {
 
   const faqs = [
     {
-      q: 'Je connais bien mes clients — est-ce que ProBoost va abîmer la relation ?',
+      q: 'Je connais bien mes clients — est-ce que ManaFlow va abîmer la relation ?',
       r: 'Non. Nos relances sont pensées pour rester dans le registre amiable et professionnel. Le ton est adapté, jamais agressif. L\'objectif est de récupérer l\'argent sans jamais compromettre la relation humaine que vous avez construite avec vos clients.',
     },
     {
       q: 'Je suis artisan ou indépendant — est-ce que c\'est fait pour moi ?',
-      r: 'Absolument. ProBoost a été conçu pour les TPE, artisans, et indépendants. Vous importez vos factures en quelques clics (CSV ou PDF), et on s\'occupe du reste. Pas besoin de compétences techniques.',
+      r: 'Absolument. ManaFlow a été conçu pour les TPE, artisans, et indépendants. Vous importez vos factures en quelques clics (CSV ou PDF), et on s\'occupe du reste. Pas besoin de compétences techniques.',
     },
     {
       q: 'Comment fonctionne la commission ?',
@@ -29,11 +29,11 @@ export default function CommentCaMarchePage() {
     },
     {
       q: 'Que se passe-t-il si une facture date de plusieurs mois ?',
-      r: 'Plus une facture est ancienne, plus elle est difficile à récupérer — mais pas impossible. ProBoost calcule automatiquement la première relance en fonction de la date d\'échéance, même si celle-ci est déjà dépassée.',
+      r: 'Plus une facture est ancienne, plus elle est difficile à récupérer — mais pas impossible. ManaFlow calcule automatiquement la première relance en fonction de la date d\'échéance, même si celle-ci est déjà dépassée.',
     },
     {
       q: 'Quels formats de fichiers puis-je importer ?',
-      r: 'ProBoost accepte les fichiers CSV et les PDF. Pour les PDF, notre IA extrait automatiquement les informations : nom du client, montant, date d\'échéance. Vous n\'avez rien à ressaisir.',
+      r: 'ManaFlow accepte les fichiers CSV et les PDF. Pour les PDF, notre IA extrait automatiquement les informations : nom du client, montant, date d\'échéance. Vous n\'avez rien à ressaisir.',
     },
     {
       q: 'La facturation électronique va-t-elle changer quelque chose pour moi ?',
@@ -86,8 +86,8 @@ export default function CommentCaMarchePage() {
         <nav style={{ position: 'sticky', top: 0, zIndex: 300, background: 'rgba(13,6,32,0.90)', backdropFilter: 'blur(20px)', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
           <div style={{ height: 72, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 20px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 2, cursor: 'pointer' }} onClick={() => router.push('/')}>
-              <img src="/logo.png" style={{ width: 36, height: 36, objectFit: 'contain', borderRadius: 8 }} />
-              <span style={{ fontFamily: 'Manrope', fontWeight: 800, fontSize: 18, color: 'white' }}>ProBoost</span>
+              <img src="/logo.png" style={{ width: 52, height: 52, objectFit: 'contain' }} />
+              <span style={{ fontFamily: 'Manrope', fontWeight: 800, fontSize: 22, color: 'white' }}>ManaFlow</span>
             </div>
             <div className="nav-links">
               <span className="nav-a" onClick={() => router.push('/')} style={{ fontSize: 14, fontWeight: 500 }}>Accueil</span>
@@ -125,7 +125,7 @@ export default function CommentCaMarchePage() {
         <div style={{ textAlign: 'center', padding: isMobile ? '48px 20px 36px' : '72px 20px 48px', position: 'relative', zIndex: 1 }}>
           <h1 style={{ fontFamily: 'Manrope', fontWeight: 900, fontSize: 'clamp(30px, 5vw, 60px)', color: 'white', letterSpacing: '-1.5px', lineHeight: 1.1, marginBottom: 14 }}>
             Tout savoir sur<br/>
-            <span style={{ background: 'linear-gradient(135deg, #a855f7, #ec4899)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>ProBoost</span>
+            <span style={{ background: 'linear-gradient(135deg, #a855f7, #ec4899)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>ManaFlow</span>
           </h1>
           <p style={{ fontSize: isMobile ? 15 : 17, color: 'rgba(255,255,255,0.50)', maxWidth: 480, margin: '0 auto', fontWeight: 300, lineHeight: 1.7 }}>
             Une vidéo et vos questions — tout ce qu&apos;il faut pour se lancer.
@@ -136,7 +136,7 @@ export default function CommentCaMarchePage() {
         <section style={{ padding: isMobile ? '0 20px 56px' : '0 40px 80px', maxWidth: 900, margin: '0 auto', position: 'relative', zIndex: 1 }}>
           <div style={{ marginBottom: 24, textAlign: 'center' }}>
             <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.25)', fontWeight: 600, letterSpacing: '2px', textTransform: 'uppercase' }}>01 — Vidéo explicative</span>
-            <h2 style={{ fontFamily: 'Manrope', fontWeight: 800, fontSize: isMobile ? 22 : 28, color: 'white', letterSpacing: '-0.5px', marginTop: 8 }}>Voyez ProBoost en action</h2>
+            <h2 style={{ fontFamily: 'Manrope', fontWeight: 800, fontSize: isMobile ? 22 : 28, color: 'white', letterSpacing: '-0.5px', marginTop: 8 }}>Voyez ManaFlow en action</h2>
           </div>
           <div style={{ background: 'rgba(255,255,255,0.04)', backdropFilter: 'blur(12px)', borderRadius: 20, aspectRatio: '16/9', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 14, border: '1px solid rgba(255,255,255,0.08)' }}>
             <div style={{ width: 64, height: 64, background: 'linear-gradient(135deg, #a855f7, #ec4899)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', boxShadow: '0 4px 24px rgba(168,85,247,0.45)' }}>
@@ -182,10 +182,10 @@ export default function CommentCaMarchePage() {
         <footer style={{ borderTop: '1px solid rgba(255,255,255,0.06)', padding: isMobile ? '24px 20px' : '28px 40px', position: 'relative', zIndex: 1 }}>
           <div className="footer-inner" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: isMobile ? 16 : 0 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }} onClick={() => router.push('/')}>
-              <img src="/logo.png" style={{ width: 36, height: 36, objectFit: 'contain', borderRadius: 8 }} />
-              <span style={{ fontFamily: 'Manrope', fontWeight: 800, fontSize: 15, color: 'white' }}>ProBoost</span>
+              <img src="/logo.png" style={{ width: 52, height: 52, objectFit: 'contain' }} />
+              <span style={{ fontFamily: 'Manrope', fontWeight: 800, fontSize: 15, color: 'white' }}>ManaFlow</span>
             </div>
-            <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.25)', textAlign: 'center' }}>© 2025 ProBoost — Tous droits réservés</p>
+            <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.25)', textAlign: 'center' }}>© 2025 ManaFlow — Tous droits réservés</p>
             <div style={{ display: 'flex', gap: 20 }}>
               <span className="nav-a" onClick={() => router.push('/cgu')} style={{ fontSize: 12, cursor: 'pointer' }}>CGU</span>
               <span className="nav-a" onClick={() => router.push('/confidentialite')} style={{ fontSize: 12, cursor: 'pointer' }}>Confidentialité</span>

@@ -84,8 +84,8 @@ function AccesContent() {
             }}>
               <div style={{ width: 12, height: 12, background: 'white', borderRadius: 3 }} />
             </div>
-            <span style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 800, fontSize: 16, color: '#0a0a0a' }}>
-              ProBoost
+            <span style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 800, fontSize: 22, color: '#0a0a0a' }}>
+              ManaFlow
             </span>
           </div>
 

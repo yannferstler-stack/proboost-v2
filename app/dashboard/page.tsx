@@ -56,7 +56,7 @@ export default function Dashboard() {
   // Afficher le modal d'onboarding à la première visite
   useEffect(() => {
     if (!loading) {
-      const done = typeof window !== 'undefined' && localStorage.getItem('proboost_onboarding_done')
+      const done = typeof window !== 'undefined' && localStorage.getItem('manaflow_onboarding_done')
       if (!done) setShowOnboarding(true)
     }
   }, [loading])
@@ -247,8 +247,8 @@ export default function Dashboard() {
         {/* SIDEBAR */}
         <aside style={{ width: 240, background: 'white', borderRight: '1px solid #EAECEF', display: 'flex', flexDirection: 'column', padding: '24px 16px', position: 'fixed', top: 0, left: 0, height: '100vh' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 2, padding: '0 8px', marginBottom: 36 }}>
-            <img src="/logo.png" style={{ width: 36, height: 36, objectFit: 'contain', borderRadius: 8 }} />
-            <span onClick={() => window.location.href = '/'} style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 800, fontSize: 17, color: '#111', cursor: 'pointer' }}>ProBoost</span>
+            <img src="/logo.png" style={{ width: 52, height: 52, objectFit: 'contain' }} />
+            <span onClick={() => window.location.href = '/'} style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 800, fontSize: 22, color: '#111', cursor: 'pointer' }}>ManaFlow</span>
           </div>
           <nav style={{ display: 'flex', flexDirection: 'column', gap: 4, flex: 1 }}>
             {[
@@ -310,7 +310,7 @@ export default function Dashboard() {
                 <span style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 800, fontSize: 36, color: 'white' }}>{montantRecupere.toLocaleString('fr-FR')}</span>
                 <span style={{ fontSize: 18, color: 'rgba(255,255,255,0.8)', fontWeight: 700 }}>€</span>
               </div>
-              <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.65)', marginTop: 6 }}>grâce à ProBoost</p>
+              <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.65)', marginTop: 6 }}>grâce à ManaFlow</p>
             </div>
           </div>
 
@@ -574,7 +574,7 @@ export default function Dashboard() {
               {/* Header */}
               <div style={{ padding: '20px 24px', borderBottom: '1px solid #EAECEF', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'white', borderRadius: '20px 20px 0 0' }}>
                 <div>
-                  <h2 style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 800, fontSize: 17, color: '#111', marginBottom: 2 }}>
+                  <h2 style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 800, fontSize: 22, color: '#111', marginBottom: 2 }}>
                     Prévisualisation — Relance #{numeroRelance}
                   </h2>
                   <p style={{ fontSize: 12, color: '#9CA3AF' }}>{previewFacture.numero_facture} · {previewFacture.client_nom}</p>
@@ -659,18 +659,18 @@ export default function Dashboard() {
       )}
       {/* MODAL ONBOARDING */}
       {showOnboarding && (
-        <div className="overlay" onClick={() => { setShowOnboarding(false); localStorage.setItem('proboost_onboarding_done', '1') }}>
+        <div className="overlay" onClick={() => { setShowOnboarding(false); localStorage.setItem('manaflow_onboarding_done', '1') }}>
           <div className="modal" onClick={e => e.stopPropagation()} style={{ maxWidth: 480, textAlign: 'center' }}>
             <div style={{ width: 56, height: 56, background: 'linear-gradient(135deg, #a855f7, #ec4899)', borderRadius: 16, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px', fontSize: 26 }}>🚀</div>
             <h2 style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 800, fontSize: 22, color: '#111', marginBottom: 8 }}>
-              Bienvenue sur ProBoost !
+              Bienvenue sur ManaFlow !
             </h2>
             <p style={{ fontSize: 14, color: '#6B7280', marginBottom: 28, lineHeight: 1.6 }}>
               3 étapes pour automatiser votre recouvrement
             </p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 28, textAlign: 'left' }}>
               {[
-                { n: '1', icon: '📂', title: 'Importez vos factures', desc: 'Glissez un CSV ou des PDF — ProBoost extrait tout automatiquement', color: '#F5F3FF', border: '#DDD6FE', text: '#7c3aed' },
+                { n: '1', icon: '📂', title: 'Importez vos factures', desc: 'Glissez un CSV ou des PDF — ManaFlow extrait tout automatiquement', color: '#F5F3FF', border: '#DDD6FE', text: '#7c3aed' },
                 { n: '2', icon: '⚡', title: 'Activez les relances auto', desc: 'Pour chaque facture impayée, cliquez "Commencer" — les emails partent seuls', color: '#F0FDF4', border: '#BBF7D0', text: '#16A34A' },
                 { n: '3', icon: '📊', title: 'Suivez vos recouvrements', desc: 'Consultez le tableau de bord pour voir les paiements encaissés', color: '#FFF7ED', border: '#FED7AA', text: '#EA580C' },
               ].map(step => (
@@ -687,12 +687,12 @@ export default function Dashboard() {
             </div>
             <div style={{ display: 'flex', gap: 10 }}>
               <button
-                onClick={() => { setShowOnboarding(false); localStorage.setItem('proboost_onboarding_done', '1'); window.location.href = '/dashboard/settings' }}
+                onClick={() => { setShowOnboarding(false); localStorage.setItem('manaflow_onboarding_done', '1'); window.location.href = '/dashboard/settings' }}
                 style={{ flex: 1, background: '#F3F4F6', color: '#374151', border: 'none', borderRadius: 10, padding: '12px', fontSize: 14, fontWeight: 600, cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}>
                 Configurer d&apos;abord
               </button>
               <button
-                onClick={() => { setShowOnboarding(false); localStorage.setItem('proboost_onboarding_done', '1'); window.location.href = '/dashboard/importer' }}
+                onClick={() => { setShowOnboarding(false); localStorage.setItem('manaflow_onboarding_done', '1'); window.location.href = '/dashboard/importer' }}
                 className="btn-main"
                 style={{ flex: 1, color: 'white', border: 'none', borderRadius: 10, padding: '12px', fontSize: 14, fontWeight: 600, cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}>
                 Importer mes factures →

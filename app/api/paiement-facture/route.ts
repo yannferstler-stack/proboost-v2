@@ -23,7 +23,7 @@ function getSupabaseAdmin() {
  *   montant         number   — montant en euros (ex: 1500)
  *   clientNom       string   — nom du client (libellé sur la page Stripe)
  *   numeroFacture   string   — référence facture (libellé)
- *   userId          string   — ID de l'utilisateur ProBoost (pour récupérer son compte Connect + plan)
+ *   userId          string   — ID de l'utilisateur ManaFlow (pour récupérer son compte Connect + plan)
  */
 export async function POST(request: NextRequest) {
   try {
@@ -68,7 +68,7 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // ── 2. Récupérer les infos du profil ProBoost (Connect + plan) ──
+    // ── 2. Récupérer les infos du profil ManaFlow (Connect + plan) ──
     const { data: profile } = await supabase
       .from('profiles')
       .select('stripe_connect_account_id, plan')
@@ -77,7 +77,7 @@ export async function POST(request: NextRequest) {
 
     const stripe = getStripe()
     const montantCentimes = Math.round(Number(montant) * 100)
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://proboost.fr'
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://manaflow.fr'
 
     // ── 3. Construire les paramètres de la session ──
     const sessionParams: any = {
@@ -107,7 +107,7 @@ export async function POST(request: NextRequest) {
       expires_at: Math.floor(Date.now() / 1000) + 86_400,
     }
 
-    // ── 4. Activer Stripe Connect si le ProBoost a un compte connecté ──
+    // ── 4. Activer Stripe Connect si le ManaFlow a un compte connecté ──
     if (profile?.stripe_connect_account_id) {
       const plan = profile.plan || 'starter'
       const feePercent = plan === 'pro' ? 7 : plan === 'premium' ? 8 : 10

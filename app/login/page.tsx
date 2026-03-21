@@ -71,8 +71,8 @@ export default function LoginPage() {
           <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '40px 20px', position: 'relative', zIndex: 1 }}>
             {/* Logo */}
             <div style={{ display: 'flex', alignItems: 'center', gap: 2, cursor: 'pointer', marginBottom: 40 }} onClick={() => router.push('/')}>
-              <img src="/logo.png" style={{ width: 36, height: 36, objectFit: 'contain', borderRadius: 8 }} />
-              <span style={{ fontFamily: 'Manrope', fontWeight: 800, fontSize: 20, color: 'white' }}>ProBoost</span>
+              <img src="/logo.png" style={{ width: 52, height: 52, objectFit: 'contain' }} />
+              <span style={{ fontFamily: 'Manrope', fontWeight: 800, fontSize: 22, color: 'white' }}>ManaFlow</span>
             </div>
 
             {/* Card formulaire */}
@@ -82,7 +82,7 @@ export default function LoginPage() {
                   {isSignUp ? 'Créer votre compte' : 'Bon retour'}
                 </h2>
                 <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.45)' }}>
-                  {isSignUp ? 'Commencez à automatiser vos relances' : 'Connectez-vous à votre espace ProBoost'}
+                  {isSignUp ? 'Commencez à automatiser vos relances' : 'Connectez-vous à votre espace ManaFlow'}
                 </p>
               </div>
 
@@ -137,8 +137,8 @@ export default function LoginPage() {
             <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: '40px 48px', position: 'relative', zIndex: 1 }}>
               {/* Logo */}
               <div style={{ display: 'flex', alignItems: 'center', gap: 2, cursor: 'pointer' }} onClick={() => router.push('/')}>
-                <img src="/logo.png" style={{ width: 36, height: 36, objectFit: 'contain', borderRadius: 8 }} />
-                <span style={{ fontFamily: 'Manrope', fontWeight: 800, fontSize: 20, color: 'white' }}>ProBoost</span>
+                <img src="/logo.png" style={{ width: 52, height: 52, objectFit: 'contain' }} />
+                <span style={{ fontFamily: 'Manrope', fontWeight: 800, fontSize: 22, color: 'white' }}>ManaFlow</span>
               </div>
 
               {/* Centre */}
@@ -195,7 +195,7 @@ export default function LoginPage() {
                 </div>
               </div>
 
-              <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.2)' }}>© 2025 ProBoost</p>
+              <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.2)' }}>© 2025 ManaFlow</p>
             </div>
 
             {/* RIGHT — formulaire */}
@@ -207,7 +207,7 @@ export default function LoginPage() {
                     {isSignUp ? 'Créer votre compte' : 'Bon retour'}
                   </h2>
                   <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.4)' }}>
-                    {isSignUp ? 'Commencez à automatiser vos relances' : 'Connectez-vous à votre espace ProBoost'}
+                    {isSignUp ? 'Commencez à automatiser vos relances' : 'Connectez-vous à votre espace ManaFlow'}
                   </p>
                 </div>
 

@@ -26,7 +26,7 @@ async function getOrCreatePaymentUrl(
   userId: string,
 ): Promise<string | null> {
   try {
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://proboost.fr'
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://manaflow.fr'
     const baseUrl = process.env.VERCEL_URL
       ? `https://${process.env.VERCEL_URL}`
       : appUrl
@@ -52,7 +52,7 @@ export async function POST(request: NextRequest) {
       companyName, companyAddress, companyPhone,
       typeRelance = 'email', // 'email' | 'sms' | 'both'
       userPlan = 'starter',
-      userId,               // ID de l'utilisateur ProBoost (pour le lien de paiement)
+      userId,               // ID de l'utilisateur ManaFlow (pour le lien de paiement)
     } = await request.json()
 
     // Sécurité : bloquer SMS si plan non Pro
@@ -84,7 +84,7 @@ export async function POST(request: NextRequest) {
         paymentUrl,
       })
       const { error: emailError } = await resend.emails.send({
-        from: `ProBoost <onboarding@resend.dev>`,
+        from: `ManaFlow <onboarding@resend.dev>`,
         to: clientEmail,
         subject,
         html,

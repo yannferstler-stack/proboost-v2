@@ -150,8 +150,8 @@ export default function Home() {
           transition: 'all 0.3s'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }} onClick={() => router.push('/')}>
-            <img src="/logo.png" style={{ width: 40, height: 40, objectFit: 'contain', borderRadius: 10 }} />
-            <span style={{ fontFamily: 'Manrope', fontWeight: 800, fontSize: 16, color: '#111' }}>ProBoost</span>
+            <img src="/logo.png" style={{ width: 52, height: 52, objectFit: 'contain' }} />
+            <span style={{ fontFamily: 'Manrope', fontWeight: 800, fontSize: 22, color: '#111' }}>ManaFlow</span>
           </div>
           <div className="nav-desktop" style={{ display: 'flex', alignItems: 'center', gap: 28 }}>
             <span className="nav-a" onClick={() => router.push('/comment-ca-marche')} style={{ fontSize: 14, color: '#6B7280', fontWeight: 500 }}>Comment ça marche ?</span>
@@ -238,7 +238,7 @@ export default function Home() {
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 20 }}>
               {[
                 { n: '1', icon: '📥', title: 'Importez', desc: 'CSV ou PDF — notre IA extrait client, montant et échéance instantanément.' },
-                { n: '2', icon: '⚡', title: 'ProBoost relance', desc: 'Emails & SMS automatiques à J+7, J+15, J+30. Ton progressif, coordonnées de votre société.' },
+                { n: '2', icon: '⚡', title: 'ManaFlow relance', desc: 'Emails & SMS automatiques à J+7, J+15, J+30. Ton progressif, coordonnées de votre société.' },
                 { n: '3', icon: '💶', title: 'Vous encaissez', desc: 'Commission uniquement sur les factures réellement recouvrées. Zéro risque.' },
               ].map((s, i) => (
                 <Reveal key={i} delay={i * 0.1}>
@@ -352,10 +352,10 @@ export default function Home() {
         {/* ── FOOTER ── */}
         <footer style={{ background: '#fafafa', borderTop: '1px solid #f0f0f0', padding: '28px 40px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }} onClick={() => router.push('/')}>
-            <img src="/logo.png" style={{ width: 24, height: 24, objectFit: 'contain', borderRadius: 5 }} />
-            <span style={{ fontFamily: 'Manrope', fontWeight: 800, fontSize: 30, color: '#111' }}>ProBoost</span>
+            <img src="/logo.png" style={{ width: 40, height: 40, objectFit: 'contain' }} />
+            <span style={{ fontFamily: 'Manrope', fontWeight: 800, fontSize: 34, color: '#111' }}>ManaFlow</span>
           </div>
-          <p style={{ fontSize: 12, color: '#9CA3AF' }}>© 2025 ProBoost — Tous droits réservés</p>
+          <p style={{ fontSize: 12, color: '#9CA3AF' }}>© 2025 ManaFlow — Tous droits réservés</p>
           <div style={{ display: 'flex', gap: 20 }}>
             {['CGU', 'Confidentialité', 'Contact'].map(l => (
               <span key={l} className="nav-a" style={{ fontSize: 12, color: '#9CA3AF', cursor: 'pointer' }}>{l}</span>

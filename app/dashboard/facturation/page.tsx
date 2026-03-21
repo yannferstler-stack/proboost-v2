@@ -63,8 +63,8 @@ export default function FacturationPage() {
         {/* SIDEBAR */}
         <aside style={{ width: 240, background: 'white', borderRight: '1px solid #EAECEF', display: 'flex', flexDirection: 'column', padding: '24px 16px', position: 'fixed', top: 0, left: 0, height: '100vh' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 2, padding: '0 8px', marginBottom: 36 }}>
-            <img src="/logo.png" style={{ width: 36, height: 36, objectFit: 'contain', borderRadius: 8 }} />
-            <span onClick={() => window.location.href = '/'} style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 800, fontSize: 17, color: '#111', cursor: 'pointer' }}>ProBoost</span>
+            <img src="/logo.png" style={{ width: 52, height: 52, objectFit: 'contain' }} />
+            <span onClick={() => window.location.href = '/'} style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 800, fontSize: 22, color: '#111', cursor: 'pointer' }}>ManaFlow</span>
           </div>
           <nav style={{ display: 'flex', flexDirection: 'column', gap: 4, flex: 1 }}>
             {[
@@ -101,7 +101,7 @@ export default function FacturationPage() {
 
           <div style={{ marginBottom: 32, animation: 'fadeUp 0.4s ease both' }}>
             <h1 style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 800, fontSize: 24, color: '#111', marginBottom: 4 }}>Facturation</h1>
-            <p style={{ color: '#9CA3AF', fontSize: 14 }}>Récapitulatif des commissions ProBoost sur vos factures recouvrées</p>
+            <p style={{ color: '#9CA3AF', fontSize: 14 }}>Récapitulatif des commissions ManaFlow sur vos factures recouvrées</p>
           </div>
 
           {/* Bandeau plan actuel */}
@@ -134,7 +134,7 @@ export default function FacturationPage() {
               <p style={{ fontSize: 12, color: '#9CA3AF' }}>{factures.length} facture{factures.length > 1 ? 's' : ''} payée{factures.length > 1 ? 's' : ''}</p>
             </div>
             <div className="card" style={{ background: 'white', borderRadius: 14, padding: '22px 20px', boxShadow: '0 1px 4px rgba(0,0,0,0.06)', border: '1px solid #EAECEF' }}>
-              <p style={{ fontSize: 11, color: '#9CA3AF', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.4px', marginBottom: 12 }}>Commission ProBoost ({(currentPlan.taux * 100).toFixed(0)}%)</p>
+              <p style={{ fontSize: 11, color: '#9CA3AF', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.4px', marginBottom: 12 }}>Commission ManaFlow ({(currentPlan.taux * 100).toFixed(0)}%)</p>
               <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, marginBottom: 6 }}>
                 <span style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 800, fontSize: 28, color: '#ec4899', lineHeight: 1 }}>{totalCommission.toLocaleString('fr-FR', { minimumFractionDigits: 2 })}</span>
                 <span style={{ fontSize: 15, color: '#ec4899', fontWeight: 700 }}>€</span>
