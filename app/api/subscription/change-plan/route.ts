@@ -38,25 +38,35 @@ export async function POST(req: NextRequest) {
     process.env.SUPABASE_SERVICE_ROLE_KEY!
   )
 
-  const { data: profile } = await supabaseAdmin
+  // Récupérer le plan actuel (colonne toujours existante)
+  const { data: planData } = await supabaseAdmin
     .from('profiles')
-    .select('plan, stripe_subscription_id, current_period_end')
+    .select('plan')
     .eq('id', user.id)
     .single()
 
-  if (!profile?.stripe_subscription_id) {
-    return NextResponse.json({ error: 'Abonnement Stripe introuvable. Contactez le support.' }, { status: 400 })
-  }
-
-  const currentPlan = profile.plan || 'starter'
+  const currentPlan = planData?.plan || 'starter'
   if (currentPlan === newPlan) {
     return NextResponse.json({ error: 'Vous êtes déjà sur ce plan.' }, { status: 400 })
   }
 
+  // Récupérer les champs Stripe (colonnes optionnelles, peuvent ne pas exister encore)
+  const { data: stripeData } = await supabaseAdmin
+    .from('profiles')
+    .select('stripe_subscription_id, current_period_end')
+    .eq('id', user.id)
+    .single()
+
   const isUpgrade = PLAN_ORDER[newPlan] > PLAN_ORDER[currentPlan]
 
   if (isUpgrade) {
-    // Upgrade : application immédiate avec prorata
+    // Upgrade : application immédiate avec prorata (requiert stripe_subscription_id)
+    if (!stripeData?.stripe_subscription_id) {
+      return NextResponse.json({
+        error: 'Abonnement Stripe introuvable. Contactez contact@proboost.fr',
+      }, { status: 400 })
+    }
+
     const newPriceId = getPriceId(newPlan)
     if (!newPriceId) {
       return NextResponse.json({
@@ -65,10 +75,10 @@ export async function POST(req: NextRequest) {
     }
 
     const stripe = getStripe()
-    const subscription = await stripe.subscriptions.retrieve(profile.stripe_subscription_id)
+    const subscription = await stripe.subscriptions.retrieve(stripeData.stripe_subscription_id)
     const itemId = subscription.items.data[0].id
 
-    await stripe.subscriptions.update(profile.stripe_subscription_id, {
+    await stripe.subscriptions.update(stripeData.stripe_subscription_id, {
       items: [{ id: itemId, price: newPriceId }],
       proration_behavior: 'create_prorations',
     })
@@ -81,9 +91,27 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ immediate: true, newPlan })
   } else {
     // Downgrade : planifié pour la fin de la période en cours
-    const effectiveDate = profile.current_period_end
-      ? new Date(profile.current_period_end)
+    const effectiveDate = stripeData?.current_period_end
+      ? new Date(stripeData.current_period_end)
       : new Date()
+
+    // Tenter de planifier le changement de prix dans Stripe (sans proration)
+    if (stripeData?.stripe_subscription_id) {
+      const newPriceId = getPriceId(newPlan)
+      if (newPriceId) {
+        try {
+          const stripe = getStripe()
+          const subscription = await stripe.subscriptions.retrieve(stripeData.stripe_subscription_id)
+          const itemId = subscription.items.data[0].id
+          await stripe.subscriptions.update(stripeData.stripe_subscription_id, {
+            items: [{ id: itemId, price: newPriceId }],
+            proration_behavior: 'none',
+          })
+        } catch {
+          // Ignore : le pending_plan en DB suffit comme fallback
+        }
+      }
+    }
 
     await supabaseAdmin
       .from('profiles')
