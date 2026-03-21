@@ -30,6 +30,7 @@ export default function SettingsPage() {
   const [changingPlan, setChangingPlan] = useState(false)
   const [planMessage, setPlanMessage] = useState('')
   const [portalLoading, setPortalLoading] = useState(false)
+  const [connectLoading, setConnectLoading] = useState(false)
   const supabase = createClient()
 
   const PLAN_ORDER: Record<string, number> = { starter: 1, premium: 2, pro: 3 }
@@ -74,6 +75,32 @@ export default function SettingsPage() {
       alert('Erreur réseau.')
     }
     setPortalLoading(false)
+  }
+
+  const openStripeConnect = async () => {
+    if (!user || !profile) return
+    setConnectLoading(true)
+    try {
+      const res = await fetch('/api/stripe-connect', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: user.email,
+          company: profile.company_name || '',
+          userId: user.id,
+        }),
+      })
+      const data = await res.json()
+      if (data.url) window.location.href = data.url
+      else if (data.already_connected) {
+        alert('Votre compte Stripe est déjà connecté et actif.')
+      } else {
+        alert(data.error || 'Erreur lors de la connexion Stripe.')
+      }
+    } catch {
+      alert('Erreur réseau.')
+    }
+    setConnectLoading(false)
   }
 
   const isPro = profile?.plan === 'pro'
@@ -193,7 +220,7 @@ export default function SettingsPage() {
         {/* SIDEBAR DESKTOP */}
         <aside className="desktop-sidebar" style={{ width: 240, background: 'white', borderRight: '1px solid #EAECEF', flexDirection: 'column', padding: '24px 16px', position: 'fixed', top: 0, left: 0, height: '100vh' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 2, padding: '0 8px', marginBottom: 36 }}>
-            <img src="/logo.png" style={{ width: 96, height: 96, objectFit: 'contain', marginLeft: -26, marginRight: -22, marginTop: -22, marginBottom: -22 }} />
+            <img src="/logo.png" style={{ width: 36, height: 36, objectFit: 'contain', borderRadius: 8 }} />
             <span onClick={() => window.location.href = '/'} style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 800, fontSize: 17, color: '#111', cursor: 'pointer' }}>ProBoost</span>
           </div>
           <nav style={{ display: 'flex', flexDirection: 'column', gap: 4, flex: 1 }}>
@@ -434,6 +461,41 @@ export default function SettingsPage() {
                 <p style={{ fontSize: 11, color: '#9CA3AF' }}>Email de connexion</p>
               </div>
             </div>
+
+            {/* ── Stripe Connect ── */}
+            {profile?.stripe_connect_account_id ? (
+              // Connecté ✅
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 14px', background: '#F0FDF4', borderRadius: 10, border: '1px solid #BBF7D0', marginBottom: 10 }}>
+                <div style={{ width: 28, height: 28, background: '#16A34A', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <span style={{ fontSize: 13, color: 'white', fontWeight: 700 }}>✓</span>
+                </div>
+                <div style={{ flex: 1 }}>
+                  <p style={{ fontSize: 13, fontWeight: 600, color: '#15803d' }}>Compte Stripe connecté</p>
+                  <p style={{ fontSize: 11, color: '#16A34A' }}>Les paiements clients arrivent directement sur votre compte bancaire.</p>
+                </div>
+                <button onClick={openStripeConnect} disabled={connectLoading}
+                  style={{ fontSize: 11, color: '#6B7280', background: 'white', border: '1px solid #D1FAE5', borderRadius: 6, padding: '4px 10px', cursor: 'pointer', fontFamily: 'Inter, sans-serif', whiteSpace: 'nowrap' }}>
+                  Gérer
+                </button>
+              </div>
+            ) : (
+              // Non connecté ⚠️
+              <div style={{ background: '#FFFBEB', border: '1.5px solid #FDE68A', borderRadius: 10, padding: '12px 14px', marginBottom: 10 }}>
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10, marginBottom: 10 }}>
+                  <span style={{ fontSize: 15, flexShrink: 0 }}>💳</span>
+                  <div>
+                    <p style={{ fontSize: 13, fontWeight: 700, color: '#92400E', marginBottom: 2 }}>Compte Stripe non connecté</p>
+                    <p style={{ fontSize: 12, color: '#B45309', lineHeight: 1.6 }}>
+                      Sans Stripe, les relances sont envoyées mais sans lien de paiement. Vos clients ne peuvent pas payer directement depuis l'email.
+                    </p>
+                  </div>
+                </div>
+                <button onClick={openStripeConnect} disabled={connectLoading}
+                  style={{ width: '100%', background: 'linear-gradient(135deg, #F59E0B, #D97706)', color: 'white', border: 'none', borderRadius: 8, padding: '10px 14px', fontSize: 13, fontWeight: 700, cursor: connectLoading ? 'not-allowed' : 'pointer', fontFamily: 'Inter, sans-serif', opacity: connectLoading ? 0.6 : 1 }}>
+                  {connectLoading ? 'Connexion...' : '🔗 Connecter mon compte Stripe →'}
+                </button>
+              </div>
+            )}
 
             {/* Alerte paiement en retard */}
             {profile?.payment_status === 'past_due' && (

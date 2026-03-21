@@ -153,7 +153,7 @@ export default function BlogPage() {
         <nav style={{ borderBottom: '1px solid rgba(255,255,255,0.06)', position: 'sticky', top: 0, zIndex: 100, background: 'rgba(13,6,32,0.92)', backdropFilter: 'blur(20px)' }}>
           <div style={{ height: 72, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 20px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 2, cursor: 'pointer' }} onClick={() => router.push('/')}>
-              <img src="/logo.png" style={{ width: 96, height: 96, objectFit: 'contain', marginLeft: -26, marginRight: -22, marginTop: -22, marginBottom: -22 }} />
+              <img src="/logo.png" style={{ width: 36, height: 36, objectFit: 'contain', borderRadius: 8 }} />
               <span style={{ fontFamily: 'Manrope', fontWeight: 800, fontSize: 18, color: 'white' }}>ProBoost</span>
             </div>
             <div className="nav-links">

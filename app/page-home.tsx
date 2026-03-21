@@ -124,6 +124,17 @@ export default function Home() {
         .plan-card:hover { transform: translateY(-3px); box-shadow: 0 12px 36px rgba(0,0,0,0.10) !important; }
         .btn-plan { transition: all 0.2s; }
         .btn-plan:hover { opacity: 0.88; transform: translateY(-1px); }
+
+        /* ── Responsive mobile ── */
+        .hero-btns { display: flex; gap: 10px; justify-content: center; margin-bottom: 48px; }
+        .hero-trust { display: flex; gap: 28px; justify-content: center; }
+        @media (max-width: 540px) {
+          .hero-btns { flex-direction: column; align-items: center; gap: 8px; margin-bottom: 28px; }
+          .hero-btns .btn-g, .hero-btns .btn-o { width: 230px; font-size: 14px !important; padding: 11px 16px !important; }
+          .hero-trust { gap: 10px 18px; flex-wrap: wrap; }
+          .hero-trust span { font-size: 12px !important; }
+          nav .nav-desktop { display: none !important; }
+        }
       `}</style>
 
       <div style={{ fontFamily: 'Inter, sans-serif', color: '#111', background: '#fff' }}>
@@ -139,10 +150,10 @@ export default function Home() {
           transition: 'all 0.3s'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }} onClick={() => router.push('/')}>
-            <img src="/logo.png" style={{ width: 184, height: 184, objectFit: 'contain', borderRadius: 16 }} />
+            <img src="/logo.png" style={{ width: 40, height: 40, objectFit: 'contain', borderRadius: 10 }} />
             <span style={{ fontFamily: 'Manrope', fontWeight: 800, fontSize: 16, color: '#111' }}>ProBoost</span>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 28 }}>
+          <div className="nav-desktop" style={{ display: 'flex', alignItems: 'center', gap: 28 }}>
             <span className="nav-a" onClick={() => router.push('/comment-ca-marche')} style={{ fontSize: 14, color: '#6B7280', fontWeight: 500 }}>Comment ça marche ?</span>
             <span className="nav-a" onClick={() => router.push('/login')} style={{ fontSize: 14, color: '#6B7280', fontWeight: 500 }}>Connexion</span>
             <button className="btn-g" onClick={() => router.push('/login')} style={{ borderRadius: 8, padding: '8px 18px', fontSize: 13 }}>
@@ -167,7 +178,7 @@ export default function Home() {
           </Reveal>
 
           <Reveal delay={0.15}>
-            <div style={{ display: 'flex', gap: 10, justifyContent: 'center', marginBottom: 48 }}>
+            <div className="hero-btns">
               <button className="btn-g" onClick={() => router.push('/comment-ca-marche')} style={{ borderRadius: 10, padding: '13px 28px', fontSize: 15, boxShadow: '0 4px 16px rgba(29,185,84,0.25)' }}>
                 Comment ça marche ? →
               </button>
@@ -178,7 +189,7 @@ export default function Home() {
           </Reveal>
 
           <Reveal delay={0.2}>
-            <div style={{ display: 'flex', gap: 28, justifyContent: 'center' }}>
+            <div className="hero-trust">
               {['Dès 19,99€/mois', 'Commission au succès', 'Email + SMS'].map((t, i) => (
                 <span key={i} style={{ fontSize: 13, color: '#9CA3AF', display: 'flex', alignItems: 'center', gap: 5 }}>
                   <span style={{ color: '#1DB954', fontWeight: 700 }}>✓</span> {t}
@@ -304,6 +315,14 @@ export default function Home() {
                 </Reveal>
               ))}
             </div>
+
+            {/* Note Stripe — visible mais pas bloquante */}
+            <p style={{ textAlign: 'center', marginTop: 24, fontSize: 12, color: '#9CA3AF', lineHeight: 1.7 }}>
+              💳 La réception des paiements clients nécessite un compte{' '}
+              <a href="https://stripe.com" target="_blank" rel="noopener noreferrer" style={{ color: '#6B7280', textDecoration: 'underline' }}>Stripe</a>{' '}
+              (gratuit, création guidée en 3 min lors de l'inscription).
+              Les relances emails fonctionnent sans Stripe.
+            </p>
           </div>
         </section>
 

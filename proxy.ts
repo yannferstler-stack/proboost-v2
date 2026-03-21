@@ -11,6 +11,8 @@ export async function proxy(request: NextRequest) {
   // ── 1. Protection mot de passe site entier ──
   // Ces routes ne nécessitent pas de mot de passe
   if (pathname === '/acces' || pathname === '/paiement-requis' ||
+      pathname === '/paiement-recu' || pathname === '/paiement-annule' ||
+      pathname.startsWith('/souscrire') ||  // pages de souscription (post-paiement Stripe)
       pathname.startsWith('/api/acces') || pathname.startsWith('/api/webhooks') ||
       pathname.startsWith('/_next') || pathname.includes('.')) {
     return NextResponse.next()
@@ -60,34 +62,28 @@ export async function proxy(request: NextRequest) {
   }
 
   if (!pathname.startsWith('/dashboard/pricing')) {
-    // Requête plan seul (colonne toujours existante)
+    // Requête unique : plan + statut paiement (colonnes créées via migration 001_schema.sql)
     const { data: profile, error: profileError } = await supabase
       .from('profiles')
-      .select('plan')
+      .select('plan, payment_status, payment_failed_at')
       .eq('id', user.id)
       .single()
 
     // Si erreur DB (ex: profil manquant), ne pas bloquer
     if (!profileError) {
+      // Vérification plan actif
       const planActif = profile?.plan && ['starter', 'premium', 'pro'].includes(profile.plan)
       if (!planActif) {
         return NextResponse.redirect(new URL('/dashboard/pricing', request.url))
       }
-    }
 
-    // ── Blocage si paiement en retard depuis plus de 3 jours ──
-    // (seulement si les colonnes payment_status existent)
-    const { data: paymentData } = await supabase
-      .from('profiles')
-      .select('payment_status, payment_failed_at')
-      .eq('id', user.id)
-      .single()
-
-    if (paymentData?.payment_status === 'past_due' && paymentData?.payment_failed_at) {
-      const failedAt = new Date(paymentData.payment_failed_at)
-      const joursDepuisEchec = (Date.now() - failedAt.getTime()) / (1000 * 60 * 60 * 24)
-      if (joursDepuisEchec >= 3) {
-        return NextResponse.redirect(new URL('/paiement-requis', request.url))
+      // ── Blocage si paiement en retard depuis plus de 3 jours ──
+      if (profile?.payment_status === 'past_due' && profile?.payment_failed_at) {
+        const failedAt = new Date(profile.payment_failed_at)
+        const joursDepuisEchec = (Date.now() - failedAt.getTime()) / (1000 * 60 * 60 * 24)
+        if (joursDepuisEchec >= 3) {
+          return NextResponse.redirect(new URL('/paiement-requis', request.url))
+        }
       }
     }
   }

@@ -71,7 +71,7 @@ export default function LoginPage() {
           <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '40px 20px', position: 'relative', zIndex: 1 }}>
             {/* Logo */}
             <div style={{ display: 'flex', alignItems: 'center', gap: 2, cursor: 'pointer', marginBottom: 40 }} onClick={() => router.push('/')}>
-              <img src="/logo.png" style={{ width: 96, height: 96, objectFit: 'contain', marginLeft: -26, marginRight: -22, marginTop: -22, marginBottom: -22 }} />
+              <img src="/logo.png" style={{ width: 36, height: 36, objectFit: 'contain', borderRadius: 8 }} />
               <span style={{ fontFamily: 'Manrope', fontWeight: 800, fontSize: 20, color: 'white' }}>ProBoost</span>
             </div>
 
@@ -137,7 +137,7 @@ export default function LoginPage() {
             <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: '40px 48px', position: 'relative', zIndex: 1 }}>
               {/* Logo */}
               <div style={{ display: 'flex', alignItems: 'center', gap: 2, cursor: 'pointer' }} onClick={() => router.push('/')}>
-                <img src="/logo.png" style={{ width: 96, height: 96, objectFit: 'contain', marginLeft: -26, marginRight: -22, marginTop: -22, marginBottom: -22 }} />
+                <img src="/logo.png" style={{ width: 36, height: 36, objectFit: 'contain', borderRadius: 8 }} />
                 <span style={{ fontFamily: 'Manrope', fontWeight: 800, fontSize: 20, color: 'white' }}>ProBoost</span>
               </div>
 

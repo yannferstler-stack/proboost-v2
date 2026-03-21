@@ -1,6 +1,7 @@
 'use client'
 import { useEffect, useState } from 'react'
 import { createClient } from '../lib/supabase'
+import { getEmailContent } from '../lib/email-templates'
 
 type Relance = {
   date: string
@@ -32,6 +33,10 @@ export default function Dashboard() {
   const [selectedFacture, setSelectedFacture] = useState<Facture | null>(null)
   const [historyFacture, setHistoryFacture] = useState<Facture | null>(null)
   const [confirmDelete, setConfirmDelete] = useState<string | null>(null)
+  const [realHistory, setRealHistory] = useState<Record<string, any[]>>({})
+  const [loadingHistory, setLoadingHistory] = useState(false)
+  const [previewFacture, setPreviewFacture] = useState<Facture | null>(null)
+  const [showOnboarding, setShowOnboarding] = useState(false)
   const supabase = createClient()
 
   useEffect(() => {
@@ -47,6 +52,32 @@ export default function Dashboard() {
     }
     getUser()
   }, [])
+
+  // Afficher le modal d'onboarding à la première visite
+  useEffect(() => {
+    if (!loading) {
+      const done = typeof window !== 'undefined' && localStorage.getItem('proboost_onboarding_done')
+      if (!done) setShowOnboarding(true)
+    }
+  }, [loading])
+
+  // Charger l'historique réel quand on ouvre le modal
+  useEffect(() => {
+    if (!historyFacture) return
+    if (realHistory[historyFacture.id]) return // déjà chargé
+    setLoadingHistory(true)
+    supabase
+      .from('relances')
+      .select('*')
+      .eq('facture_id', historyFacture.id)
+      .order('envoye_le', { ascending: true })
+      .then(({ data }) => {
+        if (data) {
+          setRealHistory(prev => ({ ...prev, [historyFacture.id]: data }))
+        }
+        setLoadingHistory(false)
+      })
+  }, [historyFacture])
 
   const isPro = profile?.plan === 'pro'
   const isPremiumOrPro = profile?.plan === 'premium' || profile?.plan === 'pro'
@@ -132,6 +163,20 @@ export default function Dashboard() {
     }
   }
 
+  const getEmailPreviewContent = (facture: Facture) => {
+    const numeroRelance = (facture.nombre_relances || 0) + 1
+    return getEmailContent({
+      clientNom: facture.client_nom,
+      montant: facture.montant,
+      dateEcheance: facture.date_echeance,
+      numeroFacture: facture.numero_facture || '',
+      companyName: profile?.company_name || 'Votre société',
+      companyAddress: profile?.company_address || '',
+      companyPhone: profile?.company_phone || '',
+      numeroRelance,
+    })
+  }
+
   const getMockHistory = (facture: Facture): Relance[] => {
     const nb = facture.nombre_relances || 0
     const types: ('email' | 'sms')[] = ['email', 'sms', 'email', 'email', 'sms']
@@ -202,7 +247,7 @@ export default function Dashboard() {
         {/* SIDEBAR */}
         <aside style={{ width: 240, background: 'white', borderRight: '1px solid #EAECEF', display: 'flex', flexDirection: 'column', padding: '24px 16px', position: 'fixed', top: 0, left: 0, height: '100vh' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 2, padding: '0 8px', marginBottom: 36 }}>
-            <img src="/logo.png" style={{ width: 96, height: 96, objectFit: 'contain', marginLeft: -26, marginRight: -22, marginTop: -22, marginBottom: -22 }} />
+            <img src="/logo.png" style={{ width: 36, height: 36, objectFit: 'contain', borderRadius: 8 }} />
             <span onClick={() => window.location.href = '/'} style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 800, fontSize: 17, color: '#111', cursor: 'pointer' }}>ProBoost</span>
           </div>
           <nav style={{ display: 'flex', flexDirection: 'column', gap: 4, flex: 1 }}>
@@ -503,13 +548,57 @@ export default function Dashboard() {
                 </div>
               ))}
             </div>
-            <button onClick={() => { setHistoryFacture(selectedFacture); setSelectedFacture(null) }}
-              style={{ marginTop: 20, width: '100%', background: '#F5F3FF', color: '#7c3aed', border: '1.5px solid #DDD6FE', borderRadius: 10, padding: '11px', fontSize: 14, fontWeight: 600, cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}>
-              Voir l&apos;historique des relances →
-            </button>
+            <div style={{ display: 'flex', gap: 10, marginTop: 20 }}>
+              <button onClick={() => { setHistoryFacture(selectedFacture); setSelectedFacture(null) }}
+                style={{ flex: 1, background: '#F5F3FF', color: '#7c3aed', border: '1.5px solid #DDD6FE', borderRadius: 10, padding: '11px', fontSize: 14, fontWeight: 600, cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}>
+                Historique →
+              </button>
+              {selectedFacture.statut !== 'payée' && (
+                <button onClick={() => { setPreviewFacture(selectedFacture); setSelectedFacture(null) }}
+                  style={{ flex: 1, background: '#F0FDF4', color: '#16A34A', border: '1.5px solid #BBF7D0', borderRadius: 10, padding: '11px', fontSize: 14, fontWeight: 600, cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}>
+                  Prévisualiser l&apos;email →
+                </button>
+              )}
+            </div>
           </div>
         </div>
       )}
+
+      {/* MODAL PRÉVISUALISATION EMAIL */}
+      {previewFacture && (() => {
+        const { subject, html } = getEmailPreviewContent(previewFacture)
+        const numeroRelance = (previewFacture.nombre_relances || 0) + 1
+        return (
+          <div className="overlay" onClick={() => setPreviewFacture(null)}>
+            <div className="modal" onClick={e => e.stopPropagation()} style={{ maxWidth: 660, padding: '0' }}>
+              {/* Header */}
+              <div style={{ padding: '20px 24px', borderBottom: '1px solid #EAECEF', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'white', borderRadius: '20px 20px 0 0' }}>
+                <div>
+                  <h2 style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 800, fontSize: 17, color: '#111', marginBottom: 2 }}>
+                    Prévisualisation — Relance #{numeroRelance}
+                  </h2>
+                  <p style={{ fontSize: 12, color: '#9CA3AF' }}>{previewFacture.numero_facture} · {previewFacture.client_nom}</p>
+                </div>
+                <button onClick={() => setPreviewFacture(null)} style={{ background: '#F3F4F6', border: 'none', borderRadius: 8, width: 32, height: 32, cursor: 'pointer', fontSize: 16, color: '#6B7280', fontFamily: 'Inter, sans-serif' }}>×</button>
+              </div>
+              {/* Sujet */}
+              <div style={{ padding: '12px 24px', background: '#F9FAFB', borderBottom: '1px solid #EAECEF' }}>
+                <span style={{ fontSize: 11, color: '#9CA3AF', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px', marginRight: 8 }}>Objet :</span>
+                <span style={{ fontSize: 13, color: '#111', fontWeight: 500 }}>{subject}</span>
+              </div>
+              {/* Corps email */}
+              <div style={{ height: 440, overflow: 'hidden', borderRadius: '0 0 20px 20px' }}>
+                <iframe
+                  srcDoc={html}
+                  style={{ width: '100%', height: '100%', border: 'none', display: 'block' }}
+                  title="Prévisualisation email"
+                  sandbox="allow-same-origin"
+                />
+              </div>
+            </div>
+          </div>
+        )
+      })()}
 
       {/* MODAL HISTORIQUE RELANCES */}
       {historyFacture && (
@@ -528,10 +617,22 @@ export default function Dashboard() {
               <span style={{ fontSize: 13, color: '#7c3aed', fontWeight: 600 }}>{historyFacture.nombre_relances || 0} relances envoyées</span>
               <span style={{ fontSize: 13, color: '#9CA3AF' }}>Limite : {getLimiteRelances()}</span>
             </div>
-            {getMockHistory(historyFacture).length === 0 ? (
-              <p style={{ fontSize: 14, color: '#9CA3AF', textAlign: 'center', padding: '24px 0' }}>Aucune relance envoyée pour cette facture.</p>
-            ) : (
-              getMockHistory(historyFacture).map((r, i) => (
+            {loadingHistory ? (
+              <div style={{ textAlign: 'center', padding: '24px 0' }}>
+                <div style={{ width: 28, height: 28, border: '3px solid #E0E0E0', borderTop: '3px solid #a855f7', borderRadius: '50%', animation: 'spin 0.8s linear infinite', margin: '0 auto' }} />
+              </div>
+            ) : (() => {
+              const rows = realHistory[historyFacture.id]?.length
+                ? realHistory[historyFacture.id].map((r, i) => ({
+                    date: r.envoye_le,
+                    type: r.type === 'sms' ? 'sms' : 'email',
+                    numero: r.numero_relance || i + 1,
+                    statut: r.statut || 'envoyé',
+                  }))
+                : getMockHistory(historyFacture)
+              return rows.length === 0 ? (
+                <p style={{ fontSize: 14, color: '#9CA3AF', textAlign: 'center', padding: '24px 0' }}>Aucune relance envoyée pour cette facture.</p>
+              ) : rows.map((r, i) => (
                 <div key={i} className="history-row">
                   <div style={{ width: 32, height: 32, background: r.type === 'sms' ? '#F5F3FF' : '#F0FDF4', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                     <span style={{ fontSize: 14 }}>{r.type === 'sms' ? '📱' : '✉️'}</span>
@@ -547,10 +648,56 @@ export default function Dashboard() {
                       {new Date(r.date).toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
                     </p>
                   </div>
-                  <span style={{ fontSize: 12, color: '#16A34A', fontWeight: 600 }}>Envoyée</span>
+                  <span style={{ fontSize: 12, fontWeight: 600, color: (r as any).statut === 'erreur' ? '#EF4444' : '#16A34A' }}>
+                    {(r as any).statut === 'erreur' ? 'Erreur' : 'Envoyée'}
+                  </span>
                 </div>
               ))
-            )}
+            })()}
+          </div>
+        </div>
+      )}
+      {/* MODAL ONBOARDING */}
+      {showOnboarding && (
+        <div className="overlay" onClick={() => { setShowOnboarding(false); localStorage.setItem('proboost_onboarding_done', '1') }}>
+          <div className="modal" onClick={e => e.stopPropagation()} style={{ maxWidth: 480, textAlign: 'center' }}>
+            <div style={{ width: 56, height: 56, background: 'linear-gradient(135deg, #a855f7, #ec4899)', borderRadius: 16, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px', fontSize: 26 }}>🚀</div>
+            <h2 style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 800, fontSize: 22, color: '#111', marginBottom: 8 }}>
+              Bienvenue sur ProBoost !
+            </h2>
+            <p style={{ fontSize: 14, color: '#6B7280', marginBottom: 28, lineHeight: 1.6 }}>
+              3 étapes pour automatiser votre recouvrement
+            </p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 28, textAlign: 'left' }}>
+              {[
+                { n: '1', icon: '📂', title: 'Importez vos factures', desc: 'Glissez un CSV ou des PDF — ProBoost extrait tout automatiquement', color: '#F5F3FF', border: '#DDD6FE', text: '#7c3aed' },
+                { n: '2', icon: '⚡', title: 'Activez les relances auto', desc: 'Pour chaque facture impayée, cliquez "Commencer" — les emails partent seuls', color: '#F0FDF4', border: '#BBF7D0', text: '#16A34A' },
+                { n: '3', icon: '📊', title: 'Suivez vos recouvrements', desc: 'Consultez le tableau de bord pour voir les paiements encaissés', color: '#FFF7ED', border: '#FED7AA', text: '#EA580C' },
+              ].map(step => (
+                <div key={step.n} style={{ display: 'flex', gap: 14, alignItems: 'flex-start', background: step.color, border: `1.5px solid ${step.border}`, borderRadius: 12, padding: '14px 16px' }}>
+                  <div style={{ width: 36, height: 36, background: step.border, borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, fontSize: 18 }}>
+                    {step.icon}
+                  </div>
+                  <div>
+                    <p style={{ fontWeight: 700, fontSize: 14, color: step.text, marginBottom: 2 }}>{step.title}</p>
+                    <p style={{ fontSize: 12, color: '#6B7280', lineHeight: 1.5 }}>{step.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div style={{ display: 'flex', gap: 10 }}>
+              <button
+                onClick={() => { setShowOnboarding(false); localStorage.setItem('proboost_onboarding_done', '1'); window.location.href = '/dashboard/settings' }}
+                style={{ flex: 1, background: '#F3F4F6', color: '#374151', border: 'none', borderRadius: 10, padding: '12px', fontSize: 14, fontWeight: 600, cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}>
+                Configurer d&apos;abord
+              </button>
+              <button
+                onClick={() => { setShowOnboarding(false); localStorage.setItem('proboost_onboarding_done', '1'); window.location.href = '/dashboard/importer' }}
+                className="btn-main"
+                style={{ flex: 1, color: 'white', border: 'none', borderRadius: 10, padding: '12px', fontSize: 14, fontWeight: 600, cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}>
+                Importer mes factures →
+              </button>
+            </div>
           </div>
         </div>
       )}
