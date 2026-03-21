@@ -464,17 +464,26 @@ export default function SettingsPage() {
                 </button>
               </div>
 
-              {profile?.current_period_end && (
-                <div style={{ marginTop: 10, display: 'flex', alignItems: 'center', gap: 8, padding: '8px 12px', background: 'rgba(168,85,247,0.05)', borderRadius: 8, border: '1px solid rgba(168,85,247,0.15)' }}>
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#a855f7" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                  <p style={{ fontSize: 12, color: '#6B7280' }}>
-                    Prochaine échéance prélevée le{' '}
-                    <strong style={{ color: '#374151' }}>
-                      {new Date(profile.current_period_end).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}
-                    </strong>
-                  </p>
-                </div>
-              )}
+              {(() => {
+                // Utilise current_period_end si disponible, sinon calcule depuis created_at
+                const renewalDate = profile?.current_period_end
+                  ? new Date(profile.current_period_end)
+                  : profile?.created_at
+                    ? (() => { const d = new Date(profile.created_at); d.setMonth(d.getMonth() + 1); return d })()
+                    : null
+                if (!renewalDate) return null
+                return (
+                  <div style={{ marginTop: 10, display: 'flex', alignItems: 'center', gap: 8, padding: '8px 12px', background: 'rgba(168,85,247,0.05)', borderRadius: 8, border: '1px solid rgba(168,85,247,0.15)' }}>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#a855f7" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                    <p style={{ fontSize: 12, color: '#6B7280' }}>
+                      Prochaine échéance prélevée le{' '}
+                      <strong style={{ color: '#374151' }}>
+                        {renewalDate.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}
+                      </strong>
+                    </p>
+                  </div>
+                )
+              })()}
 
               {profile?.pending_plan && profile?.pending_plan_effective_date && (
                 <div style={{ marginTop: 8, background: '#F0FDF4', border: '1px solid #BBF7D0', borderRadius: 8, padding: '8px 12px' }}>
