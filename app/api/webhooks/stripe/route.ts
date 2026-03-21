@@ -60,7 +60,7 @@ export async function POST(req: NextRequest) {
           numero_relance: null,
           envoye_le: new Date().toISOString(),
           statut: 'payé',
-        }).catch(() => {})
+        }).then(null, () => {})
 
         // Notifier l'utilisateur ManaFlow par email (optionnel)
         if (userId) {
@@ -102,7 +102,7 @@ export async function POST(req: NextRequest) {
                   </p>
                 </div>
               `,
-            }).catch(() => {}) // Ne pas bloquer sur l'email de notification
+            }).then(null, () => {}) // Ne pas bloquer sur l'email de notification
           }
         }
       }

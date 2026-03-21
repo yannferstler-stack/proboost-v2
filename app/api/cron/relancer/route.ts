@@ -196,7 +196,7 @@ export async function GET(request: NextRequest) {
         numero_relance: numeroRelance,
         envoye_le: new Date().toISOString(),
         statut: 'erreur',
-      }).catch(() => {})
+      }).then(null, () => {})
 
       results.push({ id: facture.id, status: 'error', error: String(err) })
     }
