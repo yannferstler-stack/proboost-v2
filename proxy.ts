@@ -60,21 +60,31 @@ export async function proxy(request: NextRequest) {
   }
 
   if (!pathname.startsWith('/dashboard/pricing')) {
-    const { data: profile } = await supabase
+    // Requête plan seul (colonne toujours existante)
+    const { data: profile, error: profileError } = await supabase
       .from('profiles')
-      .select('plan, payment_status, payment_failed_at')
+      .select('plan')
       .eq('id', user.id)
       .single()
 
-    const planActif = profile?.plan && ['starter', 'premium', 'pro'].includes(profile.plan)
-
-    if (!planActif && pathname.startsWith('/dashboard')) {
-      return NextResponse.redirect(new URL('/dashboard/pricing', request.url))
+    // Si erreur DB (ex: profil manquant), ne pas bloquer
+    if (!profileError) {
+      const planActif = profile?.plan && ['starter', 'premium', 'pro'].includes(profile.plan)
+      if (!planActif) {
+        return NextResponse.redirect(new URL('/dashboard/pricing', request.url))
+      }
     }
 
     // ── Blocage si paiement en retard depuis plus de 3 jours ──
-    if (profile?.payment_status === 'past_due' && profile?.payment_failed_at) {
-      const failedAt = new Date(profile.payment_failed_at)
+    // (seulement si les colonnes payment_status existent)
+    const { data: paymentData } = await supabase
+      .from('profiles')
+      .select('payment_status, payment_failed_at')
+      .eq('id', user.id)
+      .single()
+
+    if (paymentData?.payment_status === 'past_due' && paymentData?.payment_failed_at) {
+      const failedAt = new Date(paymentData.payment_failed_at)
       const joursDepuisEchec = (Date.now() - failedAt.getTime()) / (1000 * 60 * 60 * 24)
       if (joursDepuisEchec >= 3) {
         return NextResponse.redirect(new URL('/paiement-requis', request.url))
