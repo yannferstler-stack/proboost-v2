@@ -50,7 +50,7 @@ const PLANS = [
     nom: 'Premium', prix: '49,99', couleur: '#ec4899', bg: 'rgba(236,72,153,0.1)', border: 'rgba(236,72,153,0.25)', commission: '12%',
     description: 'Pour les TPE avec un volume de factures régulier',
     features: [
-      { label: '20 factures / mois', ok: true, bold: true },
+      { label: '50 factures / mois', ok: true, bold: true },
       { label: '5 relances par facture', ok: true, bold: true },
       { label: 'Import CSV & PDF', ok: true, bold: false },
       { label: 'Dashboard complet', ok: true, bold: false },

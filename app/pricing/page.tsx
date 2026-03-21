@@ -36,7 +36,7 @@ const PLANS = [
     badge: '🔵',
     description: 'Pour les PME avec un volume de factures régulier',
     features: [
-      '20 factures / mois',
+      '50 factures / mois',
       '5 relances par facture',
       'Email uniquement',
       'Délais personnalisables',
