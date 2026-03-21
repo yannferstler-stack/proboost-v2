@@ -99,7 +99,7 @@ export default function PricingPage() {
         <nav style={{ background: 'white', borderBottom: '1px solid #EAECEF', padding: '0 40px', height: 64, display: 'flex', alignItems: 'center', justifyContent: 'space-between', position: 'sticky', top: 0, zIndex: 100 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 20, cursor: 'pointer' }} onClick={() => router.push('/')}>
             <img src="/logo.png" style={{ height: 44, width: 'auto', objectFit: 'contain' }} />
-            <span style={{ fontSize: 22, color: '#111' }}><span style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 400 }}>Mana</span><span style={{ fontFamily: "'Playfair Display', serif", fontStyle: 'italic', fontWeight: 700 }}>flow</span></span>
+            <span style={{ fontSize: 22, color: '#111' }}><span style={{ fontFamily: "'Playfair Display', serif", fontStyle: 'italic', fontWeight: 700 }}>Mana</span><span style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 400 }}>flow</span></span>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 32 }}>
             <span className="nav-link" onClick={() => router.push('/')} style={{ fontSize: 14, color: '#6B7280', fontWeight: 500 }}>Accueil</span>
