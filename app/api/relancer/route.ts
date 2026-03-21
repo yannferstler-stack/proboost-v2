@@ -51,9 +51,20 @@ export async function POST(request: NextRequest) {
       montant, dateEcheance, nombreRelances, numeroFacture,
       companyName, companyAddress, companyPhone,
       typeRelance = 'email', // 'email' | 'sms' | 'both'
-      userPlan = 'starter',
       userId,               // ID de l'utilisateur ManaFlow (pour le lien de paiement)
     } = await request.json()
+
+    // Sécurité : lire le plan depuis la DB (ne jamais faire confiance au client)
+    const supabaseAdmin = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!
+    )
+    const { data: profile } = await supabaseAdmin
+      .from('profiles')
+      .select('plan')
+      .eq('id', userId)
+      .single()
+    const userPlan: string = profile?.plan ?? 'starter'
 
     // Sécurité : bloquer SMS si plan non Pro
     const canSms = userPlan === 'pro'

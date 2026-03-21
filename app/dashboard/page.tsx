@@ -37,6 +37,7 @@ export default function Dashboard() {
   const [loadingHistory, setLoadingHistory] = useState(false)
   const [previewFacture, setPreviewFacture] = useState<Facture | null>(null)
   const [showOnboarding, setShowOnboarding] = useState(false)
+  const [displayCount, setDisplayCount] = useState(20)
   const supabase = createClient()
 
   useEffect(() => {
@@ -60,6 +61,9 @@ export default function Dashboard() {
       if (!done) setShowOnboarding(true)
     }
   }, [loading])
+
+  // Réinitialiser la pagination quand le tri change
+  useEffect(() => { setDisplayCount(20) }, [sortBy])
 
   // Charger l'historique réel quand on ouvre le modal
   useEffect(() => {
@@ -234,6 +238,8 @@ export default function Dashboard() {
         .sort-btn:hover:not(.active) { border-color: #9CA3AF; background: #F9FAFB; }
         .btn-delete { background: none; border: none; cursor: pointer; color: #D1D5DB; font-size: 18px; padding: 4px 6px; border-radius: 6px; transition: all 0.15s; line-height: 1; }
         .btn-delete:hover { color: #EF4444; background: #FEF2F2; }
+        .btn-load-more { background: white; border: 1.5px solid #E5E7EB; border-radius: 8px; padding: 9px 20px; font-size: 13px; font-weight: 600; color: #6B7280; cursor: pointer; font-family: Inter, sans-serif; transition: all 0.15s; }
+        .btn-load-more:hover { border-color: #a855f7; color: #7c3aed; background: #F5F3FF; }
         .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 200; display: flex; align-items: center; justify-content: center; }
         .modal { background: white; border-radius: 20px; padding: 32px; max-width: 520px; width: 90%; animation: modalIn 0.2s ease; max-height: 80vh; overflow-y: auto; }
         .modal-confirm { background: white; border-radius: 16px; padding: 28px; max-width: 400px; width: 90%; animation: modalIn 0.2s ease; }
@@ -248,7 +254,7 @@ export default function Dashboard() {
         <aside style={{ width: 240, background: 'white', borderRight: '1px solid #EAECEF', display: 'flex', flexDirection: 'column', padding: '24px 16px', position: 'fixed', top: 0, left: 0, height: '100vh' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 2, padding: '0 8px', marginBottom: 36 }}>
             <img src="/logo.png" style={{ height: 44, width: 'auto', objectFit: 'contain' }} />
-            <span onClick={() => window.location.href = '/'} style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 800, fontSize: 22, color: '#111', cursor: 'pointer' }}>ManaFlow</span>
+            <span onClick={() => window.location.href = '/'} style={{ fontSize: 22, color: '#111', cursor: 'pointer' }}><span style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 400 }}>Mana</span><span style={{ fontFamily: "'Playfair Display', serif", fontStyle: 'italic', fontWeight: 700 }}>flow</span></span>
           </div>
           <nav style={{ display: 'flex', flexDirection: 'column', gap: 4, flex: 1 }}>
             {[
@@ -291,6 +297,28 @@ export default function Dashboard() {
               + Importer des factures
             </button>
           </div>
+
+          {/* BANNIÈRE STRIPE CONNECT */}
+          {!profile?.stripe_connect_account_id && (
+            <div style={{ background: 'linear-gradient(135deg, #fffbeb, #fef3c7)', border: '1.5px solid #f59e0b', borderRadius: 14, padding: '16px 20px', marginBottom: 24, display: 'flex', alignItems: 'center', gap: 14, animation: 'fadeUp 0.4s ease 0.05s both' }}>
+              <div style={{ width: 40, height: 40, background: '#f59e0b', borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, fontSize: 20 }}>
+                ⚡
+              </div>
+              <div style={{ flex: 1 }}>
+                <p style={{ fontSize: 14, fontWeight: 700, color: '#92400e', marginBottom: 2, fontFamily: 'Manrope, sans-serif' }}>
+                  Activez les paiements en ligne
+                </p>
+                <p style={{ fontSize: 12, color: '#b45309', lineHeight: 1.5 }}>
+                  Connectez Stripe pour permettre à vos clients de payer directement depuis l'email de relance.
+                </p>
+              </div>
+              <button
+                onClick={() => window.location.href = '/dashboard/settings'}
+                style={{ background: '#f59e0b', color: 'white', border: 'none', borderRadius: 8, padding: '9px 16px', fontSize: 13, fontWeight: 700, cursor: 'pointer', fontFamily: 'Inter, sans-serif', whiteSpace: 'nowrap', flexShrink: 0 }}>
+                Configurer →
+              </button>
+            </div>
+          )}
 
           {/* STATS */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 20, marginBottom: 28, animation: 'fadeUp 0.4s ease 0.1s both' }}>
@@ -381,18 +409,19 @@ export default function Dashboard() {
                   </tr>
                 </thead>
                 <tbody>
-                  {sortedFactures.map((f, i) => {
+                  {sortedFactures.slice(0, displayCount).map((f, i) => {
                     const canal = getCanalForFacture(f.id)
                     const badge = getStatutBadge(f.statut)
                     const nextRelance = getNextRelanceDate(f)
                     const limite = getLimiteRelances()
                     const nbRelances = f.nombre_relances || 0
                     const limiteAtteinte = nbRelances >= limite
+                    const visibleCount = Math.min(sortedFactures.length, displayCount)
 
                     return (
                       <tr key={f.id} className="row-hover"
                         onClick={() => setSelectedFacture(f)}
-                        style={{ borderBottom: i < sortedFactures.length - 1 ? '1px solid #F3F4F6' : 'none', background: 'white' }}>
+                        style={{ borderBottom: i < visibleCount - 1 ? '1px solid #F3F4F6' : 'none', background: 'white' }}>
 
                         <td style={{ padding: '14px 16px' }} onClick={e => e.stopPropagation()}>
                           <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
@@ -485,6 +514,14 @@ export default function Dashboard() {
                   })}
                 </tbody>
               </table>
+              {sortedFactures.length > displayCount && (
+                <div style={{ padding: '16px', textAlign: 'center', borderTop: '1px solid #F3F4F6' }}>
+                  <button className="btn-load-more" onClick={() => setDisplayCount(c => c + 20)}>
+                    Charger {Math.min(20, sortedFactures.length - displayCount)} facture{Math.min(20, sortedFactures.length - displayCount) > 1 ? 's' : ''} de plus
+                    <span style={{ color: '#9CA3AF', fontWeight: 400 }}> · {sortedFactures.length - displayCount} restante{sortedFactures.length - displayCount > 1 ? 's' : ''}</span>
+                  </button>
+                </div>
+              )}
             </div>
           )}
         </div>
