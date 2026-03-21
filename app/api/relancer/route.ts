@@ -8,8 +8,8 @@ function getStripe() {
   return new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: '2023-10-16' })
 }
 
-const resend = new Resend(process.env.RESEND_API_KEY)
-const supabase = createClient(
+const getResend = () => new Resend(process.env.RESEND_API_KEY)
+const getSupabase = () => createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 )
@@ -83,7 +83,7 @@ export async function POST(request: NextRequest) {
         companyPhone: companyPhone || '', numeroRelance,
         paymentUrl,
       })
-      const { error: emailError } = await resend.emails.send({
+      const { error: emailError } = await getResend().emails.send({
         from: `ManaFlow <onboarding@resend.dev>`,
         to: clientEmail,
         subject,
@@ -105,7 +105,7 @@ export async function POST(request: NextRequest) {
     }
 
     // ── MISE À JOUR SUPABASE ──
-    const { error: dbError } = await supabase
+    const { error: dbError } = await getSupabase()
       .from('factures')
       .update({ nombre_relances: numeroRelance, statut: 'relancée' })
       .eq('id', factureId)
@@ -116,7 +116,7 @@ export async function POST(request: NextRequest) {
     }
 
     const typeLog = sendEmail && sendSms ? 'email+sms' : sendSms ? 'sms' : 'email'
-    await supabase.from('relances').insert({
+    await getSupabase().from('relances').insert({
       facture_id: factureId,
       type: typeLog,
       numero_relance: numeroRelance,

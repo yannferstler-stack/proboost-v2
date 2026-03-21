@@ -1,10 +1,20 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+export const dynamic = 'force-dynamic'
+
+import { useEffect, useState, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 
 export default function PaiementRecuPage() {
+  return (
+    <Suspense fallback={<div style={{ minHeight: '100vh', background: '#020617' }} />}>
+      <PaiementRecuContent />
+    </Suspense>
+  )
+}
+
+function PaiementRecuContent() {
   const searchParams = useSearchParams()
   const sessionId = searchParams.get('session_id')
   const [status, setStatus] = useState<'loading' | 'success' | 'error'>('loading')

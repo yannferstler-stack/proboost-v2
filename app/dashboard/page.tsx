@@ -71,7 +71,7 @@ export default function Dashboard() {
       .select('*')
       .eq('facture_id', historyFacture.id)
       .order('envoye_le', { ascending: true })
-      .then(({ data }) => {
+      .then(({ data }: { data: any }) => {
         if (data) {
           setRealHistory(prev => ({ ...prev, [historyFacture.id]: data }))
         }
