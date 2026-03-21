@@ -153,7 +153,7 @@ export default function BlogPage() {
         <nav style={{ borderBottom: '1px solid rgba(255,255,255,0.06)', position: 'sticky', top: 0, zIndex: 100, background: 'rgba(13,6,32,0.92)', backdropFilter: 'blur(20px)' }}>
           <div style={{ height: 72, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 20px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 2, cursor: 'pointer' }} onClick={() => router.push('/')}>
-              <img src="/logo.png" style={{ width: 52, height: 52, objectFit: 'contain' }} />
+              <img src="/logo.png" style={{ height: 44, width: 'auto', objectFit: 'contain' }} />
               <span style={{ fontFamily: 'Manrope', fontWeight: 800, fontSize: 22, color: 'white' }}>ManaFlow</span>
             </div>
             <div className="nav-links">

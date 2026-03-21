@@ -150,7 +150,7 @@ export default function Home() {
           transition: 'all 0.3s'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }} onClick={() => router.push('/')}>
-            <img src="/logo.png" style={{ width: 52, height: 52, objectFit: 'contain' }} />
+            <img src="/logo.png" style={{ height: 44, width: 'auto', objectFit: 'contain' }} />
             <span style={{ fontFamily: 'Manrope', fontWeight: 800, fontSize: 22, color: '#111' }}>ManaFlow</span>
           </div>
           <div className="nav-desktop" style={{ display: 'flex', alignItems: 'center', gap: 28 }}>
@@ -352,7 +352,7 @@ export default function Home() {
         {/* ── FOOTER ── */}
         <footer style={{ background: '#fafafa', borderTop: '1px solid #f0f0f0', padding: '28px 40px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }} onClick={() => router.push('/')}>
-            <img src="/logo.png" style={{ width: 40, height: 40, objectFit: 'contain' }} />
+            <img src="/logo.png" style={{ height: 36, width: 'auto', objectFit: 'contain' }} />
             <span style={{ fontFamily: 'Manrope', fontWeight: 800, fontSize: 34, color: '#111' }}>ManaFlow</span>
           </div>
           <p style={{ fontSize: 12, color: '#9CA3AF' }}>© 2025 ManaFlow — Tous droits réservés</p>

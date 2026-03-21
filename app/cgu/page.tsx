@@ -138,7 +138,7 @@ export default function CguPage() {
         <nav style={{ position: 'sticky', top: 0, zIndex: 300, background: 'rgba(13,6,32,0.90)', backdropFilter: 'blur(20px)', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
           <div style={{ height: 72, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 20px', maxWidth: 1100, margin: '0 auto' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 2, cursor: 'pointer' }} onClick={() => router.push('/')}>
-              <img src="/logo.png" style={{ width: 52, height: 52, objectFit: 'contain' }} />
+              <img src="/logo.png" style={{ height: 44, width: 'auto', objectFit: 'contain' }} />
               <span style={{ fontFamily: 'Manrope', fontWeight: 800, fontSize: 22, color: 'white' }}>ManaFlow</span>
             </div>
             <div className="nav-links" style={{ display: 'flex', alignItems: 'center', gap: 28 }}>
@@ -182,7 +182,7 @@ export default function CguPage() {
         <footer style={{ borderTop: '1px solid rgba(255,255,255,0.06)', padding: isMobile ? '24px 20px' : '28px 40px', position: 'relative', zIndex: 1 }}>
           <div className="footer-inner" style={{ maxWidth: 1100, margin: '0 auto', gap: isMobile ? 16 : 0 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }} onClick={() => router.push('/')}>
-              <img src="/logo.png" style={{ width: 52, height: 52, objectFit: 'contain' }} />
+              <img src="/logo.png" style={{ height: 44, width: 'auto', objectFit: 'contain' }} />
               <span style={{ fontFamily: 'Manrope', fontWeight: 800, fontSize: 15, color: 'white' }}>ManaFlow</span>
             </div>
             <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.25)', textAlign: 'center' }}>© 2025 ManaFlow — Tous droits réservés</p>
