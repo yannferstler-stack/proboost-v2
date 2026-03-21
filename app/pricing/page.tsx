@@ -60,7 +60,7 @@ const PLANS = [
     badge: '🟣',
     description: 'Pour les cabinets et entreprises à fort volume',
     features: [
-      'Jusqu'à 200 factures / mois',
+      "Jusqu'à 200 factures / mois",
       '5 relances par facture',
       'Email + SMS',
       'Délais personnalisables',
