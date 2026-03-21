@@ -77,6 +77,24 @@ function SuccessContent() {
       })
       if (profileError) throw profileError
 
+      // Récupérer les données Stripe et enrichir le profil
+      if (sessionId) {
+        try {
+          const stripeRes = await fetch(`/api/subscription/session-data?session_id=${sessionId}`)
+          if (stripeRes.ok) {
+            const sd = await stripeRes.json()
+            if (sd.customer_id || sd.subscription_id) {
+              await supabase.from('profiles').update({
+                stripe_customer_id: sd.customer_id,
+                stripe_subscription_id: sd.subscription_id,
+                current_period_end: sd.current_period_end,
+                payment_status: 'active',
+              }).eq('id', userId)
+            }
+          }
+        } catch {}
+      }
+
       setStep('done')
       setTimeout(() => router.push('/dashboard'), 2500)
     } catch (err: any) {

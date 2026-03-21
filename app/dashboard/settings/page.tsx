@@ -26,7 +26,55 @@ export default function SettingsPage() {
   const [message, setMessage] = useState('')
   const [isMobile, setIsMobile] = useState(false)
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [showPlanModal, setShowPlanModal] = useState(false)
+  const [changingPlan, setChangingPlan] = useState(false)
+  const [planMessage, setPlanMessage] = useState('')
+  const [portalLoading, setPortalLoading] = useState(false)
   const supabase = createClient()
+
+  const PLAN_ORDER: Record<string, number> = { starter: 1, premium: 2, pro: 3 }
+  const PLAN_LABELS: Record<string, string> = { starter: 'Starter — 19,99€/mois', premium: 'Premium — 49,99€/mois', pro: 'Pro — 149,99€/mois' }
+  const PLAN_COLORS: Record<string, string> = { starter: '#a855f7', premium: '#ec4899', pro: '#c084fc' }
+
+  const changePlan = async (newPlan: string) => {
+    setChangingPlan(true)
+    setPlanMessage('')
+    try {
+      const res = await fetch('/api/subscription/change-plan', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ newPlan }),
+      })
+      const data = await res.json()
+      if (!res.ok) {
+        setPlanMessage('error:' + (data.error || 'Erreur lors du changement de plan.'))
+      } else if (data.immediate) {
+        setPlanMessage('success:Plan mis à jour en ' + newPlan + ' avec succès !')
+        setProfile((p: any) => ({ ...p, plan: newPlan, pending_plan: null }))
+      } else {
+        const date = new Date(data.effective_date).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })
+        setPlanMessage('success:Passage en ' + newPlan + ' planifié pour le ' + date + '.')
+        setProfile((p: any) => ({ ...p, pending_plan: newPlan, pending_plan_effective_date: data.effective_date }))
+      }
+    } catch {
+      setPlanMessage('error:Erreur réseau. Réessayez.')
+    }
+    setChangingPlan(false)
+    setShowPlanModal(false)
+  }
+
+  const openPortal = async () => {
+    setPortalLoading(true)
+    try {
+      const res = await fetch('/api/subscription/portal', { method: 'POST' })
+      const data = await res.json()
+      if (data.url) window.location.href = data.url
+      else alert(data.error || 'Erreur portail Stripe.')
+    } catch {
+      alert('Erreur réseau.')
+    }
+    setPortalLoading(false)
+  }
 
   const isPro = profile?.plan === 'pro'
   const isPremiumOrPro = profile?.plan === 'premium' || profile?.plan === 'pro'
@@ -373,8 +421,10 @@ export default function SettingsPage() {
               <div style={{ width: 36, height: 36, background: 'rgba(192,132,252,0.10)', border: '1px solid rgba(192,132,252,0.25)', borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                 <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#c084fc" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
               </div>
-              <h2 style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 700, fontSize: 15, color: '#111' }}>Compte</h2>
+              <h2 style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 700, fontSize: 15, color: '#111' }}>Compte &amp; Abonnement</h2>
             </div>
+
+            {/* Email */}
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '12px 14px', background: '#F9FAFB', borderRadius: 10, border: '1px solid #E5E7EB', marginBottom: 10 }}>
               <div style={{ width: 34, height: 34, background: 'linear-gradient(135deg, #a855f7, #ec4899)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                 <span style={{ fontSize: 13, color: 'white', fontWeight: 700 }}>{user?.email?.[0]?.toUpperCase()}</span>
@@ -384,17 +434,120 @@ export default function SettingsPage() {
                 <p style={{ fontSize: 11, color: '#9CA3AF' }}>Email de connexion</p>
               </div>
             </div>
-            <div className="compte-row" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 14px', background: '#F9FAFB', borderRadius: 10, border: '1px solid #E5E7EB' }}>
-              <div>
-                <p style={{ fontSize: 13, fontWeight: 600, color: '#374151' }}>Plan actuel</p>
-                <p style={{ fontSize: 12, color: '#9CA3AF', marginTop: 2, textTransform: 'capitalize' }}>{profile?.plan || 'Starter'}</p>
+
+            {/* Alerte paiement en retard */}
+            {profile?.payment_status === 'past_due' && (
+              <div style={{ background: '#FEF2F2', border: '1.5px solid #FECACA', borderRadius: 10, padding: '12px 14px', marginBottom: 10, display: 'flex', alignItems: 'flex-start', gap: 10 }}>
+                <span style={{ fontSize: 16, flexShrink: 0 }}>⚠️</span>
+                <div>
+                  <p style={{ fontSize: 13, fontWeight: 700, color: '#DC2626', marginBottom: 2 }}>Paiement en attente</p>
+                  {profile?.payment_failed_at && (() => {
+                    const deadline = new Date(new Date(profile.payment_failed_at).getTime() + 3 * 24 * 60 * 60 * 1000)
+                    return <p style={{ fontSize: 12, color: '#EF4444' }}>Régularisez avant le {deadline.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' })} pour éviter la suspension.</p>
+                  })()}
+                </div>
               </div>
-              <button onClick={() => window.location.href = '/souscrire'}
-                style={{ background: 'linear-gradient(135deg, #a855f7, #ec4899)', color: 'white', border: 'none', borderRadius: 8, padding: '8px 14px', fontSize: 12, fontWeight: 700, cursor: 'pointer', fontFamily: 'Inter, sans-serif', boxShadow: '0 2px 10px rgba(168,85,247,0.30)', whiteSpace: 'nowrap' }}>
-                Changer de plan →
-              </button>
+            )}
+
+            {/* Plan actuel */}
+            <div style={{ padding: '14px', background: '#F9FAFB', borderRadius: 10, border: '1px solid #E5E7EB', marginBottom: 10 }}>
+              <div className="compte-row" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, marginBottom: profile?.current_period_end ? 10 : 0 }}>
+                <div>
+                  <p style={{ fontSize: 13, fontWeight: 600, color: '#374151' }}>Plan actuel</p>
+                  <p style={{ fontSize: 13, color: '#a855f7', marginTop: 2, fontWeight: 700, textTransform: 'capitalize' }}>
+                    {profile?.plan || 'Starter'}
+                  </p>
+                </div>
+                <button onClick={() => setShowPlanModal(true)}
+                  style={{ background: 'linear-gradient(135deg, #a855f7, #ec4899)', color: 'white', border: 'none', borderRadius: 8, padding: '8px 14px', fontSize: 12, fontWeight: 700, cursor: 'pointer', fontFamily: 'Inter, sans-serif', boxShadow: '0 2px 10px rgba(168,85,247,0.30)', whiteSpace: 'nowrap' }}>
+                  Changer de plan
+                </button>
+              </div>
+
+              {profile?.current_period_end && (
+                <p style={{ fontSize: 12, color: '#9CA3AF' }}>
+                  Renouvellement le {new Date(profile.current_period_end).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}
+                </p>
+              )}
+
+              {profile?.pending_plan && profile?.pending_plan_effective_date && (
+                <div style={{ marginTop: 8, background: '#F0FDF4', border: '1px solid #BBF7D0', borderRadius: 8, padding: '8px 12px' }}>
+                  <p style={{ fontSize: 12, color: '#16A34A', fontWeight: 600 }}>
+                    Passage en {profile.pending_plan} planifié le {new Date(profile.pending_plan_effective_date).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}
+                  </p>
+                </div>
+              )}
             </div>
+
+            {/* Message changement de plan */}
+            {planMessage && (
+              <div style={{ background: planMessage.startsWith('error:') ? '#FEF2F2' : 'rgba(168,85,247,0.08)', border: `1px solid ${planMessage.startsWith('error:') ? '#FECACA' : 'rgba(168,85,247,0.25)'}`, borderRadius: 10, padding: '10px 14px', marginBottom: 10 }}>
+                <p style={{ fontSize: 13, color: planMessage.startsWith('error:') ? '#DC2626' : '#7c3aed', fontWeight: 600 }}>
+                  {planMessage.replace(/^(error:|success:)/, '')}
+                </p>
+              </div>
+            )}
+
+            {/* Portail Stripe */}
+            <button onClick={openPortal} disabled={portalLoading}
+              style={{ width: '100%', padding: '10px 14px', borderRadius: 10, fontSize: 13, fontWeight: 600, cursor: portalLoading ? 'not-allowed' : 'pointer', fontFamily: 'Inter, sans-serif', background: 'white', color: '#374151', border: '1.5px solid #E5E7EB' }}>
+              {portalLoading ? 'Connexion...' : '💳 Gérer mon moyen de paiement'}
+            </button>
           </div>
+
+          {/* MODAL CHANGEMENT DE PLAN */}
+          {showPlanModal && (
+            <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 500, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20 }} onClick={() => setShowPlanModal(false)}>
+              <div style={{ background: 'white', borderRadius: 20, padding: '28px', maxWidth: 480, width: '100%', boxShadow: '0 24px 64px rgba(0,0,0,0.25)' }} onClick={e => e.stopPropagation()}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
+                  <h3 style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 800, fontSize: 18, color: '#111' }}>Changer de plan</h3>
+                  <button onClick={() => setShowPlanModal(false)} style={{ background: '#F3F4F6', border: 'none', borderRadius: 8, width: 32, height: 32, cursor: 'pointer', fontSize: 18, color: '#6B7280' }}>×</button>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                  {['starter', 'premium', 'pro'].map(plan => {
+                    const isCurrent = profile?.plan === plan
+                    const isPending = profile?.pending_plan === plan
+                    const isUpgrade = (PLAN_ORDER[plan] || 0) > (PLAN_ORDER[profile?.plan] || 0)
+                    const effectiveLabel = isUpgrade
+                      ? 'Effectif immédiatement (avec prorata)'
+                      : profile?.current_period_end
+                        ? `Effectif le ${new Date(profile.current_period_end).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' })}`
+                        : 'Effectif au prochain renouvellement'
+                    return (
+                      <div key={plan} style={{ border: `1.5px solid ${isCurrent || isPending ? PLAN_COLORS[plan] : '#E5E7EB'}`, borderRadius: 12, padding: '14px 16px', background: isCurrent ? 'rgba(168,85,247,0.04)' : 'white' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                          <div>
+                            <p style={{ fontSize: 14, fontWeight: 700, color: '#111', textTransform: 'capitalize', marginBottom: 3 }}>
+                              {plan === 'starter' ? 'Starter — 19,99€/mois' : plan === 'premium' ? 'Premium — 49,99€/mois' : 'Pro — 149,99€/mois'}
+                            </p>
+                            {!isCurrent && !isPending && (
+                              <p style={{ fontSize: 11, color: '#9CA3AF' }}>{effectiveLabel}</p>
+                            )}
+                            {isPending && (
+                              <p style={{ fontSize: 11, color: '#16A34A', fontWeight: 600 }}>Changement planifié</p>
+                            )}
+                          </div>
+                          {isCurrent ? (
+                            <span style={{ fontSize: 11, fontWeight: 700, padding: '4px 10px', borderRadius: 20, background: `${PLAN_COLORS[plan]}20`, color: PLAN_COLORS[plan] }}>Actuel</span>
+                          ) : isPending ? (
+                            <span style={{ fontSize: 11, fontWeight: 700, padding: '4px 10px', borderRadius: 20, background: '#F0FDF4', color: '#16A34A' }}>Planifié</span>
+                          ) : (
+                            <button onClick={() => changePlan(plan)} disabled={changingPlan}
+                              style={{ background: `linear-gradient(135deg, ${PLAN_COLORS[plan]}, ${plan === 'pro' ? '#a855f7' : '#ec4899'})`, color: 'white', border: 'none', borderRadius: 8, padding: '7px 14px', fontSize: 12, fontWeight: 700, cursor: changingPlan ? 'not-allowed' : 'pointer', fontFamily: 'Inter, sans-serif', opacity: changingPlan ? 0.6 : 1 }}>
+                              {changingPlan ? '...' : isUpgrade ? 'Passer en ' + plan : 'Réduire en ' + plan}
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
+                <p style={{ fontSize: 11, color: '#9CA3AF', marginTop: 14, lineHeight: 1.6 }}>
+                  Les upgrades sont effectifs immédiatement avec un prorata. Les downgrades sont effectifs à la fin de votre période de facturation en cours.
+                </p>
+              </div>
+            </div>
+          )}
 
           {/* MESSAGE */}
           {message && (

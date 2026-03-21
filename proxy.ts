@@ -10,7 +10,8 @@ export async function proxy(request: NextRequest) {
 
   // ── 1. Protection mot de passe site entier ──
   // Ces routes ne nécessitent pas de mot de passe
-  if (pathname === '/acces' || pathname.startsWith('/api/acces') || 
+  if (pathname === '/acces' || pathname === '/paiement-requis' ||
+      pathname.startsWith('/api/acces') || pathname.startsWith('/api/webhooks') ||
       pathname.startsWith('/_next') || pathname.includes('.')) {
     return NextResponse.next()
   }
@@ -61,7 +62,7 @@ export async function proxy(request: NextRequest) {
   if (!pathname.startsWith('/dashboard/pricing')) {
     const { data: profile } = await supabase
       .from('profiles')
-      .select('plan')
+      .select('plan, payment_status, payment_failed_at')
       .eq('id', user.id)
       .single()
 
@@ -69,6 +70,15 @@ export async function proxy(request: NextRequest) {
 
     if (!planActif && pathname.startsWith('/dashboard')) {
       return NextResponse.redirect(new URL('/dashboard/pricing', request.url))
+    }
+
+    // ── Blocage si paiement en retard depuis plus de 3 jours ──
+    if (profile?.payment_status === 'past_due' && profile?.payment_failed_at) {
+      const failedAt = new Date(profile.payment_failed_at)
+      const joursDepuisEchec = (Date.now() - failedAt.getTime()) / (1000 * 60 * 60 * 24)
+      if (joursDepuisEchec >= 3) {
+        return NextResponse.redirect(new URL('/paiement-requis', request.url))
+      }
     }
   }
 
