@@ -12,6 +12,8 @@ type Relance = {
 type Facture = {
   id: string
   client_nom: string
+  client_email?: string
+  client_telephone?: string
   numero_facture: string
   montant: number
   date_echeance: string
@@ -38,6 +40,8 @@ export default function Dashboard() {
   const [previewFacture, setPreviewFacture] = useState<Facture | null>(null)
   const [showOnboarding, setShowOnboarding] = useState(false)
   const [displayCount, setDisplayCount] = useState(20)
+  const [relancingId, setRelancingId] = useState<string | null>(null)
+  const [relanceMsg, setRelanceMsg] = useState<{ id: string; ok: boolean } | null>(null)
   const supabase = createClient()
 
   useEffect(() => {
@@ -195,6 +199,65 @@ export default function Dashboard() {
     return history
   }
 
+  const handleExportCSV = () => {
+    if (factures.length === 0) return
+    const rows = [
+      ['N° Facture', 'Client', 'Email', 'Téléphone', 'Montant (€)', 'Échéance', 'Statut', 'Relances', 'Séquence active', 'Prochaine relance'].join(','),
+      ...factures.map(f => [
+        f.numero_facture || '', f.client_nom || '', f.client_email || '',
+        f.client_telephone || '', f.montant || '', f.date_echeance || '',
+        f.statut || '', f.nombre_relances || 0,
+        f.sequence_active ? 'Oui' : 'Non',
+        f.next_relance_date ? new Date(f.next_relance_date).toLocaleDateString('fr-FR') : '—',
+      ].map(v => `"${v}"`).join(','))
+    ]
+    const blob = new Blob(['\ufeff' + rows.join('\n')], { type: 'text/csv;charset=utf-8;' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url; a.download = `manaflow-factures-${new Date().toISOString().split('T')[0]}.csv`; a.click()
+    URL.revokeObjectURL(url)
+  }
+
+  const handleRelancerMaintenant = async (facture: Facture) => {
+    if (!facture.client_email) { setRelanceMsg({ id: facture.id, ok: false }); setTimeout(() => setRelanceMsg(null), 3000); return }
+    setRelancingId(facture.id)
+    try {
+      const res = await fetch('/api/relancer', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          factureId: facture.id,
+          clientEmail: facture.client_email,
+          clientNom: facture.client_nom,
+          clientTelephone: facture.client_telephone,
+          montant: facture.montant,
+          dateEcheance: facture.date_echeance,
+          nombreRelances: facture.nombre_relances || 0,
+          numeroFacture: facture.numero_facture,
+          companyName: profile?.company_name,
+          companyAddress: profile?.company_address,
+          companyPhone: profile?.company_phone,
+          typeRelance: getCanalForFacture(facture.id),
+          userId: user?.id,
+        }),
+      })
+      if (res.ok) {
+        const data = await res.json()
+        setFactures(prev => prev.map(f => f.id === facture.id
+          ? { ...f, nombre_relances: data.numeroRelance, statut: 'relancée' }
+          : f
+        ))
+        setRelanceMsg({ id: facture.id, ok: true })
+      } else {
+        setRelanceMsg({ id: facture.id, ok: false })
+      }
+    } catch {
+      setRelanceMsg({ id: facture.id, ok: false })
+    }
+    setRelancingId(null)
+    setTimeout(() => setRelanceMsg(null), 3000)
+  }
+
   if (loading) return (
     <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#F4F6F8' }}>
       <div style={{ width: 36, height: 36, border: '3px solid #E0E0E0', borderTop: '3px solid #a855f7', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
@@ -240,6 +303,11 @@ export default function Dashboard() {
         .btn-delete:hover { color: #EF4444; background: #FEF2F2; }
         .btn-load-more { background: white; border: 1.5px solid #E5E7EB; border-radius: 8px; padding: 9px 20px; font-size: 13px; font-weight: 600; color: #6B7280; cursor: pointer; font-family: Inter, sans-serif; transition: all 0.15s; }
         .btn-load-more:hover { border-color: #a855f7; color: #7c3aed; background: #F5F3FF; }
+        .btn-export { background: white; border: 1.5px solid #E5E7EB; border-radius: 8px; padding: 9px 16px; font-size: 13px; font-weight: 600; color: #6B7280; cursor: pointer; font-family: Inter, sans-serif; transition: all 0.15s; }
+        .btn-export:hover { border-color: #a855f7; color: #7c3aed; background: #F5F3FF; }
+        .btn-relay { background: none; border: 1px solid #DDD6FE; border-radius: 6px; padding: 3px 8px; font-size: 11px; font-weight: 600; color: #7c3aed; cursor: pointer; font-family: Inter, sans-serif; transition: all 0.15s; white-space: nowrap; }
+        .btn-relay:hover:not(:disabled) { background: #F5F3FF; border-color: #a855f7; }
+        .btn-relay:disabled { opacity: 0.5; cursor: not-allowed; }
         .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 200; display: flex; align-items: center; justify-content: center; }
         .modal { background: white; border-radius: 20px; padding: 32px; max-width: 520px; width: 90%; animation: modalIn 0.2s ease; max-height: 80vh; overflow-y: auto; }
         .modal-confirm { background: white; border-radius: 16px; padding: 28px; max-width: 400px; width: 90%; animation: modalIn 0.2s ease; }
@@ -292,10 +360,17 @@ export default function Dashboard() {
           {/* HEADER */}
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 32, animation: 'fadeUp 0.4s ease both' }}>
             <h1 style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 800, fontSize: 24, color: '#111' }}>Tableau de bord</h1>
-            <button className="btn-main" onClick={() => window.location.href = '/dashboard/importer'}
-              style={{ color: 'white', border: 'none', borderRadius: 10, padding: '11px 22px', fontSize: 14, fontWeight: 600, cursor: 'pointer', fontFamily: 'Inter, sans-serif', boxShadow: '0 4px 16px rgba(168,85,247,0.35)' }}>
-              + Importer des factures
-            </button>
+            <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+              {factures.length > 0 && (
+                <button className="btn-export" onClick={handleExportCSV}>
+                  ↓ Exporter CSV
+                </button>
+              )}
+              <button className="btn-main" onClick={() => window.location.href = '/dashboard/importer'}
+                style={{ color: 'white', border: 'none', borderRadius: 10, padding: '11px 22px', fontSize: 14, fontWeight: 600, cursor: 'pointer', fontFamily: 'Inter, sans-serif', boxShadow: '0 4px 16px rgba(168,85,247,0.35)' }}>
+                + Importer des factures
+              </button>
+            </div>
           </div>
 
           {/* BANNIÈRE STRIPE CONNECT */}
@@ -499,6 +574,12 @@ export default function Dashboard() {
                                   En pause · {nbRelances}/{limite} — voir historique
                                 </span>
                               )}
+                              <button
+                                className="btn-relay"
+                                disabled={relancingId === f.id}
+                                onClick={(e) => { e.stopPropagation(); handleRelancerMaintenant(f) }}>
+                                {relancingId === f.id ? '⏳ Envoi...' : relanceMsg?.id === f.id ? (relanceMsg.ok ? '✓ Envoyée' : '✗ Erreur') : '⚡ Relancer'}
+                              </button>
                             </div>
                           )}
                         </td>

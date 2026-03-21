@@ -196,14 +196,13 @@ export default function ImporterPage() {
     const doublons = factures.filter(f => f.doublonWarning && !f.erreur)
     if (doublons.length > 0) { setMessage(`Impossible d'importer : ${doublons.length} numéro(s) déjà existant(s). Corrigez avant d'importer.`); return }
     setImporting(true)
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) { window.location.href = '/login'; return }
+    const { data: { session } } = await supabase.auth.getSession()
+    if (!session) { window.location.href = '/login'; return }
     const valides = factures.filter(f => !f.erreur && !f.doublonWarning)
     const rows = valides.map(f => {
       const dateEcheance = f.date_echeance || ''
       const nextRelanceDate = getFirstRelanceDate(dateEcheance)
       return {
-        user_id: user.id,
         client_nom: f.raison_sociale || f.client_nom || f.nom,
         client_email: f.email_facturation || f.client_email || f.email,
         client_telephone: f.telephone || f.client_telephone,
@@ -222,13 +221,26 @@ export default function ImporterPage() {
       }
     })
 
-    // Insert par lots de 50 pour éviter les limites de payload
-    const CHUNK = 50
-    for (let i = 0; i < rows.length; i += CHUNK) {
-      const { error } = await supabase.from('factures').insert(rows.slice(i, i + CHUNK))
-      if (error) { setMessage('Erreur : ' + error.message); setImporting(false); return }
+    // Import via API (validation limite côté serveur)
+    const res = await fetch('/api/import-factures', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${session.access_token}`,
+      },
+      body: JSON.stringify({ rows }),
+    })
+    const data = await res.json()
+    if (!res.ok) {
+      setMessage(data.error || 'Erreur lors de l\'import')
+      setImporting(false)
+      return
     }
-    setMessage('Factures importées avec succès !'); setTimeout(() => window.location.href = '/dashboard', 1500)
+    const msg = data.skipped > 0
+      ? `${data.inserted} facture${data.inserted > 1 ? 's' : ''} importée${data.inserted > 1 ? 's' : ''} · ${data.skipped} ignorée${data.skipped > 1 ? 's' : ''} (limite mensuelle)`
+      : 'Factures importées avec succès !'
+    setMessage(msg)
+    setTimeout(() => window.location.href = '/dashboard', 1500)
     setImporting(false)
   }
 

@@ -31,6 +31,10 @@ function SuccessContent() {
   const handleSubmitInfos = (e: React.FormEvent) => {
     e.preventDefault()
     if (!form.prenom || !form.nom || !form.email || !form.societe) { setError('Veuillez remplir tous les champs obligatoires.'); return }
+    if (form.siret) {
+      const siretClean = form.siret.replace(/[\s.-]/g, '')
+      if (!/^\d{14}$/.test(siretClean)) { setError('Le SIRET doit contenir exactement 14 chiffres.'); return }
+    }
     setError(''); setStep('password')
   }
 
@@ -71,20 +75,25 @@ function SuccessContent() {
         sequence_j3: 30,
       })
 
-      // Enrichir avec les données Stripe
+      // Enrichir avec les données Stripe (polling — webhook peut arriver avec du retard)
       if (sessionId) {
         try {
-          const stripeRes = await fetch(`/api/subscription/session-data?session_id=${sessionId}`)
-          if (stripeRes.ok) {
-            const sd = await stripeRes.json()
-            if (sd.customer_id || sd.subscription_id) {
-              await supabase.from('profiles').update({
-                stripe_customer_id: sd.customer_id,
-                stripe_subscription_id: sd.subscription_id,
-                current_period_end: sd.current_period_end,
-                payment_status: 'active',
-              }).eq('id', uid)
+          let stripeData: any = null
+          for (let attempt = 0; attempt < 6; attempt++) {
+            if (attempt > 0) await new Promise(r => setTimeout(r, 2000))
+            const stripeRes = await fetch(`/api/subscription/session-data?session_id=${sessionId}`)
+            if (stripeRes.ok) {
+              const sd = await stripeRes.json()
+              if (sd.customer_id) { stripeData = sd; break }
             }
+          }
+          if (stripeData && (stripeData.customer_id || stripeData.subscription_id)) {
+            await supabase.from('profiles').update({
+              stripe_customer_id: stripeData.customer_id,
+              stripe_subscription_id: stripeData.subscription_id,
+              current_period_end: stripeData.current_period_end,
+              payment_status: 'active',
+            }).eq('id', uid)
           }
         } catch {}
       }
