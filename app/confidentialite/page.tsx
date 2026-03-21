@@ -158,7 +158,7 @@ export default function ConfidentialitePage() {
           <div style={{ height: 72, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 20px', maxWidth: 1100, margin: '0 auto' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 20, cursor: 'pointer' }} onClick={() => router.push('/')}>
               <img src="/logo.png" style={{ height: 44, width: 'auto', objectFit: 'contain' }} />
-              <span style={{ fontFamily: 'Manrope', fontWeight: 800, fontSize: 22, color: 'white' }}>ManaFlow</span>
+              <span style={{ fontSize: 22, color: 'white' }}><span style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 400 }}>Mana</span><span style={{ fontFamily: "'Playfair Display', serif", fontStyle: 'italic', fontWeight: 700 }}>flow</span></span>
             </div>
             <div className="nav-links" style={{ display: 'flex', alignItems: 'center', gap: 28 }}>
               <span className="nav-a" onClick={() => router.push('/')} style={{ fontSize: 14 }}>Accueil</span>
@@ -214,7 +214,7 @@ export default function ConfidentialitePage() {
           <div className="footer-inner" style={{ maxWidth: 1100, margin: '0 auto', gap: isMobile ? 16 : 0 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 20, cursor: 'pointer' }} onClick={() => router.push('/')}>
               <img src="/logo.png" style={{ height: 44, width: 'auto', objectFit: 'contain' }} />
-              <span style={{ fontFamily: 'Manrope', fontWeight: 800, fontSize: 15, color: 'white' }}>ManaFlow</span>
+              <span style={{ fontSize: 15, color: 'white' }}><span style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 400 }}>Mana</span><span style={{ fontFamily: "'Playfair Display', serif", fontStyle: 'italic', fontWeight: 700 }}>flow</span></span>
             </div>
             <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.25)', textAlign: 'center' }}>© 2025 ManaFlow — Tous droits réservés</p>
             <div style={{ display: 'flex', gap: 20 }}>
