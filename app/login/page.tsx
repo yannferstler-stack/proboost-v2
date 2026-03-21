@@ -1,8 +1,10 @@
 'use client'
 import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import { createClient } from '../lib/supabase'
 
 export default function LoginPage() {
+  const router = useRouter()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [isSignUp, setIsSignUp] = useState(false)
@@ -68,7 +70,7 @@ export default function LoginPage() {
         {isMobile && (
           <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '40px 20px', position: 'relative', zIndex: 1 }}>
             {/* Logo */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer', marginBottom: 40 }} onClick={() => window.location.href = '/'}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer', marginBottom: 40 }} onClick={() => router.push('/')}>
               <img src="/logo.png" style={{ width: 40, height: 40, objectFit: 'contain' }} />
               <span style={{ fontFamily: 'Manrope', fontWeight: 800, fontSize: 20, color: 'white' }}>ProBoost</span>
             </div>
@@ -111,7 +113,7 @@ export default function LoginPage() {
 
                 <p style={{ textAlign: 'center', fontSize: 13, color: 'rgba(255,255,255,0.4)' }}>
                   {isSignUp ? 'Déjà un compte ?' : 'Pas encore de compte ?'}{' '}
-                  <span onClick={() => { if (isSignUp) { setIsSignUp(false); setMessage('') } else window.location.href = '/souscrire' }}
+                  <span onClick={() => { if (isSignUp) { setIsSignUp(false); setMessage('') } else router.push('/souscrire') }}
                     style={{ color: '#c084fc', fontWeight: 700, cursor: 'pointer' }}>
                     {isSignUp ? 'Se connecter' : 'Souscrire'}
                   </span>
@@ -120,9 +122,9 @@ export default function LoginPage() {
             </div>
 
             <div style={{ marginTop: 32, display: 'flex', gap: 24 }}>
-              {['CGU', 'Confidentialité', 'Support'].map(l => (
-                <span key={l} style={{ fontSize: 12, color: 'rgba(255,255,255,0.25)', cursor: 'pointer' }}>{l}</span>
-              ))}
+              <span onClick={() => router.push('/cgu')} style={{ fontSize: 12, color: 'rgba(255,255,255,0.25)', cursor: 'pointer' }}>CGU</span>
+              <span onClick={() => router.push('/confidentialite')} style={{ fontSize: 12, color: 'rgba(255,255,255,0.25)', cursor: 'pointer' }}>Confidentialité</span>
+              <span onClick={() => router.push('/contact')} style={{ fontSize: 12, color: 'rgba(255,255,255,0.25)', cursor: 'pointer' }}>Support</span>
             </div>
           </div>
         )}
@@ -134,7 +136,7 @@ export default function LoginPage() {
             {/* LEFT */}
             <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: '40px 48px', position: 'relative', zIndex: 1 }}>
               {/* Logo */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }} onClick={() => window.location.href = '/'}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }} onClick={() => router.push('/')}>
                 <img src="/logo.png" style={{ width: 40, height: 40, objectFit: 'contain' }} />
                 <span style={{ fontFamily: 'Manrope', fontWeight: 800, fontSize: 20, color: 'white' }}>ProBoost</span>
               </div>
@@ -237,7 +239,7 @@ export default function LoginPage() {
 
                   <p style={{ textAlign: 'center', fontSize: 14, color: 'rgba(255,255,255,0.4)' }}>
                     {isSignUp ? 'Déjà un compte ?' : 'Pas encore de compte ?'}{' '}
-                    <span onClick={() => { if (isSignUp) { setIsSignUp(false); setMessage('') } else window.location.href = '/souscrire' }}
+                    <span onClick={() => { if (isSignUp) { setIsSignUp(false); setMessage('') } else router.push('/souscrire') }}
                       style={{ color: '#c084fc', fontWeight: 700, cursor: 'pointer' }}>
                       {isSignUp ? 'Se connecter' : 'Souscrire un abonnement'}
                     </span>

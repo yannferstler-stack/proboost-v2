@@ -1,4 +1,5 @@
 'use client'
+import { useRouter } from 'next/navigation'
 
 const PLANS = [
   {
@@ -76,6 +77,7 @@ const PLANS = [
 ]
 
 export default function PricingPage() {
+  const router = useRouter()
   return (
     <>
       <style>{`
@@ -95,14 +97,14 @@ export default function PricingPage() {
 
         {/* Navbar */}
         <nav style={{ background: 'white', borderBottom: '1px solid #EAECEF', padding: '0 40px', height: 64, display: 'flex', alignItems: 'center', justifyContent: 'space-between', position: 'sticky', top: 0, zIndex: 100 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }} onClick={() => window.location.href = '/'}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }} onClick={() => router.push('/')}>
             <img src="/logo.png" style={{ width: 36, height: 36, objectFit: 'contain' }} />
             <span style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 800, fontSize: 17, color: '#111' }}>ProBoost</span>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 32 }}>
-            <span className="nav-link" onClick={() => window.location.href = '/'} style={{ fontSize: 14, color: '#6B7280', fontWeight: 500 }}>Accueil</span>
+            <span className="nav-link" onClick={() => router.push('/')} style={{ fontSize: 14, color: '#6B7280', fontWeight: 500 }}>Accueil</span>
             <span className="nav-link" style={{ fontSize: 14, color: '#1DB954', fontWeight: 700 }}>Tarifs</span>
-            <button onClick={() => window.location.href = '/login'}
+            <button onClick={() => router.push('/login')}
               style={{ background: '#1DB954', color: 'white', border: 'none', borderRadius: 8, padding: '8px 18px', fontSize: 14, fontWeight: 600, cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}>
               Se connecter
             </button>
@@ -166,7 +168,7 @@ export default function PricingPage() {
                 ))}
               </div>
 
-              <button className="btn-plan" onClick={() => window.location.href = '/login'}
+              <button className="btn-plan" onClick={() => router.push('/login')}
                 style={{ width: '100%', background: plan.popular ? plan.couleur : 'white', color: plan.popular ? 'white' : plan.couleur, border: `2px solid ${plan.couleur}`, borderRadius: 12, padding: '14px', fontSize: 15, fontWeight: 700, cursor: 'pointer', fontFamily: 'Inter, sans-serif', marginTop: 'auto' }}>
                 {plan.cta} →
               </button>

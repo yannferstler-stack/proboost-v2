@@ -187,9 +187,9 @@ export default function CommentCaMarchePage() {
             </div>
             <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.25)', textAlign: 'center' }}>© 2025 ProBoost — Tous droits réservés</p>
             <div style={{ display: 'flex', gap: 20 }}>
-              {['CGU', 'Confidentialité', 'Contact'].map(l => (
-                <span key={l} className="nav-a" style={{ fontSize: 12, cursor: 'pointer' }}>{l}</span>
-              ))}
+              <span className="nav-a" onClick={() => router.push('/cgu')} style={{ fontSize: 12, cursor: 'pointer' }}>CGU</span>
+              <span className="nav-a" onClick={() => router.push('/confidentialite')} style={{ fontSize: 12, cursor: 'pointer' }}>Confidentialité</span>
+              <span className="nav-a" onClick={() => router.push('/contact')} style={{ fontSize: 12, cursor: 'pointer' }}>Contact</span>
             </div>
           </div>
         </footer>
