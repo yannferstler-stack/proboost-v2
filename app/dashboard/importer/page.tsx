@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { createClient } from '../../lib/supabase'
 
 type Mode = null | 'csv' | 'pdf'
@@ -40,6 +40,8 @@ export default function ImporterPage() {
   const [importing, setImporting] = useState(false)
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState('')
+  const [progress, setProgress] = useState<{ done: number; total: number } | null>(null)
+  const cancelRef = useRef(false)
   const [profile, setProfile] = useState<any>(null)
   const [facturesCeMois, setFacturesCeMois] = useState(0)
   const [numerosExistants, setNumerosExistants] = useState<string[]>([])
@@ -70,8 +72,8 @@ export default function ImporterPage() {
   }, [])
 
   const getLimiteFactures = () => {
-    if (profile?.plan === 'pro') return Infinity
-    if (profile?.plan === 'premium') return 50
+    if (profile?.plan === 'pro') return 200
+    if (profile?.plan === 'premium') return 20
     return 10
   }
 
@@ -150,21 +152,43 @@ export default function ImporterPage() {
   const analyserPDFs = async () => {
     if (files.length === 0) return
     setLoading(true); setMessage('')
+    cancelRef.current = false
+    setProgress({ done: 0, total: files.length })
+
     const resultats: FacturePreview[] = []
-    for (const file of files) {
-      const formData = new FormData(); formData.append('pdf', file)
-      try {
-        const res = await fetch('/api/analyser-pdf', { method: 'POST', body: formData })
-        const data = await res.json()
-        resultats.push({ ...data, fichier: file.name, doublonWarning: isDublon(data.numero_facture) })
-      } catch {
-        resultats.push({ fichier: file.name, erreur: true })
-      }
+    const BATCH = 5
+
+    for (let i = 0; i < files.length; i += BATCH) {
+      if (cancelRef.current) break
+      const batch = files.slice(i, i + BATCH)
+      const batchResults = await Promise.all(
+        batch.map(async (file) => {
+          const formData = new FormData(); formData.append('pdf', file)
+          try {
+            const res = await fetch('/api/analyser-pdf', { method: 'POST', body: formData })
+            const data = await res.json()
+            return { ...data, fichier: file.name, doublonWarning: isDublon(data.numero_facture) }
+          } catch {
+            return { fichier: file.name, erreur: true }
+          }
+        })
+      )
+      resultats.push(...batchResults)
+      setProgress({ done: Math.min(i + BATCH, files.length), total: files.length })
     }
+
     const valides = resultats.filter(f => !f.erreur)
-    const limitees = placesRestantes === Infinity ? resultats : [...resultats.filter(f => f.erreur), ...valides.slice(0, placesRestantes)]
+    const limitees = [...resultats.filter(f => f.erreur), ...valides.slice(0, placesRestantes)]
     setFactures(limitees)
+    setProgress(null)
     setLoading(false)
+  }
+
+  const annulerAnalyse = () => {
+    cancelRef.current = true
+    setLoading(false)
+    setProgress(null)
+    setMessage('Analyse annulée.')
   }
 
   const importerFactures = async () => {
@@ -175,32 +199,36 @@ export default function ImporterPage() {
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) { window.location.href = '/login'; return }
     const valides = factures.filter(f => !f.erreur && !f.doublonWarning)
-    const { error } = await supabase.from('factures').insert(
-      valides.map(f => {
-        const dateEcheance = f.date_echeance || ''
-        const nextRelanceDate = getFirstRelanceDate(dateEcheance)
-        return {
-          user_id: user.id,
-          client_nom: f.raison_sociale || f.client_nom || f.nom,
-          client_email: f.email_facturation || f.client_email || f.email,
-          client_telephone: f.telephone || f.client_telephone,
-          adresse: f.adresse,
-          numero_facture: f.numero_facture,
-          date_facture: f.date_facture,
-          montant_total: parseFloat(f.montant_total || f.montant || '0'),
-          montant_restant: parseFloat(f.montant_restant || f.montant || '0'),
-          montant: parseFloat(f.montant_restant || f.montant_total || f.montant || '0'),
-          date_echeance: dateEcheance,
-          statut: 'impayée',
-          nombre_relances: 0,
-          sequence_active: false,
-          sequence_started_at: null,
-          next_relance_date: nextRelanceDate.toISOString(),
-        }
-      })
-    )
-    if (error) setMessage('Erreur : ' + error.message)
-    else { setMessage('Factures importées avec succès !'); setTimeout(() => window.location.href = '/dashboard', 1500) }
+    const rows = valides.map(f => {
+      const dateEcheance = f.date_echeance || ''
+      const nextRelanceDate = getFirstRelanceDate(dateEcheance)
+      return {
+        user_id: user.id,
+        client_nom: f.raison_sociale || f.client_nom || f.nom,
+        client_email: f.email_facturation || f.client_email || f.email,
+        client_telephone: f.telephone || f.client_telephone,
+        adresse: f.adresse,
+        numero_facture: f.numero_facture,
+        date_facture: f.date_facture,
+        montant_total: parseFloat(f.montant_total || f.montant || '0'),
+        montant_restant: parseFloat(f.montant_restant || f.montant || '0'),
+        montant: parseFloat(f.montant_restant || f.montant_total || f.montant || '0'),
+        date_echeance: dateEcheance,
+        statut: 'impayée',
+        nombre_relances: 0,
+        sequence_active: false,
+        sequence_started_at: null,
+        next_relance_date: nextRelanceDate.toISOString(),
+      }
+    })
+
+    // Insert par lots de 50 pour éviter les limites de payload
+    const CHUNK = 50
+    for (let i = 0; i < rows.length; i += CHUNK) {
+      const { error } = await supabase.from('factures').insert(rows.slice(i, i + CHUNK))
+      if (error) { setMessage('Erreur : ' + error.message); setImporting(false); return }
+    }
+    setMessage('Factures importées avec succès !'); setTimeout(() => window.location.href = '/dashboard', 1500)
     setImporting(false)
   }
 
@@ -336,7 +364,7 @@ export default function ImporterPage() {
                     <p style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 800, fontSize: 18, color: limiteAtteinte ? '#DC2626' : '#111' }}>
                       {facturesCeMois}
                       {getLimiteFactures() !== Infinity && <span style={{ fontSize: 12, color: '#9CA3AF', fontWeight: 500 }}>/{getLimiteFactures()}</span>}
-                      {getLimiteFactures() === Infinity && <span style={{ fontSize: 12, color: '#a855f7', fontWeight: 500 }}> illimité</span>}
+                      {profile?.plan === 'pro' && <span style={{ fontSize: 12, color: '#a855f7', fontWeight: 500 }}> /200</span>}
                     </p>
                     {getLimiteFactures() !== Infinity && (
                       <div style={{ marginTop: 6, height: 3, background: '#F3F4F6', borderRadius: 2, width: 100 }}>
@@ -529,9 +557,31 @@ export default function ImporterPage() {
                         <span style={{ fontSize: 13, color: '#111' }}>{f.name}</span>
                       </div>
                     ))}
-                    <button className="btn-import" onClick={analyserPDFs} disabled={loading} style={{ marginTop: 14 }}>
-                      {loading ? 'Analyse en cours...' : `Analyser ${files.length} PDF${files.length > 1 ? 's' : ''} avec l'IA`}
-                    </button>
+                    {/* Barre de progression */}
+                    {progress && (
+                      <div style={{ marginTop: 16 }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
+                          <span style={{ fontSize: 13, color: '#374151', fontWeight: 600 }}>
+                            {progress.done} / {progress.total} PDFs analysés
+                          </span>
+                          <button onClick={annulerAnalyse} style={{ fontSize: 11, color: '#DC2626', background: '#FEF2F2', border: '1px solid #FECACA', borderRadius: 6, padding: '3px 10px', cursor: 'pointer', fontFamily: 'Inter, sans-serif', fontWeight: 600 }}>
+                            Annuler
+                          </button>
+                        </div>
+                        <div style={{ height: 6, background: '#F3F4F6', borderRadius: 3, overflow: 'hidden' }}>
+                          <div style={{ height: '100%', borderRadius: 3, background: 'linear-gradient(135deg, #a855f7, #ec4899)', width: `${Math.round(progress.done / progress.total * 100)}%`, transition: 'width 0.3s ease' }} />
+                        </div>
+                        <p style={{ fontSize: 11, color: '#9CA3AF', marginTop: 4 }}>
+                          ~{Math.max(1, Math.ceil((progress.total - progress.done) / 5 * 5))}s restantes
+                        </p>
+                      </div>
+                    )}
+
+                    {!progress && (
+                      <button className="btn-import" onClick={analyserPDFs} disabled={loading} style={{ marginTop: 14 }}>
+                        {loading ? 'Analyse en cours...' : `Analyser ${files.length} PDF${files.length > 1 ? 's' : ''} avec l'IA`}
+                      </button>
+                    )}
                   </div>
                 )}
               </div>

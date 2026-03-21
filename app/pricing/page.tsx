@@ -36,7 +36,7 @@ const PLANS = [
     badge: '🔵',
     description: 'Pour les PME avec un volume de factures régulier',
     features: [
-      '50 factures / mois',
+      '20 factures / mois',
       '5 relances par facture',
       'Email uniquement',
       'Délais personnalisables',
@@ -60,7 +60,7 @@ const PLANS = [
     badge: '🟣',
     description: 'Pour les cabinets et entreprises à fort volume',
     features: [
-      'Factures illimitées',
+      'Jusqu'à 200 factures / mois',
       '5 relances par facture',
       'Email + SMS',
       'Délais personnalisables',
