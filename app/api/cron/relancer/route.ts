@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { Resend } from 'resend'
-import { getEmailContent } from '../../../lib/email-templates'
+import { getEmailContent, getSmsContent } from '../../../lib/email-templates'
 
 const getResend = () => new Resend(process.env.RESEND_API_KEY)
 
@@ -159,9 +159,23 @@ export async function GET(request: NextRequest) {
         })
       }
 
-      // ── SMS (log seulement, Twilio non intégré) ──
+      // ── SMS via Twilio ──
       if (canal === 'sms' || canal === 'both') {
-        console.log(`[CRON SMS SIMULÉ] → ${facture.client_telephone} Relance #${numeroRelance}`)
+        const smsBody = getSmsContent(facture.client_nom, facture.montant, facture.numero_facture || '', company, numeroRelance)
+        const sid = process.env.TWILIO_ACCOUNT_SID
+        const twilioToken = process.env.TWILIO_AUTH_TOKEN
+        const from = process.env.TWILIO_PHONE
+        if (sid && twilioToken && from && facture.client_telephone) {
+          try {
+            const twilio = require('twilio')
+            const twilioClient = twilio(sid, twilioToken)
+            await twilioClient.messages.create({ body: smsBody, from, to: facture.client_telephone })
+          } catch (smsErr) {
+            console.error(`[CRON SMS ERREUR] facture ${facture.id}:`, smsErr)
+          }
+        } else {
+          console.log(`[CRON SMS non envoyé — Twilio non configuré] → ${facture.client_telephone}`)
+        }
       }
 
       // ── Calculer la prochaine date ──

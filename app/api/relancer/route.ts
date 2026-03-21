@@ -106,13 +106,19 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // ── SMS ──
-    // Twilio non encore intégré — log pour l'instant, prêt pour branchement
+    // ── SMS via Twilio ──
     if (sendSms) {
       const smsBody = getSmsContent(clientNom, montant, numeroFacture, company, numeroRelance)
-      console.log(`[SMS SIMULÉ] → ${clientTelephone} : ${smsBody}`)
-      // TODO: intégrer Twilio ici
-      // await twilioClient.messages.create({ body: smsBody, from: process.env.TWILIO_PHONE, to: clientTelephone })
+      const sid = process.env.TWILIO_ACCOUNT_SID
+      const token = process.env.TWILIO_AUTH_TOKEN
+      const from = process.env.TWILIO_PHONE
+      if (sid && token && from && clientTelephone) {
+        const twilio = require('twilio')
+        const twilioClient = twilio(sid, token)
+        await twilioClient.messages.create({ body: smsBody, from, to: clientTelephone })
+      } else {
+        console.log(`[SMS non envoyé — Twilio non configuré] → ${clientTelephone} : ${smsBody}`)
+      }
     }
 
     // ── MISE À JOUR SUPABASE ──
