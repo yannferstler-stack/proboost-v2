@@ -149,7 +149,7 @@ export default function Home() {
           borderBottom: scrollY > 20 ? '1px solid #f0f0f0' : 'none',
           transition: 'all 0.3s'
         }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12, cursor: 'pointer' }} onClick={() => router.push('/')}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 20, cursor: 'pointer' }} onClick={() => router.push('/')}>
             <img src="/logo.png" style={{ height: 44, width: 'auto', objectFit: 'contain' }} />
             <span style={{ fontFamily: 'Manrope', fontWeight: 800, fontSize: 22, color: '#111' }}>ManaFlow</span>
           </div>
@@ -351,7 +351,7 @@ export default function Home() {
 
         {/* ── FOOTER ── */}
         <footer style={{ background: '#fafafa', borderTop: '1px solid #f0f0f0', padding: '28px 40px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12, cursor: 'pointer' }} onClick={() => router.push('/')}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 20, cursor: 'pointer' }} onClick={() => router.push('/')}>
             <img src="/logo.png" style={{ height: 36, width: 'auto', objectFit: 'contain' }} />
             <span style={{ fontFamily: 'Manrope', fontWeight: 800, fontSize: 34, color: '#111' }}>ManaFlow</span>
           </div>
