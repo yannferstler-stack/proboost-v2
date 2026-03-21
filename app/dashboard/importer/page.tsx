@@ -73,7 +73,7 @@ export default function ImporterPage() {
 
   const getLimiteFactures = () => {
     if (profile?.plan === 'pro') return 200
-    if (profile?.plan === 'premium') return 20
+    if (profile?.plan === 'premium') return 50
     return 10
   }
 
