@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { Suspense } from 'react'
+import Image from 'next/image'
 
 function formatPrix(n: number) {
   return n.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
@@ -112,7 +113,7 @@ function SouscrireContent() {
         {/* NAV */}
         <nav style={{ height: 64, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 20px', borderBottom: '1px solid rgba(255,255,255,0.06)', position: 'relative', zIndex: 10 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 20, cursor: 'pointer' }} onClick={() => router.push('/')}>
-            <img src="/logo.png" style={{ height: 44, width: 'auto', objectFit: 'contain' }} />
+            <Image src="/logo.png" height={44} width={120} alt="ManaFlow" style={{ width: 'auto', height: 44, objectFit: 'contain' }} />
             <span style={{ fontSize: 22, color: 'white' }}><span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 700 }}>Mana</span><span style={{ fontFamily: "'Yeseva One', serif", fontWeight: 400 }}>flow</span></span>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
@@ -169,6 +170,7 @@ function SouscrireContent() {
                           <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)' }}>/ mois</span>
                         </div>
                         <span style={{ fontSize: 11, color: p.couleur, fontWeight: 600 }}>+ {p.commission} au succès</span>
+                        <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.40)', fontWeight: 400 }}>min. 5 €/facture</span>
                       </div>
                     </div>
                     {isSelected && (
@@ -227,6 +229,7 @@ function SouscrireContent() {
                   <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.65)' }}>puis {formatPrix(plan.prixBase)}€/mois</span>
                 </div>
                 <span style={{ fontSize: 12, color: plan.couleur, fontWeight: 600 }}>+ {plan.commission} prélevé sur chaque facture recouvrée</span>
+                <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.40)', display: 'block', marginTop: 2 }}>min. 5 €/facture</span>
               </div>
 
               <div style={{ marginBottom: 18 }}>

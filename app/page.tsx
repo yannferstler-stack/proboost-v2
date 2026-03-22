@@ -1,6 +1,7 @@
 ﻿'use client'
 import { useRouter } from 'next/navigation'
 import { useEffect, useRef, useState } from 'react'
+import Image from 'next/image'
 
 function formatPrix(n: number) {
   return n.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
@@ -188,7 +189,7 @@ export default function Home() {
         }}>
           <div style={{ height: 72, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 20px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 20, cursor: 'pointer' }} onClick={() => router.push('/')}>
-              <img src="/logo.png" style={{ height: 44, width: 'auto', objectFit: 'contain' }} />
+              <Image src="/logo.png" height={44} width={120} alt="ManaFlow" style={{ width: 'auto', height: 44, objectFit: 'contain' }} />
               <span style={{ fontSize: 22, color: 'white' }}><span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 700 }}>Mana</span><span style={{ fontFamily: "'Yeseva One', serif", fontWeight: 400 }}>flow</span></span>
             </div>
             <div className="nav-links" style={{ display: 'flex', alignItems: 'center', gap: 28 }}>
@@ -377,9 +378,12 @@ export default function Home() {
                       <div style={{ marginBottom: 12 }}>
                         <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.45)' }}>puis {formatPrix(plan.prixBase)}€/mois</span>
                       </div>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 6, background: plan.bg, border: `1px solid ${plan.border}`, borderRadius: 8, padding: '6px 12px' }}>
-                        <span style={{ fontSize: 13, color: plan.couleur, fontWeight: 700, letterSpacing: '-0.3px' }}>{plan.commission}</span>
-                        <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.50)', fontWeight: 400 }}>prélevé sur chaque facture recouvrée</span>
+                      <div style={{ background: plan.bg, border: `1px solid ${plan.border}`, borderRadius: 8, padding: '6px 12px' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                          <span style={{ fontSize: 13, color: plan.couleur, fontWeight: 700, letterSpacing: '-0.3px' }}>{plan.commission}</span>
+                          <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.55)', fontWeight: 400 }}>prélevé sur chaque facture recouvrée</span>
+                        </div>
+                        <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.40)', fontWeight: 400 }}>min. 5 €/facture</span>
                       </div>
                     </div>
                     <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: 20, flex: 1, marginBottom: 20 }}>
@@ -559,7 +563,7 @@ export default function Home() {
         <footer style={{ borderTop: '1px solid rgba(255,255,255,0.06)', padding: isMobile ? '24px 20px' : '28px 40px' }}>
           <div className="footer-inner" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: isMobile ? 16 : 0 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 20, cursor: 'pointer' }} onClick={() => router.push('/')}>
-              <img src="/logo.png" style={{ height: 44, width: 'auto', objectFit: 'contain' }} />
+              <Image src="/logo.png" height={44} width={120} alt="ManaFlow" style={{ width: 'auto', height: 44, objectFit: 'contain' }} />
               <span style={{ fontSize: 15, color: 'white' }}><span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 700 }}>Mana</span><span style={{ fontFamily: "'Yeseva One', serif", fontWeight: 400 }}>flow</span></span>
             </div>
             <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.25)', textAlign: 'center' }}>© 2025 ManaFlow — Tous droits réservés</p>
