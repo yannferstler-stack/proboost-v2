@@ -1,4 +1,5 @@
 ﻿'use client'
+import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { createClient } from '../lib/supabase'
 import { getEmailContent } from '../lib/email-templates'
@@ -26,6 +27,7 @@ type Facture = {
 }
 
 export default function Dashboard() {
+  const pathname = usePathname()
   const [user, setUser] = useState<any>(null)
   const [factures, setFactures] = useState<Facture[]>([])
   const [profile, setProfile] = useState<any>(null)
@@ -259,8 +261,47 @@ export default function Dashboard() {
   }
 
   if (loading) return (
-    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#F4F6F8' }}>
-      <div style={{ width: 36, height: 36, border: '3px solid #E0E0E0', borderTop: '3px solid #a855f7', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
+    <div style={{ display: 'flex', minHeight: '100vh', background: '#F4F6F8', fontFamily: 'Inter, sans-serif' }}>
+      <style>{`@keyframes shimmer { 0% { background-position: -600px 0; } 100% { background-position: 600px 0; } } .sk { background: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%); background-size: 600px 100%; animation: shimmer 1.4s infinite; border-radius: 8px; }`}</style>
+      {/* Sidebar skeleton */}
+      <aside style={{ width: 240, background: 'white', borderRight: '1px solid #EAECEF', padding: '24px 16px', flexShrink: 0 }}>
+        <div className="sk" style={{ height: 36, width: 120, marginBottom: 36 }} />
+        {[1,2,3,4].map(i => <div key={i} className="sk" style={{ height: 36, borderRadius: 10, marginBottom: 8 }} />)}
+      </aside>
+      {/* Main skeleton */}
+      <div style={{ flex: 1, padding: '32px', minWidth: 0 }}>
+        {/* Header */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 32 }}>
+          <div className="sk" style={{ height: 28, width: 180 }} />
+          <div className="sk" style={{ height: 40, width: 160, borderRadius: 10 }} />
+        </div>
+        {/* Stats */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 20, marginBottom: 28 }}>
+          {[1,2,3].map(i => (
+            <div key={i} style={{ background: 'white', borderRadius: 16, padding: 24, border: '1px solid #EAECEF' }}>
+              <div className="sk" style={{ height: 12, width: 100, marginBottom: 16 }} />
+              <div className="sk" style={{ height: 40, width: 80, marginBottom: 8 }} />
+              <div className="sk" style={{ height: 10, width: 120 }} />
+            </div>
+          ))}
+        </div>
+        {/* Table */}
+        <div style={{ background: 'white', borderRadius: 16, border: '1px solid #EAECEF', overflow: 'hidden' }}>
+          <div style={{ padding: '18px 24px', borderBottom: '1px solid #EAECEF' }}>
+            <div className="sk" style={{ height: 16, width: 80 }} />
+          </div>
+          {[1,2,3,4,5].map(i => (
+            <div key={i} style={{ display: 'flex', gap: 20, padding: '16px 24px', borderBottom: '1px solid #F3F4F6', alignItems: 'center' }}>
+              <div className="sk" style={{ height: 14, width: 100 }} />
+              <div className="sk" style={{ height: 14, width: 70 }} />
+              <div className="sk" style={{ height: 14, width: 90 }} />
+              <div className="sk" style={{ height: 24, width: 70, borderRadius: 20 }} />
+              <div className="sk" style={{ height: 14, width: 60 }} />
+              <div className="sk" style={{ height: 14, flex: 1 }} />
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   )
 
@@ -333,10 +374,14 @@ export default function Dashboard() {
             ].map(item => (
               <div key={item.label} className="sidebar-link"
                 onClick={() => window.location.href = item.href}
-                style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 12px', color: item.active ? '#a855f7' : '#6B7280', fontSize: 14, fontWeight: item.active ? 600 : 400, background: item.active ? 'rgba(168,85,247,0.08)' : 'transparent' }}>
+                style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 12px', color: pathname === item.href ? '#a855f7' : '#6B7280', fontSize: 14, fontWeight: pathname === item.href ? 600 : 400, background: pathname === item.href ? 'rgba(168,85,247,0.08)' : 'transparent' }}>
                 {item.label}
               </div>
             ))}
+            <div style={{ marginTop: 'auto', paddingTop: 12 }}>
+              <a href="/blog" style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '9px 12px', color: '#9CA3AF', fontSize: 13, textDecoration: 'none', borderRadius: 8 }}>📖 Blog</a>
+              <a href="/contact" style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '9px 12px', color: '#9CA3AF', fontSize: 13, textDecoration: 'none', borderRadius: 8 }}>💬 Aide &amp; contact</a>
+            </div>
           </nav>
           <div style={{ borderTop: '1px solid #EAECEF', paddingTop: 16 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 12px' }}>
@@ -475,7 +520,8 @@ export default function Dashboard() {
                 </div>
               </div>
 
-              <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+              <div style={{ overflowX: 'auto' }}>
+              <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 700 }}>
                 <thead>
                   <tr style={{ background: '#F9FAFB' }}>
                     {['N° Facture', 'Montant', 'Échéance', 'Statut', 'Canal', 'Relances', ''].map(h => (
@@ -595,6 +641,7 @@ export default function Dashboard() {
                   })}
                 </tbody>
               </table>
+              </div>
               {sortedFactures.length > displayCount && (
                 <div style={{ padding: '16px', textAlign: 'center', borderTop: '1px solid #F3F4F6' }}>
                   <button className="btn-load-more" onClick={() => setDisplayCount(c => c + 20)}>

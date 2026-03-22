@@ -131,6 +131,20 @@ function SuccessContent() {
     setLoading(false)
   }
 
+  // Guard : si l'utilisateur a déjà un profil complet → rediriger vers le dashboard
+  useEffect(() => {
+    const checkExistingProfile = async () => {
+      const supabase = createClient()
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) return
+      const { data: profile } = await supabase.from('profiles').select('full_name').eq('id', user.id).single()
+      if (profile?.full_name) {
+        router.replace('/dashboard')
+      }
+    }
+    checkExistingProfile()
+  }, [])
+
   // Cas : l'utilisateur revient de Stripe (return_url = /dashboard?connect=success)
   // Ce cas est géré dans le dashboard. Ici, on propose aussi un accès au dashboard
   // si l'utilisateur a été redirigé depuis /souscrire/success?stripe=refresh (refresh_url)

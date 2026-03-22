@@ -1,4 +1,5 @@
 ﻿'use client'
+import { usePathname } from 'next/navigation'
 import { useState, useEffect } from 'react'
 import { createClient } from '../../lib/supabase'
 
@@ -10,6 +11,7 @@ const PLANS = {
 const COMMISSION_MIN = 5
 
 export default function FacturationPage() {
+  const pathname = usePathname()
   const [user, setUser] = useState<any>(null)
   const [factures, setFactures] = useState<any[]>([])
   const [plan, setPlan] = useState<'starter' | 'premium' | 'pro'>('starter')
@@ -75,10 +77,14 @@ export default function FacturationPage() {
             ].map(item => (
               <div key={item.label} className="sidebar-link"
                 onClick={() => window.location.href = item.href}
-                style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 12px', color: item.active ? '#a855f7' : '#6B7280', fontSize: 14, fontWeight: item.active ? 600 : 400, background: item.active ? 'rgba(168,85,247,0.08)' : 'transparent' }}>
+                style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 12px', color: pathname === item.href ? '#a855f7' : '#6B7280', fontSize: 14, fontWeight: pathname === item.href ? 600 : 400, background: pathname === item.href ? 'rgba(168,85,247,0.08)' : 'transparent' }}>
                 {item.label}
               </div>
             ))}
+            <div style={{ marginTop: 'auto', paddingTop: 12 }}>
+              <a href="/blog" style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '9px 12px', color: '#9CA3AF', fontSize: 13, textDecoration: 'none', borderRadius: 8 }}>📖 Blog</a>
+              <a href="/contact" style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '9px 12px', color: '#9CA3AF', fontSize: 13, textDecoration: 'none', borderRadius: 8 }}>💬 Aide &amp; contact</a>
+            </div>
           </nav>
           <div style={{ borderTop: '1px solid #EAECEF', paddingTop: 16 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 12px' }}>
@@ -166,7 +172,8 @@ export default function FacturationPage() {
                 <h2 style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 700, fontSize: 15, color: '#111' }}>Détail par facture</h2>
                 <span style={{ fontSize: 12, color: '#9CA3AF', background: '#F4F6F8', padding: '3px 10px', borderRadius: 20, fontWeight: 500 }}>{factures.length} facture{factures.length > 1 ? 's' : ''}</span>
               </div>
-              <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+              <div style={{ overflowX: 'auto' }}>
+              <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 640 }}>
                 <thead>
                   <tr style={{ background: '#F9FAFB' }}>
                     {['Client', 'N° Facture', 'Montant TTC', `Commission (${(currentPlan.taux * 100).toFixed(0)}%)`, 'Net perçu', 'Date'].map(h => (
@@ -234,6 +241,7 @@ export default function FacturationPage() {
                   </tr>
                 </tfoot>
               </table>
+              </div>
             </div>
           )}
         </div>

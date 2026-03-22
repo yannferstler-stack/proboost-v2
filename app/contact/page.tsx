@@ -14,6 +14,8 @@ export default function ContactPage() {
   const [isMobile, setIsMobile] = useState(false)
   const [form, setForm] = useState({ nom: '', email: '', sujet: '', message: '' })
   const [sent, setSent] = useState(false)
+  const [sending, setSending] = useState(false)
+  const [sendError, setSendError] = useState('')
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768)
@@ -22,10 +24,22 @@ export default function ContactPage() {
     return () => window.removeEventListener('resize', check)
   }, [])
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    // TODO: connecter à un backend (Resend, Supabase Edge Function, etc.)
-    setSent(true)
+    setSending(true); setSendError('')
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error || 'Erreur lors de l\'envoi.')
+      setSent(true)
+    } catch (err: any) {
+      setSendError(err.message || 'Erreur réseau. Réessayez.')
+    }
+    setSending(false)
   }
 
   return (
@@ -171,8 +185,9 @@ export default function ContactPage() {
                       <label style={{ fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.45)', display: 'block', marginBottom: 7, textTransform: 'uppercase', letterSpacing: '0.4px' }}>Message</label>
                       <textarea placeholder="Décrivez votre question ou problème..." required rows={5} value={form.message} onChange={e => setForm(f => ({ ...f, message: e.target.value }))} className="input-field" style={{ resize: 'vertical', minHeight: 120 }} />
                     </div>
-                    <button type="submit" className="btn-submit">
-                      Envoyer le message →
+                    {sendError && <p style={{ color: '#FCA5A5', fontSize: 13, marginBottom: 4 }}>{sendError}</p>}
+                    <button type="submit" className="btn-submit" disabled={sending} style={{ opacity: sending ? 0.7 : 1 }}>
+                      {sending ? 'Envoi en cours...' : 'Envoyer le message →'}
                     </button>
                   </form>
                 </>

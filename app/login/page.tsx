@@ -11,6 +11,8 @@ export default function LoginPage() {
   const [message, setMessage] = useState('')
   const [loading, setLoading] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
+  const [forgotMode, setForgotMode] = useState(false)
+  const [forgotSent, setForgotSent] = useState(false)
   const supabase = createClient()
 
   useEffect(() => {
@@ -19,6 +21,17 @@ export default function LoginPage() {
     window.addEventListener('resize', check)
     return () => window.removeEventListener('resize', check)
   }, [])
+
+  const handleForgotPassword = async () => {
+    if (!email) { setMessage('Entrez votre adresse email.'); return }
+    setLoading(true); setMessage('')
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/reset-password`,
+    })
+    if (error) setMessage(error.message)
+    else setForgotSent(true)
+    setLoading(false)
+  }
 
   const handleAuth = async () => {
     setLoading(true)
@@ -86,39 +99,58 @@ export default function LoginPage() {
                 </p>
               </div>
 
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-                <div>
-                  <label style={{ fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.5)', display: 'block', marginBottom: 7, textTransform: 'uppercase', letterSpacing: '0.4px' }}>Adresse email</label>
-                  <input type="email" placeholder="vous@entreprise.com" value={email} onChange={e => setEmail(e.target.value)} className="input-field" />
+              {forgotMode ? (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                  {forgotSent ? (
+                    <div style={{ background: 'rgba(34,197,94,0.1)', border: '1px solid rgba(34,197,94,0.3)', borderRadius: 10, padding: '14px', textAlign: 'center' }}>
+                      <p style={{ fontSize: 14, color: '#86efac', fontWeight: 600 }}>✓ Email envoyé !</p>
+                      <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', marginTop: 4 }}>Vérifiez votre boîte mail pour réinitialiser votre mot de passe.</p>
+                    </div>
+                  ) : (
+                    <>
+                      <div>
+                        <label style={{ fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.5)', display: 'block', marginBottom: 7, textTransform: 'uppercase', letterSpacing: '0.4px' }}>Votre adresse email</label>
+                        <input type="email" placeholder="vous@entreprise.com" value={email} onChange={e => setEmail(e.target.value)} className="input-field" />
+                      </div>
+                      {message && <p style={{ fontSize: 13, color: '#fca5a5' }}>{message}</p>}
+                      <button className="btn-submit" onClick={handleForgotPassword} disabled={loading}>
+                        {loading ? <><div style={{ width: 16, height: 16, border: '2px solid rgba(255,255,255,0.3)', borderTop: '2px solid white', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />Envoi...</> : 'Envoyer le lien →'}
+                      </button>
+                    </>
+                  )}
+                  <p style={{ textAlign: 'center', fontSize: 13, color: 'rgba(255,255,255,0.4)' }}>
+                    <span onClick={() => { setForgotMode(false); setForgotSent(false); setMessage('') }} style={{ color: '#c084fc', fontWeight: 700, cursor: 'pointer' }}>← Retour à la connexion</span>
+                  </p>
                 </div>
-                <div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 7 }}>
-                    <label style={{ fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.5)', textTransform: 'uppercase', letterSpacing: '0.4px' }}>Mot de passe</label>
-                    {!isSignUp && <span style={{ fontSize: 12, color: '#c084fc', cursor: 'pointer', fontWeight: 600 }}>Oublié ?</span>}
+              ) : (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                  <div>
+                    <label style={{ fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.5)', display: 'block', marginBottom: 7, textTransform: 'uppercase', letterSpacing: '0.4px' }}>Adresse email</label>
+                    <input type="email" placeholder="vous@entreprise.com" value={email} onChange={e => setEmail(e.target.value)} className="input-field" />
                   </div>
-                  <input type="password" placeholder="••••••••••" value={password} onChange={e => setPassword(e.target.value)} onKeyDown={e => e.key === 'Enter' && handleAuth()} className="input-field" />
+                  <div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 7 }}>
+                      <label style={{ fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.5)', textTransform: 'uppercase', letterSpacing: '0.4px' }}>Mot de passe</label>
+                      {!isSignUp && <span style={{ fontSize: 12, color: '#c084fc', cursor: 'pointer', fontWeight: 600 }} onClick={() => { setForgotMode(true); setMessage('') }}>Oublié ?</span>}
+                    </div>
+                    <input type="password" placeholder="••••••••••" value={password} onChange={e => setPassword(e.target.value)} onKeyDown={e => e.key === 'Enter' && handleAuth()} className="input-field" />
+                  </div>
+                  {message && (
+                    <div style={{ background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.3)', borderRadius: 10, padding: '11px 14px' }}>
+                      <p style={{ fontSize: 13, color: '#fca5a5', fontWeight: 500 }}>{message}</p>
+                    </div>
+                  )}
+                  <button className="btn-submit" onClick={handleAuth} disabled={loading}>
+                    {loading ? <><div style={{ width: 16, height: 16, border: '2px solid rgba(255,255,255,0.3)', borderTop: '2px solid white', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />Chargement...</> : (isSignUp ? 'Créer mon compte →' : 'Se connecter →')}
+                  </button>
+                  <p style={{ textAlign: 'center', fontSize: 13, color: 'rgba(255,255,255,0.4)' }}>
+                    {isSignUp ? 'Déjà un compte ?' : 'Pas encore de compte ?'}{' '}
+                    <span onClick={() => { if (isSignUp) { setIsSignUp(false); setMessage('') } else router.push('/souscrire') }} style={{ color: '#c084fc', fontWeight: 700, cursor: 'pointer' }}>
+                      {isSignUp ? 'Se connecter' : 'Souscrire'}
+                    </span>
+                  </p>
                 </div>
-
-                {message && (
-                  <div style={{ background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.3)', borderRadius: 10, padding: '11px 14px' }}>
-                    <p style={{ fontSize: 13, color: '#fca5a5', fontWeight: 500 }}>{message}</p>
-                  </div>
-                )}
-
-                <button className="btn-submit" onClick={handleAuth} disabled={loading}>
-                  {loading ? (
-                    <><div style={{ width: 16, height: 16, border: '2px solid rgba(255,255,255,0.3)', borderTop: '2px solid white', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />Chargement...</>
-                  ) : (isSignUp ? 'Créer mon compte →' : 'Se connecter →')}
-                </button>
-
-                <p style={{ textAlign: 'center', fontSize: 13, color: 'rgba(255,255,255,0.4)' }}>
-                  {isSignUp ? 'Déjà un compte ?' : 'Pas encore de compte ?'}{' '}
-                  <span onClick={() => { if (isSignUp) { setIsSignUp(false); setMessage('') } else router.push('/souscrire') }}
-                    style={{ color: '#c084fc', fontWeight: 700, cursor: 'pointer' }}>
-                    {isSignUp ? 'Se connecter' : 'Souscrire'}
-                  </span>
-                </p>
-              </div>
+              )}
             </div>
 
             <div style={{ marginTop: 32, display: 'flex', gap: 24 }}>
@@ -211,40 +243,58 @@ export default function LoginPage() {
                   </p>
                 </div>
 
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
-                  <div>
-                    <label style={{ fontSize: 12, fontWeight: 600, color: 'rgba(255,255,255,0.5)', display: 'block', marginBottom: 7, textTransform: 'uppercase', letterSpacing: '0.4px' }}>Adresse email</label>
-                    <input type="email" placeholder="vous@entreprise.com" value={email} onChange={e => setEmail(e.target.value)} className="input-field" />
+                {forgotMode ? (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
+                    {forgotSent ? (
+                      <div style={{ background: 'rgba(34,197,94,0.1)', border: '1px solid rgba(34,197,94,0.3)', borderRadius: 10, padding: '16px', textAlign: 'center' }}>
+                        <p style={{ fontSize: 15, color: '#86efac', fontWeight: 700 }}>✓ Email envoyé !</p>
+                        <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)', marginTop: 6 }}>Vérifiez votre boîte mail pour réinitialiser votre mot de passe.</p>
+                      </div>
+                    ) : (
+                      <>
+                        <div>
+                          <label style={{ fontSize: 12, fontWeight: 600, color: 'rgba(255,255,255,0.5)', display: 'block', marginBottom: 7, textTransform: 'uppercase', letterSpacing: '0.4px' }}>Votre adresse email</label>
+                          <input type="email" placeholder="vous@entreprise.com" value={email} onChange={e => setEmail(e.target.value)} className="input-field" />
+                        </div>
+                        {message && <p style={{ fontSize: 13, color: '#fca5a5' }}>{message}</p>}
+                        <button className="btn-submit" onClick={handleForgotPassword} disabled={loading}>
+                          {loading ? <><div style={{ width: 16, height: 16, border: '2px solid rgba(255,255,255,0.3)', borderTop: '2px solid white', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />Envoi...</> : 'Envoyer le lien de réinitialisation →'}
+                        </button>
+                      </>
+                    )}
+                    <p style={{ textAlign: 'center', fontSize: 14, color: 'rgba(255,255,255,0.4)' }}>
+                      <span onClick={() => { setForgotMode(false); setForgotSent(false); setMessage('') }} style={{ color: '#c084fc', fontWeight: 700, cursor: 'pointer' }}>← Retour à la connexion</span>
+                    </p>
                   </div>
-
-                  <div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 7 }}>
-                      <label style={{ fontSize: 12, fontWeight: 600, color: 'rgba(255,255,255,0.5)', textTransform: 'uppercase', letterSpacing: '0.4px' }}>Mot de passe</label>
-                      {!isSignUp && <span style={{ fontSize: 12, color: '#c084fc', cursor: 'pointer', fontWeight: 600 }}>Oublié ?</span>}
+                ) : (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
+                    <div>
+                      <label style={{ fontSize: 12, fontWeight: 600, color: 'rgba(255,255,255,0.5)', display: 'block', marginBottom: 7, textTransform: 'uppercase', letterSpacing: '0.4px' }}>Adresse email</label>
+                      <input type="email" placeholder="vous@entreprise.com" value={email} onChange={e => setEmail(e.target.value)} className="input-field" />
                     </div>
-                    <input type="password" placeholder="••••••••••" value={password} onChange={e => setPassword(e.target.value)} onKeyDown={e => e.key === 'Enter' && handleAuth()} className="input-field" />
+                    <div>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 7 }}>
+                        <label style={{ fontSize: 12, fontWeight: 600, color: 'rgba(255,255,255,0.5)', textTransform: 'uppercase', letterSpacing: '0.4px' }}>Mot de passe</label>
+                        {!isSignUp && <span style={{ fontSize: 12, color: '#c084fc', cursor: 'pointer', fontWeight: 600 }} onClick={() => { setForgotMode(true); setMessage('') }}>Oublié ?</span>}
+                      </div>
+                      <input type="password" placeholder="••••••••••" value={password} onChange={e => setPassword(e.target.value)} onKeyDown={e => e.key === 'Enter' && handleAuth()} className="input-field" />
+                    </div>
+                    {message && (
+                      <div style={{ background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.3)', borderRadius: 10, padding: '11px 14px' }}>
+                        <p style={{ fontSize: 13, color: '#fca5a5', fontWeight: 500 }}>{message}</p>
+                      </div>
+                    )}
+                    <button className="btn-submit" onClick={handleAuth} disabled={loading}>
+                      {loading ? <><div style={{ width: 16, height: 16, border: '2px solid rgba(255,255,255,0.3)', borderTop: '2px solid white', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />Chargement...</> : (isSignUp ? 'Créer mon compte →' : 'Se connecter →')}
+                    </button>
+                    <p style={{ textAlign: 'center', fontSize: 14, color: 'rgba(255,255,255,0.4)' }}>
+                      {isSignUp ? 'Déjà un compte ?' : 'Pas encore de compte ?'}{' '}
+                      <span onClick={() => { if (isSignUp) { setIsSignUp(false); setMessage('') } else router.push('/souscrire') }} style={{ color: '#c084fc', fontWeight: 700, cursor: 'pointer' }}>
+                        {isSignUp ? 'Se connecter' : 'Souscrire un abonnement'}
+                      </span>
+                    </p>
                   </div>
-
-                  {message && (
-                    <div style={{ background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.3)', borderRadius: 10, padding: '11px 14px' }}>
-                      <p style={{ fontSize: 13, color: '#fca5a5', fontWeight: 500 }}>{message}</p>
-                    </div>
-                  )}
-
-                  <button className="btn-submit" onClick={handleAuth} disabled={loading}>
-                    {loading ? (
-                      <><div style={{ width: 16, height: 16, border: '2px solid rgba(255,255,255,0.3)', borderTop: '2px solid white', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />Chargement...</>
-                    ) : (isSignUp ? 'Créer mon compte →' : 'Se connecter →')}
-                  </button>
-
-                  <p style={{ textAlign: 'center', fontSize: 14, color: 'rgba(255,255,255,0.4)' }}>
-                    {isSignUp ? 'Déjà un compte ?' : 'Pas encore de compte ?'}{' '}
-                    <span onClick={() => { if (isSignUp) { setIsSignUp(false); setMessage('') } else router.push('/souscrire') }}
-                      style={{ color: '#c084fc', fontWeight: 700, cursor: 'pointer' }}>
-                      {isSignUp ? 'Se connecter' : 'Souscrire un abonnement'}
-                    </span>
-                  </p>
-                </div>
+                )}
 
                 <div style={{ marginTop: 40, paddingTop: 24, borderTop: '1px solid rgba(255,255,255,0.06)', display: 'flex', justifyContent: 'center', gap: 24 }}>
                   {['CGU', 'Confidentialité', 'Support'].map(l => (
