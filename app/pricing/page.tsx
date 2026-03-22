@@ -68,7 +68,7 @@ const PLANS = [
       'Historique des relances',
     ],
     popular: true,
-    popularLabel: '🏆 Recommandé pour les PME',
+    popularLabel: 'Notre choix préféré ✦',
   },
 ]
 
@@ -114,9 +114,8 @@ export default function PricingPage() {
         {/* Hero */}
         <div style={{ textAlign: 'center', padding: '72px 20px 48px', animation: 'fadeUp 0.5s ease both' }}>
           {/* Early Bird Banner */}
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'linear-gradient(135deg, #fef3c7, #fde68a)', border: '1px solid #f59e0b', borderRadius: 20, padding: '8px 20px', marginBottom: 20 }}>
-            <span style={{ fontSize: 16 }}>🐣</span>
-            <span style={{ fontSize: 13, color: '#92400e', fontWeight: 700 }}>Early Bird — <strong>-20%</strong> pour les {EARLY_BIRD_SPOTS} premiers abonnés</span>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'linear-gradient(135deg, #f3e8ff, #fce7f3)', border: '1px solid rgba(168,85,247,0.35)', borderRadius: 20, padding: '8px 20px', marginBottom: 20 }}>
+            <span style={{ fontSize: 13, color: '#7C3AED', fontWeight: 700 }}>Offre de lancement — <strong>-20%</strong> pour les {EARLY_BIRD_SPOTS} premiers abonnés</span>
           </div>
           <h1 style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 900, fontSize: 48, color: '#111', marginBottom: 16, lineHeight: 1.15 }}>
             Un plan pour chaque<br/>
@@ -135,7 +134,7 @@ export default function PricingPage() {
         <div style={{ display: 'flex', gap: 24, justifyContent: 'center', padding: '0 40px 80px', flexWrap: 'wrap', maxWidth: 1100, margin: '0 auto', animation: 'fadeUp 0.5s ease 0.1s both', alignItems: 'stretch' }}>
           {PLANS.map((plan) => (
             <div key={plan.nom} className="plan-card"
-              style={{ background: 'white', borderRadius: 20, padding: '36px 28px', flex: '1 1 300px', maxWidth: 340, border: plan.popular ? `2px solid ${plan.couleur}` : '1px solid #EAECEF', boxShadow: plan.popular ? `0 8px 40px ${plan.couleur}22` : '0 2px 8px rgba(0,0,0,0.06)', position: 'relative', display: 'flex', flexDirection: 'column' }}>
+              style={{ background: 'white', borderRadius: 20, padding: '36px 28px', flex: '1 1 300px', maxWidth: 340, border: '1px solid #EAECEF', boxShadow: '0 2px 8px rgba(0,0,0,0.06)', position: 'relative', display: 'flex', flexDirection: 'column' }}>
 
               {plan.popular && (
                 <div style={{ position: 'absolute', top: -14, left: '50%', transform: 'translateX(-50%)', background: plan.couleur, color: 'white', borderRadius: 20, padding: '4px 16px', fontSize: 12, fontWeight: 700, whiteSpace: 'nowrap' }}>
@@ -144,8 +143,8 @@ export default function PricingPage() {
               )}
 
               {/* Early bird badge on card */}
-              <div style={{ position: 'absolute', top: plan.popular ? 18 : -12, right: 18, background: '#f59e0b', color: 'white', borderRadius: 6, padding: '2px 8px', fontSize: 11, fontWeight: 700 }}>
-                -20% 🐣
+              <div style={{ position: 'absolute', top: plan.popular ? 18 : -12, right: 18, background: 'linear-gradient(135deg, #a855f7, #ec4899)', color: 'white', borderRadius: 6, padding: '2px 8px', fontSize: 11, fontWeight: 700 }}>
+                -20% lancement
               </div>
 
               <div style={{ marginBottom: 24 }}>
@@ -178,7 +177,7 @@ export default function PricingPage() {
               </div>
 
               <button className="btn-plan" onClick={() => router.push('/souscrire')}
-                style={{ width: '100%', background: plan.popular ? plan.couleur : 'white', color: plan.popular ? 'white' : plan.couleur, border: `2px solid ${plan.couleur}`, borderRadius: 12, padding: '14px', fontSize: 15, fontWeight: 700, cursor: 'pointer', fontFamily: 'Inter, sans-serif', marginTop: 'auto' }}>
+                style={{ width: '100%', background: 'white', color: plan.couleur, border: `2px solid ${plan.couleur}`, borderRadius: 12, padding: '14px', fontSize: 15, fontWeight: 700, cursor: 'pointer', fontFamily: 'Inter, sans-serif', marginTop: 'auto' }}>
                 Je me lance →
               </button>
             </div>

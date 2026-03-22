@@ -42,7 +42,6 @@ const PLANS = [
       { label: 'Relances email uniquement', ok: true, bold: false },
       { label: 'Délais personnalisables', ok: false, bold: false },
       { label: 'Historique des relances', ok: false, bold: false },
-      { label: 'Support prioritaire', ok: false, bold: false },
     ],
     popular: false, popularLabel: '',
   },
@@ -57,7 +56,6 @@ const PLANS = [
       { label: 'Relances email uniquement', ok: true, bold: false },
       { label: 'Délais personnalisables', ok: true, bold: true },
       { label: 'Historique des relances', ok: true, bold: true },
-      { label: 'Support prioritaire', ok: false, bold: false },
     ],
     popular: false, popularLabel: '',
   },
@@ -72,9 +70,8 @@ const PLANS = [
       { label: 'Relances Email + SMS', ok: true, bold: true },
       { label: 'Délais personnalisables', ok: true, bold: false },
       { label: 'Historique des relances', ok: true, bold: false },
-      { label: 'Support prioritaire', ok: true, bold: true },
     ],
-    popular: true, popularLabel: 'Recommandé pour les PME',
+    popular: true, popularLabel: 'Notre choix préféré ✦',
   },
 ]
 
@@ -344,7 +341,10 @@ export default function Home() {
           <div style={{ maxWidth: 1060, margin: '0 auto' }}>
             <Reveal>
               <div style={{ textAlign: 'center', marginBottom: 40 }}>
-                <span style={{ fontSize: 11, color: '#a855f7', fontWeight: 700, letterSpacing: '2px', textTransform: 'uppercase', display: 'block', marginBottom: 10 }}>Tarifs</span>
+                <span style={{ fontSize: 11, color: '#a855f7', fontWeight: 700, letterSpacing: '2px', textTransform: 'uppercase', display: 'block', marginBottom: 12 }}>Tarifs</span>
+                <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'linear-gradient(135deg, rgba(168,85,247,0.18), rgba(236,72,153,0.18))', border: '1px solid rgba(168,85,247,0.40)', borderRadius: 20, padding: '7px 18px', marginBottom: 18 }}>
+                  <span style={{ fontSize: 13, color: '#c084fc', fontWeight: 700 }}>Offre de lancement — <strong style={{ color: 'white' }}>-20%</strong> pour les 50 premiers abonnés</span>
+                </div>
                 <h2 style={{ fontFamily: 'Comfortaa', fontWeight: 900, fontSize: isMobile ? 28 : 38, color: 'white', letterSpacing: '-1px', marginBottom: 8 }}>Simple et transparent.</h2>
                 <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.50)', lineHeight: 1.8, maxWidth: 560, margin: '0 auto' }}>
                   Abonnement mensuel fixe + commission uniquement sur les factures recouvrées.
@@ -356,7 +356,7 @@ export default function Home() {
                 <Reveal key={plan.nom} delay={isMobile ? 0 : i * 0.08}>
                   <div className="plan-card"
                     onClick={() => router.push(`/souscrire?plan=${plan.nom.toLowerCase()}`)}
-                    style={{ background: plan.popular ? 'rgba(168,85,247,0.10)' : 'rgba(255,255,255,0.04)', backdropFilter: 'blur(12px)', borderRadius: 20, padding: '32px 24px', border: plan.popular ? '1.5px solid rgba(168,85,247,0.40)' : '1px solid rgba(255,255,255,0.08)', boxShadow: plan.popular ? '0 8px 40px rgba(168,85,247,0.20)' : 'none', position: 'relative', display: 'flex', flexDirection: 'column' }}>
+                    style={{ background: 'rgba(255,255,255,0.04)', backdropFilter: 'blur(12px)', borderRadius: 20, padding: '32px 24px', border: '1px solid rgba(255,255,255,0.08)', boxShadow: 'none', position: 'relative', display: 'flex', flexDirection: 'column' }}>
                     {plan.popular && (
                       <div style={{ position: 'absolute', top: -14, left: '50%', transform: 'translateX(-50%)', background: 'linear-gradient(135deg, #a855f7, #ec4899)', color: 'white', borderRadius: 20, padding: '4px 16px', fontSize: 12, fontWeight: 700, whiteSpace: 'nowrap' }}>
                         {plan.popularLabel}
@@ -383,8 +383,8 @@ export default function Home() {
                         </div>
                       ))}
                     </div>
-                    <div style={{ marginTop: 'auto', background: plan.popular ? 'linear-gradient(135deg, #a855f7, #ec4899)' : plan.bg, border: plan.popular ? 'none' : `1.5px solid ${plan.border}`, borderRadius: 12, padding: '12px', textAlign: 'center', boxShadow: plan.popular ? '0 4px 20px rgba(168,85,247,0.35)' : 'none' }}>
-                      <span style={{ fontSize: 14, fontWeight: 700, color: plan.popular ? 'white' : plan.couleur }}>Choisir {plan.nom} →</span>
+                    <div style={{ marginTop: 'auto', background: plan.bg, border: `1.5px solid ${plan.border}`, borderRadius: 12, padding: '12px', textAlign: 'center' }}>
+                      <span style={{ fontSize: 14, fontWeight: 700, color: plan.couleur }}>Choisir {plan.nom} →</span>
                     </div>
                   </div>
                 </Reveal>
