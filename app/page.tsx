@@ -96,7 +96,7 @@ export default function Home() {
   const [transitioning, setTransitioning] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
-  const [montantImpaye, setMontantImpaye] = useState(5000)
+  const [montantImpaye, setMontantImpaye] = useState(0)
   const [planManuel, setPlanManuel] = useState<string | null>(null)
 
   useEffect(() => {
@@ -427,11 +427,11 @@ export default function Home() {
                       <div style={{ position: 'relative' as const, flex: 1, minWidth: 160 }}>
                         <input
                           type="number"
-                          min={100}
-                          max={500000}
-                          step={100}
+                          min={0}
+                          max={1000000}
+                          step={500}
                           value={montantImpaye}
-                          onChange={e => setMontantImpaye(Math.max(100, Math.min(500000, Number(e.target.value) || 100)))}
+                          onChange={e => setMontantImpaye(Math.max(0, Math.min(1000000, Number(e.target.value) || 0)))}
                           style={{ width: '100%', background: 'rgba(255,255,255,0.07)', border: '1.5px solid rgba(168,85,247,0.35)', borderRadius: 10, padding: '10px 40px 10px 14px', fontSize: 18, fontWeight: 700, color: 'white', fontFamily: 'Comfortaa, sans-serif', outline: 'none' }}
                         />
                         <span style={{ position: 'absolute' as const, right: 12, top: '50%', transform: 'translateY(-50%)', fontSize: 15, color: 'rgba(255,255,255,0.35)', fontWeight: 700 }}>€</span>
@@ -440,10 +440,10 @@ export default function Home() {
                     </div>
                     <input
                       type="range"
-                      min={100}
-                      max={100000}
-                      step={100}
-                      value={Math.min(montantImpaye, 100000)}
+                      min={0}
+                      max={1000000}
+                      step={500}
+                      value={montantImpaye}
                       onChange={e => setMontantImpaye(Number(e.target.value))}
                       style={{ width: '100%', accentColor: '#a855f7', cursor: 'pointer' }}
                     />
