@@ -273,14 +273,14 @@ export default function DashboardPricingPage() {
                     <p style={{ fontSize: 13, color: '#6B7280', marginBottom: 16, lineHeight: 1.5 }}>{plan.description}</p>
                     {/* Early bird badge */}
                     <div style={{ display: 'inline-flex', alignItems: 'center', background: 'linear-gradient(135deg, #a855f7, #ec4899)', borderRadius: 6, padding: '2px 8px', marginBottom: 8 }}>
-                      <span style={{ fontSize: 10, color: 'white', fontWeight: 700 }}>-20% lancement</span>
+                      <span style={{ fontSize: 10, color: 'white', fontWeight: 700 }}>-20% le 1er mois</span>
                     </div>
                     <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, marginBottom: 2 }}>
                       <span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 900, fontSize: 38, color: '#111' }}>{formatPrix(plan.prixBase * (1 - EARLY_BIRD_DISCOUNT))}€</span>
-                      <span style={{ fontSize: 14, color: '#9CA3AF' }}>/mois</span>
+                      <span style={{ fontSize: 14, color: '#9CA3AF' }}>/ 1er mois</span>
                     </div>
                     <div style={{ marginBottom: 8 }}>
-                      <span style={{ fontSize: 12, color: '#9CA3AF', textDecoration: 'line-through' }}>au lieu de {formatPrix(plan.prixBase)}€/mois</span>
+                      <span style={{ fontSize: 12, color: '#9CA3AF' }}>puis {formatPrix(plan.prixBase)}€/mois</span>
                     </div>
                     <div style={{ display: 'inline-flex', alignItems: 'center', background: plan.bg, border: `1px solid ${plan.border}`, borderRadius: 8, padding: '4px 10px' }}>
                       <span style={{ fontSize: 12, color: plan.couleur, fontWeight: 700 }}>+ {plan.commission} commission au succès</span>

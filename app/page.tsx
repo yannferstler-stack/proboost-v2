@@ -348,7 +348,7 @@ export default function Home() {
               <div style={{ textAlign: 'center', marginBottom: 40 }}>
                 <span style={{ fontSize: 11, color: '#a855f7', fontWeight: 700, letterSpacing: '2px', textTransform: 'uppercase', display: 'block', marginBottom: 12 }}>Tarifs</span>
                 <div style={{ display: 'inline-flex', flexDirection: 'column', alignItems: 'center', gap: 4, background: 'linear-gradient(135deg, #a855f7, #ec4899)', borderRadius: 16, padding: '14px 32px', marginBottom: 24, boxShadow: '0 6px 28px rgba(168,85,247,0.45)' }}>
-                  <span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 900, fontSize: 34, color: 'white', lineHeight: 1, letterSpacing: '-1px' }}>-20%</span>
+                  <span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 900, fontSize: 34, color: 'white', lineHeight: 1, letterSpacing: '-1px' }}>-20% le 1er mois</span>
                   <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.88)', fontWeight: 500 }}>Offre de lancement · 50 premiers clients uniquement</span>
                 </div>
                 <h2 style={{ fontFamily: 'Comfortaa', fontWeight: 900, fontSize: isMobile ? 28 : 38, color: 'white', letterSpacing: '-1px', marginBottom: 8 }}>Simple et transparent.</h2>
@@ -363,9 +363,9 @@ export default function Home() {
                   <div className="plan-card"
                     onClick={() => router.push(`/souscrire?plan=${plan.nom.toLowerCase()}`)}
                     style={{ background: 'rgba(255,255,255,0.04)', backdropFilter: 'blur(12px)', borderRadius: 20, padding: '32px 24px', border: '1px solid rgba(255,255,255,0.08)', boxShadow: 'none', position: 'relative', display: 'flex', flexDirection: 'column' }}>
-                    {/* Badge -20% */}
+                    {/* Badge 1er mois */}
                     <div style={{ position: 'absolute', top: -11, right: 16, background: 'linear-gradient(135deg, #a855f7, #ec4899)', color: 'white', borderRadius: 6, padding: '2px 8px', fontSize: 11, fontWeight: 700 }}>
-                      -20% lancement
+                      -20% 1er mois
                     </div>
 
                     <div style={{ marginBottom: 20 }}>
@@ -373,10 +373,10 @@ export default function Home() {
                       <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)', marginBottom: 16, lineHeight: 1.5 }}>{plan.description}</p>
                       <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, marginBottom: 4 }}>
                         <span style={{ fontFamily: 'Comfortaa', fontWeight: 900, fontSize: 36, color: 'white' }}>{formatPrix(plan.prixBase * (1 - EARLY_BIRD_DISCOUNT))} €</span>
-                        <span style={{ fontSize: 14, color: 'rgba(255,255,255,0.35)' }}>/mois</span>
+                        <span style={{ fontSize: 14, color: 'rgba(255,255,255,0.35)' }}>/ 1er mois</span>
                       </div>
                       <div style={{ marginBottom: 10 }}>
-                        <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.30)', textDecoration: 'line-through' }}>puis {formatPrix(plan.prixBase)}€/mois</span>
+                        <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.45)' }}>puis {formatPrix(plan.prixBase)}€/mois</span>
                       </div>
                       <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: plan.bg, border: `1px solid ${plan.border}`, borderRadius: 8, padding: '5px 12px' }}>
                         <span style={{ fontSize: 12, color: plan.couleur, fontWeight: 600 }}>{plan.commission} prélevé sur chaque facture recouvrée</span>
@@ -408,10 +408,13 @@ export default function Home() {
           <Reveal>
             <div style={{ maxWidth: 680, margin: '0 auto', textAlign: 'center', position: 'relative', zIndex: 1 }}>
               <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.25)', fontWeight: 600, letterSpacing: '3px', textTransform: 'uppercase', marginBottom: 20 }}>Notre engagement</p>
-              <h2 style={{ fontFamily: 'Comfortaa', fontWeight: 900, fontSize: 'clamp(26px, 4vw, 48px)', color: 'white', letterSpacing: '-1.5px', lineHeight: 1.15, marginBottom: 32 }}>
+              <h2 style={{ fontFamily: 'Comfortaa', fontWeight: 900, fontSize: 'clamp(26px, 4vw, 48px)', color: 'white', letterSpacing: '-1.5px', lineHeight: 1.15, marginBottom: 16 }}>
                 Vous n&apos;aurez plus à courir après{' '}
                 <span style={{ background: 'linear-gradient(135deg, #a855f7, #ec4899)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>le temps et l&apos;argent.</span>
               </h2>
+              <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.50)', marginBottom: 32 }}>
+                Nous serons votre allié pour la gestion de vos impayés.
+              </p>
               <button className="btn-primary" onClick={() => router.push('/souscrire')} style={{ fontSize: 15, padding: '14px 32px' }}>
                 Souscrire maintenant
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" /></svg>

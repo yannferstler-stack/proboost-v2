@@ -167,9 +167,9 @@ function SouscrireContent() {
                       <div style={{ textAlign: 'right', flexShrink: 0 }}>
                         <div style={{ display: 'flex', alignItems: 'baseline', gap: 2 }}>
                           <span style={{ fontFamily: 'Comfortaa', fontWeight: 900, fontSize: 20, color: 'white' }}>{formatPrix(p.prixBase * (1 - EARLY_BIRD_DISCOUNT))} €</span>
-                          <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)' }}>/mois</span>
+                          <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)' }}>/ 1er mois</span>
                         </div>
-                        <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.30)', textDecoration: 'line-through' }}>au lieu de {formatPrix(p.prixBase)}€</div>
+                        <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.45)' }}>puis {formatPrix(p.prixBase)}€/mois</div>
                         <span style={{ fontSize: 11, color: p.couleur, fontWeight: 600 }}>+ {p.commission} au succès</span>
                       </div>
                     </div>
@@ -217,14 +217,14 @@ function SouscrireContent() {
                   <span style={{ fontSize: 11, background: 'linear-gradient(135deg, #a855f7, #ec4899)', color: 'white', borderRadius: 6, padding: '2px 8px', fontWeight: 700 }}>MENSUEL</span>
                 </div>
                 <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'linear-gradient(135deg, #a855f7, #ec4899)', borderRadius: 6, padding: '2px 8px', marginBottom: 8 }}>
-                  <span style={{ fontSize: 11, color: 'white', fontWeight: 700 }}>-20% lancement</span>
+                  <span style={{ fontSize: 11, color: 'white', fontWeight: 700 }}>-20% le 1er mois</span>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, marginBottom: 2 }}>
                   <span style={{ fontFamily: 'Comfortaa', fontWeight: 900, fontSize: 28, color: 'white' }}>{formatPrix(plan.prixBase * (1 - EARLY_BIRD_DISCOUNT))} €</span>
-                  <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.35)' }}>/mois</span>
+                  <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.35)' }}>/ 1er mois</span>
                 </div>
                 <div style={{ marginBottom: 6 }}>
-                  <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.30)', textDecoration: 'line-through' }}>au lieu de {formatPrix(plan.prixBase)}€/mois</span>
+                  <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.45)' }}>puis {formatPrix(plan.prixBase)}€/mois</span>
                 </div>
                 <span style={{ fontSize: 12, color: plan.couleur, fontWeight: 600 }}>+ {plan.commission} prélevé sur chaque facture recouvrée</span>
               </div>
