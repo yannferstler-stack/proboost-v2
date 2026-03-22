@@ -42,6 +42,9 @@ export default function Dashboard() {
   const [previewFacture, setPreviewFacture] = useState<Facture | null>(null)
   const [showOnboarding, setShowOnboarding] = useState(false)
   const [displayCount, setDisplayCount] = useState(20)
+  const [hasMore, setHasMore] = useState(false)
+  const [loadingMore, setLoadingMore] = useState(false)
+  const PAGE_SIZE = 200
   const [relancingId, setRelancingId] = useState<string | null>(null)
   const [relanceMsg, setRelanceMsg] = useState<{ id: string; ok: boolean } | null>(null)
   const [markingPaidId, setMarkingPaidId] = useState<string | null>(null)
@@ -66,8 +69,9 @@ export default function Dashboard() {
       setUser(user)
       const { data: profileData } = await supabase.from('profiles').select('*').eq('id', user.id).single()
       setProfile(profileData)
-      const { data } = await supabase.from('factures').select('*').eq('user_id', user.id).order('created_at', { ascending: false })
+      const { data } = await supabase.from('factures').select('*').eq('user_id', user.id).order('created_at', { ascending: false }).limit(PAGE_SIZE)
       setFactures(data || [])
+      setHasMore((data || []).length === PAGE_SIZE)
       setLoading(false)
 
       // Message de bienvenue personnalisé
@@ -112,6 +116,19 @@ export default function Dashboard() {
         setLoadingHistory(false)
       })
   }, [historyFacture])
+
+  const loadMoreFromServer = async () => {
+    if (!user || loadingMore) return
+    setLoadingMore(true)
+    const { data } = await supabase.from('factures').select('*').eq('user_id', user.id).order('created_at', { ascending: false }).range(factures.length, factures.length + PAGE_SIZE - 1)
+    if (data && data.length > 0) {
+      setFactures(prev => [...prev, ...data])
+      setHasMore(data.length === PAGE_SIZE)
+    } else {
+      setHasMore(false)
+    }
+    setLoadingMore(false)
+  }
 
   const isPro = profile?.plan === 'pro'
   const isPremiumOrPro = profile?.plan === 'premium' || profile?.plan === 'pro'
@@ -698,6 +715,13 @@ export default function Dashboard() {
                   <button className="btn-load-more" onClick={() => setDisplayCount(c => c + 20)}>
                     Charger {Math.min(20, sortedFactures.length - displayCount)} facture{Math.min(20, sortedFactures.length - displayCount) > 1 ? 's' : ''} de plus
                     <span style={{ color: '#9CA3AF', fontWeight: 400 }}> · {sortedFactures.length - displayCount} restante{sortedFactures.length - displayCount > 1 ? 's' : ''}</span>
+                  </button>
+                </div>
+              )}
+              {hasMore && sortedFactures.length <= displayCount && (
+                <div style={{ padding: '16px', textAlign: 'center', borderTop: '1px solid #F3F4F6' }}>
+                  <button className="btn-load-more" onClick={loadMoreFromServer} disabled={loadingMore}>
+                    {loadingMore ? 'Chargement…' : 'Charger les factures archivées'}
                   </button>
                 </div>
               )}
