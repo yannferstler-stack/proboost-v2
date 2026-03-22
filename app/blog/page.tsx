@@ -110,6 +110,12 @@ export default function BlogPage() {
   const [expanded, setExpanded] = useState<string | null>(null)
   const [isMobile, setIsMobile] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
+  const [storyNom, setStoryNom] = useState('')
+  const [storyActivite, setStoryActivite] = useState('')
+  const [storyMessage, setStoryMessage] = useState('')
+  const [storySending, setStorySending] = useState(false)
+  const [storySent, setStorySent] = useState(false)
+  const [storyError, setStoryError] = useState('')
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768)
@@ -119,6 +125,35 @@ export default function BlogPage() {
   }, [])
 
   const imgSize = isMobile ? 90 : 140
+
+  const handleStorySubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!storyNom.trim() || !storyMessage.trim()) return
+    setStorySending(true)
+    setStoryError('')
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          nom: storyNom,
+          email: storyActivite || 'Non renseigné',
+          sujet: `[Blog] Histoire de TPE — ${storyNom}`,
+          message: `Activité : ${storyActivite || 'Non renseignée'}\n\n${storyMessage}`,
+        }),
+      })
+      if (res.ok) {
+        setStorySent(true)
+        setStoryNom(''); setStoryActivite(''); setStoryMessage('')
+      } else {
+        setStoryError('Une erreur est survenue, veuillez réessayer.')
+      }
+    } catch {
+      setStoryError('Une erreur est survenue, veuillez réessayer.')
+    } finally {
+      setStorySending(false)
+    }
+  }
 
   return (
     <>
@@ -141,6 +176,12 @@ export default function BlogPage() {
         .mobile-menu { animation: slideDown 0.2s ease; }
         .btn-back-art { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); color: rgba(255,255,255,0.7); border-radius: 10px; padding: 8px 16px; font-size: 13px; font-family: Inter, sans-serif; cursor: pointer; transition: all 0.15s; display: inline-flex; align-items: center; gap: 6px; }
         .btn-back-art:hover { background: rgba(168,85,247,0.10); border-color: rgba(168,85,247,0.3); color: #c084fc; }
+        .story-input { width: 100%; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); borderRadius: 10px; color: white; font-family: Inter, sans-serif; font-size: 14px; padding: 12px 14px; outline: none; transition: border-color 0.15s; box-sizing: border-box; }
+        .story-input:focus { border-color: rgba(168,85,247,0.5); }
+        .story-input::placeholder { color: rgba(255,255,255,0.3); }
+        .story-btn { background: linear-gradient(135deg, #a855f7, #ec4899); color: white; border: none; border-radius: 12px; padding: 13px 28px; font-size: 14px; font-weight: 700; cursor: pointer; font-family: Inter, sans-serif; transition: all 0.2s; box-shadow: 0 4px 16px rgba(168,85,247,0.35); }
+        .story-btn:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(168,85,247,0.50); }
+        .story-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
         @media (max-width: 768px) {
           .nav-links { display: none !important; }
           .hamburger { display: flex !important; }
@@ -275,6 +316,65 @@ export default function BlogPage() {
             )
           })}
         </div>
+
+        {/* FORMULAIRE HISTOIRES */}
+        <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)', padding: isMobile ? '48px 20px 60px' : '64px 24px 80px', background: 'rgba(168,85,247,0.04)' }}>
+          <div style={{ maxWidth: 680, margin: '0 auto' }}>
+            <div style={{ textAlign: 'center', marginBottom: 36 }}>
+              <span style={{ fontSize: 11, color: '#a855f7', fontWeight: 700, letterSpacing: '3px', textTransform: 'uppercase', display: 'block', marginBottom: 12 }}>Partagez</span>
+              <h2 style={{ fontFamily: 'Comfortaa', fontWeight: 900, fontSize: isMobile ? 22 : 30, color: 'white', letterSpacing: '-0.5px', marginBottom: 12, lineHeight: 1.2 }}>
+                Toutes les TPE ont une histoire,<br/>racontez-nous la vôtre.
+              </h2>
+              <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.45)', lineHeight: 1.7, maxWidth: 480, margin: '0 auto' }}>
+                Votre expérience pourrait inspirer d'autres entrepreneurs — on pourrait la publier sur notre blog, ou simplement vous recontacter.
+              </p>
+            </div>
+
+            {storySent ? (
+              <div style={{ background: 'rgba(168,85,247,0.12)', border: '1px solid rgba(168,85,247,0.35)', borderRadius: 16, padding: '28px', textAlign: 'center' }}>
+                <p style={{ fontSize: 28, marginBottom: 12 }}>🙏</p>
+                <p style={{ fontFamily: 'Comfortaa', fontWeight: 700, fontSize: 16, color: 'white', marginBottom: 6 }}>Merci pour votre histoire !</p>
+                <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.55)' }}>Nous l&apos;avons bien reçue. On vous recontactera peut-être très bientôt.</p>
+              </div>
+            ) : (
+              <form onSubmit={handleStorySubmit} style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+                <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 14 }}>
+                  <div>
+                    <label style={{ display: 'block', fontSize: 12, color: 'rgba(255,255,255,0.45)', fontWeight: 600, marginBottom: 6, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Votre prénom *</label>
+                    <input
+                      type="text" value={storyNom} onChange={e => setStoryNom(e.target.value)} required
+                      placeholder="Jean-Pierre"
+                      style={{ width: '100%', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 10, color: 'white', fontFamily: 'Inter, sans-serif', fontSize: 14, padding: '12px 14px', outline: 'none', boxSizing: 'border-box' }}
+                    />
+                  </div>
+                  <div>
+                    <label style={{ display: 'block', fontSize: 12, color: 'rgba(255,255,255,0.45)', fontWeight: 600, marginBottom: 6, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Votre activité</label>
+                    <input
+                      type="text" value={storyActivite} onChange={e => setStoryActivite(e.target.value)}
+                      placeholder="Plombier, fleuriste, graphiste…"
+                      style={{ width: '100%', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 10, color: 'white', fontFamily: 'Inter, sans-serif', fontSize: 14, padding: '12px 14px', outline: 'none', boxSizing: 'border-box' }}
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label style={{ display: 'block', fontSize: 12, color: 'rgba(255,255,255,0.45)', fontWeight: 600, marginBottom: 6, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Votre histoire *</label>
+                  <textarea
+                    value={storyMessage} onChange={e => setStoryMessage(e.target.value)} required rows={5}
+                    placeholder="Racontez-nous votre quotidien, vos défis avec les impayés, ce qui vous a décidé à agir…"
+                    style={{ width: '100%', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 10, color: 'white', fontFamily: 'Inter, sans-serif', fontSize: 14, padding: '12px 14px', outline: 'none', resize: 'vertical', boxSizing: 'border-box', lineHeight: 1.6 }}
+                  />
+                </div>
+                {storyError && <p style={{ fontSize: 13, color: '#f87171' }}>{storyError}</p>}
+                <div style={{ display: 'flex', justifyContent: isMobile ? 'stretch' : 'flex-end' }}>
+                  <button type="submit" disabled={storySending} className="story-btn" style={{ width: isMobile ? '100%' : 'auto' }}>
+                    {storySending ? 'Envoi…' : 'Partager mon histoire →'}
+                  </button>
+                </div>
+              </form>
+            )}
+          </div>
+        </div>
+
       </div>
     </>
   )

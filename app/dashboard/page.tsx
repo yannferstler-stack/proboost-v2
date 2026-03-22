@@ -44,6 +44,8 @@ export default function Dashboard() {
   const [displayCount, setDisplayCount] = useState(20)
   const [relancingId, setRelancingId] = useState<string | null>(null)
   const [relanceMsg, setRelanceMsg] = useState<{ id: string; ok: boolean } | null>(null)
+  const [welcome, setWelcome] = useState<{ prenom: string; euros: number; isNew: boolean } | null>(null)
+  const [showWelcome, setShowWelcome] = useState(false)
   const supabase = createClient()
   const router = useRouter()
 
@@ -57,6 +59,17 @@ export default function Dashboard() {
       const { data } = await supabase.from('factures').select('*').eq('user_id', user.id).order('created_at', { ascending: false })
       setFactures(data || [])
       setLoading(false)
+
+      // Message de bienvenue personnalisé
+      const totalActuel = (data || []).filter((f: any) => f.statut === 'payée').reduce((s: number, f: any) => s + (f.montant || 0), 0)
+      const key = `manaflow_last_total_${user.id}`
+      const lastTotal = parseFloat(typeof window !== 'undefined' ? (localStorage.getItem(key) || '0') : '0')
+      const diff = Math.max(0, totalActuel - lastTotal)
+      if (typeof window !== 'undefined') localStorage.setItem(key, String(totalActuel))
+      const rawPrenom = (profileData?.full_name || user.email || '').split(/[@\s]/)[0]
+      const prenom = rawPrenom.charAt(0).toUpperCase() + rawPrenom.slice(1).toLowerCase()
+      setWelcome({ prenom, euros: diff, isNew: lastTotal === 0 && totalActuel === 0 })
+      setShowWelcome(true)
     }
     getUser()
   }, [])
@@ -364,6 +377,29 @@ export default function Dashboard() {
 
         {/* MAIN */}
         <div style={{ marginLeft: 240, flex: 1, padding: '32px 32px', minWidth: 0 }}>
+
+          {/* BANDEAU BIENVENUE */}
+          {showWelcome && welcome && (
+            <div style={{ background: 'linear-gradient(135deg, rgba(168,85,247,0.10), rgba(236,72,153,0.08))', border: '1px solid rgba(168,85,247,0.25)', borderRadius: 14, padding: '16px 20px', marginBottom: 24, display: 'flex', alignItems: 'center', justifyContent: 'space-between', animation: 'fadeUp 0.4s ease both', gap: 12 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                <span style={{ fontSize: 24 }}>👋</span>
+                <div>
+                  <p style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 700, fontSize: 15, color: '#111', marginBottom: 2 }}>
+                    Bon retour, {welcome.prenom} !
+                  </p>
+                  <p style={{ fontSize: 13, color: '#6B7280', lineHeight: 1.5 }}>
+                    {welcome.euros > 0
+                      ? <>Depuis votre dernière visite, vous avez récupéré <strong style={{ color: '#a855f7' }}>{welcome.euros.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</strong> supplémentaires 🎉</>
+                      : welcome.isNew
+                        ? <>Bienvenue sur ManaFlow — importez vos premières factures pour commencer le recouvrement.</>
+                        : <>Aucun nouveau recouvrement depuis votre dernière visite — continuez à importer vos factures.</>
+                    }
+                  </p>
+                </div>
+              </div>
+              <button onClick={() => setShowWelcome(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#9CA3AF', fontSize: 18, lineHeight: 1, padding: '4px', flexShrink: 0 }}>×</button>
+            </div>
+          )}
 
           {/* HEADER */}
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 32, animation: 'fadeUp 0.4s ease both' }}>

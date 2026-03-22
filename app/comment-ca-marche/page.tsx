@@ -127,24 +127,7 @@ export default function CommentCaMarchePage() {
             Tout savoir sur<br/>
             <span style={{ background: 'linear-gradient(135deg, #a855f7, #ec4899)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>ManaFlow</span>
           </h1>
-          <p style={{ fontSize: isMobile ? 15 : 17, color: 'rgba(255,255,255,0.50)', maxWidth: 480, margin: '0 auto', fontWeight: 300, lineHeight: 1.7 }}>
-            Une vidéo et vos questions — tout ce qu&apos;il faut pour se lancer.
-          </p>
         </div>
-
-        {/* VIDÉO */}
-        <section style={{ padding: isMobile ? '0 20px 56px' : '0 40px 80px', maxWidth: 900, margin: '0 auto', position: 'relative', zIndex: 1 }}>
-          <div style={{ marginBottom: 24, textAlign: 'center' }}>
-            <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.25)', fontWeight: 600, letterSpacing: '2px', textTransform: 'uppercase' }}>01 — Vidéo explicative</span>
-            <h2 style={{ fontFamily: 'Comfortaa', fontWeight: 800, fontSize: isMobile ? 22 : 28, color: 'white', letterSpacing: '-0.5px', marginTop: 8 }}>Voyez ManaFlow en action</h2>
-          </div>
-          <div style={{ background: 'rgba(255,255,255,0.04)', backdropFilter: 'blur(12px)', borderRadius: 20, aspectRatio: '16/9', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 14, border: '1px solid rgba(255,255,255,0.08)' }}>
-            <div style={{ width: 64, height: 64, background: 'linear-gradient(135deg, #a855f7, #ec4899)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', boxShadow: '0 4px 24px rgba(168,85,247,0.45)' }}>
-              <span style={{ fontSize: 22, marginLeft: 4 }}>▶</span>
-            </div>
-            <p style={{ color: 'rgba(255,255,255,0.30)', fontSize: 13 }}>Vidéo de présentation — à venir</p>
-          </div>
-        </section>
 
         {/* Q&A — questions retravaillées */}
         <section style={{ borderTop: '1px solid rgba(255,255,255,0.06)', padding: isMobile ? '56px 20px' : '80px 40px', position: 'relative', zIndex: 1 }}>
@@ -165,16 +148,10 @@ export default function CommentCaMarchePage() {
         </section>
 
         {/* CTA */}
-        <section style={{ borderTop: '1px solid rgba(255,255,255,0.06)', padding: isMobile ? '56px 20px' : '80px 40px', textAlign: 'center', position: 'relative', zIndex: 1 }}>
+        <section style={{ borderTop: '1px solid rgba(255,255,255,0.06)', padding: isMobile ? '48px 20px' : '64px 40px', textAlign: 'center', position: 'relative', zIndex: 1 }}>
           <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 400, height: 400, background: 'radial-gradient(circle, rgba(168,85,247,0.12) 0%, transparent 65%)', borderRadius: '50%', pointerEvents: 'none' }} />
-          <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.25)', fontWeight: 600, letterSpacing: '3px', textTransform: 'uppercase', marginBottom: 16 }}>Prêt à démarrer ?</p>
-          <h2 style={{ fontFamily: 'Comfortaa', fontWeight: 900, fontSize: isMobile ? 28 : 36, color: 'white', letterSpacing: '-1px', marginBottom: 14, lineHeight: 1.2 }}>
-            Récupérez vos impayés<br/>
-            <span style={{ background: 'linear-gradient(135deg, #a855f7, #ec4899)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>dès aujourd&apos;hui.</span>
-          </h2>
-          <p style={{ color: 'rgba(255,255,255,0.40)', fontSize: 14, marginBottom: 28 }}>Commission uniquement sur les factures recouvrées.</p>
-          <button className="btn-cta" onClick={() => router.push('/souscrire')} style={{ width: isMobile ? '100%' : 'auto' }}>
-            Souscrire un abonnement →
+          <button className="btn-cta" onClick={() => router.push('/souscrire')} style={{ width: isMobile ? '100%' : 'auto', position: 'relative', zIndex: 1 }}>
+            Je me lance →
           </button>
         </section>
 

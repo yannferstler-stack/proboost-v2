@@ -1,14 +1,17 @@
 ﻿'use client'
 import { useRouter } from 'next/navigation'
 
+const EARLY_BIRD_SPOTS = 50
+const EARLY_BIRD_DISCOUNT = 0.20
+
 const PLANS = [
   {
     nom: 'Starter',
-    prix: '19,99',
+    prixBase: 19.99,
     couleur: '#16A34A',
     bg: '#F0FDF4',
     border: '#BBF7D0',
-    commission: '10%',
+    commission: '14%',
     badge: '🟢',
     description: 'Idéal pour les indépendants et petites structures',
     features: [
@@ -19,22 +22,19 @@ const PLANS = [
       'Commission 14% (min 5€)',
       'Dashboard complet',
       'Import CSV & PDF',
-      '',
-      '',
     ],
-    cta: 'Commencer',
     popular: false,
     popularLabel: '',
   },
   {
     nom: 'Premium',
-    prix: '49,99',
+    prixBase: 49.99,
     couleur: '#3B82F6',
     bg: '#EFF6FF',
     border: '#BFDBFE',
     commission: '12%',
     badge: '🔵',
-    description: 'Pour les PME avec un volume de factures régulier',
+    description: 'Pour les TPE avec un volume de factures régulier',
     features: [
       '50 factures / mois',
       '5 relances par facture',
@@ -44,19 +44,17 @@ const PLANS = [
       'Dashboard complet',
       'Import CSV & PDF',
       'Historique des relances',
-      '',
     ],
-    cta: 'Choisir Premium',
     popular: false,
     popularLabel: '',
   },
   {
     nom: 'Pro',
-    prix: '99,99',
+    prixBase: 99.99,
     couleur: '#7C3AED',
     bg: '#F5F3FF',
     border: '#DDD6FE',
-    commission: '10%',
+    commission: '9%',
     badge: '🟣',
     description: 'Pour les cabinets et entreprises à fort volume',
     features: [
@@ -68,13 +66,15 @@ const PLANS = [
       'Dashboard complet',
       'Import CSV & PDF',
       'Historique des relances',
-      'Support prioritaire',
     ],
-    cta: 'Choisir Pro',
     popular: true,
     popularLabel: '🏆 Recommandé pour les PME',
   },
 ]
+
+function formatPrix(n: number) {
+  return n.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+}
 
 export default function PricingPage() {
   const router = useRouter()
@@ -113,17 +113,22 @@ export default function PricingPage() {
 
         {/* Hero */}
         <div style={{ textAlign: 'center', padding: '72px 20px 48px', animation: 'fadeUp 0.5s ease both' }}>
-          <div style={{ display: 'inline-block', background: '#F0FDF4', border: '1px solid #BBF7D0', borderRadius: 20, padding: '6px 16px', marginBottom: 20 }}>
-            <span style={{ fontSize: 13, color: '#16A34A', fontWeight: 600 }}>💰 Tarifs transparents</span>
+          {/* Early Bird Banner */}
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'linear-gradient(135deg, #fef3c7, #fde68a)', border: '1px solid #f59e0b', borderRadius: 20, padding: '8px 20px', marginBottom: 20 }}>
+            <span style={{ fontSize: 16 }}>🐣</span>
+            <span style={{ fontSize: 13, color: '#92400e', fontWeight: 700 }}>Early Bird — <strong>-20%</strong> pour les {EARLY_BIRD_SPOTS} premiers abonnés</span>
           </div>
           <h1 style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 900, fontSize: 48, color: '#111', marginBottom: 16, lineHeight: 1.15 }}>
             Un plan pour chaque<br/>
-            <span style={{ color: '#1DB954' }}>besoin</span>
+            <span style={{ color: '#7C3AED' }}>besoin</span>
           </h1>
-          <p style={{ color: '#6B7280', fontSize: 18, maxWidth: 520, margin: '0 auto 12px' }}>
-            Abonnement mensuel fixe + commission uniquement sur les factures recouvrées.
+          <p style={{ color: '#6B7280', fontSize: 16, maxWidth: 560, margin: '0 auto 6px' }}>
+            Vous n&apos;aurez plus à courir après le temps et l&apos;argent.
           </p>
-          <p style={{ color: '#9CA3AF', fontSize: 14 }}>Vous ne payez la commission que si on récupère votre argent.</p>
+          <p style={{ color: '#9CA3AF', fontSize: 15, maxWidth: 560, margin: '0 auto 6px' }}>
+            Nous serons votre allié pour la gestion de vos impayés.
+          </p>
+          <p style={{ color: '#CBD5E1', fontSize: 13, marginTop: 8 }}>Commission prélevée uniquement sur les factures effectivement recouvrées.</p>
         </div>
 
         {/* Cards */}
@@ -138,39 +143,43 @@ export default function PricingPage() {
                 </div>
               )}
 
+              {/* Early bird badge on card */}
+              <div style={{ position: 'absolute', top: plan.popular ? 18 : -12, right: 18, background: '#f59e0b', color: 'white', borderRadius: 6, padding: '2px 8px', fontSize: 11, fontWeight: 700 }}>
+                -20% 🐣
+              </div>
+
               <div style={{ marginBottom: 24 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
                   <span style={{ fontSize: 22 }}>{plan.badge}</span>
                   <h2 style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 800, fontSize: 22, color: '#111' }}>{plan.nom}</h2>
                 </div>
-                <p style={{ fontSize: 13, color: '#6B7280', marginBottom: 20, lineHeight: 1.5 }}>{plan.description}</p>
-                <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, marginBottom: 8 }}>
-                  <span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 900, fontSize: 40, color: '#111' }}>{plan.prix}€</span>
+                <p style={{ fontSize: 13, color: '#6B7280', marginBottom: 16, lineHeight: 1.5 }}>{plan.description}</p>
+                <div style={{ display: 'flex', alignItems: 'baseline', gap: 6, marginBottom: 4 }}>
+                  <span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 900, fontSize: 40, color: '#111' }}>{formatPrix(plan.prixBase * (1 - EARLY_BIRD_DISCOUNT))}€</span>
                   <span style={{ fontSize: 14, color: '#9CA3AF' }}>/mois</span>
                 </div>
+                <div style={{ marginBottom: 10 }}>
+                  <span style={{ fontSize: 13, color: '#9CA3AF', textDecoration: 'line-through' }}>puis {formatPrix(plan.prixBase)}€/mois</span>
+                </div>
                 <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: plan.bg, border: `1px solid ${plan.border}`, borderRadius: 8, padding: '4px 12px' }}>
-                  <span style={{ fontSize: 13, color: plan.couleur, fontWeight: 700 }}>+ {plan.commission} de commission au succès</span>
+                  <span style={{ fontSize: 13, color: plan.couleur, fontWeight: 600 }}>+ {plan.commission} de commission au succès</span>
                 </div>
               </div>
 
-              <div style={{ borderTop: '1px solid #F3F4F6', paddingTop: 24, marginBottom: 28, flex: 1 }}>
+              <div style={{ borderTop: '1px solid #F3F4F6', paddingTop: 20, marginBottom: 24, flex: 1 }}>
                 {plan.features.map((f, i) => (
-                  f ? (
-                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
-                      <div style={{ width: 20, height: 20, background: plan.bg, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                        <span style={{ fontSize: 11, color: plan.couleur, fontWeight: 700 }}>✓</span>
-                      </div>
-                      <span style={{ fontSize: 14, color: '#374151' }}>{f}</span>
+                  <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
+                    <div style={{ width: 20, height: 20, background: plan.bg, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                      <span style={{ fontSize: 11, color: plan.couleur, fontWeight: 700 }}>✓</span>
                     </div>
-                  ) : (
-                    <div key={i} style={{ height: 28 }} />
-                  )
+                    <span style={{ fontSize: 14, color: '#374151', fontWeight: 400 }}>{f}</span>
+                  </div>
                 ))}
               </div>
 
-              <button className="btn-plan" onClick={() => router.push('/login')}
+              <button className="btn-plan" onClick={() => router.push('/souscrire')}
                 style={{ width: '100%', background: plan.popular ? plan.couleur : 'white', color: plan.popular ? 'white' : plan.couleur, border: `2px solid ${plan.couleur}`, borderRadius: 12, padding: '14px', fontSize: 15, fontWeight: 700, cursor: 'pointer', fontFamily: 'Inter, sans-serif', marginTop: 'auto' }}>
-                {plan.cta} →
+                Je me lance →
               </button>
             </div>
           ))}

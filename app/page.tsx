@@ -149,7 +149,7 @@ export default function Home() {
         .plan-card:hover { transform: translateY(-3px); box-shadow: 0 12px 40px rgba(168,85,247,0.20) !important; }
         .invoicing-card { transition: all 0.2s; cursor: pointer; }
         .invoicing-card:hover { border-color: rgba(168,85,247,0.40) !important; transform: translateY(-2px); box-shadow: 0 8px 32px rgba(168,85,247,0.15); }
-        .step-number { font-family: Comfortaa, sans-serif; font-weight: 900; font-size: 48px; color: rgba(255,255,255,0.05); line-height: 1; letter-spacing: -2px; }
+        .step-number { font-family: Comfortaa, sans-serif; font-weight: 900; font-size: 52px; color: rgba(255,255,255,0.90); line-height: 1; letter-spacing: -2px; background: linear-gradient(135deg, #a855f7, #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .steps-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 24px; align-items: stretch; }
         .plans-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 24px; max-width: 1000px; margin: 0 auto; align-items: stretch; }
         .carousel-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: opacity 0.8s ease-in-out; }
@@ -329,12 +329,7 @@ export default function Home() {
               {steps.map((s, i) => (
                 <Reveal key={i} delay={isMobile ? 0 : i * 0.1}>
                   <div className="step-card" style={{ border: '1px solid rgba(255,255,255,0.08)', borderRadius: 20, padding: '32px 24px', background: 'rgba(255,255,255,0.04)', backdropFilter: 'blur(12px)', position: 'relative', display: 'flex', flexDirection: 'column' }}>
-                    <div style={{ position: 'absolute', top: 16, right: 20 }}>
-                      <span className="step-number">{s.n}</span>
-                    </div>
-                    <div style={{ width: 52, height: 52, background: 'rgba(168,85,247,0.12)', border: '1px solid rgba(168,85,247,0.25)', borderRadius: 16, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 24, flexShrink: 0 }}>
-                      <s.Icon />
-                    </div>
+                    <span className="step-number" style={{ display: 'block', marginBottom: 20 }}>{s.n}</span>
                     <h3 style={{ fontFamily: 'Comfortaa', fontWeight: 800, fontSize: 20, color: 'white', marginBottom: 10 }}>{s.title}</h3>
                     <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.50)', lineHeight: 1.75, flex: 1 }}>{s.desc}</p>
                   </div>
@@ -350,9 +345,9 @@ export default function Home() {
             <Reveal>
               <div style={{ textAlign: 'center', marginBottom: 40 }}>
                 <span style={{ fontSize: 11, color: '#a855f7', fontWeight: 700, letterSpacing: '2px', textTransform: 'uppercase', display: 'block', marginBottom: 10 }}>Tarifs</span>
-                <h2 style={{ fontFamily: 'Comfortaa', fontWeight: 900, fontSize: isMobile ? 28 : 38, color: 'white', letterSpacing: '-1px', marginBottom: 16 }}>Simple et transparent.</h2>
+                <h2 style={{ fontFamily: 'Comfortaa', fontWeight: 900, fontSize: isMobile ? 28 : 38, color: 'white', letterSpacing: '-1px', marginBottom: 8 }}>Simple et transparent.</h2>
                 <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.50)', lineHeight: 1.8, maxWidth: 560, margin: '0 auto' }}>
-                  Vous n&apos;aurez plus à courir après le temps et l&apos;argent. Nous serons votre allié pour la gestion de vos impayés.
+                  Abonnement mensuel fixe + commission uniquement sur les factures recouvrées.
                 </p>
               </div>
             </Reveal>
@@ -404,13 +399,10 @@ export default function Home() {
           <Reveal>
             <div style={{ maxWidth: 680, margin: '0 auto', textAlign: 'center', position: 'relative', zIndex: 1 }}>
               <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.25)', fontWeight: 600, letterSpacing: '3px', textTransform: 'uppercase', marginBottom: 20 }}>Notre engagement</p>
-              <h2 style={{ fontFamily: 'Comfortaa', fontWeight: 900, fontSize: 'clamp(26px, 4vw, 48px)', color: 'white', letterSpacing: '-1.5px', lineHeight: 1.15, marginBottom: 20 }}>
-                Vous n&apos;aurez plus à courir après{!isMobile && <br />}
-                {' '}<span style={{ background: 'linear-gradient(135deg, #a855f7, #ec4899)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>le temps et l&apos;argent.</span>
+              <h2 style={{ fontFamily: 'Comfortaa', fontWeight: 900, fontSize: 'clamp(26px, 4vw, 48px)', color: 'white', letterSpacing: '-1.5px', lineHeight: 1.15, marginBottom: 32 }}>
+                Vous n&apos;aurez plus à courir après{' '}
+                <span style={{ background: 'linear-gradient(135deg, #a855f7, #ec4899)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>le temps et l&apos;argent.</span>
               </h2>
-              <p style={{ fontSize: isMobile ? 15 : 17, color: 'rgba(255,255,255,0.45)', lineHeight: 1.8, fontWeight: 300, maxWidth: 480, margin: '0 auto 32px' }}>
-                Nous serons votre allié pour la gestion de vos impayés et serons rémunérés uniquement sur les fonds récupérés.
-              </p>
               <button className="btn-primary" onClick={() => router.push('/souscrire')} style={{ fontSize: 15, padding: '14px 32px' }}>
                 Souscrire maintenant
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" /></svg>
