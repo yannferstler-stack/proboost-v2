@@ -3,6 +3,7 @@ import { useRouter } from 'next/navigation'
 import { useState, useEffect } from 'react'
 import { createClient } from '../../lib/supabase'
 import { DashboardSidebar } from '../../components/DashboardSidebar'
+import { DEFAULT_MESSAGES } from '../../lib/email-templates'
 
 export default function SettingsPage() {
   const [user, setUser] = useState<any>(null)
@@ -19,6 +20,9 @@ export default function SettingsPage() {
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [message, setMessage] = useState('')
+  const [templateTab, setTemplateTab] = useState(0)
+  const [templates, setTemplates] = useState([DEFAULT_MESSAGES[0], DEFAULT_MESSAGES[1], DEFAULT_MESSAGES[2]])
+  const [showPreview, setShowPreview] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
   const [showPlanModal, setShowPlanModal] = useState(false)
   const [changingPlan, setChangingPlan] = useState(false)
@@ -125,6 +129,11 @@ export default function SettingsPage() {
         setSeqJ3(data.sequence_j3 || 30)
         setSeqJ4(data.sequence_j4 || null)
         setSeqJ5(data.sequence_j5 || null)
+        setTemplates([
+          data.template_relance_1 || DEFAULT_MESSAGES[0],
+          data.template_relance_2 || DEFAULT_MESSAGES[1],
+          data.template_relance_3 || DEFAULT_MESSAGES[2],
+        ])
       }
       setLoading(false)
     }
@@ -148,6 +157,9 @@ export default function SettingsPage() {
       canal_relance: canalRelance,
       sequence_j1: seqJ1, sequence_j2: seqJ2, sequence_j3: seqJ3,
       sequence_j4: seqJ4, sequence_j5: seqJ5,
+      template_relance_1: templates[0] !== DEFAULT_MESSAGES[0] ? templates[0] : null,
+      template_relance_2: templates[1] !== DEFAULT_MESSAGES[1] ? templates[1] : null,
+      template_relance_3: templates[2] !== DEFAULT_MESSAGES[2] ? templates[2] : null,
     })
     if (error) setMessage('error:' + error.message)
     else setMessage('success:Paramètres sauvegardés !')
@@ -359,6 +371,113 @@ export default function SettingsPage() {
               </div>
             </div>
           </div>
+
+          {/* EMAIL TEMPLATES */}
+          <div className="card-section" style={{ animationDelay: '0.08s' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20 }}>
+              <div style={{ width: 36, height: 36, background: 'rgba(236,72,153,0.10)', border: '1px solid rgba(236,72,153,0.25)', borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#ec4899" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              </div>
+              <div>
+                <h2 style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 700, fontSize: 15, color: '#111', marginBottom: 2 }}>Personnaliser mes relances</h2>
+                <p style={{ fontSize: 12, color: '#9CA3AF' }}>Modifiez le texte principal de chaque email de relance</p>
+              </div>
+            </div>
+
+            {/* Tabs */}
+            <div style={{ display: 'flex', gap: 6, marginBottom: 16 }}>
+              {['Relance 1', 'Relance 2', 'Relance 3'].map((label, i) => (
+                <button key={i} onClick={() => setTemplateTab(i)}
+                  style={{ padding: '7px 14px', borderRadius: 8, fontSize: 13, fontWeight: 600, fontFamily: 'Inter, sans-serif', cursor: 'pointer', border: templateTab === i ? '2px solid #ec4899' : '1.5px solid #E5E7EB', background: templateTab === i ? 'rgba(236,72,153,0.08)' : 'white', color: templateTab === i ? '#ec4899' : '#6B7280', transition: 'all 0.15s' }}>
+                  {label}
+                </button>
+              ))}
+            </div>
+
+            {/* Textarea */}
+            <textarea
+              value={templates[templateTab]}
+              onChange={e => setTemplates(prev => prev.map((t, i) => i === templateTab ? e.target.value : t))}
+              rows={6}
+              style={{ width: '100%', borderRadius: 10, padding: '12px 14px', fontSize: 13, fontFamily: 'Inter, sans-serif', border: '1.5px solid #E5E7EB', color: '#111', resize: 'vertical', outline: 'none', lineHeight: 1.7 }}
+            />
+
+            {/* Variables disponibles */}
+            <div style={{ marginTop: 8, marginBottom: 12, display: 'flex', flexWrap: 'wrap', gap: 6, alignItems: 'center' }}>
+              <span style={{ fontSize: 11, color: '#9CA3AF', fontWeight: 600 }}>Variables :</span>
+              {['{client}', '{montant}', '{facture}', '{echeance}', '{entreprise}'].map(v => (
+                <span key={v} style={{ fontSize: 11, background: '#F3F4F6', border: '1px solid #E5E7EB', borderRadius: 4, padding: '2px 7px', color: '#374151', fontFamily: 'monospace', cursor: 'pointer' }}
+                  onClick={() => {
+                    const el = document.querySelector('textarea') as HTMLTextAreaElement
+                    if (!el) return
+                    const start = el.selectionStart
+                    const end = el.selectionEnd
+                    const newText = templates[templateTab].slice(0, start) + v + templates[templateTab].slice(end)
+                    setTemplates(prev => prev.map((t, i) => i === templateTab ? newText : t))
+                    setTimeout(() => { el.setSelectionRange(start + v.length, start + v.length); el.focus() }, 0)
+                  }}>
+                  {v}
+                </span>
+              ))}
+            </div>
+
+            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+              <button
+                onClick={() => setShowPreview(true)}
+                style={{ background: 'rgba(236,72,153,0.10)', border: '1px solid rgba(236,72,153,0.25)', borderRadius: 8, padding: '7px 14px', fontSize: 12, fontWeight: 600, color: '#ec4899', cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}>
+                👁 Aperçu email
+              </button>
+              <button
+                onClick={() => setTemplates(prev => prev.map((t, i) => i === templateTab ? DEFAULT_MESSAGES[templateTab] : t))}
+                style={{ background: '#F9FAFB', border: '1.5px solid #E5E7EB', borderRadius: 8, padding: '7px 14px', fontSize: 12, fontWeight: 500, color: '#6B7280', cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}>
+                ↺ Réinitialiser au modèle standard
+              </button>
+            </div>
+          </div>
+
+          {/* Modal aperçu email */}
+          {showPreview && (
+            <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.55)', zIndex: 600, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20 }} onClick={() => setShowPreview(false)}>
+              <div style={{ background: 'white', borderRadius: 20, padding: 0, maxWidth: 620, width: '100%', maxHeight: '85vh', overflow: 'hidden', display: 'flex', flexDirection: 'column' }} onClick={e => e.stopPropagation()}>
+                <div style={{ padding: '20px 24px', borderBottom: '1px solid #EAECEF', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <div>
+                    <h3 style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 700, fontSize: 16, color: '#111', marginBottom: 2 }}>Aperçu — Relance {templateTab + 1}</h3>
+                    <p style={{ fontSize: 12, color: '#9CA3AF' }}>Visualisation avec des données d'exemple</p>
+                  </div>
+                  <button onClick={() => setShowPreview(false)} style={{ background: '#F3F4F6', border: 'none', borderRadius: 8, width: 32, height: 32, cursor: 'pointer', fontSize: 18, color: '#6B7280' }}>×</button>
+                </div>
+                <div style={{ overflowY: 'auto', flex: 1, padding: '0 0 20px' }}>
+                  <div style={{ fontFamily: 'Inter, sans-serif', maxWidth: '100%', padding: '32px 28px', color: '#111' }}>
+                    <p style={{ fontWeight: 800, fontSize: 18, marginBottom: 28, color: '#111' }}>{companyName || 'Votre Société'}</p>
+                    <h2 style={{ fontSize: 20, marginBottom: 16 }}>{templateTab === 0 ? 'Rappel de paiement' : templateTab === 1 ? 'Deuxième rappel de paiement' : 'Mise en demeure de payer'}</h2>
+                    <p style={{ color: '#6B7280', lineHeight: 1.7, marginBottom: 12 }}>Bonjour Jean Dupont,</p>
+                    {templates[templateTab].split(/\n\n+/).map((p, i) => (
+                      <p key={i} style={{ color: '#6B7280', lineHeight: 1.7, marginBottom: 12 }}>
+                        {p
+                          .replace(/\{client\}/g, 'Jean Dupont')
+                          .replace(/\{montant\}/g, '1 500')
+                          .replace(/\{facture\}/g, 'FAC-2025-001')
+                          .replace(/\{echeance\}/g, '01/12/2025')
+                          .replace(/\{entreprise\}/g, companyName || 'Votre Société')}
+                      </p>
+                    ))}
+                    <div style={{ background: '#F0FDF4', border: '1px solid #BBF7D0', borderRadius: 10, padding: 16, margin: '20px 0' }}>
+                      <p style={{ margin: 0, color: '#6B7280', fontSize: 12 }}>Référence facture</p>
+                      <p style={{ margin: '4px 0 8px', fontWeight: 700, color: '#111' }}>FAC-2025-001</p>
+                      <p style={{ margin: 0, color: '#6B7280', fontSize: 12 }}>Montant à régler</p>
+                      <p style={{ margin: '4px 0 0', fontWeight: 800, color: '#16A34A', fontSize: 20 }}>1 500 €</p>
+                    </div>
+                    <p style={{ color: '#6B7280', lineHeight: 1.7 }}>Cordialement,</p>
+                    <div style={{ marginTop: 20, paddingTop: 16, borderTop: '1px solid #E5E7EB' }}>
+                      <p style={{ margin: 0, fontWeight: 700, color: '#111' }}>{companyName || 'Votre Société'}</p>
+                      {companyAddress && <p style={{ margin: '4px 0 0', color: '#6B7280', fontSize: 13 }}>{companyAddress}</p>}
+                      {companyPhone && <p style={{ margin: '4px 0 0', color: '#6B7280', fontSize: 13 }}>Tél : {companyPhone}</p>}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* COMPTE */}
           <div className="card-section" style={{ animationDelay: '0.10s' }}>

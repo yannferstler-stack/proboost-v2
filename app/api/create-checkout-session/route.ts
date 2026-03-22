@@ -27,6 +27,7 @@ export async function POST(req: NextRequest) {
     const session = await stripe.checkout.sessions.create({
       mode: 'subscription',
       payment_method_types: ['card'],
+      payment_method_collection: 'if_required',
       line_items: [
         {
           price_data: {
@@ -44,8 +45,12 @@ export async function POST(req: NextRequest) {
       success_url: `${appUrl}/souscrire/success?plan=${plan}&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${appUrl}/souscrire?plan=${plan}`,
       metadata: { plan },
-      subscription_data: { metadata: { plan } },
+      subscription_data: {
+        metadata: { plan },
+        trial_period_days: 14,
+      },
       // Coupon early bird : -20% sur le 1er mois uniquement (duration: once)
+      // S'applique au 1er paiement, après la période d'essai de 14 jours
       // Créer dans Stripe Dashboard > Coupons : percent_off=20, duration=once, name="Offre de lancement"
       // Puis ajouter STRIPE_COUPON_EARLY_BIRD=coupon_id dans .env.local
       ...(process.env.STRIPE_COUPON_EARLY_BIRD

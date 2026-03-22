@@ -212,31 +212,34 @@ function SouscrireContent() {
               <h3 style={{ fontFamily: 'Comfortaa', fontWeight: 800, fontSize: 15, color: 'white', marginBottom: 18 }}>Récapitulatif</h3>
 
               <div style={{ background: plan.bg, border: `1px solid ${plan.border}`, borderRadius: 12, padding: '14px', marginBottom: 18 }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
                   <span style={{ fontFamily: 'Comfortaa', fontWeight: 800, fontSize: 16, color: 'white' }}>Plan {plan.nom}</span>
                   <span style={{ fontSize: 11, background: 'linear-gradient(135deg, #a855f7, #ec4899)', color: 'white', borderRadius: 6, padding: '2px 8px', fontWeight: 700 }}>MENSUEL</span>
                 </div>
-                <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'linear-gradient(135deg, #a855f7, #ec4899)', borderRadius: 6, padding: '2px 8px', marginBottom: 8 }}>
-                  <span style={{ fontSize: 11, color: 'white', fontWeight: 700 }}>-20% le 1er mois</span>
+                {/* Badge essai gratuit */}
+                <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'rgba(29,185,84,0.2)', border: '1px solid rgba(29,185,84,0.4)', borderRadius: 6, padding: '4px 10px', marginBottom: 10 }}>
+                  <span style={{ fontSize: 13 }}>🎁</span>
+                  <span style={{ fontSize: 12, color: '#4ade80', fontWeight: 700 }}>14 jours gratuits, sans engagement</span>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, marginBottom: 2 }}>
-                  <span style={{ fontFamily: 'Comfortaa', fontWeight: 900, fontSize: 28, color: 'white' }}>{formatPrix(plan.prixBase * (1 - EARLY_BIRD_DISCOUNT))} €</span>
-                  <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.35)' }}>/ 1er mois</span>
+                  <span style={{ fontFamily: 'Comfortaa', fontWeight: 900, fontSize: 28, color: 'white' }}>0 €</span>
+                  <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.35)' }}>/ aujourd'hui</span>
                 </div>
                 <div style={{ marginBottom: 6 }}>
-                  <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.45)' }}>puis {formatPrix(plan.prixBase)}€/mois</span>
+                  <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.45)' }}>puis {formatPrix(plan.prixBase * (1 - EARLY_BIRD_DISCOUNT))}€ le 1er mois (−20%), ensuite {formatPrix(plan.prixBase)}€/mois</span>
                 </div>
                 <span style={{ fontSize: 12, color: plan.couleur, fontWeight: 600 }}>+ {plan.commission} prélevé sur chaque facture recouvrée</span>
               </div>
 
               <div style={{ marginBottom: 18 }}>
                 {[
-                  { label: 'Abonnement mensuel', value: `${formatPrix(plan.prixBase * (1 - EARLY_BIRD_DISCOUNT))} €` },
-                  { label: 'Total', value: `${formatPrix(plan.prixBase * (1 - EARLY_BIRD_DISCOUNT))} €`, bold: true },
+                  { label: 'Essai 14 jours', value: '0 €' },
+                  { label: `1er paiement (J+14, −20%)`, value: `${formatPrix(plan.prixBase * (1 - EARLY_BIRD_DISCOUNT))} €` },
+                  { label: 'Dû maintenant', value: '0 €', bold: true },
                 ].map((row, i) => (
-                  <div key={i} style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 0', borderBottom: i < 1 ? '1px solid rgba(255,255,255,0.06)' : 'none' }}>
+                  <div key={i} style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 0', borderBottom: i < 2 ? '1px solid rgba(255,255,255,0.06)' : 'none' }}>
                     <span style={{ fontSize: 13, color: row.bold ? 'white' : 'rgba(255,255,255,0.45)', fontWeight: row.bold ? 700 : 400 }}>{row.label}</span>
-                    <span style={{ fontSize: 13, color: row.bold ? 'white' : 'rgba(255,255,255,0.45)', fontWeight: row.bold ? 700 : 400 }}>{row.value}</span>
+                    <span style={{ fontSize: 13, color: row.bold ? '#4ade80' : 'rgba(255,255,255,0.45)', fontWeight: row.bold ? 700 : 400 }}>{row.value}</span>
                   </div>
                 ))}
               </div>
@@ -253,7 +256,7 @@ function SouscrireContent() {
                     <div style={{ width: 16, height: 16, border: '2px solid rgba(255,255,255,0.3)', borderTop: '2px solid white', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
                     Redirection...
                   </span>
-                ) : `Souscrire au plan ${plan.nom} →`}
+                ) : `Commencer gratuitement — 14 jours d'essai →`}
               </button>
 
               {!cgvAccepted && (
@@ -261,10 +264,10 @@ function SouscrireContent() {
               )}
 
               <div style={{ marginTop: 14, display: 'flex', flexDirection: 'column', gap: 7 }}>
-                {['Paiement sécurisé par Stripe', 'Sans engagement — résiliable à tout moment', 'Accès immédiat après paiement'].map((t, i) => (
+                {['14 jours gratuits, aucune CB requise', 'Paiement sécurisé par Stripe', 'Sans engagement — résiliable à tout moment', 'Accès immédiat après inscription'].map((t, i) => (
                   <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                    <span style={{ color: '#a855f7', fontWeight: 700, fontSize: 12 }}>✓</span>
-                    <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.40)' }}>{t}</span>
+                    <span style={{ color: i === 0 ? '#4ade80' : '#a855f7', fontWeight: 700, fontSize: 12 }}>✓</span>
+                    <span style={{ fontSize: 12, color: i === 0 ? '#4ade80' : 'rgba(255,255,255,0.40)', fontWeight: i === 0 ? 600 : 400 }}>{t}</span>
                   </div>
                 ))}
               </div>

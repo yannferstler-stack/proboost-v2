@@ -8,18 +8,46 @@ export type EmailParams = {
   companyPhone: string
   numeroRelance: number
   paymentUrl?: string   // Lien Stripe Checkout pour payer directement depuis l'email
+  customMessage?: string // Texte personnalisé remplaçant le paragraphe principal
+}
+
+// Textes par défaut pour chaque niveau de relance (utilisés dans Settings comme placeholder)
+export const DEFAULT_MESSAGES = [
+  `Nous vous contactons concernant la facture {facture} d'un montant de {montant} € dont l'échéance était le {echeance}.\n\nSauf erreur de notre part, ce règlement ne nous est pas encore parvenu. Pourriez-vous effectuer ce paiement dans les meilleurs délais ?`,
+  `Malgré notre premier rappel, la facture {facture} d'un montant de {montant} € échue le {echeance} reste impayée.\n\nNous vous demandons de régulariser cette situation dans un délai de 7 jours.\n\nSans réponse de votre part, nous serons contraints d'engager une procédure de recouvrement.`,
+  `Par la présente, nous vous mettons en demeure de régler sous 48 heures la somme de {montant} € correspondant à la facture {facture} échue le {echeance}.\n\nSans règlement sous 48h, nous transmettrons ce dossier à notre service contentieux.`,
+]
+
+function applyVariables(msg: string, params: EmailParams): string {
+  const montantStr = Number(params.montant).toLocaleString('fr-FR')
+  const echeanceStr = new Date(params.dateEcheance).toLocaleDateString('fr-FR')
+  return msg
+    .replace(/\{client\}/g, params.clientNom)
+    .replace(/\{montant\}/g, montantStr)
+    .replace(/\{facture\}/g, params.numeroFacture || 'N/A')
+    .replace(/\{echeance\}/g, echeanceStr)
+    .replace(/\{entreprise\}/g, params.companyName)
 }
 
 export function getEmailContent(params: EmailParams): { subject: string; html: string } {
   const {
     clientNom, montant, dateEcheance, numeroFacture,
     companyName, companyAddress, companyPhone, numeroRelance,
-    paymentUrl,
+    paymentUrl, customMessage,
   } = params
 
   const montantStr = Number(montant).toLocaleString('fr-FR')
   const echeanceStr = new Date(dateEcheance).toLocaleDateString('fr-FR')
   const refFacture = numeroFacture || 'N/A'
+
+  // Convertit le texte personnalisé (avec sauts de ligne) en paragraphes HTML
+  const buildCustomBody = (text: string) => {
+    const resolved = applyVariables(text, params)
+    return resolved
+      .split(/\n\n+/)
+      .map(p => `<p style="color:#6B7280;line-height:1.7;margin-bottom:12px;">${p.replace(/\n/g, '<br/>')}</p>`)
+      .join('')
+  }
 
   const footer = `
     <div style="margin-top:32px;padding-top:20px;border-top:1px solid #E5E7EB;">
@@ -48,8 +76,7 @@ export function getEmailContent(params: EmailParams): { subject: string; html: s
       <p style="font-weight:800;font-size:20px;margin:0 0 32px;">${companyName}</p>
       <h2 style="font-size:22px;margin-bottom:20px;">Rappel de paiement</h2>
       <p style="color:#6B7280;line-height:1.7;margin-bottom:12px;">Bonjour ${clientNom},</p>
-      <p style="color:#6B7280;line-height:1.7;margin-bottom:12px;">Nous vous contactons concernant la facture <strong style="color:#111;">${refFacture}</strong> d'un montant de <strong style="color:#111;">${montantStr} €</strong> dont l'échéance était le <strong style="color:#111;">${echeanceStr}</strong>.</p>
-      <p style="color:#6B7280;line-height:1.7;margin-bottom:24px;">Sauf erreur de notre part, ce règlement ne nous est pas encore parvenu. Pourriez-vous effectuer ce paiement dans les meilleurs délais ?</p>
+      ${customMessage ? buildCustomBody(customMessage) : `<p style="color:#6B7280;line-height:1.7;margin-bottom:12px;">Nous vous contactons concernant la facture <strong style="color:#111;">${refFacture}</strong> d'un montant de <strong style="color:#111;">${montantStr} €</strong> dont l'échéance était le <strong style="color:#111;">${echeanceStr}</strong>.</p><p style="color:#6B7280;line-height:1.7;margin-bottom:24px;">Sauf erreur de notre part, ce règlement ne nous est pas encore parvenu. Pourriez-vous effectuer ce paiement dans les meilleurs délais ?</p>`}
       <div style="background:#F0FDF4;border:1px solid #BBF7D0;border-radius:12px;padding:20px;margin:24px 0;">
         <p style="margin:0;color:#6B7280;font-size:13px;">Référence facture</p>
         <p style="margin:4px 0 8px;font-weight:700;color:#111;">${refFacture}</p>
@@ -67,15 +94,14 @@ export function getEmailContent(params: EmailParams): { subject: string; html: s
       </div>
       <h2 style="font-size:22px;margin-bottom:20px;">Deuxième rappel de paiement</h2>
       <p style="color:#6B7280;line-height:1.7;margin-bottom:12px;">Bonjour ${clientNom},</p>
-      <p style="color:#6B7280;line-height:1.7;margin-bottom:12px;">Malgré notre premier rappel, la facture <strong style="color:#111;">${refFacture}</strong> d'un montant de <strong style="color:#111;">${montantStr} €</strong> échue le <strong style="color:#111;">${echeanceStr}</strong> reste impayée.</p>
-      <p style="color:#6B7280;line-height:1.7;margin-bottom:24px;">Nous vous demandons de régulariser cette situation dans un délai de <strong style="color:#111;">7 jours</strong>.</p>
+      ${customMessage ? buildCustomBody(customMessage) : `<p style="color:#6B7280;line-height:1.7;margin-bottom:12px;">Malgré notre premier rappel, la facture <strong style="color:#111;">${refFacture}</strong> d'un montant de <strong style="color:#111;">${montantStr} €</strong> échue le <strong style="color:#111;">${echeanceStr}</strong> reste impayée.</p><p style="color:#6B7280;line-height:1.7;margin-bottom:24px;">Nous vous demandons de régulariser cette situation dans un délai de <strong style="color:#111;">7 jours</strong>.</p>`}
       <div style="background:#FEF2F2;border:1px solid #FECACA;border-radius:12px;padding:20px;margin:24px 0;">
         <p style="margin:0;color:#6B7280;font-size:13px;">Référence facture</p>
         <p style="margin:4px 0 8px;font-weight:700;color:#111;">${refFacture}</p>
         <p style="margin:0;color:#6B7280;font-size:13px;">Montant à régler sous 7 jours</p>
         <p style="margin:4px 0 0;font-weight:800;color:#DC2626;font-size:22px;">${montantStr} €</p>
       </div>
-      <p style="color:#6B7280;line-height:1.7;margin-bottom:24px;">Sans réponse de votre part, nous serons contraints d'engager une procédure de recouvrement.</p>
+      ${!customMessage ? `<p style="color:#6B7280;line-height:1.7;margin-bottom:24px;">Sans réponse de votre part, nous serons contraints d'engager une procédure de recouvrement.</p>` : ''}
       ${paymentButton}
       <p style="color:#6B7280;line-height:1.7;">Cordialement,</p>
       ${footer}</div>`,
@@ -87,14 +113,14 @@ export function getEmailContent(params: EmailParams): { subject: string; html: s
       </div>
       <h2 style="font-size:22px;margin-bottom:20px;">Mise en demeure de payer</h2>
       <p style="color:#6B7280;line-height:1.7;margin-bottom:12px;">Bonjour ${clientNom},</p>
-      <p style="color:#6B7280;line-height:1.7;margin-bottom:12px;">Par la présente, nous vous mettons en demeure de régler sous <strong style="color:#DC2626;">48 heures</strong> la somme de <strong style="color:#DC2626;">${montantStr} €</strong> correspondant à la facture <strong style="color:#111;">${refFacture}</strong> échue le ${echeanceStr}.</p>
+      ${customMessage ? buildCustomBody(customMessage) : `<p style="color:#6B7280;line-height:1.7;margin-bottom:12px;">Par la présente, nous vous mettons en demeure de régler sous <strong style="color:#DC2626;">48 heures</strong> la somme de <strong style="color:#DC2626;">${montantStr} €</strong> correspondant à la facture <strong style="color:#111;">${refFacture}</strong> échue le ${echeanceStr}.</p>`}
       <div style="background:#FEF2F2;border:2px solid #DC2626;border-radius:12px;padding:20px;margin:24px 0;">
         <p style="margin:0;color:#6B7280;font-size:13px;">Référence facture</p>
         <p style="margin:4px 0 8px;font-weight:700;color:#111;">${refFacture}</p>
         <p style="margin:0;color:#6B7280;font-size:13px;">Montant à régler IMMÉDIATEMENT</p>
         <p style="margin:4px 0 0;font-weight:800;color:#DC2626;font-size:24px;">${montantStr} €</p>
       </div>
-      <p style="color:#6B7280;line-height:1.7;margin-bottom:24px;">Sans règlement sous 48h, nous transmettrons ce dossier à notre service contentieux.</p>
+      ${!customMessage ? `<p style="color:#6B7280;line-height:1.7;margin-bottom:24px;">Sans règlement sous 48h, nous transmettrons ce dossier à notre service contentieux.</p>` : ''}
       ${paymentButton}
       <p style="color:#6B7280;line-height:1.7;">Cordialement,</p>
       ${footer}</div>`,

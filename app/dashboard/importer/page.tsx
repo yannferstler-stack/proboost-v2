@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation'
 import { createClient } from '../../lib/supabase'
 import { DashboardSidebar } from '../../components/DashboardSidebar'
 
-type Mode = null | 'csv' | 'pdf'
+type Mode = null | 'csv' | 'pdf' | 'fec'
 
 type FacturePreview = {
   raison_sociale?: string
@@ -241,6 +241,89 @@ export default function ImporterPage() {
     setImporting(false)
   }
 
+  const handleFEC = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setFileName(file.name)
+    const reader = new FileReader()
+    reader.onload = (event) => {
+      const text = event.target?.result as string
+      const lines = text.split('\n').filter(l => l.trim())
+      if (lines.length < 2) { setMessage('Fichier FEC vide ou invalide.'); return }
+
+      const rawHeaders = lines[0].split('|').map(h => h.trim().replace(/"/g, ''))
+      const idx = (name: string) => rawHeaders.findIndex(h => h.toLowerCase() === name.toLowerCase())
+
+      const iCompteNum = idx('CompteNum'); const iCompAuxLib = idx('CompAuxLib')
+      const iPieceRef = idx('PieceRef'); const iPieceDate = idx('PieceDate')
+      const iDebit = idx('Debit'); const iCredit = idx('Credit')
+
+      if (iCompteNum === -1 || iPieceRef === -1) {
+        setMessage('Format FEC invalide — colonnes CompteNum ou PieceRef introuvables.')
+        return
+      }
+
+      // Regrouper par PieceRef (une facture = plusieurs lignes comptables)
+      const grouped: Record<string, { compAuxLib: string; solde: number; pieceDate: string }> = {}
+      lines.slice(1).forEach(line => {
+        const vals = line.split('|').map(v => v.trim().replace(/"/g, ''))
+        const compteNum = vals[iCompteNum] || ''
+        if (!compteNum.startsWith('411')) return // Filtre créances clients seulement
+
+        const pieceRef = vals[iPieceRef] || ''
+        if (!pieceRef) return
+        const debit = parseFloat((vals[iDebit] || '0').replace(',', '.')) || 0
+        const credit = parseFloat((vals[iCredit] || '0').replace(',', '.')) || 0
+        const solde = debit - credit
+
+        if (!grouped[pieceRef]) {
+          grouped[pieceRef] = { compAuxLib: vals[iCompAuxLib] || '', solde: 0, pieceDate: vals[iPieceDate] || '' }
+        }
+        grouped[pieceRef].solde += solde
+        if (!grouped[pieceRef].compAuxLib && vals[iCompAuxLib]) {
+          grouped[pieceRef].compAuxLib = vals[iCompAuxLib]
+        }
+      })
+
+      // Convertir en FacturePreview (garder uniquement les montants positifs = impayés)
+      const rows: FacturePreview[] = Object.entries(grouped)
+        .filter(([, g]) => g.solde > 0.01)
+        .map(([pieceRef, g]) => {
+          // PieceDate YYYYMMDD → ISO
+          const pd = g.pieceDate.replace(/\D/g, '')
+          let dateFacture = ''
+          if (pd.length === 8) {
+            dateFacture = `${pd.slice(0, 4)}-${pd.slice(4, 6)}-${pd.slice(6, 8)}`
+          }
+          // Échéance = date facture + 30 jours
+          let dateEcheance = ''
+          if (dateFacture) {
+            const d = new Date(dateFacture); d.setDate(d.getDate() + 30)
+            dateEcheance = d.toISOString().split('T')[0]
+          }
+          return {
+            client_nom: g.compAuxLib || pieceRef,
+            numero_facture: pieceRef,
+            date_facture: dateFacture,
+            date_echeance: dateEcheance,
+            montant: g.solde.toFixed(2),
+            client_email: '',
+            doublonWarning: isDublon(pieceRef),
+          }
+        })
+
+      if (rows.length === 0) {
+        setMessage('Aucune créance client (compte 411) trouvée dans ce fichier FEC.')
+        return
+      }
+
+      const limitees = placesRestantes === Infinity ? rows : rows.slice(0, placesRestantes)
+      if (rows.length > limitees.length) setMessage(`Seulement ${placesRestantes} facture(s) importable(s) ce mois-ci`)
+      setFactures(limitees)
+    }
+    reader.readAsText(file, 'UTF-8')
+  }
+
   const resetMode = () => { setMode(null); setFactures([]); setFiles([]); setFileName(''); setMessage('') }
   const hasDublon = factures.some(f => f.doublonWarning && !f.erreur)
   const pctMois = getLimiteFactures() === Infinity ? 0 : Math.min(100, (facturesCeMois / getLimiteFactures()) * 100)
@@ -300,10 +383,10 @@ export default function ImporterPage() {
               )}
               <div>
                 <h1 style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 800, fontSize: isMobile ? 20 : 24, color: '#111', marginBottom: 3 }}>
-                  {mode === null ? 'Importer des factures' : mode === 'csv' ? 'Import CSV' : 'Import PDF par IA'}
+                  {mode === null ? 'Importer des factures' : mode === 'csv' ? 'Import CSV' : mode === 'fec' ? 'Import FEC' : 'Import PDF par IA'}
                 </h1>
                 <p style={{ color: '#9CA3AF', fontSize: 13 }}>
-                  {mode === null ? "Choisissez votre méthode d'import" : mode === 'csv' ? 'Remplissez le template et importez votre fichier' : "L'IA extrait automatiquement les informations"}
+                  {mode === null ? "Choisissez votre méthode d'import" : mode === 'csv' ? 'Remplissez le template et importez votre fichier' : mode === 'fec' ? 'Fichier FEC — comptes 411 extraits automatiquement' : "L'IA extrait automatiquement les informations"}
                 </p>
               </div>
             </div>
@@ -374,7 +457,7 @@ export default function ImporterPage() {
 
           {/* CHOIX MODE */}
           {mode === null && (
-            <div className="mode-grid" style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 16, maxWidth: 680, animation: 'fadeUp 0.4s ease 0.1s both' }}>
+            <div className="mode-grid" style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3,1fr)', gap: 16, maxWidth: 960, animation: 'fadeUp 0.4s ease 0.1s both' }}>
               <div className={`mode-card${limiteAtteinte ? ' disabled' : ''}`} onClick={() => !limiteAtteinte && setMode('csv')}>
                 <div style={{ width: 44, height: 44, background: 'rgba(168,85,247,0.10)', border: '1px solid rgba(168,85,247,0.25)', borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 14 }}>
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#a855f7" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
@@ -390,6 +473,14 @@ export default function ImporterPage() {
                 <h3 style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 700, fontSize: 17, color: '#111', marginBottom: 6 }}>Import PDF par IA</h3>
                 <p style={{ fontSize: 14, color: '#6B7280', lineHeight: 1.6, marginBottom: 14 }}>Déposez vos factures PDF et l'IA détecte automatiquement toutes les informations.</p>
                 <span style={{ fontSize: 12, background: 'rgba(236,72,153,0.10)', color: '#be185d', borderRadius: 8, padding: '4px 10px', fontWeight: 600 }}>Zéro saisie manuelle</span>
+              </div>
+              <div className={`mode-card${limiteAtteinte ? ' disabled' : ''}`} onClick={() => !limiteAtteinte && setMode('fec')}>
+                <div style={{ width: 44, height: 44, background: 'rgba(16,185,129,0.10)', border: '1px solid rgba(16,185,129,0.25)', borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 14 }}>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#10b981" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                </div>
+                <h3 style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 700, fontSize: 17, color: '#111', marginBottom: 6 }}>Import FEC</h3>
+                <p style={{ fontSize: 14, color: '#6B7280', lineHeight: 1.6, marginBottom: 14 }}>Importez votre Fichier des Écritures Comptables — les créances clients 411 sont extraites automatiquement.</p>
+                <span style={{ fontSize: 12, background: 'rgba(16,185,129,0.10)', color: '#059669', borderRadius: 8, padding: '4px 10px', fontWeight: 600 }}>Comptabilité française</span>
               </div>
             </div>
           )}
@@ -488,6 +579,105 @@ export default function ImporterPage() {
                       {importing ? 'Import en cours...' : hasDublon ? "Corrigez les doublons avant d'importer" : limiteAtteinte ? 'Limite atteinte' : `Importer ${factures.filter(f => !f.doublonWarning).length} facture${factures.filter(f => !f.doublonWarning).length > 1 ? 's' : ''}`}
                     </button>
                   </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* FEC */}
+          {mode === 'fec' && (
+            <div style={{ maxWidth: 960, animation: 'fadeUp 0.3s ease both' }}>
+              {/* Info FEC */}
+              <div style={{ background: 'rgba(16,185,129,0.06)', border: '1px solid rgba(16,185,129,0.25)', borderRadius: 14, padding: '14px 18px', marginBottom: 16, display: 'flex', alignItems: 'flex-start', gap: 12 }}>
+                <span style={{ fontSize: 18, flexShrink: 0 }}>📊</span>
+                <div>
+                  <p style={{ fontWeight: 600, color: '#059669', fontSize: 13, marginBottom: 4 }}>Format FEC (Fichier des Écritures Comptables)</p>
+                  <p style={{ fontSize: 12, color: '#374151', lineHeight: 1.7 }}>
+                    Séparateur pipe <code style={{ background: '#F3F4F6', padding: '1px 5px', borderRadius: 4, fontFamily: 'monospace' }}>|</code> — Les lignes de compte <strong>411</strong> (créances clients) sont extraites automatiquement et regroupées par pièce. L'email client n'est pas disponible dans le FEC — vous pourrez le compléter dans le tableau de bord.
+                  </p>
+                </div>
+              </div>
+
+              {/* Upload */}
+              <div style={{ background: 'white', borderRadius: 14, padding: '16px 20px', border: '1px solid #EAECEF', marginBottom: 16 }}>
+                <div className="step-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                    <div className="step-num">1</div>
+                    <div>
+                      <p style={{ fontWeight: 600, color: '#111', marginBottom: 2, fontSize: 14 }}>Importez votre fichier FEC</p>
+                      <p style={{ fontSize: 12, color: '#9CA3AF' }}>
+                        {fileName ? <span style={{ color: '#059669', fontWeight: 600 }}>{fileName} ✓</span> : 'Fichier .txt ou .csv séparé par |'}
+                        {placesRestantes !== Infinity && <span style={{ color: '#EA580C' }}> — {placesRestantes} place{placesRestantes > 1 ? 's' : ''} restante{placesRestantes > 1 ? 's' : ''}</span>}
+                      </p>
+                    </div>
+                  </div>
+                  <label className="step-row-btn" style={{ background: 'linear-gradient(135deg, #10b981, #059669)', color: 'white', border: 'none', borderRadius: 10, padding: '9px 16px', fontSize: 13, fontWeight: 600, cursor: 'pointer', whiteSpace: 'nowrap', boxShadow: '0 2px 10px rgba(16,185,129,0.30)', display: 'inline-block' }}>
+                    Choisir un fichier FEC
+                    <input type="file" accept=".txt,.csv,.fec" onChange={handleFEC} style={{ display: 'none' }} />
+                  </label>
+                </div>
+              </div>
+
+              {/* Preview table */}
+              {factures.length > 0 && (
+                <div style={{ background: 'white', borderRadius: 14, overflow: 'hidden', border: '1px solid #EAECEF' }}>
+                  <div style={{ padding: '14px 20px', borderBottom: '1px solid #EAECEF', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                      <div className="step-num">2</div>
+                      <div>
+                        <p style={{ fontWeight: 600, color: '#111', fontSize: 14 }}>Vérifiez avant d'importer</p>
+                        <p style={{ fontSize: 12, color: '#9CA3AF' }}>{factures.length} créance{factures.length > 1 ? 's' : ''} client{factures.length > 1 ? 's' : ''} trouvée{factures.length > 1 ? 's' : ''}{hasDublon ? ` — ${factures.filter(f => f.doublonWarning).length} doublon(s)` : ''}</p>
+                      </div>
+                    </div>
+                    <span style={{ fontSize: 11, background: 'rgba(16,185,129,0.12)', color: '#059669', borderRadius: 6, padding: '3px 10px', fontWeight: 700 }}>FEC · Compte 411</span>
+                  </div>
+                  <div style={{ background: '#FFFBEB', borderBottom: '1px solid #FDE68A', padding: '8px 16px', display: 'flex', gap: 8, alignItems: 'center' }}>
+                    <span style={{ fontSize: 13 }}>⚠️</span>
+                    <p style={{ fontSize: 12, color: '#92400E' }}>L'email client n'est pas disponible dans le FEC — complétez-le manuellement dans le tableau de bord après import.</p>
+                  </div>
+                  <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
+                    <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 600 }}>
+                      <thead>
+                        <tr style={{ background: '#F9FAFB' }}>
+                          {['Client', 'N° Pièce', 'Date facture', 'Échéance', 'Montant', 'Email'].map(h => (
+                            <th key={h} style={{ textAlign: 'left', padding: '8px 12px', fontSize: 10, color: '#9CA3AF', fontWeight: 600, textTransform: 'uppercase', borderBottom: '1px solid #EAECEF', whiteSpace: 'nowrap' }}>{h}</th>
+                          ))}
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {factures.map((f, i) => (
+                          <tr key={i} className={f.doublonWarning ? 'row-dublon' : ''} style={{ borderBottom: '1px solid #F3F4F6' }}>
+                            <td style={{ padding: '10px 12px', fontWeight: 600, color: '#111', fontSize: 12, whiteSpace: 'nowrap' }}>{f.client_nom || '—'}</td>
+                            <td style={{ padding: '10px 12px', fontSize: 12, whiteSpace: 'nowrap' }}>
+                              {f.doublonWarning
+                                ? <span style={{ color: '#EA580C', fontWeight: 700 }}>{f.numero_facture} ⚠</span>
+                                : <span style={{ color: '#111', fontWeight: 600 }}>{f.numero_facture || '—'}</span>}
+                            </td>
+                            <td style={{ padding: '10px 12px', fontSize: 12, color: '#6B7280', whiteSpace: 'nowrap' }}>{f.date_facture || '—'}</td>
+                            <td style={{ padding: '10px 12px', fontSize: 12, color: '#6B7280', whiteSpace: 'nowrap' }}>{f.date_echeance || '—'}</td>
+                            <td style={{ padding: '10px 12px', fontWeight: 700, color: '#a855f7', fontSize: 12, whiteSpace: 'nowrap' }}>{f.montant ? `${parseFloat(f.montant).toFixed(2)} €` : '—'}</td>
+                            <td style={{ padding: '10px 12px', fontSize: 12, color: '#D1D5DB', fontStyle: 'italic', whiteSpace: 'nowrap' }}>À compléter</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                  <div style={{ padding: '16px 20px', borderTop: '1px solid #EAECEF' }}>
+                    {message && (
+                      <div style={{ background: '#FEF2F2', border: '1px solid #FECACA', borderRadius: 10, padding: '10px 14px', marginBottom: 12 }}>
+                        <p style={{ color: '#DC2626', fontSize: 13, fontWeight: 600 }}>{message}</p>
+                      </div>
+                    )}
+                    <button className="btn-import" onClick={importerFactures} disabled={importing || limiteAtteinte || hasDublon}>
+                      {importing ? 'Import en cours...' : hasDublon ? "Corrigez les doublons avant d'importer" : limiteAtteinte ? 'Limite atteinte' : `Importer ${factures.filter(f => !f.doublonWarning).length} créance${factures.filter(f => !f.doublonWarning).length > 1 ? 's' : ''} client${factures.filter(f => !f.doublonWarning).length > 1 ? 's' : ''}`}
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {message && factures.length === 0 && (
+                <div style={{ background: '#FEF2F2', border: '1px solid #FECACA', borderRadius: 10, padding: '12px 16px' }}>
+                  <p style={{ color: '#DC2626', fontSize: 13, fontWeight: 600 }}>{message}</p>
                 </div>
               )}
             </div>

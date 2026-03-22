@@ -61,10 +61,15 @@ export async function POST(request: NextRequest) {
     )
     const { data: profile } = await supabaseAdmin
       .from('profiles')
-      .select('plan')
+      .select('plan, template_relance_1, template_relance_2, template_relance_3')
       .eq('id', userId)
       .single()
     const userPlan: string = profile?.plan ?? 'starter'
+
+    // Récupérer le template personnalisé pour ce niveau de relance
+    const numeroRelanceForTemplate = (nombreRelances + 1)
+    const templateKey = `template_relance_${Math.min(numeroRelanceForTemplate, 3)}` as keyof typeof profile
+    const customMessage: string | undefined = profile?.[templateKey] || undefined
 
     // Sécurité : bloquer SMS si plan non Pro
     const canSms = userPlan === 'pro'
@@ -92,7 +97,7 @@ export async function POST(request: NextRequest) {
         clientNom, montant, dateEcheance, numeroFacture,
         companyName: company, companyAddress: companyAddress || '',
         companyPhone: companyPhone || '', numeroRelance,
-        paymentUrl,
+        paymentUrl, customMessage,
       })
       const { error: emailError } = await getResend().emails.send({
         from: `ManaFlow <onboarding@resend.dev>`,

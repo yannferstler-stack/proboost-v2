@@ -44,6 +44,7 @@ export default function Dashboard() {
   const [displayCount, setDisplayCount] = useState(20)
   const [relancingId, setRelancingId] = useState<string | null>(null)
   const [relanceMsg, setRelanceMsg] = useState<{ id: string; ok: boolean } | null>(null)
+  const [markingPaidId, setMarkingPaidId] = useState<string | null>(null)
   const [welcome, setWelcome] = useState<{ prenom: string; euros: number; isNew: boolean } | null>(null)
   const [showWelcome, setShowWelcome] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
@@ -242,6 +243,24 @@ export default function Dashboard() {
     URL.revokeObjectURL(url)
   }
 
+  const handleMarquerPayee = async (facture: Facture) => {
+    setMarkingPaidId(facture.id)
+    try {
+      const res = await fetch('/api/marquer-payee', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ factureId: facture.id, userId: user?.id }),
+      })
+      if (res.ok) {
+        setFactures(prev => prev.map(f => f.id === facture.id
+          ? { ...f, statut: 'payée', sequence_active: false, next_relance_date: null }
+          : f
+        ))
+      }
+    } catch {}
+    setMarkingPaidId(null)
+  }
+
   const handleRelancerMaintenant = async (facture: Facture) => {
     if (!facture.client_email) { setRelanceMsg({ id: facture.id, ok: false }); setTimeout(() => setRelanceMsg(null), 3000); return }
     setRelancingId(facture.id)
@@ -366,6 +385,9 @@ export default function Dashboard() {
         .sort-btn:hover:not(.active) { border-color: #9CA3AF; background: #F9FAFB; }
         .btn-delete { background: none; border: none; cursor: pointer; color: #D1D5DB; font-size: 18px; padding: 4px 6px; border-radius: 6px; transition: all 0.15s; line-height: 1; }
         .btn-delete:hover { color: #EF4444; background: #FEF2F2; }
+        .btn-paid { background: none; border: 1px solid #BBF7D0; border-radius: 6px; padding: 4px 8px; font-size: 11px; font-weight: 700; color: #16A34A; cursor: pointer; font-family: Inter, sans-serif; transition: all 0.15s; white-space: nowrap; }
+        .btn-paid:hover:not(:disabled) { background: #F0FDF4; border-color: #16A34A; }
+        .btn-paid:disabled { opacity: 0.5; cursor: not-allowed; }
         .btn-load-more { background: white; border: 1.5px solid #E5E7EB; border-radius: 8px; padding: 9px 20px; font-size: 13px; font-weight: 600; color: #6B7280; cursor: pointer; font-family: Inter, sans-serif; transition: all 0.15s; }
         .btn-load-more:hover { border-color: #a855f7; color: #7c3aed; background: #F5F3FF; }
         .btn-export { background: white; border: 1.5px solid #E5E7EB; border-radius: 8px; padding: 9px 16px; font-size: 13px; font-weight: 600; color: #6B7280; cursor: pointer; font-family: Inter, sans-serif; transition: all 0.15s; }
@@ -639,11 +661,22 @@ export default function Dashboard() {
                           )}
                         </td>
 
-                        {/* SUPPRIMER */}
+                        {/* SUPPRIMER + MARQUER PAYÉE */}
                         <td style={{ padding: '14px 12px', textAlign: 'center' }} onClick={e => e.stopPropagation()}>
-                          <button className="btn-delete" onClick={() => setConfirmDelete(f.id)} title="Supprimer cette facture">
-                            ×
-                          </button>
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: 4, alignItems: 'center' }}>
+                            {f.statut !== 'payée' && (
+                              <button
+                                className="btn-paid"
+                                disabled={markingPaidId === f.id}
+                                onClick={() => handleMarquerPayee(f)}
+                                title="Marquer comme payée">
+                                {markingPaidId === f.id ? '⏳' : '✓ Payée'}
+                              </button>
+                            )}
+                            <button className="btn-delete" onClick={() => setConfirmDelete(f.id)} title="Supprimer cette facture">
+                              ×
+                            </button>
+                          </div>
                         </td>
                       </tr>
                     )

@@ -26,7 +26,24 @@ function SuccessContent() {
 
   const planColor = PLAN_COLORS[plan] || '#1DB954'
 
-  const handleChange = (field: string, value: string) => setForm(prev => ({ ...prev, [field]: value }))
+  const handleChange = (field: string, value: string) => {
+    if (field === 'siret') {
+      // Auto-format SIRET : XXX XXX XXX XXXXX
+      const digits = value.replace(/\D/g, '').slice(0, 14)
+      let formatted = ''
+      if (digits.length <= 3) formatted = digits
+      else if (digits.length <= 6) formatted = `${digits.slice(0,3)} ${digits.slice(3)}`
+      else if (digits.length <= 9) formatted = `${digits.slice(0,3)} ${digits.slice(3,6)} ${digits.slice(6)}`
+      else formatted = `${digits.slice(0,3)} ${digits.slice(3,6)} ${digits.slice(6,9)} ${digits.slice(9)}`
+      setForm(prev => ({ ...prev, siret: formatted }))
+    } else {
+      setForm(prev => ({ ...prev, [field]: value }))
+    }
+  }
+
+  const siretDigits = form.siret.replace(/\D/g, '')
+  const siretValid = siretDigits.length === 14
+  const siretPartial = siretDigits.length > 0 && siretDigits.length < 14
 
   const handleSubmitInfos = (e: React.FormEvent) => {
     e.preventDefault()
@@ -260,7 +277,27 @@ function SuccessContent() {
 
                 <div style={{ marginBottom: 16 }}>
                   <label style={labelStyle}>SIRET</label>
-                  <input style={inputStyle} value={form.siret} onChange={e => handleChange('siret', e.target.value)} placeholder="123 456 789 00012" />
+                  <div style={{ position: 'relative' }}>
+                    <input
+                      style={{ ...inputStyle, paddingRight: 40, borderColor: siretValid ? '#1DB954' : siretPartial ? '#DC2626' : '#E5E7EB' }}
+                      value={form.siret}
+                      onChange={e => handleChange('siret', e.target.value)}
+                      placeholder="123 456 789 00012"
+                    />
+                    {(siretValid || siretPartial) && (
+                      <span style={{ position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)', fontSize: 16, color: siretValid ? '#1DB954' : '#DC2626', pointerEvents: 'none' }}>
+                        {siretValid ? '✓' : '✗'}
+                      </span>
+                    )}
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 5 }}>
+                    {siretPartial && <span style={{ fontSize: 11, color: '#DC2626' }}>14 chiffres requis ({siretDigits.length}/14)</span>}
+                    {siretValid && <span style={{ fontSize: 11, color: '#16A34A' }}>SIRET valide ✓</span>}
+                    {!siretPartial && !siretValid && <span />}
+                    <a href="https://annuaire-entreprises.data.gouv.fr" target="_blank" rel="noopener noreferrer" style={{ fontSize: 11, color: '#3B82F6', textDecoration: 'none', fontWeight: 500 }}>
+                      Trouver mon SIRET →
+                    </a>
+                  </div>
                 </div>
 
                 <div style={{ marginBottom: 16 }}>

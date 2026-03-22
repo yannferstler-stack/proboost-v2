@@ -97,6 +97,7 @@ export default function Home() {
   const [transitioning, setTransitioning] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
+  const [montantImpaye, setMontantImpaye] = useState(5000)
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768)
@@ -347,9 +348,16 @@ export default function Home() {
             <Reveal>
               <div style={{ textAlign: 'center', marginBottom: 40 }}>
                 <span style={{ fontSize: 11, color: '#a855f7', fontWeight: 700, letterSpacing: '2px', textTransform: 'uppercase', display: 'block', marginBottom: 12 }}>Tarifs</span>
-                <div style={{ display: 'inline-flex', flexDirection: 'column', alignItems: 'center', gap: 4, background: 'linear-gradient(135deg, #a855f7, #ec4899)', borderRadius: 16, padding: '14px 32px', marginBottom: 24, boxShadow: '0 6px 28px rgba(168,85,247,0.45)' }}>
-                  <span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 900, fontSize: 34, color: 'white', lineHeight: 1, letterSpacing: '-1px' }}>-20% le 1er mois</span>
-                  <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.88)', fontWeight: 500 }}>Offre de lancement · 50 premiers clients uniquement</span>
+                <div style={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', alignItems: 'center', gap: 12, marginBottom: 24, justifyContent: 'center' }}>
+                  <div style={{ display: 'inline-flex', flexDirection: 'column', alignItems: 'center', gap: 2, background: 'rgba(29,185,84,0.15)', border: '1.5px solid rgba(29,185,84,0.4)', borderRadius: 16, padding: '12px 28px', boxShadow: '0 4px 20px rgba(29,185,84,0.20)' }}>
+                    <span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 900, fontSize: 30, color: '#4ade80', lineHeight: 1, letterSpacing: '-1px' }}>14 jours gratuits</span>
+                    <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.65)', fontWeight: 500 }}>Sans CB · Accès complet</span>
+                  </div>
+                  <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.30)' }}>+</span>
+                  <div style={{ display: 'inline-flex', flexDirection: 'column', alignItems: 'center', gap: 2, background: 'linear-gradient(135deg, rgba(168,85,247,0.2), rgba(236,72,153,0.2))', border: '1.5px solid rgba(168,85,247,0.3)', borderRadius: 16, padding: '12px 28px' }}>
+                    <span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 900, fontSize: 30, color: 'white', lineHeight: 1, letterSpacing: '-1px' }}>-20% le 1er mois</span>
+                    <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.55)', fontWeight: 500 }}>Offre de lancement · 50 premiers clients</span>
+                  </div>
                 </div>
                 <h2 style={{ fontFamily: 'Comfortaa', fontWeight: 900, fontSize: isMobile ? 28 : 38, color: 'white', letterSpacing: '-1px', marginBottom: 8 }}>Simple et transparent.</h2>
                 <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.50)', lineHeight: 1.8, maxWidth: 560, margin: '0 auto' }}>
@@ -363,20 +371,20 @@ export default function Home() {
                   <div className="plan-card"
                     onClick={() => router.push(`/souscrire?plan=${plan.nom.toLowerCase()}`)}
                     style={{ background: 'rgba(255,255,255,0.04)', backdropFilter: 'blur(12px)', borderRadius: 20, padding: '32px 24px', border: '1px solid rgba(255,255,255,0.08)', boxShadow: 'none', position: 'relative', display: 'flex', flexDirection: 'column' }}>
-                    {/* Badge 1er mois */}
-                    <div style={{ position: 'absolute', top: -11, right: 16, background: 'linear-gradient(135deg, #a855f7, #ec4899)', color: 'white', borderRadius: 6, padding: '2px 8px', fontSize: 11, fontWeight: 700 }}>
-                      -20% 1er mois
+                    {/* Badge essai gratuit */}
+                    <div style={{ position: 'absolute', top: -11, right: 16, background: 'rgba(29,185,84,0.9)', color: 'white', borderRadius: 6, padding: '2px 8px', fontSize: 11, fontWeight: 700 }}>
+                      14 jours gratuits
                     </div>
 
                     <div style={{ marginBottom: 20 }}>
                       <h3 style={{ fontFamily: 'Comfortaa', fontWeight: 800, fontSize: 22, color: 'white', marginBottom: 6 }}>{plan.nom}</h3>
                       <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)', marginBottom: 16, lineHeight: 1.5, minHeight: 40 }}>{plan.description}</p>
                       <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, marginBottom: 4 }}>
-                        <span style={{ fontFamily: 'Comfortaa', fontWeight: 900, fontSize: 36, color: 'white' }}>{formatPrix(plan.prixBase * (1 - EARLY_BIRD_DISCOUNT))} €</span>
-                        <span style={{ fontSize: 14, color: 'rgba(255,255,255,0.35)' }}>/ 1er mois</span>
+                        <span style={{ fontFamily: 'Comfortaa', fontWeight: 900, fontSize: 36, color: 'white' }}>0 €</span>
+                        <span style={{ fontSize: 14, color: 'rgba(255,255,255,0.35)' }}>/ 14 jours</span>
                       </div>
                       <div style={{ marginBottom: 12 }}>
-                        <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.45)' }}>puis {formatPrix(plan.prixBase)}€/mois</span>
+                        <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.45)' }}>puis {formatPrix(plan.prixBase * (1 - EARLY_BIRD_DISCOUNT))}€ le 1er mois (−20%), ensuite {formatPrix(plan.prixBase)}€/mois</span>
                       </div>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 6, background: plan.bg, border: `1px solid ${plan.border}`, borderRadius: 8, padding: '6px 12px' }}>
                         <span style={{ fontSize: 13, color: plan.couleur, fontWeight: 700, letterSpacing: '-0.3px' }}>{plan.commission}</span>
@@ -394,7 +402,7 @@ export default function Home() {
                       ))}
                     </div>
                     <div style={{ marginTop: 'auto', background: plan.bg, border: `1.5px solid ${plan.border}`, borderRadius: 12, padding: '12px', textAlign: 'center' }}>
-                      <span style={{ fontSize: 14, fontWeight: 700, color: plan.couleur }}>Choisir {plan.nom} →</span>
+                      <span style={{ fontSize: 14, fontWeight: 700, color: plan.couleur }}>Commencer gratuitement →</span>
                     </div>
                   </div>
                 </Reveal>
@@ -402,6 +410,112 @@ export default function Home() {
             </div>
           </div>
         </section>
+
+        {/* SIMULATEUR ROI */}
+        {(() => {
+          const nbFactures = Math.max(1, Math.round(montantImpaye / 500))
+          const planRec = montantImpaye <= 5000 ? PLANS[0] : montantImpaye <= 25000 ? PLANS[1] : PLANS[2]
+          const tauxCommission = parseFloat(planRec.commission) / 100
+          const gainBrut = montantImpaye * 0.80
+          const commission = gainBrut * tauxCommission
+          const gainNet = gainBrut - commission - planRec.prixBase
+          const roi = planRec.prixBase > 0 ? Math.round(gainNet / planRec.prixBase) : 0
+          const montantRecupere = gainBrut - commission
+          return (
+            <section style={{ padding: isMobile ? '60px 20px' : '80px 40px', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+              <div style={{ maxWidth: 800, margin: '0 auto' }}>
+                <Reveal>
+                  <div style={{ textAlign: 'center', marginBottom: 40 }}>
+                    <span style={{ fontSize: 11, color: '#a855f7', fontWeight: 700, letterSpacing: '2px', textTransform: 'uppercase' as const, display: 'block', marginBottom: 12 }}>Simulateur ROI</span>
+                    <h2 style={{ fontFamily: 'Comfortaa', fontWeight: 900, fontSize: isMobile ? 26 : 36, color: 'white', letterSpacing: '-1px', marginBottom: 8 }}>Combien allez-vous récupérer ?</h2>
+                    <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.45)', lineHeight: 1.7 }}>Estimez votre gain net avec ManaFlow en quelques secondes.</p>
+                  </div>
+                </Reveal>
+
+                <div style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 24, padding: isMobile ? '28px 20px' : '40px', backdropFilter: 'blur(12px)' }}>
+                  {/* INPUT */}
+                  <div style={{ marginBottom: 32 }}>
+                    <label style={{ display: 'block', fontSize: 14, color: 'rgba(255,255,255,0.70)', fontWeight: 600, marginBottom: 16 }}>
+                      💸 Vous avez combien d'impayés en ce moment ?
+                    </label>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap' as const }}>
+                      <div style={{ position: 'relative' as const, flex: 1, minWidth: 200 }}>
+                        <input
+                          type="number"
+                          min={500}
+                          max={500000}
+                          step={500}
+                          value={montantImpaye}
+                          onChange={e => setMontantImpaye(Math.max(500, Math.min(500000, Number(e.target.value) || 500)))}
+                          style={{ width: '100%', background: 'rgba(255,255,255,0.07)', border: '1.5px solid rgba(168,85,247,0.4)', borderRadius: 12, padding: '14px 50px 14px 16px', fontSize: 22, fontWeight: 700, color: 'white', fontFamily: 'Comfortaa, sans-serif', outline: 'none' }}
+                        />
+                        <span style={{ position: 'absolute' as const, right: 16, top: '50%', transform: 'translateY(-50%)', fontSize: 18, color: 'rgba(255,255,255,0.40)', fontWeight: 700 }}>€</span>
+                      </div>
+                      <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.35)', whiteSpace: 'nowrap' as const }}>≈ {nbFactures} facture{nbFactures > 1 ? 's' : ''} impayée{nbFactures > 1 ? 's' : ''}</span>
+                    </div>
+                    <input
+                      type="range"
+                      min={500}
+                      max={100000}
+                      step={500}
+                      value={Math.min(montantImpaye, 100000)}
+                      onChange={e => setMontantImpaye(Number(e.target.value))}
+                      style={{ width: '100%', marginTop: 14, accentColor: '#a855f7', height: 6, cursor: 'pointer' }}
+                    />
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 4 }}>
+                      <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.25)' }}>500 €</span>
+                      <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.25)' }}>100 000 €</span>
+                    </div>
+                  </div>
+
+                  {/* RÉSULTATS */}
+                  <div style={{ background: 'rgba(168,85,247,0.07)', border: '1px solid rgba(168,85,247,0.20)', borderRadius: 16, padding: isMobile ? '20px' : '28px 32px', marginBottom: 24 }}>
+                    <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)', marginBottom: 20, fontWeight: 500 }}>
+                      Avec ManaFlow ({planRec.nom} — recommandé pour votre volume) :
+                    </p>
+                    <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(2,1fr)', gap: 16, marginBottom: 20 }}>
+                      {[
+                        { label: 'Montant potentiellement récupéré', value: `${gainBrut.toLocaleString('fr-FR', { maximumFractionDigits: 0 })} €`, sub: '(80% de taux de recouvrement moyen)', color: 'white' },
+                        { label: 'Commission ManaFlow', value: `−${commission.toLocaleString('fr-FR', { maximumFractionDigits: 0 })} €`, sub: `(${planRec.commission} sur le récupéré)`, color: '#fca5a5' },
+                        { label: 'Abonnement mensuel', value: `−${formatPrix(planRec.prixBase)} €/mois`, sub: `Plan ${planRec.nom}`, color: 'rgba(255,255,255,0.55)' },
+                        { label: 'Net encaissé par vous', value: `+${montantRecupere.toLocaleString('fr-FR', { maximumFractionDigits: 0 })} €`, sub: `après notre commission`, color: '#4ade80' },
+                      ].map((item, i) => (
+                        <div key={i} style={{ padding: '14px 16px', background: 'rgba(255,255,255,0.04)', borderRadius: 12, border: '1px solid rgba(255,255,255,0.06)' }}>
+                          <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.45)', marginBottom: 6 }}>{item.label}</p>
+                          <p style={{ fontFamily: 'Comfortaa', fontWeight: 900, fontSize: 20, color: item.color, letterSpacing: '-0.5px' }}>{item.value}</p>
+                          <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.30)', marginTop: 2 }}>{item.sub}</p>
+                        </div>
+                      ))}
+                    </div>
+                    {/* Gain net total + ROI */}
+                    <div style={{ background: 'linear-gradient(135deg, rgba(29,185,84,0.15), rgba(74,222,128,0.10))', border: '1.5px solid rgba(29,185,84,0.35)', borderRadius: 14, padding: '20px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap' as const, gap: 16 }}>
+                      <div>
+                        <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.50)', marginBottom: 4 }}>Votre gain net estimé</p>
+                        <p style={{ fontFamily: 'Comfortaa', fontWeight: 900, fontSize: isMobile ? 32 : 42, color: gainNet >= 0 ? '#4ade80' : '#fca5a5', letterSpacing: '-1px' }}>
+                          {gainNet >= 0 ? '+' : ''}{gainNet.toLocaleString('fr-FR', { maximumFractionDigits: 0 })} €
+                        </p>
+                      </div>
+                      {roi > 0 && (
+                        <div style={{ textAlign: 'right' as const }}>
+                          <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.50)', marginBottom: 4 }}>Retour sur investissement</p>
+                          <p style={{ fontFamily: 'Comfortaa', fontWeight: 900, fontSize: isMobile ? 28 : 38, color: '#4ade80', letterSpacing: '-1px' }}>{roi}x</p>
+                          <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)' }}>votre abonnement</p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  <button className="btn-primary" onClick={() => router.push(`/souscrire?plan=${planRec.nom.toLowerCase()}`)} style={{ width: '100%', justifyContent: 'center', fontSize: 15, padding: '16px' }}>
+                    Commencer avec le plan {planRec.nom} — 14 jours gratuits →
+                  </button>
+                  <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.25)', textAlign: 'center' as const, marginTop: 10 }}>
+                    Estimation basée sur un taux de recouvrement moyen de 80%. Résultats variables selon les cas.
+                  </p>
+                </div>
+              </div>
+            </section>
+          )
+        })()}
 
         {/* CTA FINAL */}
         <section style={{ padding: isMobile ? '60px 20px' : '100px 40px', borderTop: '1px solid rgba(255,255,255,0.06)', position: 'relative', overflow: 'hidden' }}>
@@ -417,9 +531,9 @@ export default function Home() {
                 Nous serons votre allié pour la gestion de vos impayés.
               </p>
               <button className="btn-primary" onClick={() => router.push('/souscrire')} style={{ fontSize: 15, padding: '14px 32px' }}>
-                Souscrire maintenant
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" /></svg>
+                Essayer gratuitement 14 jours →
               </button>
+              <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.25)', marginTop: 12 }}>Sans CB requise · Sans engagement · Accès complet pendant 14 jours</p>
             </div>
           </Reveal>
         </section>
