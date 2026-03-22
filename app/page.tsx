@@ -97,6 +97,7 @@ export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
   const [montantImpaye, setMontantImpaye] = useState(0)
+  const [inputStr, setInputStr] = useState('')
   const [planManuel, setPlanManuel] = useState<string | null>(null)
 
   useEffect(() => {
@@ -403,11 +404,17 @@ export default function Home() {
 
         {/* SIMULATEUR ROI */}
         {(() => {
-          const planAuto = montantImpaye <= 5000 ? PLANS[0] : montantImpaye <= 25000 ? PLANS[1] : PLANS[2]
+          const montant = Math.max(0, Math.min(1000000, montantImpaye))
+          const planAuto = montant <= 5000 ? PLANS[0] : montant <= 25000 ? PLANS[1] : PLANS[2]
           const planActif = planManuel ? PLANS.find(p => p.nom === planManuel) || planAuto : planAuto
           const tauxCommission = parseFloat(planActif.commission) / 100
-          const gainBrut = montantImpaye * 0.80
-          const commission = gainBrut * tauxCommission
+          const gainBrut = montant * 0.80
+          // Commission = max(taux%, 5€ min par facture recouvrée)
+          const nbFactures = Math.max(1, Math.round(montant / 500))
+          const nbRecouvertes = Math.ceil(nbFactures * 0.80)
+          const commissionPct = gainBrut * tauxCommission
+          const commissionMin = nbRecouvertes * 5
+          const commission = Math.max(commissionPct, commissionMin)
           const gainNet = gainBrut - commission - planActif.prixBase
           const roi = planActif.prixBase > 0 ? Math.round(gainNet / planActif.prixBase) : 0
           return (
@@ -426,12 +433,22 @@ export default function Home() {
                     <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' as const, marginBottom: 10 }}>
                       <div style={{ position: 'relative' as const, flex: 1, minWidth: 160 }}>
                         <input
-                          type="number"
-                          min={0}
-                          max={1000000}
-                          step={500}
-                          value={montantImpaye}
-                          onChange={e => setMontantImpaye(Math.max(0, Math.min(1000000, Number(e.target.value) || 0)))}
+                          type="text"
+                          inputMode="numeric"
+                          placeholder="Ex : 5 000"
+                          value={inputStr}
+                          onChange={e => {
+                            const raw = e.target.value.replace(/\s/g, '')
+                            setInputStr(e.target.value)
+                            const num = parseInt(raw, 10)
+                            if (!isNaN(num)) setMontantImpaye(Math.min(1000000, num))
+                            else if (raw === '' || raw === '0') setMontantImpaye(0)
+                          }}
+                          onBlur={() => {
+                            const clamped = Math.max(0, Math.min(1000000, montantImpaye))
+                            setMontantImpaye(clamped)
+                            setInputStr(clamped > 0 ? clamped.toLocaleString('fr-FR') : '')
+                          }}
                           style={{ width: '100%', background: 'rgba(255,255,255,0.07)', border: '1.5px solid rgba(168,85,247,0.35)', borderRadius: 10, padding: '10px 40px 10px 14px', fontSize: 18, fontWeight: 700, color: 'white', fontFamily: 'Comfortaa, sans-serif', outline: 'none' }}
                         />
                         <span style={{ position: 'absolute' as const, right: 12, top: '50%', transform: 'translateY(-50%)', fontSize: 15, color: 'rgba(255,255,255,0.35)', fontWeight: 700 }}>€</span>
@@ -444,7 +461,11 @@ export default function Home() {
                       max={1000000}
                       step={500}
                       value={montantImpaye}
-                      onChange={e => setMontantImpaye(Number(e.target.value))}
+                      onChange={e => {
+                        const v = Number(e.target.value)
+                        setMontantImpaye(v)
+                        setInputStr(v > 0 ? v.toLocaleString('fr-FR') : '')
+                      }}
                       style={{ width: '100%', accentColor: '#a855f7', cursor: 'pointer' }}
                     />
                   </div>
@@ -468,7 +489,7 @@ export default function Home() {
                   <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr 1fr' : 'repeat(3,1fr)', gap: 8, marginBottom: 16 }}>
                     {[
                       { label: 'Récupéré (80%)', value: `${gainBrut.toLocaleString('fr-FR', { maximumFractionDigits: 0 })} €`, color: 'white' },
-                      { label: `Commission (${planActif.commission})`, value: `−${commission.toLocaleString('fr-FR', { maximumFractionDigits: 0 })} €`, color: '#fca5a5' },
+                      { label: `Commission (${planActif.commission}, min 5€/facture)`, value: `−${commission.toLocaleString('fr-FR', { maximumFractionDigits: 0 })} €`, color: '#fca5a5' },
                       { label: `Abonnement ${planActif.nom}`, value: `−${formatPrix(planActif.prixBase)} €/mois`, color: 'rgba(255,255,255,0.45)' },
                     ].map((item, i) => (
                       <div key={i} style={{ padding: '10px 12px', background: 'rgba(255,255,255,0.03)', borderRadius: 10, border: '1px solid rgba(255,255,255,0.06)' }}>

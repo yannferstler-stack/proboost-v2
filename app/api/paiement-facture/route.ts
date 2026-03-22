@@ -110,7 +110,7 @@ export async function POST(request: NextRequest) {
     // ── 4. Activer Stripe Connect si le ManaFlow a un compte connecté ──
     if (profile?.stripe_connect_account_id) {
       const plan = profile.plan || 'starter'
-      const feePercent = plan === 'pro' ? 7 : plan === 'premium' ? 8 : 10
+      const feePercent = plan === 'pro' ? 10 : plan === 'premium' ? 12 : 14
       const feeAmount = Math.max(
         Math.round((montantCentimes * feePercent) / 100),
         500 // minimum 5€

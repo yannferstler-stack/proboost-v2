@@ -7,7 +7,7 @@ export async function POST(req: NextRequest) {
   try {
     const { amount, connectedAccountId, plan } = await req.json();
 
-    const feePercent = plan === "pro" ? 7 : plan === "premium" ? 8 : 10;
+    const feePercent = plan === "pro" ? 10 : plan === "premium" ? 12 : 14;
 
     const feeAmount = Math.max(
       Math.round((amount * feePercent) / 100),
