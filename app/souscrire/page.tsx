@@ -70,7 +70,7 @@ function SouscrireContent() {
       const res = await fetch('/api/create-checkout-session', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ plan: selectedPlan }),
+        body: JSON.stringify({ plan: selectedPlan, cgv_accepted: true }),
       })
       const data = await res.json()
       if (data.url) window.location.href = data.url
@@ -139,7 +139,7 @@ function SouscrireContent() {
             <div style={{ marginBottom: 24 }}>
               <span style={{ fontSize: 11, color: '#a855f7', fontWeight: 700, letterSpacing: '2px', textTransform: 'uppercase' }}>Souscription</span>
               <h1 style={{ fontFamily: 'Comfortaa', fontWeight: 900, fontSize: isMobile ? 24 : 32, color: 'white', letterSpacing: '-1px', marginTop: 6, marginBottom: 6 }}>Choisissez votre plan</h1>
-              <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.45)' }}>Abonnement mensuel sans engagement — résiliable à tout moment.</p>
+              <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.65)' }}>Abonnement mensuel sans engagement — résiliable à tout moment.</p>
             </div>
 
             {/* PLANS */}
@@ -160,7 +160,7 @@ function SouscrireContent() {
                             <span style={{ fontFamily: 'Comfortaa', fontWeight: 800, fontSize: 16, color: 'white' }}>{p.nom}</span>
                             {p.popular && <span style={{ fontSize: 11, background: 'linear-gradient(135deg, #a855f7, #ec4899)', color: 'white', borderRadius: 20, padding: '2px 8px', fontWeight: 700 }}>Recommandé</span>}
                           </div>
-                          <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.40)' }}>{p.description}</span>
+                          <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.60)' }}>{p.description}</span>
                         </div>
                       </div>
                       <div style={{ textAlign: 'right', flexShrink: 0 }}>
@@ -224,7 +224,7 @@ function SouscrireContent() {
                   <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.35)' }}>/ aujourd'hui</span>
                 </div>
                 <div style={{ marginBottom: 6 }}>
-                  <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.45)' }}>puis {formatPrix(plan.prixBase)}€/mois</span>
+                  <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.65)' }}>puis {formatPrix(plan.prixBase)}€/mois</span>
                 </div>
                 <span style={{ fontSize: 12, color: plan.couleur, fontWeight: 600 }}>+ {plan.commission} prélevé sur chaque facture recouvrée</span>
               </div>

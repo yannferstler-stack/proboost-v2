@@ -128,7 +128,7 @@ export default function NousConnaitrePage() {
                 Yann a passé dix ans dans la finance. Il y a vu de grandes entreprises développer des modèles économiques extrêmement complexes et des entrepreneurs bâtir de véritables succès. Mais il a aussi observé un paradoxe étonnant : les impayés sont presque toujours procrastinés. La solution est souvent simple, mais personne n'a vraiment envie de s'en occuper.
               </p>
               <div style={{ marginTop: 20, paddingTop: 20, borderTop: '1px solid rgba(255,255,255,0.08)' }}>
-                <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)', lineHeight: 1.7, fontStyle: 'italic' }}>
+                <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.65)', lineHeight: 1.7, fontStyle: 'italic' }}>
                   « Alors une idée est née : utiliser l'intelligence artificielle pour créer un outil simple et efficace, capable de gérer ces relances sans friction. »
                 </p>
               </div>
@@ -148,7 +148,7 @@ export default function NousConnaitrePage() {
                 Anne-Sophie travaille dans le marketing et la communication depuis près de quinze ans. Fille de tapissier décorateur, elle se souvient avoir aidé son père à faire ses factures sur Word lorsque les ordinateurs sont arrivés dans les foyers. Très tôt, elle a constaté l'approximation qui peut exister chez certains artisans dès qu'il s'agit d'administratif ou de relances.
               </p>
               <div style={{ marginTop: 20, paddingTop: 20, borderTop: '1px solid rgba(255,255,255,0.08)' }}>
-                <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)', lineHeight: 1.7, fontStyle: 'italic' }}>
+                <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.65)', lineHeight: 1.7, fontStyle: 'italic' }}>
                   « La relation client est précieuse et ne doit jamais être abîmée, car elle est souvent la clé de la pérennité d'une entreprise. »
                 </p>
               </div>
@@ -201,7 +201,7 @@ export default function NousConnaitrePage() {
               ].map((s, i) => (
                 <div key={i} style={{ textAlign: 'center', padding: isMobile ? '28px 20px' : '20px 36px', borderRight: !isMobile && i < 2 ? '1px solid rgba(255,255,255,0.06)' : 'none', borderBottom: isMobile && i < 2 ? '1px solid rgba(255,255,255,0.06)' : 'none' }}>
                   <p style={{ fontFamily: 'Comfortaa', fontWeight: 900, fontSize: isMobile ? 40 : 48, color: s.color, letterSpacing: '-2px', marginBottom: 8 }}>{s.value}</p>
-                  <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.40)', lineHeight: 1.6, maxWidth: 180, margin: '0 auto' }}>{s.label}</p>
+                  <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.60)', lineHeight: 1.6, maxWidth: 180, margin: '0 auto' }}>{s.label}</p>
                 </div>
               ))}
             </div>
@@ -215,11 +215,11 @@ export default function NousConnaitrePage() {
           <h2 style={{ fontFamily: 'Comfortaa', fontWeight: 900, fontSize: isMobile ? 26 : 36, color: 'white', letterSpacing: '-1px', marginBottom: 14 }}>
             Prêt à nous faire confiance ?
           </h2>
-          <p style={{ color: 'rgba(255,255,255,0.40)', fontSize: 14, marginBottom: 28, maxWidth: 400, margin: '0 auto 28px' }}>
+          <p style={{ color: 'rgba(255,255,255,0.60)', fontSize: 14, marginBottom: 28, maxWidth: 400, margin: '0 auto 28px' }}>
             Rejoignez les entrepreneurs qui ont décidé de se concentrer sur leur métier et de nous confier leurs impayés.
           </p>
           <button className="btn-cta" onClick={() => router.push('/souscrire')} style={{ width: isMobile ? '100%' : 'auto' }}>
-            Souscrire un abonnement →
+            Commencer gratuitement — 14 jours d&apos;essai →
           </button>
         </section>
 

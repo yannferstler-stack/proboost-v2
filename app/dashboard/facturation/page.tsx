@@ -45,6 +45,29 @@ export default function FacturationPage() {
   const currentPlan = PLANS[plan]
   const calcCommission = (montant: number) => Math.max(montant * currentPlan.taux, COMMISSION_MIN)
 
+  const exportCSV = () => {
+    const header = ['Client', 'N° Facture', 'Montant TTC (€)', 'Commission (€)', 'Net perçu (€)', 'Date']
+    const rows = factures.map(f => {
+      const montant = Number(f.montant)
+      const commission = calcCommission(montant)
+      const net = montant - commission
+      return [
+        f.client_nom || '',
+        f.numero_facture || '',
+        montant.toFixed(2),
+        commission.toFixed(2),
+        net.toFixed(2),
+        new Date(f.created_at).toLocaleDateString('fr-FR'),
+      ]
+    })
+    const csv = [header, ...rows].map(r => r.map(v => `"${String(v).replace(/"/g, '""')}"`).join(';')).join('\n')
+    const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url; a.download = `manaflow-facturation-${new Date().toISOString().slice(0,10)}.csv`
+    a.click(); URL.revokeObjectURL(url)
+  }
+
   const totalRecouvre = factures.reduce((sum, f) => sum + Number(f.montant), 0)
   const totalCommission = factures.reduce((sum, f) => sum + calcCommission(Number(f.montant)), 0)
   const totalNet = totalRecouvre - totalCommission
@@ -140,9 +163,18 @@ export default function FacturationPage() {
             </div>
           ) : (
             <div style={{ background: 'white', borderRadius: 16, overflow: 'hidden', boxShadow: '0 1px 4px rgba(0,0,0,0.06)', border: '1px solid #EAECEF', animation: 'fadeUp 0.4s ease 0.15s both' }}>
-              <div style={{ padding: '18px 24px', borderBottom: '1px solid #EAECEF', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <h2 style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 700, fontSize: 15, color: '#111' }}>Détail par facture</h2>
-                <span style={{ fontSize: 12, color: '#9CA3AF', background: '#F4F6F8', padding: '3px 10px', borderRadius: 20, fontWeight: 500 }}>{factures.length} facture{factures.length > 1 ? 's' : ''}</span>
+              <div style={{ padding: '18px 24px', borderBottom: '1px solid #EAECEF', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 10 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                  <h2 style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 700, fontSize: 15, color: '#111' }}>Détail par facture</h2>
+                  <span style={{ fontSize: 12, color: '#9CA3AF', background: '#F4F6F8', padding: '3px 10px', borderRadius: 20, fontWeight: 500 }}>{factures.length} facture{factures.length > 1 ? 's' : ''}</span>
+                </div>
+                <button onClick={exportCSV}
+                  style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'white', border: '1.5px solid #EAECEF', borderRadius: 8, padding: '7px 14px', fontSize: 12, fontWeight: 600, color: '#6B7280', cursor: 'pointer', fontFamily: 'Inter, sans-serif', transition: 'all 0.15s' }}
+                  onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = '#a855f7'; (e.currentTarget as HTMLButtonElement).style.color = '#a855f7' }}
+                  onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = '#EAECEF'; (e.currentTarget as HTMLButtonElement).style.color = '#6B7280' }}>
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                  Exporter CSV
+                </button>
               </div>
               <div style={{ overflowX: 'auto' }}>
               <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 640 }}>
