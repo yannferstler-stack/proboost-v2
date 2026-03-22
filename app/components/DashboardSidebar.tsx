@@ -9,7 +9,6 @@ const NAV_ITEMS = [
   { label: 'Importer', href: '/dashboard/importer', icon: '📤' },
   { label: 'Facturation', href: '/dashboard/facturation', icon: '🧾' },
   { label: 'Paramètres', href: '/dashboard/settings', icon: '⚙️' },
-  { label: 'Plans', href: '/dashboard/pricing', icon: '💎' },
 ]
 
 const LOGO_FILTER = 'drop-shadow(0 0 14px rgba(236,72,153,0.6)) drop-shadow(0 0 4px rgba(168,85,247,0.4))'
