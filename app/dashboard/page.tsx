@@ -60,8 +60,9 @@ export default function Dashboard() {
 
   useEffect(() => {
     const getUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser()
-      if (!user) { router.push('/login'); return }
+      const { data: { session } } = await supabase.auth.getSession()
+      if (!session) { router.push('/login'); return }
+      const user = session.user
       setUser(user)
       const { data: profileData } = await supabase.from('profiles').select('*').eq('id', user.id).single()
       setProfile(profileData)
@@ -75,7 +76,7 @@ export default function Dashboard() {
       const lastTotal = parseFloat(typeof window !== 'undefined' ? (localStorage.getItem(key) || '0') : '0')
       const diff = Math.max(0, totalActuel - lastTotal)
       if (typeof window !== 'undefined') localStorage.setItem(key, String(totalActuel))
-      const rawPrenom = (profileData?.full_name || user.email || '').split(/[@\s]/)[0]
+      const rawPrenom = (profileData?.full_name || user.email || '').split(/[@\s.]/)[0]
       const prenom = rawPrenom.charAt(0).toUpperCase() + rawPrenom.slice(1).toLowerCase()
       setWelcome({ prenom, euros: diff, isNew: lastTotal === 0 && totalActuel === 0 })
       setShowWelcome(true)
@@ -173,6 +174,10 @@ export default function Dashboard() {
   }
 
   const handleActiverSequence = async (facture: Facture) => {
+    if (!profile?.stripe_connect_account_id) {
+      alert('⚠️ Connectez d\'abord votre compte Stripe dans les Paramètres pour activer les relances. Sans Stripe, le paiement n\'est pas possible pour vos clients.')
+      return
+    }
     const limite = getLimiteRelances()
     if ((facture.nombre_relances || 0) >= limite) return
     const now = new Date().toISOString()
@@ -262,6 +267,10 @@ export default function Dashboard() {
   }
 
   const handleRelancerMaintenant = async (facture: Facture) => {
+    if (!profile?.stripe_connect_account_id) {
+      alert('⚠️ Connectez d\'abord votre compte Stripe dans les Paramètres pour envoyer des relances. Sans Stripe, le paiement n\'est pas possible pour vos clients.')
+      return
+    }
     if (!facture.client_email) { setRelanceMsg({ id: facture.id, ok: false }); setTimeout(() => setRelanceMsg(null), 3000); return }
     setRelancingId(facture.id)
     try {

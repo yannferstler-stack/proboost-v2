@@ -1,6 +1,7 @@
 'use client'
 import { useState, useEffect } from 'react'
 import { createClient } from '../../lib/supabase'
+import { DashboardSidebar } from '../../components/DashboardSidebar'
 
 export default function AnalyticsPage() {
   const [user, setUser] = useState<any>(null)
@@ -10,8 +11,9 @@ export default function AnalyticsPage() {
 
   useEffect(() => {
     const getData = async () => {
-      const { data: { user } } = await supabase.auth.getUser()
-      if (!user) { window.location.href = '/login'; return }
+      const { data: { session } } = await supabase.auth.getSession()
+      if (!session) { window.location.href = '/login'; return }
+      const user = session.user
       setUser(user)
       const { data } = await supabase
         .from('factures')
@@ -80,7 +82,7 @@ export default function AnalyticsPage() {
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@700;800&family=Comfortaa:wght@700;800&family=Yeseva+One&display=swap');
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         body { background: #F4F6F8; }
         @keyframes spin { to { transform: rotate(360deg); } }
@@ -90,52 +92,24 @@ export default function AnalyticsPage() {
         .card { transition: box-shadow 0.2s, transform 0.2s; }
         .card:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(168,85,247,0.10) !important; }
         .row-hover:hover { background: #FAFAFA !important; }
+        .desktop-sidebar { display: flex; }
+        .mobile-topbar { display: none; }
+        .mobile-sidebar { display: none; }
+        @media (max-width: 768px) {
+          .desktop-sidebar { display: none !important; }
+          .mobile-topbar { display: flex !important; }
+          .analytics-content { margin-left: 0 !important; padding: 80px 16px 24px !important; }
+          .analytics-stats-grid { grid-template-columns: 1fr !important; }
+          .analytics-row2 { grid-template-columns: 1fr !important; }
+        }
       `}</style>
 
       <div style={{ display: 'flex', minHeight: '100vh', fontFamily: 'Inter, sans-serif', background: '#F4F6F8' }}>
 
-        {/* SIDEBAR */}
-        <aside style={{ width: 240, background: 'white', borderRight: '1px solid #EAECEF', display: 'flex', flexDirection: 'column', padding: '24px 16px', position: 'fixed', top: 0, left: 0, height: '100vh' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 2, padding: '0 8px', marginBottom: 36 }}>
-            <img src="/logo.png" style={{ height: 44, width: 'auto', objectFit: 'contain' }} />
-            <span onClick={() => window.location.href = '/'} style={{ fontSize: 22, color: '#111', cursor: 'pointer' }}>
-              <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: 'italic', fontWeight: 700 }}>Mana</span>
-              <span style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 400 }}>flow</span>
-            </span>
-          </div>
-          <nav style={{ display: 'flex', flexDirection: 'column', gap: 4, flex: 1 }}>
-            {[
-              { label: 'Tableau de bord', href: '/dashboard', active: false },
-              { label: 'Analytics', href: '/dashboard/analytics', active: true },
-              { label: 'Importer', href: '/dashboard/importer', active: false },
-              { label: 'Facturation', href: '/dashboard/facturation', active: false },
-              { label: 'Paramètres', href: '/dashboard/settings', active: false },
-            ].map(item => (
-              <div key={item.label} className="sidebar-link"
-                onClick={() => window.location.href = item.href}
-                style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 12px', color: item.active ? '#a855f7' : '#6B7280', fontSize: 14, fontWeight: item.active ? 600 : 400, background: item.active ? 'rgba(168,85,247,0.08)' : 'transparent' }}>
-                {item.label}
-              </div>
-            ))}
-          </nav>
-          <div style={{ borderTop: '1px solid #EAECEF', paddingTop: 16 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 12px' }}>
-              <div style={{ width: 32, height: 32, background: 'linear-gradient(135deg, #a855f7, #ec4899)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                <span style={{ fontSize: 13, color: 'white', fontWeight: 700 }}>{user?.email?.[0]?.toUpperCase()}</span>
-              </div>
-              <div style={{ flex: 1, overflow: 'hidden' }}>
-                <p style={{ fontSize: 12, fontWeight: 600, color: '#111', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{user?.email}</p>
-                <button onClick={async () => { await supabase.auth.signOut(); window.location.href = '/login' }}
-                  style={{ fontSize: 11, color: '#999', background: 'none', border: 'none', cursor: 'pointer', padding: 0, fontFamily: 'Inter, sans-serif' }}>
-                  Déconnexion
-                </button>
-              </div>
-            </div>
-          </div>
-        </aside>
+        <DashboardSidebar user={user} title="Analyses" />
 
         {/* CONTENU */}
-        <div style={{ marginLeft: 240, flex: 1, padding: '32px 32px', minWidth: 0 }}>
+        <div className="analytics-content" style={{ marginLeft: 240, flex: 1, padding: '32px 32px', minWidth: 0 }}>
 
           {/* HEADER */}
           <div style={{ marginBottom: 32, animation: 'fadeUp 0.4s ease both' }}>
@@ -159,7 +133,7 @@ export default function AnalyticsPage() {
           ) : (
             <>
               {/* LIGNE 1 : 3 stat cards */}
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 20, marginBottom: 24, animation: 'fadeUp 0.4s ease 0.05s both' }}>
+              <div className="analytics-stats-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 20, marginBottom: 24, animation: 'fadeUp 0.4s ease 0.05s both' }}>
 
                 {/* Taux de recouvrement + arc SVG */}
                 <div className="card" style={{ background: 'white', borderRadius: 16, padding: '24px 20px', boxShadow: '0 1px 4px rgba(0,0,0,0.06)', border: '1px solid #EAECEF', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -237,7 +211,7 @@ export default function AnalyticsPage() {
               </div>
 
               {/* LIGNE 2 : Graphique + Top 5 */}
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, animation: 'fadeUp 0.4s ease 0.10s both' }}>
+              <div className="analytics-row2" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, animation: 'fadeUp 0.4s ease 0.10s both' }}>
 
                 {/* Graphique mensuel */}
                 <div className="card" style={{ background: 'white', borderRadius: 16, padding: '24px 20px', boxShadow: '0 1px 4px rgba(0,0,0,0.06)', border: '1px solid #EAECEF' }}>
