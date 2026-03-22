@@ -60,7 +60,7 @@ export default function NousConnaitrePage() {
           <div style={{ height: 72, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 20px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 20, cursor: 'pointer' }} onClick={() => router.push('/')}>
               <img src="/logo.png" style={{ height: 44, width: 'auto', objectFit: 'contain' }} />
-              <span style={{ fontSize: 22, color: 'white' }}><span style={{ fontFamily: "'Yeseva One', serif" }}>Mana</span><span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 400 }}>flow</span></span>
+              <span style={{ fontSize: 22, color: 'white' }}><span style={{ fontFamily: "'Yeseva One', serif", fontWeight: 700 }}>Mana</span><span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 400 }}>flow</span></span>
             </div>
             <div className="nav-links">
               <span className="nav-a" onClick={() => router.push('/')} style={{ fontSize: 14 }}>Accueil</span>
@@ -160,7 +160,7 @@ export default function NousConnaitrePage() {
         <section style={{ borderTop: '1px solid rgba(255,255,255,0.06)', padding: isMobile ? '56px 20px' : '80px 40px', position: 'relative', zIndex: 1 }}>
           <div style={{ maxWidth: 800, margin: '0 auto', textAlign: 'center' }}>
             <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.25)', fontWeight: 600, letterSpacing: '3px', textTransform: 'uppercase', display: 'block', marginBottom: 18 }}>Notre mission</span>
-            <h2 style={{ fontFamily: 'Yeseva One', fontSize: 'clamp(22px, 4vw, 44px)', color: 'white', lineHeight: 1.3, marginBottom: 24, letterSpacing: '-0.5px' }}>
+            <h2 style={{ fontFamily: 'Yeseva One', fontWeight: 700, fontSize: 'clamp(22px, 4vw, 44px)', color: 'white', lineHeight: 1.3, marginBottom: 24, letterSpacing: '-0.5px' }}>
               Contribuer, à notre échelle,<br className="mission-br"/>à faire vivre l&apos;économie française.
             </h2>
             <p style={{ fontSize: isMobile ? 15 : 17, color: 'rgba(255,255,255,0.55)', lineHeight: 1.85, fontWeight: 300, maxWidth: 560, margin: '0 auto' }}>
@@ -228,7 +228,7 @@ export default function NousConnaitrePage() {
           <div className="footer-inner" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: isMobile ? 16 : 0 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 20, cursor: 'pointer' }} onClick={() => router.push('/')}>
               <img src="/logo.png" style={{ height: 44, width: 'auto', objectFit: 'contain' }} />
-              <span style={{ fontSize: 15, color: 'white' }}><span style={{ fontFamily: "'Yeseva One', serif" }}>Mana</span><span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 400 }}>flow</span></span>
+              <span style={{ fontSize: 15, color: 'white' }}><span style={{ fontFamily: "'Yeseva One', serif", fontWeight: 700 }}>Mana</span><span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 400 }}>flow</span></span>
             </div>
             <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.25)', textAlign: 'center' }}>© 2025 ManaFlow — Tous droits réservés</p>
             <div style={{ display: 'flex', gap: 20 }}>

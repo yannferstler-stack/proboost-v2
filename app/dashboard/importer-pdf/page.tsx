@@ -72,7 +72,7 @@ export default function ImporterPDF() {
         <aside style={{ width: 240, background: 'white', borderRight: '1px solid #EAECEF', display: 'flex', flexDirection: 'column', padding: '24px 16px', position: 'fixed', top: 0, left: 0, height: '100vh' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 2, padding: '0 8px', marginBottom: 36 }}>
             <img src="/logo.png" alt="ManaFlow" style={{ height: 44, width: 'auto', objectFit: 'contain' }} />
-            <span style={{ fontSize: 22, color: '#111' }}><span style={{ fontFamily: "'Yeseva One', serif" }}>Mana</span><span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 400 }}>flow</span></span>
+            <span style={{ fontSize: 22, color: '#111' }}><span style={{ fontFamily: "'Yeseva One', serif", fontWeight: 700 }}>Mana</span><span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 400 }}>flow</span></span>
           </div>
           <nav style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
             <div onClick={() => window.location.href = '/dashboard'} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 12px', color: '#6B7280', fontSize: 14, cursor: 'pointer', borderRadius: 8 }}>

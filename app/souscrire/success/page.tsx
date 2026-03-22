@@ -167,7 +167,7 @@ function SuccessContent() {
         <nav style={{ background: 'white', borderBottom: '1px solid #EAECEF', height: 60, display: 'flex', alignItems: 'center', padding: '0 40px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 2 }}>
             <img src="/logo.png" style={{ height: 44, width: 'auto', objectFit: 'contain' }} />
-            <span style={{ fontSize: 22, color: '#111' }}><span style={{ fontFamily: "'Yeseva One', serif" }}>Mana</span><span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 400 }}>flow</span></span>
+            <span style={{ fontSize: 22, color: '#111' }}><span style={{ fontFamily: "'Yeseva One', serif", fontWeight: 700 }}>Mana</span><span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 400 }}>flow</span></span>
           </div>
         </nav>
 
