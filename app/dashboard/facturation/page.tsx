@@ -1,7 +1,8 @@
 ﻿'use client'
-import { usePathname } from 'next/navigation'
 import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import { createClient } from '../../lib/supabase'
+import { DashboardSidebar } from '../../components/DashboardSidebar'
 
 const PLANS = {
   starter: { nom: 'Starter', taux: 0.14, couleur: '#a855f7', bg: 'rgba(168,85,247,0.10)', prix: '19,99 €/mois', desc: '10 factures · 3 relances · Email' },
@@ -11,17 +12,17 @@ const PLANS = {
 const COMMISSION_MIN = 5
 
 export default function FacturationPage() {
-  const pathname = usePathname()
   const [user, setUser] = useState<any>(null)
   const [factures, setFactures] = useState<any[]>([])
   const [plan, setPlan] = useState<'starter' | 'premium' | 'pro'>('starter')
   const [loading, setLoading] = useState(true)
   const supabase = createClient()
+  const router = useRouter()
 
   useEffect(() => {
     const getData = async () => {
       const { data: { user } } = await supabase.auth.getUser()
-      if (!user) { window.location.href = '/login'; return }
+      if (!user) { router.push('/login'); return }
       setUser(user)
       const { data: profile } = await supabase.from('profiles').select('plan').eq('id', user.id).single()
       if (profile?.plan) setPlan(profile.plan)
@@ -62,45 +63,7 @@ export default function FacturationPage() {
 
       <div style={{ display: 'flex', minHeight: '100vh', fontFamily: 'Inter, sans-serif', background: '#F4F6F8' }}>
 
-        {/* SIDEBAR */}
-        <aside style={{ width: 240, background: 'linear-gradient(180deg, #0d0620 0%, #150a30 60%, #0f0a2e 100%)', borderRight: '1px solid rgba(255,255,255,0.07)', display: 'flex', flexDirection: 'column', padding: '24px 16px', position: 'fixed', top: 0, left: 0, height: '100vh' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 2, padding: '0 8px', marginBottom: 36 }}>
-            <img src="/logo.png" style={{ height: 44, width: "auto", objectFit: "contain", filter: "drop-shadow(0 0 14px rgba(236,72,153,0.6)) drop-shadow(0 0 4px rgba(168,85,247,0.4))" }} />
-            <span onClick={() => window.location.href = '/'} style={{ fontSize: 22, color: 'white', cursor: 'pointer' }}><span style={{ fontFamily: "'Yeseva One', serif", fontWeight: 700 }}>Mana</span><span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 400 }}>flow</span></span>
-          </div>
-          <nav style={{ display: 'flex', flexDirection: 'column', gap: 4, flex: 1 }}>
-            {[
-              { label: 'Tableau de bord', href: '/dashboard', active: false },
-              { label: 'Importer', href: '/dashboard/importer', active: false },
-              { label: 'Facturation', href: '/dashboard/facturation', active: true },
-              { label: 'Paramètres', href: '/dashboard/settings', active: false },
-            ].map(item => (
-              <div key={item.label} className="sidebar-link"
-                onClick={() => window.location.href = item.href}
-                style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 12px', color: pathname === item.href ? 'white' : 'rgba(255,255,255,0.55)', fontSize: 14, fontWeight: pathname === item.href ? 600 : 400, background: pathname === item.href ? 'rgba(255,255,255,0.10)' : 'transparent' }}>
-                {item.label}
-              </div>
-            ))}
-            <div style={{ marginTop: 'auto', paddingTop: 12 }}>
-              <a href="/blog" style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '9px 12px', color: 'rgba(255,255,255,0.45)', fontSize: 13, textDecoration: 'none', borderRadius: 8 }}>📖 Blog</a>
-              <a href="/contact" style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '9px 12px', color: 'rgba(255,255,255,0.45)', fontSize: 13, textDecoration: 'none', borderRadius: 8 }}>💬 Aide &amp; contact</a>
-            </div>
-          </nav>
-          <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: 16 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 12px' }}>
-              <div style={{ width: 32, height: 32, background: 'linear-gradient(135deg, #a855f7, #ec4899)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                <span style={{ fontSize: 13, color: 'white', fontWeight: 700 }}>{user?.email?.[0]?.toUpperCase()}</span>
-              </div>
-              <div style={{ flex: 1, overflow: 'hidden' }}>
-                <p style={{ fontSize: 12, fontWeight: 600, color: 'white', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{user?.email}</p>
-                <button onClick={async () => { await supabase.auth.signOut(); window.location.href = '/login' }}
-                  style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', background: 'none', border: 'none', cursor: 'pointer', padding: 0, fontFamily: 'Inter, sans-serif' }}>
-                  Déconnexion
-                </button>
-              </div>
-            </div>
-          </div>
-        </aside>
+        <DashboardSidebar user={user} title="Facturation" />
 
         {/* CONTENU */}
         <div style={{ marginLeft: 240, flex: 1, padding: '32px 32px' }}>
@@ -123,7 +86,7 @@ export default function FacturationPage() {
                 &nbsp;·&nbsp; {currentPlan.desc}
               </p>
             </div>
-            <button onClick={() => window.location.href = '/souscrire'}
+            <button onClick={() => router.push('/souscrire')}
               style={{ background: 'white', color: '#7c3aed', border: 'none', borderRadius: 10, padding: '12px 20px', fontSize: 13, fontWeight: 700, cursor: 'pointer', fontFamily: 'Inter, sans-serif', whiteSpace: 'nowrap', boxShadow: '0 2px 10px rgba(0,0,0,0.10)' }}>
               Changer de plan →
             </button>

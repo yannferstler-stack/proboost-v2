@@ -1,8 +1,9 @@
 ﻿'use client'
-import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { createClient } from '../lib/supabase'
 import { getEmailContent } from '../lib/email-templates'
+import { DashboardSidebar } from '../components/DashboardSidebar'
 
 type Relance = {
   date: string
@@ -27,7 +28,6 @@ type Facture = {
 }
 
 export default function Dashboard() {
-  const pathname = usePathname()
   const [user, setUser] = useState<any>(null)
   const [factures, setFactures] = useState<Facture[]>([])
   const [profile, setProfile] = useState<any>(null)
@@ -45,11 +45,12 @@ export default function Dashboard() {
   const [relancingId, setRelancingId] = useState<string | null>(null)
   const [relanceMsg, setRelanceMsg] = useState<{ id: string; ok: boolean } | null>(null)
   const supabase = createClient()
+  const router = useRouter()
 
   useEffect(() => {
     const getUser = async () => {
       const { data: { user } } = await supabase.auth.getUser()
-      if (!user) { window.location.href = '/login'; return }
+      if (!user) { router.push('/login'); return }
       setUser(user)
       const { data: profileData } = await supabase.from('profiles').select('*').eq('id', user.id).single()
       setProfile(profileData)
@@ -359,45 +360,7 @@ export default function Dashboard() {
 
       <div style={{ display: 'flex', minHeight: '100vh', fontFamily: 'Inter, sans-serif', background: '#F4F6F8' }}>
 
-        {/* SIDEBAR */}
-        <aside style={{ width: 240, background: 'linear-gradient(180deg, #0d0620 0%, #150a30 60%, #0f0a2e 100%)', borderRight: '1px solid rgba(255,255,255,0.07)', display: 'flex', flexDirection: 'column', padding: '24px 16px', position: 'fixed', top: 0, left: 0, height: '100vh' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 2, padding: '0 8px', marginBottom: 36 }}>
-            <img src="/logo.png" style={{ height: 44, width: "auto", objectFit: "contain", filter: "drop-shadow(0 0 14px rgba(236,72,153,0.6)) drop-shadow(0 0 4px rgba(168,85,247,0.4))" }} />
-            <span onClick={() => window.location.href = '/'} style={{ fontSize: 22, color: 'white', cursor: 'pointer' }}><span style={{ fontFamily: "'Yeseva One', serif", fontWeight: 700 }}>Mana</span><span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 400 }}>flow</span></span>
-          </div>
-          <nav style={{ display: 'flex', flexDirection: 'column', gap: 4, flex: 1 }}>
-            {[
-              { label: 'Tableau de bord', href: '/dashboard', active: true },
-              { label: 'Importer', href: '/dashboard/importer', active: false },
-              { label: 'Facturation', href: '/dashboard/facturation', active: false },
-              { label: 'Paramètres', href: '/dashboard/settings', active: false },
-            ].map(item => (
-              <div key={item.label} className="sidebar-link"
-                onClick={() => window.location.href = item.href}
-                style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 12px', color: pathname === item.href ? 'white' : 'rgba(255,255,255,0.55)', fontSize: 14, fontWeight: pathname === item.href ? 600 : 400, background: pathname === item.href ? 'rgba(255,255,255,0.10)' : 'transparent' }}>
-                {item.label}
-              </div>
-            ))}
-            <div style={{ marginTop: 'auto', paddingTop: 12 }}>
-              <a href="/blog" style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '9px 12px', color: 'rgba(255,255,255,0.45)', fontSize: 13, textDecoration: 'none', borderRadius: 8 }}>📖 Blog</a>
-              <a href="/contact" style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '9px 12px', color: 'rgba(255,255,255,0.45)', fontSize: 13, textDecoration: 'none', borderRadius: 8 }}>💬 Aide &amp; contact</a>
-            </div>
-          </nav>
-          <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: 16 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 12px' }}>
-              <div style={{ width: 32, height: 32, background: 'linear-gradient(135deg, #a855f7, #ec4899)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                <span style={{ fontSize: 13, color: 'white', fontWeight: 700 }}>{user?.email?.[0]?.toUpperCase()}</span>
-              </div>
-              <div style={{ flex: 1, overflow: 'hidden' }}>
-                <p style={{ fontSize: 12, fontWeight: 600, color: 'white', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{user?.email}</p>
-                <button onClick={async () => { await supabase.auth.signOut(); window.location.href = '/login' }}
-                  style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', background: 'none', border: 'none', cursor: 'pointer', padding: 0, fontFamily: 'Inter, sans-serif' }}>
-                  Déconnexion
-                </button>
-              </div>
-            </div>
-          </div>
-        </aside>
+        <DashboardSidebar user={user} title="Tableau de bord" />
 
         {/* MAIN */}
         <div style={{ marginLeft: 240, flex: 1, padding: '32px 32px', minWidth: 0 }}>
@@ -411,7 +374,7 @@ export default function Dashboard() {
                   ↓ Exporter CSV
                 </button>
               )}
-              <button className="btn-main" onClick={() => window.location.href = '/dashboard/importer'}
+              <button className="btn-main" onClick={() => router.push('/dashboard/importer')}
                 style={{ color: 'white', border: 'none', borderRadius: 10, padding: '11px 22px', fontSize: 14, fontWeight: 600, cursor: 'pointer', fontFamily: 'Inter, sans-serif', boxShadow: '0 4px 16px rgba(168,85,247,0.35)' }}>
                 + Importer des factures
               </button>
@@ -433,7 +396,7 @@ export default function Dashboard() {
                 </p>
               </div>
               <button
-                onClick={() => window.location.href = '/dashboard/settings'}
+                onClick={() => router.push('/dashboard/settings')}
                 style={{ background: '#f59e0b', color: 'white', border: 'none', borderRadius: 8, padding: '9px 16px', fontSize: 13, fontWeight: 700, cursor: 'pointer', fontFamily: 'Inter, sans-serif', whiteSpace: 'nowrap', flexShrink: 0 }}>
                 Configurer →
               </button>
@@ -466,7 +429,7 @@ export default function Dashboard() {
           {!profile?.company_name && (
             <div style={{ background: '#FFF7ED', border: '1px solid #FED7AA', borderRadius: 12, padding: '14px 20px', marginBottom: 16, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <p style={{ fontSize: 13, color: '#EA580C' }}>Renseignez le nom de votre société pour personnaliser vos relances</p>
-              <button onClick={() => window.location.href = '/dashboard/settings'}
+              <button onClick={() => router.push('/dashboard/settings')}
                 style={{ background: '#EA580C', color: 'white', border: 'none', borderRadius: 8, padding: '7px 14px', fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: 'Inter, sans-serif', whiteSpace: 'nowrap' }}>
                 Configurer →
               </button>
@@ -476,7 +439,7 @@ export default function Dashboard() {
           {!isPro && (
             <div style={{ background: 'linear-gradient(135deg, #a855f7, #7c3aed)', borderRadius: 12, padding: '14px 20px', marginBottom: 20, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <p style={{ fontSize: 13, color: 'white' }}>Les relances SMS multiplient les taux de recouvrement — disponibles en <strong>Plan Pro</strong></p>
-              <button onClick={() => window.location.href = '/souscrire?plan=pro'}
+              <button onClick={() => router.push('/souscrire?plan=pro')}
                 style={{ background: 'white', color: '#7c3aed', border: 'none', borderRadius: 8, padding: '7px 14px', fontSize: 13, fontWeight: 700, cursor: 'pointer', fontFamily: 'Inter, sans-serif', whiteSpace: 'nowrap' }}>
                 Passer Pro →
               </button>
@@ -490,7 +453,7 @@ export default function Dashboard() {
                 <h2 style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 800, fontSize: 20, color: 'white', marginBottom: 6 }}>Commencez maintenant</h2>
                 <p style={{ color: 'rgba(255,255,255,0.75)', fontSize: 14 }}>Importez votre premier fichier CSV et automatisez vos relances</p>
               </div>
-              <button onClick={() => window.location.href = '/dashboard/importer'}
+              <button onClick={() => router.push('/dashboard/importer')}
                 style={{ background: 'white', color: '#a855f7', border: 'none', borderRadius: 10, padding: '12px 24px', fontSize: 14, fontWeight: 700, cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}>
                 Importer maintenant
               </button>
@@ -588,7 +551,7 @@ export default function Dashboard() {
                             <div>
                               <span style={{ fontSize: 12, color: '#9CA3AF', fontWeight: 500 }}>Limite atteinte ({nbRelances}/{limite})</span>
                               {!isPremiumOrPro && (
-                                <p style={{ fontSize: 11, color: '#a855f7', cursor: 'pointer', marginTop: 2, fontWeight: 600 }} onClick={() => window.location.href = '/souscrire'}>
+                                <p style={{ fontSize: 11, color: '#a855f7', cursor: 'pointer', marginTop: 2, fontWeight: 600 }} onClick={() => router.push('/souscrire')}>
                                   Passer Premium →
                                 </p>
                               )}
@@ -852,12 +815,12 @@ export default function Dashboard() {
             </div>
             <div style={{ display: 'flex', gap: 10 }}>
               <button
-                onClick={() => { setShowOnboarding(false); localStorage.setItem('manaflow_onboarding_done', '1'); window.location.href = '/dashboard/settings' }}
+                onClick={() => { setShowOnboarding(false); localStorage.setItem('manaflow_onboarding_done', '1'); router.push('/dashboard/settings') }}
                 style={{ flex: 1, background: '#F3F4F6', color: '#374151', border: 'none', borderRadius: 10, padding: '12px', fontSize: 14, fontWeight: 600, cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}>
                 Configurer d&apos;abord
               </button>
               <button
-                onClick={() => { setShowOnboarding(false); localStorage.setItem('manaflow_onboarding_done', '1'); window.location.href = '/dashboard/importer' }}
+                onClick={() => { setShowOnboarding(false); localStorage.setItem('manaflow_onboarding_done', '1'); router.push('/dashboard/importer') }}
                 className="btn-main"
                 style={{ flex: 1, color: 'white', border: 'none', borderRadius: 10, padding: '12px', fontSize: 14, fontWeight: 600, cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}>
                 Importer mes factures →

@@ -1,8 +1,8 @@
 ﻿'use client'
 import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { createClient } from '../../lib/supabase'
-import { usePathname } from 'next/navigation'
-
+import { DashboardSidebar } from '../../components/DashboardSidebar'
 const PLANS = [
   {
     id: 'starter',
@@ -72,14 +72,6 @@ const PLANS = [
   },
 ]
 
-const NAV_ITEMS = [
-  { label: 'Tableau de bord', href: '/dashboard', icon: '📊' },
-  { label: 'Importer', href: '/dashboard/importer', icon: '📤' },
-  { label: 'Facturation', href: '/dashboard/facturation', icon: '🧾' },
-  { label: 'Paramètres', href: '/dashboard/settings', icon: '⚙️' },
-  { label: 'Plans', href: '/dashboard/pricing', icon: '💎' },
-]
-
 export default function DashboardPricingPage() {
   const [user, setUser] = useState<any>(null)
   const [currentPlan, setCurrentPlan] = useState<string>('starter')
@@ -88,12 +80,12 @@ export default function DashboardPricingPage() {
   const [changing, setChanging] = useState(false)
   const [result, setResult] = useState<{ type: 'success' | 'error'; msg: string } | null>(null)
   const supabase = createClient()
-  const pathname = usePathname()
+  const router = useRouter()
 
   useEffect(() => {
     const getUser = async () => {
       const { data: { user } } = await supabase.auth.getUser()
-      if (!user) { window.location.href = '/login'; return }
+      if (!user) { router.push('/login'); return }
       setUser(user)
       // Fetch current plan
       const { data: profile } = await supabase
@@ -210,40 +202,7 @@ export default function DashboardPricingPage() {
 
       <div style={{ display: 'flex', minHeight: '100vh', background: '#F4F6F8', fontFamily: 'Inter, sans-serif' }}>
 
-        {/* Sidebar */}
-        <div style={{ width: 230, background: 'linear-gradient(180deg, #0d0620 0%, #150a30 60%, #0f0a2e 100%)', borderRight: '1px solid rgba(255,255,255,0.07)', padding: '24px 16px', display: 'flex', flexDirection: 'column', position: 'sticky', top: 0, height: '100vh' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 32, paddingLeft: 8, cursor: 'pointer' }} onClick={() => window.location.href = '/'}><img src="/logo.png" style={{ height: 32, width: "auto", objectFit: "contain", filter: "drop-shadow(0 0 12px rgba(236,72,153,0.6)) drop-shadow(0 0 4px rgba(168,85,247,0.4))" }} />
-            <span style={{ fontSize: 18, color: 'white' }}>
-              <span style={{ fontFamily: "'Yeseva One', serif", fontWeight: 700 }}>Mana</span>
-              <span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 400 }}>flow</span>
-            </span>
-          </div>
-          <nav style={{ flex: 1 }}>
-            {NAV_ITEMS.map(item => (
-              <a key={item.href} href={item.href} className="nav-item"
-                style={{
-                  background: pathname === item.href ? 'rgba(255,255,255,0.10)' : 'transparent',
-                  color: pathname === item.href ? 'white' : 'rgba(255,255,255,0.55)',
-                  fontWeight: pathname === item.href ? 700 : 500,
-                }}>
-                <span>{item.icon}</span>
-                <span>{item.label}</span>
-              </a>
-            ))}
-          </nav>
-          <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: 12, marginBottom: 8 }}>
-            <a href="/blog" style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '8px 14px', borderRadius: 10, textDecoration: 'none', fontSize: 13, color: 'rgba(255,255,255,0.45)', marginBottom: 2, transition: 'color 0.15s' }}>
-              📖 Blog
-            </a>
-            <a href="/contact" style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '8px 14px', borderRadius: 10, textDecoration: 'none', fontSize: 13, color: 'rgba(255,255,255,0.45)', transition: 'color 0.15s' }}>
-              💬 Aide &amp; contact
-            </a>
-          </div>
-          <button onClick={async () => { await supabase.auth.signOut(); window.location.href = '/login' }}
-            style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '10px 14px', borderRadius: 10, background: 'none', border: 'none', cursor: 'pointer', fontSize: 13, color: 'rgba(255,255,255,0.45)', fontFamily: 'Inter, sans-serif', width: '100%', textAlign: 'left' }}>
-            🚪 Déconnexion
-          </button>
-        </div>
+        <DashboardSidebar user={user} title="Plans" />
 
         {/* Main */}
         <div style={{ flex: 1, overflowY: 'auto' }}>

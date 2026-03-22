@@ -1,7 +1,8 @@
 ﻿'use client'
-import { usePathname } from 'next/navigation'
 import { useState, useEffect, useRef } from 'react'
+import { useRouter } from 'next/navigation'
 import { createClient } from '../../lib/supabase'
+import { DashboardSidebar } from '../../components/DashboardSidebar'
 
 type Mode = null | 'csv' | 'pdf'
 
@@ -26,15 +27,7 @@ type FacturePreview = {
   doublonWarning?: boolean
 }
 
-const NAV_ITEMS = [
-  { label: 'Tableau de bord', href: '/dashboard', active: false },
-  { label: 'Importer', href: '/dashboard/importer', active: true },
-  { label: 'Facturation', href: '/dashboard/facturation', active: false },
-  { label: 'Paramètres', href: '/dashboard/settings', active: false },
-]
-
 export default function ImporterPage() {
-  const pathname = usePathname()
   const [mode, setMode] = useState<Mode>(null)
   const [factures, setFactures] = useState<FacturePreview[]>([])
   const [files, setFiles] = useState<File[]>([])
@@ -44,12 +37,13 @@ export default function ImporterPage() {
   const [message, setMessage] = useState('')
   const [progress, setProgress] = useState<{ done: number; total: number } | null>(null)
   const cancelRef = useRef(false)
+  const [user, setUser] = useState<any>(null)
   const [profile, setProfile] = useState<any>(null)
   const [facturesCeMois, setFacturesCeMois] = useState(0)
   const [numerosExistants, setNumerosExistants] = useState<string[]>([])
   const [isMobile, setIsMobile] = useState(false)
-  const [sidebarOpen, setSidebarOpen] = useState(false)
   const supabase = createClient()
+  const router = useRouter()
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768)
@@ -62,6 +56,7 @@ export default function ImporterPage() {
     const loadData = async () => {
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) return
+      setUser(user)
       const { data: profileData } = await supabase.from('profiles').select('*').eq('id', user.id).single()
       setProfile(profileData)
       const debutMois = new Date(); debutMois.setDate(1); debutMois.setHours(0, 0, 0, 0)
@@ -199,7 +194,7 @@ export default function ImporterPage() {
     if (doublons.length > 0) { setMessage(`Impossible d'importer : ${doublons.length} numéro(s) déjà existant(s). Corrigez avant d'importer.`); return }
     setImporting(true)
     const { data: { session } } = await supabase.auth.getSession()
-    if (!session) { window.location.href = '/login'; return }
+    if (!session) { router.push('/login'); return }
     const valides = factures.filter(f => !f.erreur && !f.doublonWarning)
     const rows = valides.map(f => {
       const dateEcheance = f.date_echeance || ''
@@ -242,7 +237,7 @@ export default function ImporterPage() {
       ? `${data.inserted} facture${data.inserted > 1 ? 's' : ''} importée${data.inserted > 1 ? 's' : ''} · ${data.skipped} ignorée${data.skipped > 1 ? 's' : ''} (limite mensuelle)`
       : 'Factures importées avec succès !'
     setMessage(msg)
-    setTimeout(() => window.location.href = '/dashboard', 1500)
+    setTimeout(() => router.push('/dashboard'), 1500)
     setImporting(false)
   }
 
@@ -292,63 +287,7 @@ export default function ImporterPage() {
 
       <div style={{ display: 'flex', minHeight: '100vh', fontFamily: 'Inter, sans-serif', background: '#F4F6F8' }}>
 
-        {/* SIDEBAR DESKTOP */}
-        <aside className="desktop-sidebar" style={{ width: 240, background: 'linear-gradient(180deg, #0d0620 0%, #150a30 60%, #0f0a2e 100%)', borderRight: '1px solid rgba(255,255,255,0.07)', flexDirection: 'column', padding: '24px 16px', position: 'fixed', top: 0, left: 0, height: '100vh' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 2, padding: '0 8px', marginBottom: 36 }}>
-            <img src="/logo.png" style={{ height: 44, width: "auto", objectFit: "contain", filter: "drop-shadow(0 0 14px rgba(236,72,153,0.6)) drop-shadow(0 0 4px rgba(168,85,247,0.4))" }} />
-            <span onClick={() => window.location.href = '/'} style={{ fontSize: 22, color: 'white', cursor: 'pointer' }}><span style={{ fontFamily: "'Yeseva One', serif", fontWeight: 700 }}>Mana</span><span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 400 }}>flow</span></span>
-          </div>
-          <nav style={{ display: 'flex', flexDirection: 'column', gap: 4, flex: 1 }}>
-            {NAV_ITEMS.map(item => (
-              <div key={item.label} className="sidebar-link" onClick={() => window.location.href = item.href}
-                style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 12px', color: pathname === item.href ? 'white' : 'rgba(255,255,255,0.55)', fontSize: 14, fontWeight: pathname === item.href ? 600 : 400, background: pathname === item.href ? 'rgba(255,255,255,0.10)' : 'transparent' }}>
-                {item.label}
-              </div>
-            ))}
-            <div style={{ marginTop: 'auto', paddingTop: 12 }}>
-              <a href="/blog" style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '9px 12px', color: 'rgba(255,255,255,0.45)', fontSize: 13, textDecoration: 'none', borderRadius: 8 }}>📖 Blog</a>
-              <a href="/contact" style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '9px 12px', color: 'rgba(255,255,255,0.45)', fontSize: 13, textDecoration: 'none', borderRadius: 8 }}>💬 Aide &amp; contact</a>
-            </div>
-          </nav>
-        </aside>
-
-        {/* SIDEBAR MOBILE */}
-        {sidebarOpen && (
-          <>
-            <div className="sidebar-overlay" onClick={() => setSidebarOpen(false)} />
-            <div className="mobile-sidebar">
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 32 }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <div style={{ width: 32, height: 32, background: 'linear-gradient(135deg, #a855f7, #ec4899)', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <span style={{ color: 'white', fontFamily: 'Comfortaa, sans-serif', fontWeight: 800, fontSize: 14 }}>P</span>
-                  </div>
-                  <span style={{ fontSize: 22, color: 'white' }}><span style={{ fontFamily: "'Yeseva One', serif", fontWeight: 700 }}>Mana</span><span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 400 }}>flow</span></span>
-                </div>
-                <button onClick={() => setSidebarOpen(false)} style={{ background: '#F3F4F6', border: 'none', borderRadius: 8, width: 32, height: 32, cursor: 'pointer', fontSize: 18, color: '#6B7280' }}>×</button>
-              </div>
-              <nav style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-                {NAV_ITEMS.map(item => (
-                  <div key={item.label} className="sidebar-link" onClick={() => { window.location.href = item.href; setSidebarOpen(false) }}
-                    style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '12px 14px', color: pathname === item.href ? 'white' : 'rgba(255,255,255,0.55)', fontSize: 15, fontWeight: pathname === item.href ? 600 : 400, background: pathname === item.href ? 'rgba(255,255,255,0.10)' : 'transparent' }}>
-                    {item.label}
-                  </div>
-                ))}
-              </nav>
-            </div>
-          </>
-        )}
-
-        {/* TOPBAR MOBILE */}
-        <div className="mobile-topbar" style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 100, height: 60, background: 'white', borderBottom: '1px solid #EAECEF', alignItems: 'center', justifyContent: 'space-between', padding: '0 16px' }}>
-          <button onClick={() => setSidebarOpen(true)} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4 }}>
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#374151" strokeWidth="2.5" strokeLinecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-          </button>
-          <span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 800, fontSize: 16, color: '#111' }}>Importer</span>
-          <button className="export-btn" onClick={exporterCSV}
-            style={{ background: 'white', color: '#374151', border: '1.5px solid #E5E7EB', borderRadius: 8, padding: '6px 10px', fontSize: 11, fontWeight: 600, cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}>
-            Export CSV
-          </button>
-        </div>
+        <DashboardSidebar user={user} title="Importer" />
 
         {/* MAIN */}
         <div className="main-content" style={{ marginLeft: isMobile ? 0 : 240, flex: 1, padding: isMobile ? '76px 16px 24px' : '32px 32px' }}>
@@ -409,14 +348,14 @@ export default function ImporterPage() {
           {limiteAtteinte && (
             <div className="banner-row" style={{ background: '#FEF2F2', border: '1px solid #FECACA', borderRadius: 12, padding: '12px 16px', marginBottom: 16, display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 10 }}>
               <p style={{ fontSize: 13, fontWeight: 600, color: '#DC2626' }}>Limite atteinte — passez au plan supérieur.</p>
-              <button onClick={() => window.location.href = '/souscrire'} style={{ background: '#DC2626', color: 'white', border: 'none', borderRadius: 8, padding: '7px 14px', fontSize: 13, fontWeight: 700, cursor: 'pointer', fontFamily: 'Inter, sans-serif', whiteSpace: 'nowrap' }}>Changer →</button>
+              <button onClick={() => router.push('/souscrire')} style={{ background: '#DC2626', color: 'white', border: 'none', borderRadius: 8, padding: '7px 14px', fontSize: 13, fontWeight: 700, cursor: 'pointer', fontFamily: 'Inter, sans-serif', whiteSpace: 'nowrap' }}>Changer →</button>
             </div>
           )}
 
           {!limiteAtteinte && getLimiteFactures() !== Infinity && facturesCeMois >= getLimiteFactures() * 0.8 && (
             <div className="banner-row" style={{ background: '#FFF7ED', border: '1px solid #FED7AA', borderRadius: 12, padding: '12px 16px', marginBottom: 16, display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 10 }}>
               <p style={{ fontSize: 13, color: '#EA580C' }}>Il reste <strong>{placesRestantes}</strong> facture{placesRestantes > 1 ? 's' : ''} ce mois-ci</p>
-              <button onClick={() => window.location.href = '/souscrire'} style={{ background: '#EA580C', color: 'white', border: 'none', borderRadius: 8, padding: '6px 12px', fontSize: 12, fontWeight: 700, cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}>Upgrader →</button>
+              <button onClick={() => router.push('/souscrire')} style={{ background: '#EA580C', color: 'white', border: 'none', borderRadius: 8, padding: '6px 12px', fontSize: 12, fontWeight: 700, cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}>Upgrader →</button>
             </div>
           )}
 
