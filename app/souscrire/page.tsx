@@ -3,12 +3,16 @@ import { useState, useEffect } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { Suspense } from 'react'
 
+const EARLY_BIRD_DISCOUNT = 0.20
+function formatPrix(n: number) {
+  return n.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+}
+
 const PLANS = [
   {
     id: 'starter',
     nom: 'Starter',
-    prix: '19,99',
-    prixNum: 1999,
+    prixBase: 19.99,
     couleur: '#a855f7',
     bg: 'rgba(168,85,247,0.12)',
     border: 'rgba(168,85,247,0.25)',
@@ -19,8 +23,7 @@ const PLANS = [
   {
     id: 'premium',
     nom: 'Premium',
-    prix: '49,99',
-    prixNum: 4999,
+    prixBase: 49.99,
     couleur: '#ec4899',
     bg: 'rgba(236,72,153,0.12)',
     border: 'rgba(236,72,153,0.25)',
@@ -31,14 +34,13 @@ const PLANS = [
   {
     id: 'pro',
     nom: 'Pro',
-    prix: '149,99',
-    prixNum: 14999,
+    prixBase: 149.99,
     couleur: '#c084fc',
     bg: 'rgba(192,132,252,0.12)',
     border: 'rgba(192,132,252,0.25)',
     commission: '10%',
     description: 'Pour les cabinets et entreprises à fort volume',
-    features: ["Jusqu'à 200 factures / mois", '5 relances par facture', 'Email + SMS', 'Délais personnalisables', 'Support prioritaire'],
+    features: ["Jusqu'à 200 factures / mois", '5 relances par facture', 'Email + SMS', 'Délais personnalisables'],
     popular: true,
   },
 ]
@@ -164,9 +166,10 @@ function SouscrireContent() {
                       </div>
                       <div style={{ textAlign: 'right', flexShrink: 0 }}>
                         <div style={{ display: 'flex', alignItems: 'baseline', gap: 2 }}>
-                          <span style={{ fontFamily: 'Comfortaa', fontWeight: 900, fontSize: 20, color: 'white' }}>{p.prix} €</span>
+                          <span style={{ fontFamily: 'Comfortaa', fontWeight: 900, fontSize: 20, color: 'white' }}>{formatPrix(p.prixBase * (1 - EARLY_BIRD_DISCOUNT))} €</span>
                           <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)' }}>/mois</span>
                         </div>
+                        <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.30)', textDecoration: 'line-through' }}>au lieu de {formatPrix(p.prixBase)}€</div>
                         <span style={{ fontSize: 11, color: p.couleur, fontWeight: 600 }}>+ {p.commission} au succès</span>
                       </div>
                     </div>
@@ -213,17 +216,23 @@ function SouscrireContent() {
                   <span style={{ fontFamily: 'Comfortaa', fontWeight: 800, fontSize: 16, color: 'white' }}>Plan {plan.nom}</span>
                   <span style={{ fontSize: 11, background: 'linear-gradient(135deg, #a855f7, #ec4899)', color: 'white', borderRadius: 6, padding: '2px 8px', fontWeight: 700 }}>MENSUEL</span>
                 </div>
-                <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, marginBottom: 4 }}>
-                  <span style={{ fontFamily: 'Comfortaa', fontWeight: 900, fontSize: 28, color: 'white' }}>{plan.prix} €</span>
+                <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'linear-gradient(135deg, #a855f7, #ec4899)', borderRadius: 6, padding: '2px 8px', marginBottom: 8 }}>
+                  <span style={{ fontSize: 11, color: 'white', fontWeight: 700 }}>-20% lancement</span>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, marginBottom: 2 }}>
+                  <span style={{ fontFamily: 'Comfortaa', fontWeight: 900, fontSize: 28, color: 'white' }}>{formatPrix(plan.prixBase * (1 - EARLY_BIRD_DISCOUNT))} €</span>
                   <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.35)' }}>/mois</span>
+                </div>
+                <div style={{ marginBottom: 6 }}>
+                  <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.30)', textDecoration: 'line-through' }}>au lieu de {formatPrix(plan.prixBase)}€/mois</span>
                 </div>
                 <span style={{ fontSize: 12, color: plan.couleur, fontWeight: 600 }}>+ {plan.commission} prélevé sur chaque facture recouvrée</span>
               </div>
 
               <div style={{ marginBottom: 18 }}>
                 {[
-                  { label: 'Abonnement mensuel', value: `${plan.prix} €` },
-                  { label: 'Total', value: `${plan.prix} €`, bold: true },
+                  { label: 'Abonnement mensuel', value: `${formatPrix(plan.prixBase * (1 - EARLY_BIRD_DISCOUNT))} €` },
+                  { label: 'Total', value: `${formatPrix(plan.prixBase * (1 - EARLY_BIRD_DISCOUNT))} €`, bold: true },
                 ].map((row, i) => (
                   <div key={i} style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 0', borderBottom: i < 1 ? '1px solid rgba(255,255,255,0.06)' : 'none' }}>
                     <span style={{ fontSize: 13, color: row.bold ? 'white' : 'rgba(255,255,255,0.45)', fontWeight: row.bold ? 700 : 400 }}>{row.label}</span>

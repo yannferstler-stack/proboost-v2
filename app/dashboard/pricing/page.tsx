@@ -3,11 +3,17 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '../../lib/supabase'
 import { DashboardSidebar } from '../../components/DashboardSidebar'
+
+const EARLY_BIRD_DISCOUNT = 0.20
+function formatPrix(n: number) {
+  return n.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+}
+
 const PLANS = [
   {
     id: 'starter',
     nom: 'Starter',
-    prix: '19,99',
+    prixBase: 19.99,
     couleur: '#16A34A',
     bg: '#F0FDF4',
     border: '#BBF7D0',
@@ -28,7 +34,7 @@ const PLANS = [
   {
     id: 'premium',
     nom: 'Premium',
-    prix: '49,99',
+    prixBase: 49.99,
     couleur: '#3B82F6',
     bg: '#EFF6FF',
     border: '#BFDBFE',
@@ -50,7 +56,7 @@ const PLANS = [
   {
     id: 'pro',
     nom: 'Pro',
-    prix: '249,99',
+    prixBase: 149.99,
     couleur: '#7C3AED',
     bg: '#F5F3FF',
     border: '#DDD6FE',
@@ -178,7 +184,7 @@ export default function DashboardPricingPage() {
                     </div>
                     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                       <span style={{ fontSize: 13, color: '#6B7280' }}>Nouveau plan</span>
-                      <span style={{ fontSize: 13, fontWeight: 700, color: plan.couleur }}>{plan.nom} — {plan.prix}€/mois</span>
+                      <span style={{ fontSize: 13, fontWeight: 700, color: plan.couleur }}>{plan.nom} — {formatPrix(plan.prixBase * (1 - EARLY_BIRD_DISCOUNT))}€/mois</span>
                     </div>
                   </div>
                   <div style={{ display: 'flex', gap: 10 }}>
@@ -245,8 +251,8 @@ export default function DashboardPricingPage() {
                 <div key={plan.id} className="plan-card" style={{
                   background: 'white', borderRadius: 20, padding: '36px 28px',
                   flex: '1 1 280px', maxWidth: 320,
-                  border: isCurrent ? `2px solid ${plan.couleur}` : plan.popular ? `2px solid ${plan.couleur}` : '1px solid #EAECEF',
-                  boxShadow: plan.popular ? `0 8px 40px ${plan.couleur}22` : '0 2px 8px rgba(0,0,0,0.06)',
+                  border: isCurrent ? `2px solid ${plan.couleur}` : '1px solid #EAECEF',
+                  boxShadow: isCurrent ? `0 4px 20px ${plan.couleur}22` : '0 2px 8px rgba(0,0,0,0.06)',
                   position: 'relative', display: 'flex', flexDirection: 'column',
                 }}>
                   {isCurrent && (
@@ -258,15 +264,6 @@ export default function DashboardPricingPage() {
                       ✓ Votre plan actuel
                     </div>
                   )}
-                  {!isCurrent && plan.popular && (
-                    <div style={{
-                      position: 'absolute', top: -14, left: '50%', transform: 'translateX(-50%)',
-                      background: plan.couleur, color: 'white', borderRadius: 20,
-                      padding: '4px 16px', fontSize: 12, fontWeight: 700, whiteSpace: 'nowrap',
-                    }}>
-                      🏆 Recommandé pour les PME
-                    </div>
-                  )}
 
                   <div style={{ marginBottom: 20 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
@@ -274,9 +271,16 @@ export default function DashboardPricingPage() {
                       <h2 style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 800, fontSize: 22, color: '#111' }}>{plan.nom}</h2>
                     </div>
                     <p style={{ fontSize: 13, color: '#6B7280', marginBottom: 16, lineHeight: 1.5 }}>{plan.description}</p>
-                    <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, marginBottom: 8 }}>
-                      <span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 900, fontSize: 38, color: '#111' }}>{plan.prix}€</span>
+                    {/* Early bird badge */}
+                    <div style={{ display: 'inline-flex', alignItems: 'center', background: 'linear-gradient(135deg, #a855f7, #ec4899)', borderRadius: 6, padding: '2px 8px', marginBottom: 8 }}>
+                      <span style={{ fontSize: 10, color: 'white', fontWeight: 700 }}>-20% lancement</span>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, marginBottom: 2 }}>
+                      <span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 900, fontSize: 38, color: '#111' }}>{formatPrix(plan.prixBase * (1 - EARLY_BIRD_DISCOUNT))}€</span>
                       <span style={{ fontSize: 14, color: '#9CA3AF' }}>/mois</span>
+                    </div>
+                    <div style={{ marginBottom: 8 }}>
+                      <span style={{ fontSize: 12, color: '#9CA3AF', textDecoration: 'line-through' }}>au lieu de {formatPrix(plan.prixBase)}€/mois</span>
                     </div>
                     <div style={{ display: 'inline-flex', alignItems: 'center', background: plan.bg, border: `1px solid ${plan.border}`, borderRadius: 8, padding: '4px 10px' }}>
                       <span style={{ fontSize: 12, color: plan.couleur, fontWeight: 700 }}>+ {plan.commission} commission au succès</span>

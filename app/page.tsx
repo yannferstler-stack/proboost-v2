@@ -147,8 +147,8 @@ export default function Home() {
         .nav-a:hover { color: #c084fc !important; }
         .step-card { transition: box-shadow 0.2s, transform 0.2s; height: 100%; }
         .step-card:hover { box-shadow: 0 8px 32px rgba(168,85,247,0.15) !important; transform: translateY(-2px); }
-        .plan-card { transition: box-shadow 0.2s, transform 0.2s; height: 100%; cursor: pointer; }
-        .plan-card:hover { transform: translateY(-3px); box-shadow: 0 12px 40px rgba(168,85,247,0.20) !important; }
+        .plan-card { transition: box-shadow 0.25s, transform 0.25s, border-color 0.25s; height: 100%; cursor: pointer; }
+        .plan-card:hover { transform: translateY(-6px); box-shadow: 0 20px 64px rgba(168,85,247,0.50) !important; border-color: rgba(168,85,247,0.45) !important; }
         .invoicing-card { transition: all 0.2s; cursor: pointer; }
         .invoicing-card:hover { border-color: rgba(168,85,247,0.40) !important; transform: translateY(-2px); box-shadow: 0 8px 32px rgba(168,85,247,0.15); }
         .step-number { font-family: Comfortaa, sans-serif; font-weight: 900; font-size: 52px; color: rgba(255,255,255,0.90); line-height: 1; letter-spacing: -2px; background: linear-gradient(135deg, #a855f7, #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
