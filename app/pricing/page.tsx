@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 import { useRouter } from 'next/navigation'
 
 const PLANS = [
@@ -81,7 +81,7 @@ export default function PricingPage() {
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@700;800;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Comfortaa:wght@300;400;700&family=Yeseva+One&display=swap');
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         body { background: #F4F6F8; }
         @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
@@ -99,7 +99,7 @@ export default function PricingPage() {
         <nav style={{ background: 'white', borderBottom: '1px solid #EAECEF', padding: '0 40px', height: 64, display: 'flex', alignItems: 'center', justifyContent: 'space-between', position: 'sticky', top: 0, zIndex: 100 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 20, cursor: 'pointer' }} onClick={() => router.push('/')}>
             <img src="/logo.png" style={{ height: 44, width: 'auto', objectFit: 'contain' }} />
-            <span style={{ fontSize: 22, color: '#111' }}><span style={{ fontFamily: "'Playfair Display', serif", fontStyle: 'italic', fontWeight: 700 }}>Mana</span><span style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 400 }}>flow</span></span>
+            <span style={{ fontSize: 22, color: '#111' }}><span style={{ fontFamily: "'Yeseva One', serif" }}>Mana</span><span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 400 }}>flow</span></span>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 32 }}>
             <span className="nav-link" onClick={() => router.push('/')} style={{ fontSize: 14, color: '#6B7280', fontWeight: 500 }}>Accueil</span>
@@ -116,7 +116,7 @@ export default function PricingPage() {
           <div style={{ display: 'inline-block', background: '#F0FDF4', border: '1px solid #BBF7D0', borderRadius: 20, padding: '6px 16px', marginBottom: 20 }}>
             <span style={{ fontSize: 13, color: '#16A34A', fontWeight: 600 }}>💰 Tarifs transparents</span>
           </div>
-          <h1 style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 900, fontSize: 48, color: '#111', marginBottom: 16, lineHeight: 1.15 }}>
+          <h1 style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 900, fontSize: 48, color: '#111', marginBottom: 16, lineHeight: 1.15 }}>
             Un plan pour chaque<br/>
             <span style={{ color: '#1DB954' }}>besoin</span>
           </h1>
@@ -141,11 +141,11 @@ export default function PricingPage() {
               <div style={{ marginBottom: 24 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
                   <span style={{ fontSize: 22 }}>{plan.badge}</span>
-                  <h2 style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 800, fontSize: 22, color: '#111' }}>{plan.nom}</h2>
+                  <h2 style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 800, fontSize: 22, color: '#111' }}>{plan.nom}</h2>
                 </div>
                 <p style={{ fontSize: 13, color: '#6B7280', marginBottom: 20, lineHeight: 1.5 }}>{plan.description}</p>
                 <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, marginBottom: 8 }}>
-                  <span style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 900, fontSize: 40, color: '#111' }}>{plan.prix}€</span>
+                  <span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 900, fontSize: 40, color: '#111' }}>{plan.prix}€</span>
                   <span style={{ fontSize: 14, color: '#9CA3AF' }}>/mois</span>
                 </div>
                 <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: plan.bg, border: `1px solid ${plan.border}`, borderRadius: 8, padding: '4px 12px' }}>
@@ -178,7 +178,7 @@ export default function PricingPage() {
 
         {/* FAQ */}
         <div style={{ background: 'white', borderTop: '1px solid #EAECEF', padding: '60px 40px', textAlign: 'center' }}>
-          <h2 style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 800, fontSize: 28, color: '#111', marginBottom: 40 }}>Questions fréquentes</h2>
+          <h2 style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 800, fontSize: 28, color: '#111', marginBottom: 40 }}>Questions fréquentes</h2>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 24, maxWidth: 900, margin: '0 auto', textAlign: 'left' }}>
             {[
               { q: 'Comment fonctionne la commission ?', r: 'La commission est prélevée uniquement sur les factures effectivement recouvrées. Si la facture n\'est pas payée, vous ne payez rien en plus de votre abonnement.' },

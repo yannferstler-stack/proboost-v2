@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 import { useState, useEffect } from 'react'
 import { createClient } from '../../lib/supabase'
 
@@ -46,7 +46,7 @@ export default function FacturationPage() {
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Comfortaa:wght@300;400;700&family=Yeseva+One&display=swap');
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         body { background: #F4F6F8; }
         @keyframes spin { to { transform: rotate(360deg); } }
@@ -64,7 +64,7 @@ export default function FacturationPage() {
         <aside style={{ width: 240, background: 'white', borderRight: '1px solid #EAECEF', display: 'flex', flexDirection: 'column', padding: '24px 16px', position: 'fixed', top: 0, left: 0, height: '100vh' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 2, padding: '0 8px', marginBottom: 36 }}>
             <img src="/logo.png" style={{ height: 44, width: 'auto', objectFit: 'contain' }} />
-            <span onClick={() => window.location.href = '/'} style={{ fontSize: 22, color: '#111', cursor: 'pointer' }}><span style={{ fontFamily: "'Playfair Display', serif", fontStyle: 'italic', fontWeight: 700 }}>Mana</span><span style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 400 }}>flow</span></span>
+            <span onClick={() => window.location.href = '/'} style={{ fontSize: 22, color: '#111', cursor: 'pointer' }}><span style={{ fontFamily: "'Yeseva One', serif" }}>Mana</span><span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 400 }}>flow</span></span>
           </div>
           <nav style={{ display: 'flex', flexDirection: 'column', gap: 4, flex: 1 }}>
             {[
@@ -100,7 +100,7 @@ export default function FacturationPage() {
         <div style={{ marginLeft: 240, flex: 1, padding: '32px 32px' }}>
 
           <div style={{ marginBottom: 32, animation: 'fadeUp 0.4s ease both' }}>
-            <h1 style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 800, fontSize: 24, color: '#111', marginBottom: 4 }}>Facturation</h1>
+            <h1 style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 800, fontSize: 24, color: '#111', marginBottom: 4 }}>Facturation</h1>
             <p style={{ color: '#9CA3AF', fontSize: 14 }}>Récapitulatif des commissions ManaFlow sur vos factures recouvrées</p>
           </div>
 
@@ -109,7 +109,7 @@ export default function FacturationPage() {
             <div>
               <p style={{ color: 'rgba(255,255,255,0.60)', fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '1px', marginBottom: 8 }}>Votre plan actuel</p>
               <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 6 }}>
-                <span style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 800, fontSize: 26, color: 'white' }}>{currentPlan.nom}</span>
+                <span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 800, fontSize: 26, color: 'white' }}>{currentPlan.nom}</span>
                 <span style={{ background: 'rgba(255,255,255,0.20)', color: 'white', borderRadius: 20, padding: '4px 12px', fontSize: 12, fontWeight: 700 }}>{currentPlan.prix}</span>
               </div>
               <p style={{ color: 'rgba(255,255,255,0.65)', fontSize: 13 }}>
@@ -128,7 +128,7 @@ export default function FacturationPage() {
             <div className="card" style={{ background: 'white', borderRadius: 14, padding: '22px 20px', boxShadow: '0 1px 4px rgba(0,0,0,0.06)', border: '1px solid #EAECEF' }}>
               <p style={{ fontSize: 11, color: '#9CA3AF', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.4px', marginBottom: 12 }}>Total recouvré</p>
               <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, marginBottom: 6 }}>
-                <span style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 800, fontSize: 28, color: '#a855f7', lineHeight: 1 }}>{totalRecouvre.toLocaleString('fr-FR', { minimumFractionDigits: 2 })}</span>
+                <span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 800, fontSize: 28, color: '#a855f7', lineHeight: 1 }}>{totalRecouvre.toLocaleString('fr-FR', { minimumFractionDigits: 2 })}</span>
                 <span style={{ fontSize: 15, color: '#a855f7', fontWeight: 700 }}>€</span>
               </div>
               <p style={{ fontSize: 12, color: '#9CA3AF' }}>{factures.length} facture{factures.length > 1 ? 's' : ''} payée{factures.length > 1 ? 's' : ''}</p>
@@ -136,7 +136,7 @@ export default function FacturationPage() {
             <div className="card" style={{ background: 'white', borderRadius: 14, padding: '22px 20px', boxShadow: '0 1px 4px rgba(0,0,0,0.06)', border: '1px solid #EAECEF' }}>
               <p style={{ fontSize: 11, color: '#9CA3AF', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.4px', marginBottom: 12 }}>Commission ManaFlow ({(currentPlan.taux * 100).toFixed(0)}%)</p>
               <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, marginBottom: 6 }}>
-                <span style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 800, fontSize: 28, color: '#ec4899', lineHeight: 1 }}>{totalCommission.toLocaleString('fr-FR', { minimumFractionDigits: 2 })}</span>
+                <span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 800, fontSize: 28, color: '#ec4899', lineHeight: 1 }}>{totalCommission.toLocaleString('fr-FR', { minimumFractionDigits: 2 })}</span>
                 <span style={{ fontSize: 15, color: '#ec4899', fontWeight: 700 }}>€</span>
               </div>
               <p style={{ fontSize: 12, color: '#9CA3AF' }}>Minimum 5 € par facture</p>
@@ -144,7 +144,7 @@ export default function FacturationPage() {
             <div className="card" style={{ background: 'linear-gradient(135deg, #a855f7, #ec4899)', borderRadius: 14, padding: '22px 20px', boxShadow: '0 4px 20px rgba(168,85,247,0.30)', border: 'none' }}>
               <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.70)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.4px', marginBottom: 12 }}>Montant net perçu</p>
               <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, marginBottom: 6 }}>
-                <span style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 800, fontSize: 28, color: 'white', lineHeight: 1 }}>{totalNet.toLocaleString('fr-FR', { minimumFractionDigits: 2 })}</span>
+                <span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 800, fontSize: 28, color: 'white', lineHeight: 1 }}>{totalNet.toLocaleString('fr-FR', { minimumFractionDigits: 2 })}</span>
                 <span style={{ fontSize: 15, color: 'rgba(255,255,255,0.85)', fontWeight: 700 }}>€</span>
               </div>
               <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.60)' }}>Ce que vous encaissez</p>
@@ -157,13 +157,13 @@ export default function FacturationPage() {
               <div style={{ width: 56, height: 56, background: 'rgba(168,85,247,0.10)', border: '1px solid rgba(168,85,247,0.20)', borderRadius: 16, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#a855f7" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
               </div>
-              <h3 style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 700, fontSize: 18, color: '#111', marginBottom: 8 }}>Aucune facture payée pour l'instant</h3>
+              <h3 style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 700, fontSize: 18, color: '#111', marginBottom: 8 }}>Aucune facture payée pour l'instant</h3>
               <p style={{ color: '#9CA3AF', fontSize: 14 }}>Les commissions apparaîtront ici dès qu'une facture sera marquée comme payée</p>
             </div>
           ) : (
             <div style={{ background: 'white', borderRadius: 16, overflow: 'hidden', boxShadow: '0 1px 4px rgba(0,0,0,0.06)', border: '1px solid #EAECEF', animation: 'fadeUp 0.4s ease 0.15s both' }}>
               <div style={{ padding: '18px 24px', borderBottom: '1px solid #EAECEF', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <h2 style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 700, fontSize: 15, color: '#111' }}>Détail par facture</h2>
+                <h2 style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 700, fontSize: 15, color: '#111' }}>Détail par facture</h2>
                 <span style={{ fontSize: 12, color: '#9CA3AF', background: '#F4F6F8', padding: '3px 10px', borderRadius: 20, fontWeight: 500 }}>{factures.length} facture{factures.length > 1 ? 's' : ''}</span>
               </div>
               <table style={{ width: '100%', borderCollapse: 'collapse' }}>
@@ -191,7 +191,7 @@ export default function FacturationPage() {
                           </div>
                         </td>
                         <td style={{ padding: '14px 20px', color: '#6B7280', fontSize: 13 }}>{f.numero_facture || '—'}</td>
-                        <td style={{ padding: '14px 20px', fontWeight: 700, color: '#111', fontSize: 14, fontFamily: 'Manrope, sans-serif' }}>
+                        <td style={{ padding: '14px 20px', fontWeight: 700, color: '#111', fontSize: 14, fontFamily: 'Comfortaa, sans-serif' }}>
                           {montant.toLocaleString('fr-FR', { minimumFractionDigits: 2 })} €
                         </td>
                         <td style={{ padding: '14px 20px' }}>
@@ -216,8 +216,8 @@ export default function FacturationPage() {
                 </tbody>
                 <tfoot>
                   <tr style={{ background: '#F9FAFB', borderTop: '2px solid #EAECEF' }}>
-                    <td colSpan={2} style={{ padding: '14px 20px', fontWeight: 700, color: '#111', fontSize: 13, fontFamily: 'Manrope, sans-serif' }}>TOTAL</td>
-                    <td style={{ padding: '14px 20px', fontWeight: 800, color: '#111', fontSize: 15, fontFamily: 'Manrope, sans-serif' }}>
+                    <td colSpan={2} style={{ padding: '14px 20px', fontWeight: 700, color: '#111', fontSize: 13, fontFamily: 'Comfortaa, sans-serif' }}>TOTAL</td>
+                    <td style={{ padding: '14px 20px', fontWeight: 800, color: '#111', fontSize: 15, fontFamily: 'Comfortaa, sans-serif' }}>
                       {totalRecouvre.toLocaleString('fr-FR', { minimumFractionDigits: 2 })} €
                     </td>
                     <td style={{ padding: '14px 20px' }}>

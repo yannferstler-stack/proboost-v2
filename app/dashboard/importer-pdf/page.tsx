@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 import { useState } from 'react'
 import { createClient } from '../../lib/supabase'
 
@@ -58,7 +58,7 @@ export default function ImporterPDF() {
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Comfortaa:wght@300;400;700&family=Yeseva+One&display=swap');
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         body { background: #F4F6F8; }
         .drop-zone { border: 2px dashed #E5E7EB; border-radius: 16px; padding: 48px; text-align: center; cursor: pointer; transition: all 0.2s; }
@@ -72,7 +72,7 @@ export default function ImporterPDF() {
         <aside style={{ width: 240, background: 'white', borderRight: '1px solid #EAECEF', display: 'flex', flexDirection: 'column', padding: '24px 16px', position: 'fixed', top: 0, left: 0, height: '100vh' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 2, padding: '0 8px', marginBottom: 36 }}>
             <img src="/logo.png" alt="ManaFlow" style={{ height: 44, width: 'auto', objectFit: 'contain' }} />
-            <span style={{ fontSize: 22, color: '#111' }}><span style={{ fontFamily: "'Playfair Display', serif", fontStyle: 'italic', fontWeight: 700 }}>Mana</span><span style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 400 }}>flow</span></span>
+            <span style={{ fontSize: 22, color: '#111' }}><span style={{ fontFamily: "'Yeseva One', serif" }}>Mana</span><span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 400 }}>flow</span></span>
           </div>
           <nav style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
             <div onClick={() => window.location.href = '/dashboard'} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 12px', color: '#6B7280', fontSize: 14, cursor: 'pointer', borderRadius: 8 }}>
@@ -89,7 +89,7 @@ export default function ImporterPDF() {
 
         <div style={{ marginLeft: 240, flex: 1, padding: 40 }}>
           <div style={{ marginBottom: 36 }}>
-            <h1 style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 800, fontSize: 26, color: '#111', marginBottom: 4 }}>Import PDF par IA 🤖</h1>
+            <h1 style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 800, fontSize: 26, color: '#111', marginBottom: 4 }}>Import PDF par IA 🤖</h1>
             <p style={{ color: '#9CA3AF', fontSize: 14 }}>Déposez vos factures PDF — l'IA extrait automatiquement toutes les informations</p>
           </div>
 
@@ -121,7 +121,7 @@ export default function ImporterPDF() {
           {factures.length > 0 && (
             <div style={{ background: 'white', borderRadius: 16, overflow: 'hidden', boxShadow: '0 1px 4px rgba(0,0,0,0.06)', border: '1px solid #EAECEF' }}>
               <div style={{ padding: '20px 24px', borderBottom: '1px solid #EAECEF' }}>
-                <h2 style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 700, fontSize: 16, color: '#111' }}>Résultats de l'analyse</h2>
+                <h2 style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 700, fontSize: 16, color: '#111' }}>Résultats de l'analyse</h2>
               </div>
               <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                 <thead>

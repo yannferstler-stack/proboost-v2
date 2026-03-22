@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 import { useRouter } from 'next/navigation'
 import { useEffect, useRef, useState } from 'react'
 
@@ -129,7 +129,7 @@ export default function Home() {
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Manrope:wght@400;700;800;900&family=Playfair+Display:ital,wght@1,700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Comfortaa:wght@300;400;700&family=Yeseva+One&display=swap');
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         html { scroll-behavior: smooth; }
         body { background: #0d0620; }
@@ -149,7 +149,7 @@ export default function Home() {
         .plan-card:hover { transform: translateY(-3px); box-shadow: 0 12px 40px rgba(168,85,247,0.20) !important; }
         .invoicing-card { transition: all 0.2s; cursor: pointer; }
         .invoicing-card:hover { border-color: rgba(168,85,247,0.40) !important; transform: translateY(-2px); box-shadow: 0 8px 32px rgba(168,85,247,0.15); }
-        .step-number { font-family: Manrope, sans-serif; font-weight: 900; font-size: 48px; color: rgba(255,255,255,0.05); line-height: 1; letter-spacing: -2px; }
+        .step-number { font-family: Comfortaa, sans-serif; font-weight: 900; font-size: 48px; color: rgba(255,255,255,0.05); line-height: 1; letter-spacing: -2px; }
         .steps-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 24px; align-items: stretch; }
         .plans-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 24px; max-width: 1000px; margin: 0 auto; align-items: stretch; }
         .carousel-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: opacity 0.8s ease-in-out; }
@@ -185,7 +185,7 @@ export default function Home() {
           <div style={{ height: 72, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 20px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 20, cursor: 'pointer' }} onClick={() => router.push('/')}>
               <img src="/logo.png" style={{ height: 44, width: 'auto', objectFit: 'contain' }} />
-              <span style={{ fontSize: 22, color: 'white' }}><span style={{ fontFamily: "'Playfair Display', serif", fontStyle: 'italic', fontWeight: 700 }}>Mana</span><span style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 400 }}>flow</span></span>
+              <span style={{ fontSize: 22, color: 'white' }}><span style={{ fontFamily: "'Yeseva One', serif" }}>Mana</span><span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 400 }}>flow</span></span>
             </div>
             <div className="nav-links" style={{ display: 'flex', alignItems: 'center', gap: 28 }}>
               <span className="nav-a" onClick={() => router.push('/blog')} style={{ fontSize: 14, fontWeight: 500 }}>Blog</span>
@@ -234,10 +234,10 @@ export default function Home() {
 
           <div style={{ position: 'relative', zIndex: 2, textAlign: 'center', padding: isMobile ? '80px 20px 60px' : '0 24px', maxWidth: 900, width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             <h1 style={{ marginBottom: 20, textShadow: '0 2px 24px rgba(0,0,0,0.6)', lineHeight: 1.1 }}>
-              <span style={{ display: 'block', fontFamily: 'Manrope', fontWeight: 400, fontSize: 'clamp(26px, 5vw, 58px)', color: 'white', letterSpacing: '-0.5px' }}>
+              <span style={{ display: 'block', fontFamily: 'Comfortaa', fontWeight: 400, fontSize: 'clamp(26px, 5vw, 58px)', color: 'white', letterSpacing: '-0.5px' }}>
                 Concentrez-vous sur l&apos;essentiel,
               </span>
-              <span style={{ display: 'block', fontFamily: 'Playfair Display', fontWeight: 700, fontStyle: 'italic', fontSize: 'clamp(26px, 5vw, 58px)', color: 'white', letterSpacing: '-0.5px' }}>
+              <span style={{ display: 'block', fontFamily: 'Yeseva One', fontSize: 'clamp(26px, 5vw, 58px)', color: 'white', letterSpacing: '-0.5px' }}>
                 nous gérons vos impayés.
               </span>
             </h1>
@@ -280,8 +280,8 @@ export default function Home() {
               <Reveal key={i} delay={i * 0.1}>
                 <div style={{ padding: isMobile ? '32px 20px' : '40px 36px', borderRight: !isMobile && i < 2 ? '1px solid rgba(255,255,255,0.06)' : 'none', borderBottom: isMobile && i < 2 ? '1px solid rgba(255,255,255,0.06)' : 'none', textAlign: 'center' }}>
                   <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, justifyContent: 'center', marginBottom: 16 }}>
-                    <span style={{ fontFamily: 'Manrope', fontWeight: 900, fontSize: isMobile ? 56 : 72, color: s.color, letterSpacing: '-3px', lineHeight: 1 }}>{s.value}</span>
-                    <span style={{ fontFamily: 'Manrope', fontWeight: 700, fontSize: isMobile ? 22 : 28, color: s.color, opacity: 0.7 }}>{s.unit}</span>
+                    <span style={{ fontFamily: 'Comfortaa', fontWeight: 900, fontSize: isMobile ? 56 : 72, color: s.color, letterSpacing: '-3px', lineHeight: 1 }}>{s.value}</span>
+                    <span style={{ fontFamily: 'Comfortaa', fontWeight: 700, fontSize: isMobile ? 22 : 28, color: s.color, opacity: 0.7 }}>{s.unit}</span>
                   </div>
                   <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.45)', lineHeight: 1.6, maxWidth: 200, margin: '0 auto' }}>{s.label}</p>
                 </div>
@@ -322,7 +322,7 @@ export default function Home() {
           <div style={{ maxWidth: 960, margin: '0 auto' }}>
             <Reveal>
               <div style={{ marginBottom: isMobile ? 40 : 64, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12 }}>
-                <h2 style={{ fontFamily: 'Manrope', fontWeight: 900, fontSize: isMobile ? 28 : 44, color: 'white', letterSpacing: '-1px', textAlign: 'center' }}>3 étapes pour récupérer vos impayés.</h2>
+                <h2 style={{ fontFamily: 'Comfortaa', fontWeight: 900, fontSize: isMobile ? 28 : 44, color: 'white', letterSpacing: '-1px', textAlign: 'center' }}>3 étapes pour récupérer vos impayés.</h2>
               </div>
             </Reveal>
             <div className="steps-grid" style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3,1fr)', gap: 20 }}>
@@ -335,7 +335,7 @@ export default function Home() {
                     <div style={{ width: 52, height: 52, background: 'rgba(168,85,247,0.12)', border: '1px solid rgba(168,85,247,0.25)', borderRadius: 16, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 24, flexShrink: 0 }}>
                       <s.Icon />
                     </div>
-                    <h3 style={{ fontFamily: 'Manrope', fontWeight: 800, fontSize: 20, color: 'white', marginBottom: 10 }}>{s.title}</h3>
+                    <h3 style={{ fontFamily: 'Comfortaa', fontWeight: 800, fontSize: 20, color: 'white', marginBottom: 10 }}>{s.title}</h3>
                     <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.50)', lineHeight: 1.75, flex: 1 }}>{s.desc}</p>
                   </div>
                 </Reveal>
@@ -350,7 +350,7 @@ export default function Home() {
             <Reveal>
               <div style={{ textAlign: 'center', marginBottom: 40 }}>
                 <span style={{ fontSize: 11, color: '#a855f7', fontWeight: 700, letterSpacing: '2px', textTransform: 'uppercase', display: 'block', marginBottom: 10 }}>Tarifs</span>
-                <h2 style={{ fontFamily: 'Manrope', fontWeight: 900, fontSize: isMobile ? 28 : 38, color: 'white', letterSpacing: '-1px', marginBottom: 16 }}>Simple et transparent.</h2>
+                <h2 style={{ fontFamily: 'Comfortaa', fontWeight: 900, fontSize: isMobile ? 28 : 38, color: 'white', letterSpacing: '-1px', marginBottom: 16 }}>Simple et transparent.</h2>
                 <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.50)', lineHeight: 1.8, maxWidth: 560, margin: '0 auto' }}>
                   Vous n&apos;aurez plus à courir après le temps et l&apos;argent. Nous serons votre allié pour la gestion de vos impayés.
                 </p>
@@ -368,10 +368,10 @@ export default function Home() {
                       </div>
                     )}
                     <div style={{ marginBottom: 20 }}>
-                      <h3 style={{ fontFamily: 'Manrope', fontWeight: 800, fontSize: 22, color: 'white', marginBottom: 6 }}>{plan.nom}</h3>
+                      <h3 style={{ fontFamily: 'Comfortaa', fontWeight: 800, fontSize: 22, color: 'white', marginBottom: 6 }}>{plan.nom}</h3>
                       <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)', marginBottom: 16, lineHeight: 1.5 }}>{plan.description}</p>
                       <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, marginBottom: 10 }}>
-                        <span style={{ fontFamily: 'Manrope', fontWeight: 900, fontSize: 36, color: 'white' }}>{plan.prix} €</span>
+                        <span style={{ fontFamily: 'Comfortaa', fontWeight: 900, fontSize: 36, color: 'white' }}>{plan.prix} €</span>
                         <span style={{ fontSize: 14, color: 'rgba(255,255,255,0.35)' }}>/mois</span>
                       </div>
                       <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: plan.bg, border: `1px solid ${plan.border}`, borderRadius: 8, padding: '5px 12px' }}>
@@ -404,7 +404,7 @@ export default function Home() {
           <Reveal>
             <div style={{ maxWidth: 680, margin: '0 auto', textAlign: 'center', position: 'relative', zIndex: 1 }}>
               <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.25)', fontWeight: 600, letterSpacing: '3px', textTransform: 'uppercase', marginBottom: 20 }}>Notre engagement</p>
-              <h2 style={{ fontFamily: 'Manrope', fontWeight: 900, fontSize: 'clamp(26px, 4vw, 48px)', color: 'white', letterSpacing: '-1.5px', lineHeight: 1.15, marginBottom: 20 }}>
+              <h2 style={{ fontFamily: 'Comfortaa', fontWeight: 900, fontSize: 'clamp(26px, 4vw, 48px)', color: 'white', letterSpacing: '-1.5px', lineHeight: 1.15, marginBottom: 20 }}>
                 Vous n&apos;aurez plus à courir après{!isMobile && <br />}
                 {' '}<span style={{ background: 'linear-gradient(135deg, #a855f7, #ec4899)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>le temps et l&apos;argent.</span>
               </h2>
@@ -424,7 +424,7 @@ export default function Home() {
           <div className="footer-inner" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: isMobile ? 16 : 0 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 20, cursor: 'pointer' }} onClick={() => router.push('/')}>
               <img src="/logo.png" style={{ height: 44, width: 'auto', objectFit: 'contain' }} />
-              <span style={{ fontSize: 15, color: 'white' }}><span style={{ fontFamily: "'Playfair Display', serif", fontStyle: 'italic', fontWeight: 700 }}>Mana</span><span style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 400 }}>flow</span></span>
+              <span style={{ fontSize: 15, color: 'white' }}><span style={{ fontFamily: "'Yeseva One', serif" }}>Mana</span><span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 400 }}>flow</span></span>
             </div>
             <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.25)', textAlign: 'center' }}>© 2025 ManaFlow — Tous droits réservés</p>
             <div style={{ display: 'flex', gap: 20 }}>

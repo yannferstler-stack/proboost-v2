@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 import { useRouter } from 'next/navigation'
 import { useState, useEffect } from 'react'
 
@@ -31,7 +31,7 @@ export default function ContactPage() {
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Manrope:wght@700;800;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Comfortaa:wght@300;400;700&family=Yeseva+One&display=swap');
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         body { background: #0d0620; }
         @keyframes fadeUp { from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)} }
@@ -67,7 +67,7 @@ export default function ContactPage() {
           <div style={{ height: 72, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 20px', maxWidth: 1100, margin: '0 auto' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 20, cursor: 'pointer' }} onClick={() => router.push('/')}>
               <img src="/logo.png" style={{ height: 44, width: 'auto', objectFit: 'contain' }} />
-              <span style={{ fontSize: 22, color: 'white' }}><span style={{ fontFamily: "'Playfair Display', serif", fontStyle: 'italic', fontWeight: 700 }}>Mana</span><span style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 400 }}>flow</span></span>
+              <span style={{ fontSize: 22, color: 'white' }}><span style={{ fontFamily: "'Yeseva One', serif" }}>Mana</span><span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 400 }}>flow</span></span>
             </div>
             <div className="nav-links" style={{ display: 'flex', alignItems: 'center', gap: 28 }}>
               <span className="nav-a" onClick={() => router.push('/')} style={{ fontSize: 14 }}>Accueil</span>
@@ -86,7 +86,7 @@ export default function ContactPage() {
             <div style={{ width: 6, height: 6, background: '#a855f7', borderRadius: '50%', animation: 'pulse 2s infinite' }} />
             <span style={{ fontSize: 12, color: '#c084fc', fontWeight: 600 }}>Réponse sous 48h</span>
           </div>
-          <h1 style={{ fontFamily: 'Manrope', fontWeight: 900, fontSize: 'clamp(28px, 5vw, 52px)', color: 'white', letterSpacing: '-1.5px', lineHeight: 1.1, marginBottom: 14 }}>
+          <h1 style={{ fontFamily: 'Comfortaa', fontWeight: 900, fontSize: 'clamp(28px, 5vw, 52px)', color: 'white', letterSpacing: '-1.5px', lineHeight: 1.1, marginBottom: 14 }}>
             Une question ?<br/>
             <span style={{ background: 'linear-gradient(135deg, #a855f7, #ec4899)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>On est là.</span>
           </h1>
@@ -129,7 +129,7 @@ export default function ContactPage() {
                 </div>
                 <div>
                   <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: 4 }}>{item.titre}</p>
-                  <p style={{ fontFamily: 'Manrope', fontWeight: 700, color: 'white', fontSize: 14, marginBottom: 2 }}>{item.valeur}</p>
+                  <p style={{ fontFamily: 'Comfortaa', fontWeight: 700, color: 'white', fontSize: 14, marginBottom: 2 }}>{item.valeur}</p>
                   <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.35)' }}>{item.detail}</p>
                 </div>
               </div>
@@ -143,7 +143,7 @@ export default function ContactPage() {
             <div style={{ background: 'rgba(255,255,255,0.04)', backdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 20, padding: isMobile ? '28px 24px' : '40px 36px' }}>
               {!sent ? (
                 <>
-                  <h2 style={{ fontFamily: 'Manrope', fontWeight: 800, fontSize: 20, color: 'white', marginBottom: 6 }}>Envoyez-nous un message</h2>
+                  <h2 style={{ fontFamily: 'Comfortaa', fontWeight: 800, fontSize: 20, color: 'white', marginBottom: 6 }}>Envoyez-nous un message</h2>
                   <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.40)', marginBottom: 28 }}>Tous les champs sont obligatoires.</p>
                   <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
                     <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 16 }}>
@@ -181,7 +181,7 @@ export default function ContactPage() {
                   <div style={{ width: 64, height: 64, background: 'rgba(168,85,247,0.15)', border: '1px solid rgba(168,85,247,0.30)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px' }}>
                     <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#c084fc" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
                   </div>
-                  <h3 style={{ fontFamily: 'Manrope', fontWeight: 800, fontSize: 20, color: 'white', marginBottom: 8 }}>Message envoyé !</h3>
+                  <h3 style={{ fontFamily: 'Comfortaa', fontWeight: 800, fontSize: 20, color: 'white', marginBottom: 8 }}>Message envoyé !</h3>
                   <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.45)', lineHeight: 1.7 }}>Nous reviendrons vers vous à l&apos;adresse <span style={{ color: '#c084fc', fontWeight: 600 }}>{form.email}</span> sous 48h ouvrées.</p>
                 </div>
               )}
@@ -192,7 +192,7 @@ export default function ContactPage() {
               <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.30)', fontWeight: 600, letterSpacing: '2px', textTransform: 'uppercase', marginBottom: 4 }}>Questions fréquentes</p>
               {FAQ_RAPIDE.map((faq, i) => (
                 <div key={i} className="faq-item" style={{ background: 'rgba(255,255,255,0.03)', backdropFilter: 'blur(12px)', borderRadius: 14, padding: '18px 20px' }}>
-                  <p style={{ fontFamily: 'Manrope', fontWeight: 700, color: 'white', fontSize: 13, marginBottom: 6 }}>{faq.q}</p>
+                  <p style={{ fontFamily: 'Comfortaa', fontWeight: 700, color: 'white', fontSize: 13, marginBottom: 6 }}>{faq.q}</p>
                   <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)', lineHeight: 1.6 }}>{faq.r}</p>
                 </div>
               ))}
@@ -215,7 +215,7 @@ export default function ContactPage() {
           <div className="footer-inner" style={{ maxWidth: 1100, margin: '0 auto', gap: isMobile ? 16 : 0 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 20, cursor: 'pointer' }} onClick={() => router.push('/')}>
               <img src="/logo.png" style={{ height: 44, width: 'auto', objectFit: 'contain' }} />
-              <span style={{ fontSize: 15, color: 'white' }}><span style={{ fontFamily: "'Playfair Display', serif", fontStyle: 'italic', fontWeight: 700 }}>Mana</span><span style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 400 }}>flow</span></span>
+              <span style={{ fontSize: 15, color: 'white' }}><span style={{ fontFamily: "'Yeseva One', serif" }}>Mana</span><span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 400 }}>flow</span></span>
             </div>
             <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.25)', textAlign: 'center' }}>© 2025 ManaFlow — Tous droits réservés</p>
             <div style={{ display: 'flex', gap: 20 }}>

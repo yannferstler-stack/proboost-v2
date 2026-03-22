@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 import { useEffect, useState } from 'react'
 import { createClient } from '../../lib/supabase'
 
@@ -96,7 +96,7 @@ export default function DashboardPricingPage() {
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@700;800;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Comfortaa:wght@300;400;700&family=Yeseva+One&display=swap');
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         body { background: #F4F6F8; }
         @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
@@ -110,7 +110,7 @@ export default function DashboardPricingPage() {
         <div style={{ background: 'white', borderBottom: '1px solid #EAECEF', padding: '16px 40px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 2 }}>
             <img src="/logo.png" style={{ height: 44, width: 'auto', objectFit: 'contain' }} />
-            <span style={{ fontSize: 22, color: '#111' }}><span style={{ fontFamily: "'Playfair Display', serif", fontStyle: 'italic', fontWeight: 700 }}>Mana</span><span style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 400 }}>flow</span></span>
+            <span style={{ fontSize: 22, color: '#111' }}><span style={{ fontFamily: "'Yeseva One', serif" }}>Mana</span><span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 400 }}>flow</span></span>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
             <span style={{ fontSize: 13, color: '#6B7280' }}>Connecté : {user?.email}</span>
@@ -126,7 +126,7 @@ export default function DashboardPricingPage() {
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#F0FDF4', border: '1px solid #BBF7D0', borderRadius: 20, padding: '6px 16px', marginBottom: 20 }}>
             <span style={{ fontSize: 12, color: '#16A34A', fontWeight: 600 }}>🎉 Bienvenue sur ManaFlow, {user?.email?.split('@')[0]} !</span>
           </div>
-          <h1 style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 800, fontSize: 34, color: '#111', marginBottom: 12 }}>
+          <h1 style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 800, fontSize: 34, color: '#111', marginBottom: 12 }}>
             Choisissez votre plan pour commencer
           </h1>
           <p style={{ fontSize: 15, color: '#6B7280', maxWidth: 500, margin: '0 auto 8px' }}>
@@ -172,11 +172,11 @@ export default function DashboardPricingPage() {
               <div style={{ marginBottom: 20 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
                   <span style={{ fontSize: 20 }}>{plan.badge}</span>
-                  <h2 style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 800, fontSize: 22, color: '#111' }}>{plan.nom}</h2>
+                  <h2 style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 800, fontSize: 22, color: '#111' }}>{plan.nom}</h2>
                 </div>
                 <p style={{ fontSize: 13, color: '#6B7280', marginBottom: 16, lineHeight: 1.5 }}>{plan.description}</p>
                 <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, marginBottom: 8 }}>
-                  <span style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 900, fontSize: 38, color: '#111' }}>{plan.prix}€</span>
+                  <span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 900, fontSize: 38, color: '#111' }}>{plan.prix}€</span>
                   <span style={{ fontSize: 14, color: '#9CA3AF' }}>/mois</span>
                 </div>
                 <div style={{ display: 'inline-flex', alignItems: 'center', background: plan.bg, border: `1px solid ${plan.border}`, borderRadius: 8, padding: '4px 10px' }}>

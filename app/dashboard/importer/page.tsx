@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 import { useState, useEffect, useRef } from 'react'
 import { createClient } from '../../lib/supabase'
 
@@ -251,7 +251,7 @@ export default function ImporterPage() {
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Comfortaa:wght@300;400;700&family=Yeseva+One&display=swap');
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         body { background: #F4F6F8; }
         @keyframes fadeUp { from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)} }
@@ -294,7 +294,7 @@ export default function ImporterPage() {
         <aside className="desktop-sidebar" style={{ width: 240, background: 'white', borderRight: '1px solid #EAECEF', flexDirection: 'column', padding: '24px 16px', position: 'fixed', top: 0, left: 0, height: '100vh' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 2, padding: '0 8px', marginBottom: 36 }}>
             <img src="/logo.png" style={{ height: 44, width: 'auto', objectFit: 'contain' }} />
-            <span onClick={() => window.location.href = '/'} style={{ fontSize: 22, color: '#111', cursor: 'pointer' }}><span style={{ fontFamily: "'Playfair Display', serif", fontStyle: 'italic', fontWeight: 700 }}>Mana</span><span style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 400 }}>flow</span></span>
+            <span onClick={() => window.location.href = '/'} style={{ fontSize: 22, color: '#111', cursor: 'pointer' }}><span style={{ fontFamily: "'Yeseva One', serif" }}>Mana</span><span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 400 }}>flow</span></span>
           </div>
           <nav style={{ display: 'flex', flexDirection: 'column', gap: 4, flex: 1 }}>
             {NAV_ITEMS.map(item => (
@@ -314,9 +314,9 @@ export default function ImporterPage() {
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 32 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                   <div style={{ width: 32, height: 32, background: 'linear-gradient(135deg, #a855f7, #ec4899)', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <span style={{ color: 'white', fontFamily: 'Manrope, sans-serif', fontWeight: 800, fontSize: 14 }}>P</span>
+                    <span style={{ color: 'white', fontFamily: 'Comfortaa, sans-serif', fontWeight: 800, fontSize: 14 }}>P</span>
                   </div>
-                  <span style={{ fontSize: 22, color: '#111' }}><span style={{ fontFamily: "'Playfair Display', serif", fontStyle: 'italic', fontWeight: 700 }}>Mana</span><span style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 400 }}>flow</span></span>
+                  <span style={{ fontSize: 22, color: '#111' }}><span style={{ fontFamily: "'Yeseva One', serif" }}>Mana</span><span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 400 }}>flow</span></span>
                 </div>
                 <button onClick={() => setSidebarOpen(false)} style={{ background: '#F3F4F6', border: 'none', borderRadius: 8, width: 32, height: 32, cursor: 'pointer', fontSize: 18, color: '#6B7280' }}>×</button>
               </div>
@@ -337,7 +337,7 @@ export default function ImporterPage() {
           <button onClick={() => setSidebarOpen(true)} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4 }}>
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#374151" strokeWidth="2.5" strokeLinecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
           </button>
-          <span style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 800, fontSize: 16, color: '#111' }}>Importer</span>
+          <span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 800, fontSize: 16, color: '#111' }}>Importer</span>
           <button className="export-btn" onClick={exporterCSV}
             style={{ background: 'white', color: '#374151', border: '1.5px solid #E5E7EB', borderRadius: 8, padding: '6px 10px', fontSize: 11, fontWeight: 600, cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}>
             Export CSV
@@ -354,7 +354,7 @@ export default function ImporterPage() {
                 <button onClick={resetMode} style={{ background: '#F3F4F6', border: 'none', borderRadius: 8, padding: '8px 12px', cursor: 'pointer', fontSize: 13, color: '#6B7280', fontFamily: 'Inter, sans-serif' }}>← Retour</button>
               )}
               <div>
-                <h1 style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 800, fontSize: isMobile ? 20 : 24, color: '#111', marginBottom: 3 }}>
+                <h1 style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 800, fontSize: isMobile ? 20 : 24, color: '#111', marginBottom: 3 }}>
                   {mode === null ? 'Importer des factures' : mode === 'csv' ? 'Import CSV' : 'Import PDF par IA'}
                 </h1>
                 <p style={{ color: '#9CA3AF', fontSize: 13 }}>
@@ -373,7 +373,7 @@ export default function ImporterPage() {
                 {profile && (
                   <div style={{ background: limiteAtteinte ? '#FEF2F2' : 'white', border: `1px solid ${limiteAtteinte ? '#FECACA' : '#EAECEF'}`, borderRadius: 12, padding: '10px 16px', textAlign: 'right', minWidth: 130 }}>
                     <p style={{ fontSize: 11, color: '#9CA3AF', fontWeight: 600, textTransform: 'uppercase', marginBottom: 4 }}>Ce mois</p>
-                    <p style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 800, fontSize: 18, color: limiteAtteinte ? '#DC2626' : '#111' }}>
+                    <p style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 800, fontSize: 18, color: limiteAtteinte ? '#DC2626' : '#111' }}>
                       {facturesCeMois}
                       {getLimiteFactures() !== Infinity && <span style={{ fontSize: 12, color: '#9CA3AF', fontWeight: 500 }}>/{getLimiteFactures()}</span>}
                       {profile?.plan === 'pro' && <span style={{ fontSize: 12, color: '#a855f7', fontWeight: 500 }}> /200</span>}
@@ -392,7 +392,7 @@ export default function ImporterPage() {
             {isMobile && profile && (
               <div style={{ background: limiteAtteinte ? '#FEF2F2' : 'white', border: `1px solid ${limiteAtteinte ? '#FECACA' : '#EAECEF'}`, borderRadius: 10, padding: '8px 12px', textAlign: 'right' }}>
                 <p style={{ fontSize: 10, color: '#9CA3AF', fontWeight: 600, textTransform: 'uppercase', marginBottom: 2 }}>Ce mois</p>
-                <p style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 800, fontSize: 15, color: limiteAtteinte ? '#DC2626' : '#111' }}>
+                <p style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 800, fontSize: 15, color: limiteAtteinte ? '#DC2626' : '#111' }}>
                   {facturesCeMois}{getLimiteFactures() !== Infinity && <span style={{ fontSize: 11, color: '#9CA3AF', fontWeight: 500 }}>/{getLimiteFactures()}</span>}
                 </p>
               </div>
@@ -434,7 +434,7 @@ export default function ImporterPage() {
                 <div style={{ width: 44, height: 44, background: 'rgba(168,85,247,0.10)', border: '1px solid rgba(168,85,247,0.25)', borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 14 }}>
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#a855f7" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
                 </div>
-                <h3 style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 700, fontSize: 17, color: '#111', marginBottom: 6 }}>Import CSV</h3>
+                <h3 style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 700, fontSize: 17, color: '#111', marginBottom: 6 }}>Import CSV</h3>
                 <p style={{ fontSize: 14, color: '#6B7280', lineHeight: 1.6, marginBottom: 14 }}>Téléchargez notre template, remplissez-le et importez-le en un clic.</p>
                 <span style={{ fontSize: 12, background: 'rgba(168,85,247,0.10)', color: '#7c3aed', borderRadius: 8, padding: '4px 10px', fontWeight: 600 }}>Simple et rapide</span>
               </div>
@@ -442,7 +442,7 @@ export default function ImporterPage() {
                 <div style={{ width: 44, height: 44, background: 'rgba(236,72,153,0.10)', border: '1px solid rgba(236,72,153,0.25)', borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 14 }}>
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ec4899" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
                 </div>
-                <h3 style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 700, fontSize: 17, color: '#111', marginBottom: 6 }}>Import PDF par IA</h3>
+                <h3 style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 700, fontSize: 17, color: '#111', marginBottom: 6 }}>Import PDF par IA</h3>
                 <p style={{ fontSize: 14, color: '#6B7280', lineHeight: 1.6, marginBottom: 14 }}>Déposez vos factures PDF et l'IA détecte automatiquement toutes les informations.</p>
                 <span style={{ fontSize: 12, background: 'rgba(236,72,153,0.10)', color: '#be185d', borderRadius: 8, padding: '4px 10px', fontWeight: 600 }}>Zéro saisie manuelle</span>
               </div>
@@ -601,7 +601,7 @@ export default function ImporterPage() {
               {factures.length > 0 && (
                 <div style={{ background: 'white', borderRadius: 14, overflow: 'hidden', border: '1px solid #EAECEF' }}>
                   <div style={{ padding: '14px 20px', borderBottom: '1px solid #EAECEF' }}>
-                    <h2 style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 700, fontSize: 14, color: '#111' }}>Résultats de l'analyse</h2>
+                    <h2 style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 700, fontSize: 14, color: '#111' }}>Résultats de l'analyse</h2>
                   </div>
                   <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
                     <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 500 }}>

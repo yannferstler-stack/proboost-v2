@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 import { useRouter } from 'next/navigation'
 import { useState, useEffect } from 'react'
 
@@ -132,7 +132,7 @@ export default function ConfidentialitePage() {
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Manrope:wght@700;800;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Comfortaa:wght@300;400;700&family=Yeseva+One&display=swap');
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         body { background: #0d0620; }
         .nav-a { transition: color 0.15s; cursor: pointer; color: rgba(255,255,255,0.6); }
@@ -158,7 +158,7 @@ export default function ConfidentialitePage() {
           <div style={{ height: 72, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 20px', maxWidth: 1100, margin: '0 auto' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 20, cursor: 'pointer' }} onClick={() => router.push('/')}>
               <img src="/logo.png" style={{ height: 44, width: 'auto', objectFit: 'contain' }} />
-              <span style={{ fontSize: 22, color: 'white' }}><span style={{ fontFamily: "'Playfair Display', serif", fontStyle: 'italic', fontWeight: 700 }}>Mana</span><span style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 400 }}>flow</span></span>
+              <span style={{ fontSize: 22, color: 'white' }}><span style={{ fontFamily: "'Yeseva One', serif" }}>Mana</span><span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 400 }}>flow</span></span>
             </div>
             <div className="nav-links" style={{ display: 'flex', alignItems: 'center', gap: 28 }}>
               <span className="nav-a" onClick={() => router.push('/')} style={{ fontSize: 14 }}>Accueil</span>
@@ -177,7 +177,7 @@ export default function ConfidentialitePage() {
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#f472b6" strokeWidth="2.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
             <span style={{ fontSize: 12, color: '#f472b6', fontWeight: 600 }}>Conforme RGPD</span>
           </div>
-          <h1 style={{ fontFamily: 'Manrope', fontWeight: 900, fontSize: 'clamp(28px, 5vw, 52px)', color: 'white', letterSpacing: '-1.5px', lineHeight: 1.1, marginBottom: 14 }}>
+          <h1 style={{ fontFamily: 'Comfortaa', fontWeight: 900, fontSize: 'clamp(28px, 5vw, 52px)', color: 'white', letterSpacing: '-1.5px', lineHeight: 1.1, marginBottom: 14 }}>
             Politique de<br/>
             <span style={{ background: 'linear-gradient(135deg, #a855f7, #ec4899)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Confidentialité</span>
           </h1>
@@ -191,7 +191,7 @@ export default function ConfidentialitePage() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
             {SECTIONS.map((s, i) => (
               <div key={i} className="section-card" style={{ background: 'rgba(255,255,255,0.03)', backdropFilter: 'blur(12px)', borderRadius: 16, padding: isMobile ? '24px 20px' : '32px 36px' }}>
-                <h2 style={{ fontFamily: 'Manrope', fontWeight: 800, fontSize: isMobile ? 15 : 17, color: 'white', marginBottom: 14 }}>{s.titre}</h2>
+                <h2 style={{ fontFamily: 'Comfortaa', fontWeight: 800, fontSize: isMobile ? 15 : 17, color: 'white', marginBottom: 14 }}>{s.titre}</h2>
                 <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.55)', lineHeight: 1.85, whiteSpace: 'pre-line' }}>{s.contenu}</p>
               </div>
             ))}
@@ -203,7 +203,7 @@ export default function ConfidentialitePage() {
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
             </div>
             <div>
-              <p style={{ fontFamily: 'Manrope', fontWeight: 700, color: 'white', fontSize: 14, marginBottom: 4 }}>Une question sur vos données ?</p>
+              <p style={{ fontFamily: 'Comfortaa', fontWeight: 700, color: 'white', fontSize: 14, marginBottom: 4 }}>Une question sur vos données ?</p>
               <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)' }}>Contactez-nous à <span style={{ color: '#c084fc', fontWeight: 600 }}>contact@manaflow.fr</span> — réponse sous 48h.</p>
             </div>
           </div>
@@ -214,7 +214,7 @@ export default function ConfidentialitePage() {
           <div className="footer-inner" style={{ maxWidth: 1100, margin: '0 auto', gap: isMobile ? 16 : 0 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 20, cursor: 'pointer' }} onClick={() => router.push('/')}>
               <img src="/logo.png" style={{ height: 44, width: 'auto', objectFit: 'contain' }} />
-              <span style={{ fontSize: 15, color: 'white' }}><span style={{ fontFamily: "'Playfair Display', serif", fontStyle: 'italic', fontWeight: 700 }}>Mana</span><span style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 400 }}>flow</span></span>
+              <span style={{ fontSize: 15, color: 'white' }}><span style={{ fontFamily: "'Yeseva One', serif" }}>Mana</span><span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 400 }}>flow</span></span>
             </div>
             <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.25)', textAlign: 'center' }}>© 2025 ManaFlow — Tous droits réservés</p>
             <div style={{ display: 'flex', gap: 20 }}>

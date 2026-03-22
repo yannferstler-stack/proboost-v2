@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState, Suspense } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
@@ -35,7 +35,7 @@ function AccesContent() {
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Manrope:wght@700;800;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Comfortaa:wght@300;400;700&display=swap');
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         body { background: #fafafa; }
         @keyframes fadeUp {
@@ -84,7 +84,7 @@ function AccesContent() {
             }}>
               <div style={{ width: 12, height: 12, background: 'white', borderRadius: 3 }} />
             </div>
-            <span style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 800, fontSize: 22, color: '#0a0a0a' }}>
+            <span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 800, fontSize: 22, color: '#0a0a0a' }}>
               ManaFlow
             </span>
           </div>
@@ -105,7 +105,7 @@ function AccesContent() {
           </div>
 
           <h1 style={{
-            fontFamily: 'Manrope, sans-serif',
+            fontFamily: 'Comfortaa, sans-serif',
             fontWeight: 900, fontSize: 22,
             color: '#0a0a0a', marginBottom: 6,
             letterSpacing: '-0.5px',

@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '../lib/supabase'
@@ -38,7 +38,7 @@ export default function LoginPage() {
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Manrope:wght@700;800;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Comfortaa:wght@300;400;700&family=Yeseva+One&display=swap');
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes spin { to { transform: rotate(360deg); } }
@@ -72,13 +72,13 @@ export default function LoginPage() {
             {/* Logo */}
             <div style={{ display: 'flex', alignItems: 'center', gap: 20, cursor: 'pointer', marginBottom: 40 }} onClick={() => router.push('/')}>
               <img src="/logo.png" style={{ height: 44, width: 'auto', objectFit: 'contain' }} />
-              <span style={{ fontSize: 22, color: 'white' }}><span style={{ fontFamily: "'Playfair Display', serif", fontStyle: 'italic', fontWeight: 700 }}>Mana</span><span style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 400 }}>flow</span></span>
+              <span style={{ fontSize: 22, color: 'white' }}><span style={{ fontFamily: "'Yeseva One', serif" }}>Mana</span><span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 400 }}>flow</span></span>
             </div>
 
             {/* Card formulaire */}
             <div style={{ width: '100%', maxWidth: 420, background: 'rgba(255,255,255,0.06)', backdropFilter: 'blur(24px)', borderRadius: 24, padding: '36px 28px', border: '1px solid rgba(255,255,255,0.10)', boxShadow: '0 24px 64px rgba(0,0,0,0.5)', animation: 'fadeUp 0.5s ease both' }}>
               <div style={{ marginBottom: 28 }}>
-                <h2 style={{ fontFamily: 'Manrope', fontWeight: 900, fontSize: 24, color: 'white', letterSpacing: '-0.8px', marginBottom: 6 }}>
+                <h2 style={{ fontFamily: 'Comfortaa', fontWeight: 900, fontSize: 24, color: 'white', letterSpacing: '-0.8px', marginBottom: 6 }}>
                   {isSignUp ? 'Créer votre compte' : 'Bon retour'}
                 </h2>
                 <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.45)' }}>
@@ -138,7 +138,7 @@ export default function LoginPage() {
               {/* Logo */}
               <div style={{ display: 'flex', alignItems: 'center', gap: 20, cursor: 'pointer' }} onClick={() => router.push('/')}>
                 <img src="/logo.png" style={{ height: 44, width: 'auto', objectFit: 'contain' }} />
-                <span style={{ fontSize: 22, color: 'white' }}><span style={{ fontFamily: "'Playfair Display', serif", fontStyle: 'italic', fontWeight: 700 }}>Mana</span><span style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 400 }}>flow</span></span>
+                <span style={{ fontSize: 22, color: 'white' }}><span style={{ fontFamily: "'Yeseva One', serif" }}>Mana</span><span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 400 }}>flow</span></span>
               </div>
 
               {/* Centre */}
@@ -148,7 +148,7 @@ export default function LoginPage() {
                   <span style={{ fontSize: 12, color: '#c084fc', fontWeight: 600 }}>Relances automatisées</span>
                 </div>
 
-                <h1 style={{ fontFamily: 'Manrope', fontWeight: 900, fontSize: 40, color: 'white', letterSpacing: '-1.5px', lineHeight: 1.1, marginBottom: 14 }}>
+                <h1 style={{ fontFamily: 'Comfortaa', fontWeight: 900, fontSize: 40, color: 'white', letterSpacing: '-1.5px', lineHeight: 1.1, marginBottom: 14 }}>
                   Vos impayés,<br/>
                   <span style={{ background: 'linear-gradient(135deg, #a855f7, #ec4899)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>enfin récupérés.</span>
                 </h1>
@@ -187,7 +187,7 @@ export default function LoginPage() {
                       { value: '5h', label: 'Économisées/sem.', color: '#a855f7' },
                     ].map((s, i) => (
                       <div key={i} style={{ textAlign: 'center', padding: '8px', borderRight: i < 2 ? '1px solid rgba(255,255,255,0.08)' : 'none' }}>
-                        <p style={{ fontFamily: 'Manrope', fontWeight: 800, fontSize: 20, color: s.color, marginBottom: 3 }}>{s.value}</p>
+                        <p style={{ fontFamily: 'Comfortaa', fontWeight: 800, fontSize: 20, color: s.color, marginBottom: 3 }}>{s.value}</p>
                         <p style={{ fontSize: 10, color: 'rgba(255,255,255,0.35)' }}>{s.label}</p>
                       </div>
                     ))}
@@ -203,7 +203,7 @@ export default function LoginPage() {
               <div style={{ width: '100%', animation: 'fadeUp 0.5s ease both' }}>
 
                 <div style={{ marginBottom: 36 }}>
-                  <h2 style={{ fontFamily: 'Manrope', fontWeight: 900, fontSize: 26, color: 'white', letterSpacing: '-0.8px', marginBottom: 8 }}>
+                  <h2 style={{ fontFamily: 'Comfortaa', fontWeight: 900, fontSize: 26, color: 'white', letterSpacing: '-0.8px', marginBottom: 8 }}>
                     {isSignUp ? 'Créer votre compte' : 'Bon retour'}
                   </h2>
                   <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.4)' }}>

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
@@ -33,7 +33,7 @@ function ConfirmationContent() {
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Manrope:wght@700;800;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Comfortaa:wght@300;400;700&display=swap');
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         body { background: #fafafa; }
         @keyframes spin { to { transform: rotate(360deg); } }
@@ -97,7 +97,7 @@ function ConfirmationContent() {
               </svg>
             </div>
             <h1 style={{
-              fontFamily: "Manrope, sans-serif", fontWeight: 900,
+              fontFamily: 'Comfortaa, sans-serif', fontWeight: 900,
               fontSize: 24, color: "#0a0a0a", marginBottom: 8, letterSpacing: "-0.8px",
             }}>
               Paiement échoué
@@ -150,7 +150,7 @@ function ConfirmationContent() {
                 <div style={{ width: 10, height: 10, background: "white", borderRadius: 2 }} />
               </div>
               <span style={{
-                fontFamily: "Manrope, sans-serif", fontWeight: 800,
+                fontFamily: 'Comfortaa, sans-serif', fontWeight: 800,
                 fontSize: 14, color: "#0a0a0a",
               }}>
                 ManaFlow
@@ -177,7 +177,7 @@ function ConfirmationContent() {
             </div>
 
             <h1 style={{
-              fontFamily: "Manrope, sans-serif", fontWeight: 900,
+              fontFamily: 'Comfortaa, sans-serif', fontWeight: 900,
               fontSize: 26, color: "#0a0a0a", marginBottom: 8, letterSpacing: "-1px",
             }}>
               Paiement confirmé
@@ -202,7 +202,7 @@ function ConfirmationContent() {
                   Montant réglé
                 </p>
                 <p style={{
-                  fontFamily: "Manrope, sans-serif", fontWeight: 900,
+                  fontFamily: 'Comfortaa, sans-serif', fontWeight: 900,
                   fontSize: 42, color: "#0a0a0a",
                   letterSpacing: "-2px", lineHeight: 1,
                 }}>

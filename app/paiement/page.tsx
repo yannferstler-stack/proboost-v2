@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState } from "react";
 import { loadStripe } from "@stripe/stripe-js";
@@ -136,7 +136,7 @@ export default function PaiementPage() {
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Manrope:wght@700;800;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Comfortaa:wght@300;400;700&display=swap');
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         body { background: #fafafa; }
         @keyframes spin { to { transform: rotate(360deg); } }
@@ -176,7 +176,7 @@ export default function PaiementPage() {
               }}>
                 <div style={{ width: 12, height: 12, background: "white", borderRadius: 3 }} />
               </div>
-              <span style={{ fontFamily: "Manrope, sans-serif", fontWeight: 800, fontSize: 16, color: "white" }}>
+              <span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 800, fontSize: 16, color: "white" }}>
                 ManaFlow
               </span>
             </div>
@@ -201,7 +201,7 @@ export default function PaiementPage() {
             </p>
             <div style={{ display: "flex", alignItems: "baseline", gap: 6, marginBottom: 40 }}>
               <span style={{
-                fontFamily: "Manrope, sans-serif",
+                fontFamily: 'Comfortaa, sans-serif',
                 fontWeight: 900, fontSize: 58,
                 color: "white", letterSpacing: "-3px", lineHeight: 1,
               }}>
@@ -249,7 +249,7 @@ export default function PaiementPage() {
         }}>
           <div style={{ width: "100%", maxWidth: 400, animation: "fadeUp 0.5s ease forwards" }}>
             <h2 style={{
-              fontFamily: "Manrope, sans-serif",
+              fontFamily: 'Comfortaa, sans-serif',
               fontWeight: 900, fontSize: 24,
               color: "#0a0a0a", marginBottom: 4,
               letterSpacing: "-0.8px",

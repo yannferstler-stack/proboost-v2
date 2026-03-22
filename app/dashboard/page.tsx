@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 import { useEffect, useState } from 'react'
 import { createClient } from '../lib/supabase'
 import { getEmailContent } from '../lib/email-templates'
@@ -270,7 +270,7 @@ export default function Dashboard() {
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Manrope:wght@700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Comfortaa:wght@300;400;700&family=Yeseva+One&display=swap');
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         body { background: #F4F6F8; }
         @keyframes spin { to { transform: rotate(360deg); } }
@@ -322,7 +322,7 @@ export default function Dashboard() {
         <aside style={{ width: 240, background: 'white', borderRight: '1px solid #EAECEF', display: 'flex', flexDirection: 'column', padding: '24px 16px', position: 'fixed', top: 0, left: 0, height: '100vh' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 2, padding: '0 8px', marginBottom: 36 }}>
             <img src="/logo.png" style={{ height: 44, width: 'auto', objectFit: 'contain' }} />
-            <span onClick={() => window.location.href = '/'} style={{ fontSize: 22, color: '#111', cursor: 'pointer' }}><span style={{ fontFamily: "'Playfair Display', serif", fontStyle: 'italic', fontWeight: 700 }}>Mana</span><span style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 400 }}>flow</span></span>
+            <span onClick={() => window.location.href = '/'} style={{ fontSize: 22, color: '#111', cursor: 'pointer' }}><span style={{ fontFamily: "'Yeseva One', serif" }}>Mana</span><span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 400 }}>flow</span></span>
           </div>
           <nav style={{ display: 'flex', flexDirection: 'column', gap: 4, flex: 1 }}>
             {[
@@ -359,7 +359,7 @@ export default function Dashboard() {
 
           {/* HEADER */}
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 32, animation: 'fadeUp 0.4s ease both' }}>
-            <h1 style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 800, fontSize: 24, color: '#111' }}>Tableau de bord</h1>
+            <h1 style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 800, fontSize: 24, color: '#111' }}>Tableau de bord</h1>
             <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
               {factures.length > 0 && (
                 <button className="btn-export" onClick={handleExportCSV}>
@@ -380,7 +380,7 @@ export default function Dashboard() {
                 ⚡
               </div>
               <div style={{ flex: 1 }}>
-                <p style={{ fontSize: 14, fontWeight: 700, color: '#92400e', marginBottom: 2, fontFamily: 'Manrope, sans-serif' }}>
+                <p style={{ fontSize: 14, fontWeight: 700, color: '#92400e', marginBottom: 2, fontFamily: 'Comfortaa, sans-serif' }}>
                   Activez les paiements en ligne
                 </p>
                 <p style={{ fontSize: 12, color: '#b45309', lineHeight: 1.5 }}>
@@ -399,18 +399,18 @@ export default function Dashboard() {
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 20, marginBottom: 28, animation: 'fadeUp 0.4s ease 0.1s both' }}>
             <div className="card" style={{ background: 'white', borderRadius: 16, padding: '24px', boxShadow: '0 1px 4px rgba(0,0,0,0.06)', border: '1px solid #EAECEF' }}>
               <p style={{ fontSize: 11, color: '#9CA3AF', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: 12 }}>Relances effectuées</p>
-              <span style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 800, fontSize: 36, color: '#a855f7' }}>{totalRelances}</span>
+              <span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 800, fontSize: 36, color: '#a855f7' }}>{totalRelances}</span>
               <p style={{ fontSize: 12, color: '#9CA3AF', marginTop: 6 }}>emails + SMS cumulés</p>
             </div>
             <div className="card" style={{ background: 'white', borderRadius: 16, padding: '24px', boxShadow: '0 1px 4px rgba(0,0,0,0.06)', border: '1px solid #EAECEF' }}>
               <p style={{ fontSize: 11, color: '#9CA3AF', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: 12 }}>Total factures</p>
-              <span style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 800, fontSize: 36, color: '#ec4899' }}>{totalFactures}</span>
+              <span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 800, fontSize: 36, color: '#ec4899' }}>{totalFactures}</span>
               <p style={{ fontSize: 12, color: '#9CA3AF', marginTop: 6 }}>factures importées</p>
             </div>
             <div className="card" style={{ background: 'linear-gradient(135deg, #a855f7, #ec4899)', borderRadius: 16, padding: '24px', boxShadow: '0 4px 20px rgba(168,85,247,0.30)', border: 'none' }}>
               <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.7)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: 12 }}>Montant récupéré</p>
               <div style={{ display: 'flex', alignItems: 'baseline', gap: 4 }}>
-                <span style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 800, fontSize: 36, color: 'white' }}>{montantRecupere.toLocaleString('fr-FR')}</span>
+                <span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 800, fontSize: 36, color: 'white' }}>{montantRecupere.toLocaleString('fr-FR')}</span>
                 <span style={{ fontSize: 18, color: 'rgba(255,255,255,0.8)', fontWeight: 700 }}>€</span>
               </div>
               <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.65)', marginTop: 6 }}>grâce à ManaFlow</p>
@@ -442,7 +442,7 @@ export default function Dashboard() {
           {factures.length === 0 && (
             <div style={{ background: 'linear-gradient(135deg, #a855f7, #ec4899)', borderRadius: 16, padding: '32px 36px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', boxShadow: '0 4px 24px rgba(168,85,247,0.30)' }}>
               <div>
-                <h2 style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 800, fontSize: 20, color: 'white', marginBottom: 6 }}>Commencez maintenant</h2>
+                <h2 style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 800, fontSize: 20, color: 'white', marginBottom: 6 }}>Commencez maintenant</h2>
                 <p style={{ color: 'rgba(255,255,255,0.75)', fontSize: 14 }}>Importez votre premier fichier CSV et automatisez vos relances</p>
               </div>
               <button onClick={() => window.location.href = '/dashboard/importer'}
@@ -457,7 +457,7 @@ export default function Dashboard() {
             <div style={{ background: 'white', borderRadius: 16, overflow: 'hidden', boxShadow: '0 1px 4px rgba(0,0,0,0.06)', border: '1px solid #EAECEF', animation: 'fadeUp 0.4s ease 0.2s both' }}>
               <div style={{ padding: '18px 24px', borderBottom: '1px solid #EAECEF', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                  <h2 style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 700, fontSize: 15, color: '#111' }}>Factures</h2>
+                  <h2 style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 700, fontSize: 15, color: '#111' }}>Factures</h2>
                   <span style={{ fontSize: 12, color: '#9CA3AF', background: '#F4F6F8', padding: '3px 10px', borderRadius: 20, fontWeight: 500 }}>{factures.length}</span>
                 </div>
                 <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
@@ -500,12 +500,12 @@ export default function Dashboard() {
 
                         <td style={{ padding: '14px 16px' }} onClick={e => e.stopPropagation()}>
                           <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                            <span style={{ fontWeight: 700, color: '#111', fontSize: 13, fontFamily: 'Manrope, sans-serif' }}>{f.numero_facture || '—'}</span>
+                            <span style={{ fontWeight: 700, color: '#111', fontSize: 13, fontFamily: 'Comfortaa, sans-serif' }}>{f.numero_facture || '—'}</span>
                             <span style={{ fontSize: 11, color: '#9CA3AF' }}>{f.client_nom}</span>
                           </div>
                         </td>
 
-                        <td style={{ padding: '14px 16px', fontWeight: 700, color: '#111', fontSize: 14, fontFamily: 'Manrope, sans-serif', whiteSpace: 'nowrap' }}>
+                        <td style={{ padding: '14px 16px', fontWeight: 700, color: '#111', fontSize: 14, fontFamily: 'Comfortaa, sans-serif', whiteSpace: 'nowrap' }}>
                           {Number(f.montant).toLocaleString('fr-FR')} €
                         </td>
 
@@ -615,7 +615,7 @@ export default function Dashboard() {
             <div style={{ width: 48, height: 48, background: '#FEF2F2', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px', fontSize: 22 }}>
               🗑️
             </div>
-            <h3 style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 800, fontSize: 18, color: '#111', textAlign: 'center', marginBottom: 8 }}>
+            <h3 style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 800, fontSize: 18, color: '#111', textAlign: 'center', marginBottom: 8 }}>
               Supprimer cette facture ?
             </h3>
             <p style={{ fontSize: 13, color: '#6B7280', textAlign: 'center', marginBottom: 6, lineHeight: 1.6 }}>
@@ -644,7 +644,7 @@ export default function Dashboard() {
           <div className="modal" onClick={e => e.stopPropagation()}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 24 }}>
               <div>
-                <h2 style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 800, fontSize: 20, color: '#111', marginBottom: 4 }}>
+                <h2 style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 800, fontSize: 20, color: '#111', marginBottom: 4 }}>
                   {selectedFacture.numero_facture || 'Facture'}
                 </h2>
                 <span style={{ fontSize: 13, color: '#9CA3AF' }}>Détails de la facture</span>
@@ -692,7 +692,7 @@ export default function Dashboard() {
               {/* Header */}
               <div style={{ padding: '20px 24px', borderBottom: '1px solid #EAECEF', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'white', borderRadius: '20px 20px 0 0' }}>
                 <div>
-                  <h2 style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 800, fontSize: 22, color: '#111', marginBottom: 2 }}>
+                  <h2 style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 800, fontSize: 22, color: '#111', marginBottom: 2 }}>
                     Prévisualisation — Relance #{numeroRelance}
                   </h2>
                   <p style={{ fontSize: 12, color: '#9CA3AF' }}>{previewFacture.numero_facture} · {previewFacture.client_nom}</p>
@@ -724,7 +724,7 @@ export default function Dashboard() {
           <div className="modal" onClick={e => e.stopPropagation()}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 24 }}>
               <div>
-                <h2 style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 800, fontSize: 20, color: '#111', marginBottom: 4 }}>
+                <h2 style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 800, fontSize: 20, color: '#111', marginBottom: 4 }}>
                   Historique des relances
                 </h2>
                 <span style={{ fontSize: 13, color: '#9CA3AF' }}>{historyFacture.numero_facture} · {historyFacture.client_nom}</span>
@@ -780,7 +780,7 @@ export default function Dashboard() {
         <div className="overlay" onClick={() => { setShowOnboarding(false); localStorage.setItem('manaflow_onboarding_done', '1') }}>
           <div className="modal" onClick={e => e.stopPropagation()} style={{ maxWidth: 480, textAlign: 'center' }}>
             <div style={{ width: 56, height: 56, background: 'linear-gradient(135deg, #a855f7, #ec4899)', borderRadius: 16, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px', fontSize: 26 }}>🚀</div>
-            <h2 style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 800, fontSize: 22, color: '#111', marginBottom: 8 }}>
+            <h2 style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 800, fontSize: 22, color: '#111', marginBottom: 8 }}>
               Bienvenue sur ManaFlow !
             </h2>
             <p style={{ fontSize: 14, color: '#6B7280', marginBottom: 28, lineHeight: 1.6 }}>

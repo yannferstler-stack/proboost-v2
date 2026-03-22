@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
@@ -52,7 +52,7 @@ export default function CommentCaMarchePage() {
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Manrope:wght@700;800;900&family=Playfair+Display:ital,wght@1,700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Comfortaa:wght@300;400;700&family=Yeseva+One&display=swap');
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         body { background: #0d0620; }
         @keyframes slideDown { from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)} }
@@ -87,7 +87,7 @@ export default function CommentCaMarchePage() {
           <div style={{ height: 72, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 20px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 20, cursor: 'pointer' }} onClick={() => router.push('/')}>
               <img src="/logo.png" style={{ height: 44, width: 'auto', objectFit: 'contain' }} />
-              <span style={{ fontSize: 22, color: 'white' }}><span style={{ fontFamily: "'Playfair Display', serif", fontStyle: 'italic', fontWeight: 700 }}>Mana</span><span style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 400 }}>flow</span></span>
+              <span style={{ fontSize: 22, color: 'white' }}><span style={{ fontFamily: "'Yeseva One', serif" }}>Mana</span><span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 400 }}>flow</span></span>
             </div>
             <div className="nav-links">
               <span className="nav-a" onClick={() => router.push('/')} style={{ fontSize: 14, fontWeight: 500 }}>Accueil</span>
@@ -123,7 +123,7 @@ export default function CommentCaMarchePage() {
 
         {/* HEADER — sans badge "Guide complet" */}
         <div style={{ textAlign: 'center', padding: isMobile ? '48px 20px 36px' : '72px 20px 48px', position: 'relative', zIndex: 1 }}>
-          <h1 style={{ fontFamily: 'Manrope', fontWeight: 900, fontSize: 'clamp(30px, 5vw, 60px)', color: 'white', letterSpacing: '-1.5px', lineHeight: 1.1, marginBottom: 14 }}>
+          <h1 style={{ fontFamily: 'Comfortaa', fontWeight: 900, fontSize: 'clamp(30px, 5vw, 60px)', color: 'white', letterSpacing: '-1.5px', lineHeight: 1.1, marginBottom: 14 }}>
             Tout savoir sur<br/>
             <span style={{ background: 'linear-gradient(135deg, #a855f7, #ec4899)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>ManaFlow</span>
           </h1>
@@ -136,7 +136,7 @@ export default function CommentCaMarchePage() {
         <section style={{ padding: isMobile ? '0 20px 56px' : '0 40px 80px', maxWidth: 900, margin: '0 auto', position: 'relative', zIndex: 1 }}>
           <div style={{ marginBottom: 24, textAlign: 'center' }}>
             <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.25)', fontWeight: 600, letterSpacing: '2px', textTransform: 'uppercase' }}>01 — Vidéo explicative</span>
-            <h2 style={{ fontFamily: 'Manrope', fontWeight: 800, fontSize: isMobile ? 22 : 28, color: 'white', letterSpacing: '-0.5px', marginTop: 8 }}>Voyez ManaFlow en action</h2>
+            <h2 style={{ fontFamily: 'Comfortaa', fontWeight: 800, fontSize: isMobile ? 22 : 28, color: 'white', letterSpacing: '-0.5px', marginTop: 8 }}>Voyez ManaFlow en action</h2>
           </div>
           <div style={{ background: 'rgba(255,255,255,0.04)', backdropFilter: 'blur(12px)', borderRadius: 20, aspectRatio: '16/9', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 14, border: '1px solid rgba(255,255,255,0.08)' }}>
             <div style={{ width: 64, height: 64, background: 'linear-gradient(135deg, #a855f7, #ec4899)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', boxShadow: '0 4px 24px rgba(168,85,247,0.45)' }}>
@@ -151,12 +151,12 @@ export default function CommentCaMarchePage() {
           <div style={{ maxWidth: 800, margin: '0 auto' }}>
             <div style={{ textAlign: 'center', marginBottom: 36 }}>
               <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.25)', fontWeight: 600, letterSpacing: '2px', textTransform: 'uppercase' }}>02 — Questions & Réponses</span>
-              <h2 style={{ fontFamily: 'Manrope', fontWeight: 800, fontSize: isMobile ? 22 : 28, color: 'white', letterSpacing: '-0.5px', marginTop: 8 }}>Vos questions, nos réponses</h2>
+              <h2 style={{ fontFamily: 'Comfortaa', fontWeight: 800, fontSize: isMobile ? 22 : 28, color: 'white', letterSpacing: '-0.5px', marginTop: 8 }}>Vos questions, nos réponses</h2>
             </div>
             <div style={{ display: 'grid', gap: 12 }}>
               {faqs.map((faq, i) => (
                 <div key={i} className="faq-card" style={{ background: 'rgba(255,255,255,0.04)', backdropFilter: 'blur(12px)', borderRadius: 14, padding: isMobile ? '18px 20px' : '22px 26px' }}>
-                  <p style={{ fontFamily: 'Manrope', fontWeight: 700, color: 'white', fontSize: 14, marginBottom: 8 }}>{faq.q}</p>
+                  <p style={{ fontFamily: 'Comfortaa', fontWeight: 700, color: 'white', fontSize: 14, marginBottom: 8 }}>{faq.q}</p>
                   <p style={{ color: 'rgba(255,255,255,0.50)', fontSize: 14, lineHeight: 1.7 }}>{faq.r}</p>
                 </div>
               ))}
@@ -168,7 +168,7 @@ export default function CommentCaMarchePage() {
         <section style={{ borderTop: '1px solid rgba(255,255,255,0.06)', padding: isMobile ? '56px 20px' : '80px 40px', textAlign: 'center', position: 'relative', zIndex: 1 }}>
           <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 400, height: 400, background: 'radial-gradient(circle, rgba(168,85,247,0.12) 0%, transparent 65%)', borderRadius: '50%', pointerEvents: 'none' }} />
           <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.25)', fontWeight: 600, letterSpacing: '3px', textTransform: 'uppercase', marginBottom: 16 }}>Prêt à démarrer ?</p>
-          <h2 style={{ fontFamily: 'Manrope', fontWeight: 900, fontSize: isMobile ? 28 : 36, color: 'white', letterSpacing: '-1px', marginBottom: 14, lineHeight: 1.2 }}>
+          <h2 style={{ fontFamily: 'Comfortaa', fontWeight: 900, fontSize: isMobile ? 28 : 36, color: 'white', letterSpacing: '-1px', marginBottom: 14, lineHeight: 1.2 }}>
             Récupérez vos impayés<br/>
             <span style={{ background: 'linear-gradient(135deg, #a855f7, #ec4899)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>dès aujourd&apos;hui.</span>
           </h2>
@@ -183,7 +183,7 @@ export default function CommentCaMarchePage() {
           <div className="footer-inner" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: isMobile ? 16 : 0 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 20, cursor: 'pointer' }} onClick={() => router.push('/')}>
               <img src="/logo.png" style={{ height: 44, width: 'auto', objectFit: 'contain' }} />
-              <span style={{ fontSize: 15, color: 'white' }}><span style={{ fontFamily: "'Playfair Display', serif", fontStyle: 'italic', fontWeight: 700 }}>Mana</span><span style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 400 }}>flow</span></span>
+              <span style={{ fontSize: 15, color: 'white' }}><span style={{ fontFamily: "'Yeseva One', serif" }}>Mana</span><span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 400 }}>flow</span></span>
             </div>
             <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.25)', textAlign: 'center' }}>© 2025 ManaFlow — Tous droits réservés</p>
             <div style={{ display: 'flex', gap: 20 }}>

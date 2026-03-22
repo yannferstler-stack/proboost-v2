@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 import { useRouter } from 'next/navigation'
 import { useState, useEffect } from 'react'
 
@@ -90,10 +90,10 @@ function FacturationVisuel({ size }: { size: number }) {
         <div style={{ fontSize: size < 120 ? 9 : 11, color: '#ec4899', fontWeight: 700, letterSpacing: '1.5px', textTransform: 'uppercase', marginBottom: 4, fontFamily: 'Inter, sans-serif' }}>
           Obligatoire
         </div>
-        <div style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 900, fontSize: size < 120 ? 18 : 26, color: 'white', lineHeight: 1, letterSpacing: '-1px' }}>
+        <div style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 900, fontSize: size < 120 ? 18 : 26, color: 'white', lineHeight: 1, letterSpacing: '-1px' }}>
           Sept.
         </div>
-        <div style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 900, fontSize: size < 120 ? 22 : 32, color: '#a855f7', lineHeight: 1, letterSpacing: '-1px' }}>
+        <div style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 900, fontSize: size < 120 ? 22 : 32, color: '#a855f7', lineHeight: 1, letterSpacing: '-1px' }}>
           2026
         </div>
         {/* Barre d'alerte */}
@@ -123,7 +123,7 @@ export default function BlogPage() {
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Manrope:wght@700;800;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Comfortaa:wght@300;400;700&family=Yeseva+One&display=swap');
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         body { background: #0d0620; }
         @keyframes fadeUp { from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)} }
@@ -154,7 +154,7 @@ export default function BlogPage() {
           <div style={{ height: 72, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 20px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 20, cursor: 'pointer' }} onClick={() => router.push('/')}>
               <img src="/logo.png" style={{ height: 44, width: 'auto', objectFit: 'contain' }} />
-              <span style={{ fontSize: 22, color: 'white' }}><span style={{ fontFamily: "'Playfair Display', serif", fontStyle: 'italic', fontWeight: 700 }}>Mana</span><span style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 400 }}>flow</span></span>
+              <span style={{ fontSize: 22, color: 'white' }}><span style={{ fontFamily: "'Yeseva One', serif" }}>Mana</span><span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 400 }}>flow</span></span>
             </div>
             <div className="nav-links">
               <span className="nav-a" onClick={() => router.push('/')} style={{ fontSize: 14 }}>Accueil</span>
@@ -181,7 +181,7 @@ export default function BlogPage() {
         {/* HEADER */}
         <div style={{ maxWidth: 860, margin: '0 auto', padding: isMobile ? '40px 20px 32px' : '56px 24px 40px', animation: 'fadeUp 0.4s ease both' }}>
           <span style={{ fontSize: 11, color: '#a855f7', fontWeight: 700, letterSpacing: '3px', textTransform: 'uppercase', display: 'block', marginBottom: 12 }}>Blog</span>
-          <h1 style={{ fontFamily: 'Manrope', fontWeight: 900, fontSize: isMobile ? 26 : 38, color: 'white', letterSpacing: '-1.5px', marginBottom: 16, lineHeight: 1.1 }}>
+          <h1 style={{ fontFamily: 'Comfortaa', fontWeight: 900, fontSize: isMobile ? 26 : 38, color: 'white', letterSpacing: '-1.5px', marginBottom: 16, lineHeight: 1.1 }}>
             Des histoires qui vous ressemblent
           </h1>
           <p style={{ fontSize: isMobile ? 14 : 16, color: 'rgba(255,255,255,0.55)', lineHeight: 1.8, maxWidth: 680 }}>
@@ -219,7 +219,7 @@ export default function BlogPage() {
 
                   {/* TEXTE */}
                   <div style={{ flex: 1, minWidth: 0 }}>
-                    <h2 style={{ fontFamily: 'Manrope', fontWeight: 800, fontSize: isMobile ? 15 : 20, color: 'white', letterSpacing: '-0.3px', marginBottom: 8, lineHeight: 1.25 }}>
+                    <h2 style={{ fontFamily: 'Comfortaa', fontWeight: 800, fontSize: isMobile ? 15 : 20, color: 'white', letterSpacing: '-0.3px', marginBottom: 8, lineHeight: 1.25 }}>
                       {article.titre}
                     </h2>
                     <p style={{ fontSize: isMobile ? 12 : 14, color: 'rgba(255,255,255,0.50)', lineHeight: 1.65 }}>

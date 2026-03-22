@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
@@ -17,7 +17,7 @@ export default function NousConnaitrePage() {
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Manrope:wght@700;800;900&family=Playfair+Display:ital,wght@0,700;1,700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Comfortaa:wght@300;400;700&family=Yeseva+One&display=swap');
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         body { background: #0d0620; }
         @keyframes pulse { 0%,100%{opacity:1}50%{opacity:0.4} }
@@ -60,7 +60,7 @@ export default function NousConnaitrePage() {
           <div style={{ height: 72, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 20px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 20, cursor: 'pointer' }} onClick={() => router.push('/')}>
               <img src="/logo.png" style={{ height: 44, width: 'auto', objectFit: 'contain' }} />
-              <span style={{ fontSize: 22, color: 'white' }}><span style={{ fontFamily: "'Playfair Display', serif", fontStyle: 'italic', fontWeight: 700 }}>Mana</span><span style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 400 }}>flow</span></span>
+              <span style={{ fontSize: 22, color: 'white' }}><span style={{ fontFamily: "'Yeseva One', serif" }}>Mana</span><span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 400 }}>flow</span></span>
             </div>
             <div className="nav-links">
               <span className="nav-a" onClick={() => router.push('/')} style={{ fontSize: 14 }}>Accueil</span>
@@ -101,7 +101,7 @@ export default function NousConnaitrePage() {
             <div style={{ width: 6, height: 6, background: '#a855f7', borderRadius: '50%', animation: 'pulse 2s infinite' }} />
             <span style={{ fontSize: 12, color: '#c084fc', fontWeight: 600 }}>Notre histoire</span>
           </div>
-          <h1 style={{ fontFamily: 'Manrope', fontWeight: 900, fontSize: 'clamp(28px, 5vw, 60px)', color: 'white', letterSpacing: '-1.5px', lineHeight: 1.1, marginBottom: 14 }}>
+          <h1 style={{ fontFamily: 'Comfortaa', fontWeight: 900, fontSize: 'clamp(28px, 5vw, 60px)', color: 'white', letterSpacing: '-1.5px', lineHeight: 1.1, marginBottom: 14 }}>
             Nés d&apos;un paradoxe,<br/>
             <span style={{ background: 'linear-gradient(135deg, #a855f7, #ec4899)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>construits pour vous.</span>
           </h1>
@@ -117,10 +117,10 @@ export default function NousConnaitrePage() {
             <div className="profile-card" style={{ background: 'rgba(168,85,247,0.06)', backdropFilter: 'blur(16px)', border: '1px solid rgba(168,85,247,0.20)', borderRadius: 24, padding: isMobile ? '28px 24px' : '40px 36px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 24 }}>
                 <div style={{ width: 56, height: 56, background: 'linear-gradient(135deg, #a855f7, #7c3aed)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, boxShadow: '0 4px 20px rgba(168,85,247,0.40)' }}>
-                  <span style={{ fontFamily: 'Manrope', fontWeight: 900, fontSize: 22, color: 'white' }}>Y</span>
+                  <span style={{ fontFamily: 'Comfortaa', fontWeight: 900, fontSize: 22, color: 'white' }}>Y</span>
                 </div>
                 <div>
-                  <h3 style={{ fontFamily: 'Manrope', fontWeight: 800, fontSize: 18, color: 'white', marginBottom: 4 }}>Yann</h3>
+                  <h3 style={{ fontFamily: 'Comfortaa', fontWeight: 800, fontSize: 18, color: 'white', marginBottom: 4 }}>Yann</h3>
                   <span style={{ fontSize: 11, background: 'rgba(168,85,247,0.15)', color: '#c084fc', border: '1px solid rgba(168,85,247,0.25)', borderRadius: 6, padding: '3px 8px', fontWeight: 600 }}>Finance · 10 ans d&apos;expérience</span>
                 </div>
               </div>
@@ -137,10 +137,10 @@ export default function NousConnaitrePage() {
             <div className="profile-card" style={{ background: 'rgba(236,72,153,0.06)', backdropFilter: 'blur(16px)', border: '1px solid rgba(236,72,153,0.20)', borderRadius: 24, padding: isMobile ? '28px 24px' : '40px 36px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 24 }}>
                 <div style={{ width: 56, height: 56, background: 'linear-gradient(135deg, #ec4899, #be185d)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, boxShadow: '0 4px 20px rgba(236,72,153,0.40)' }}>
-                  <span style={{ fontFamily: 'Manrope', fontWeight: 900, fontSize: 22, color: 'white' }}>A</span>
+                  <span style={{ fontFamily: 'Comfortaa', fontWeight: 900, fontSize: 22, color: 'white' }}>A</span>
                 </div>
                 <div>
-                  <h3 style={{ fontFamily: 'Manrope', fontWeight: 800, fontSize: 18, color: 'white', marginBottom: 4 }}>Anne-Sophie</h3>
+                  <h3 style={{ fontFamily: 'Comfortaa', fontWeight: 800, fontSize: 18, color: 'white', marginBottom: 4 }}>Anne-Sophie</h3>
                   <span style={{ fontSize: 11, background: 'rgba(236,72,153,0.15)', color: '#f472b6', border: '1px solid rgba(236,72,153,0.25)', borderRadius: 6, padding: '3px 8px', fontWeight: 600 }}>Marketing & Communication · 15 ans</span>
                 </div>
               </div>
@@ -160,7 +160,7 @@ export default function NousConnaitrePage() {
         <section style={{ borderTop: '1px solid rgba(255,255,255,0.06)', padding: isMobile ? '56px 20px' : '80px 40px', position: 'relative', zIndex: 1 }}>
           <div style={{ maxWidth: 800, margin: '0 auto', textAlign: 'center' }}>
             <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.25)', fontWeight: 600, letterSpacing: '3px', textTransform: 'uppercase', display: 'block', marginBottom: 18 }}>Notre mission</span>
-            <h2 style={{ fontFamily: 'Playfair Display', fontWeight: 700, fontStyle: 'italic', fontSize: 'clamp(22px, 4vw, 44px)', color: 'white', lineHeight: 1.3, marginBottom: 24, letterSpacing: '-0.5px' }}>
+            <h2 style={{ fontFamily: 'Yeseva One', fontSize: 'clamp(22px, 4vw, 44px)', color: 'white', lineHeight: 1.3, marginBottom: 24, letterSpacing: '-0.5px' }}>
               Contribuer, à notre échelle,<br className="mission-br"/>à faire vivre l&apos;économie française.
             </h2>
             <p style={{ fontSize: isMobile ? 15 : 17, color: 'rgba(255,255,255,0.55)', lineHeight: 1.85, fontWeight: 300, maxWidth: 560, margin: '0 auto' }}>
@@ -182,7 +182,7 @@ export default function NousConnaitrePage() {
                   <div style={{ width: 48, height: 48, background: 'rgba(168,85,247,0.12)', border: '1px solid rgba(168,85,247,0.25)', borderRadius: 14, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20, marginBottom: 16 }}>
                     {v.icon}
                   </div>
-                  <h3 style={{ fontFamily: 'Manrope', fontWeight: 800, fontSize: 16, color: 'white', marginBottom: 8 }}>{v.titre}</h3>
+                  <h3 style={{ fontFamily: 'Comfortaa', fontWeight: 800, fontSize: 16, color: 'white', marginBottom: 8 }}>{v.titre}</h3>
                   <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.50)', lineHeight: 1.75 }}>{v.texte}</p>
                 </div>
               ))}
@@ -200,7 +200,7 @@ export default function NousConnaitrePage() {
                 { value: '100%', label: 'alignés sur votre succès — aucun frais sans résultat', color: '#c084fc' },
               ].map((s, i) => (
                 <div key={i} style={{ textAlign: 'center', padding: isMobile ? '28px 20px' : '20px 36px', borderRight: !isMobile && i < 2 ? '1px solid rgba(255,255,255,0.06)' : 'none', borderBottom: isMobile && i < 2 ? '1px solid rgba(255,255,255,0.06)' : 'none' }}>
-                  <p style={{ fontFamily: 'Manrope', fontWeight: 900, fontSize: isMobile ? 40 : 48, color: s.color, letterSpacing: '-2px', marginBottom: 8 }}>{s.value}</p>
+                  <p style={{ fontFamily: 'Comfortaa', fontWeight: 900, fontSize: isMobile ? 40 : 48, color: s.color, letterSpacing: '-2px', marginBottom: 8 }}>{s.value}</p>
                   <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.40)', lineHeight: 1.6, maxWidth: 180, margin: '0 auto' }}>{s.label}</p>
                 </div>
               ))}
@@ -212,7 +212,7 @@ export default function NousConnaitrePage() {
         <section style={{ padding: isMobile ? '56px 20px' : '80px 40px', textAlign: 'center', position: 'relative', zIndex: 1 }}>
           <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 400, height: 400, background: 'radial-gradient(circle, rgba(168,85,247,0.12) 0%, transparent 65%)', borderRadius: '50%', pointerEvents: 'none' }} />
           <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.25)', fontWeight: 600, letterSpacing: '3px', textTransform: 'uppercase', marginBottom: 16 }}>Rejoignez-nous</p>
-          <h2 style={{ fontFamily: 'Manrope', fontWeight: 900, fontSize: isMobile ? 26 : 36, color: 'white', letterSpacing: '-1px', marginBottom: 14 }}>
+          <h2 style={{ fontFamily: 'Comfortaa', fontWeight: 900, fontSize: isMobile ? 26 : 36, color: 'white', letterSpacing: '-1px', marginBottom: 14 }}>
             Prêt à nous faire confiance ?
           </h2>
           <p style={{ color: 'rgba(255,255,255,0.40)', fontSize: 14, marginBottom: 28, maxWidth: 400, margin: '0 auto 28px' }}>
@@ -228,7 +228,7 @@ export default function NousConnaitrePage() {
           <div className="footer-inner" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: isMobile ? 16 : 0 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 20, cursor: 'pointer' }} onClick={() => router.push('/')}>
               <img src="/logo.png" style={{ height: 44, width: 'auto', objectFit: 'contain' }} />
-              <span style={{ fontSize: 15, color: 'white' }}><span style={{ fontFamily: "'Playfair Display', serif", fontStyle: 'italic', fontWeight: 700 }}>Mana</span><span style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 400 }}>flow</span></span>
+              <span style={{ fontSize: 15, color: 'white' }}><span style={{ fontFamily: "'Yeseva One', serif" }}>Mana</span><span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 400 }}>flow</span></span>
             </div>
             <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.25)', textAlign: 'center' }}>© 2025 ManaFlow — Tous droits réservés</p>
             <div style={{ display: 'flex', gap: 20 }}>

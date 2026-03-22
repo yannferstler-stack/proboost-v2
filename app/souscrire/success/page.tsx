@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 import { useState, useEffect, Suspense } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { createClient } from '../../lib/supabase'
@@ -148,7 +148,7 @@ function SuccessContent() {
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Manrope:wght@700;800;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Comfortaa:wght@300;400;700&family=Yeseva+One&display=swap');
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         body { background: #F4F6F8; }
         @keyframes spin { to { transform: rotate(360deg); } }
@@ -167,7 +167,7 @@ function SuccessContent() {
         <nav style={{ background: 'white', borderBottom: '1px solid #EAECEF', height: 60, display: 'flex', alignItems: 'center', padding: '0 40px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 2 }}>
             <img src="/logo.png" style={{ height: 44, width: 'auto', objectFit: 'contain' }} />
-            <span style={{ fontSize: 22, color: '#111' }}><span style={{ fontFamily: "'Playfair Display', serif", fontStyle: 'italic', fontWeight: 700 }}>Mana</span><span style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 400 }}>flow</span></span>
+            <span style={{ fontSize: 22, color: '#111' }}><span style={{ fontFamily: "'Yeseva One', serif" }}>Mana</span><span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 400 }}>flow</span></span>
           </div>
         </nav>
 
@@ -215,7 +215,7 @@ function SuccessContent() {
             {/* ÉTAPE 1 — INFOS */}
             {step === 'infos' && (
               <form onSubmit={handleSubmitInfos}>
-                <h2 style={{ fontFamily: 'Manrope', fontWeight: 800, fontSize: 20, color: '#111', marginBottom: 6 }}>Vos informations</h2>
+                <h2 style={{ fontFamily: 'Comfortaa', fontWeight: 800, fontSize: 20, color: '#111', marginBottom: 6 }}>Vos informations</h2>
                 <p style={{ fontSize: 13, color: '#9CA3AF', marginBottom: 24 }}>Ces informations seront utilisées pour personnaliser vos relances.</p>
 
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 16 }}>
@@ -273,7 +273,7 @@ function SuccessContent() {
             {/* ÉTAPE 2 — MOT DE PASSE (+ création compte en fond) */}
             {step === 'password' && (
               <form onSubmit={handleSubmitPassword}>
-                <h2 style={{ fontFamily: 'Manrope', fontWeight: 800, fontSize: 20, color: '#111', marginBottom: 6 }}>Créez votre mot de passe</h2>
+                <h2 style={{ fontFamily: 'Comfortaa', fontWeight: 800, fontSize: 20, color: '#111', marginBottom: 6 }}>Créez votre mot de passe</h2>
                 <p style={{ fontSize: 13, color: '#9CA3AF', marginBottom: 24 }}>Minimum 8 caractères.</p>
 
                 <div style={{ marginBottom: 16 }}>
@@ -312,7 +312,7 @@ function SuccessContent() {
             {/* ÉTAPE 3 — STRIPE CONNECT (obligatoire) */}
             {step === 'stripe' && (
               <div>
-                <h2 style={{ fontFamily: 'Manrope', fontWeight: 800, fontSize: 20, color: '#111', marginBottom: 6 }}>Connectez votre compte Stripe</h2>
+                <h2 style={{ fontFamily: 'Comfortaa', fontWeight: 800, fontSize: 20, color: '#111', marginBottom: 6 }}>Connectez votre compte Stripe</h2>
                 <p style={{ fontSize: 13, color: '#9CA3AF', marginBottom: 24 }}>Pour recevoir les paiements de vos clients directement sur votre compte bancaire.</p>
 
                 {/* Explication visuelle du flux */}
@@ -372,7 +372,7 @@ function SuccessContent() {
                 <div style={{ width: 64, height: 64, background: '#1DB954', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px', animation: 'checkmark 0.4s ease' }}>
                   <span style={{ color: 'white', fontSize: 28, fontWeight: 700 }}>✓</span>
                 </div>
-                <h2 style={{ fontFamily: 'Manrope', fontWeight: 900, fontSize: 22, color: '#111', marginBottom: 8 }}>Compte créé !</h2>
+                <h2 style={{ fontFamily: 'Comfortaa', fontWeight: 900, fontSize: 22, color: '#111', marginBottom: 8 }}>Compte créé !</h2>
                 <p style={{ fontSize: 14, color: '#6B7280', marginBottom: 6 }}>Bienvenue sur ManaFlow, {form.prenom}.</p>
                 <p style={{ fontSize: 13, color: '#9CA3AF' }}>Redirection vers votre dashboard...</p>
                 <div style={{ marginTop: 20, width: 32, height: 32, border: '3px solid #E0E0E0', borderTop: '3px solid #1DB954', borderRadius: '50%', animation: 'spin 0.8s linear infinite', margin: '20px auto 0' }} />

@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 import { useState, useEffect } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { Suspense } from 'react'
@@ -83,7 +83,7 @@ function SouscrireContent() {
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Manrope:wght@700;800;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Comfortaa:wght@300;400;700&family=Yeseva+One&display=swap');
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         body { background: #0d0620; }
         @keyframes spin { to { transform: rotate(360deg); } }
@@ -112,7 +112,7 @@ function SouscrireContent() {
         <nav style={{ height: 64, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 20px', borderBottom: '1px solid rgba(255,255,255,0.06)', position: 'relative', zIndex: 10 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 20, cursor: 'pointer' }} onClick={() => router.push('/')}>
             <img src="/logo.png" style={{ height: 44, width: 'auto', objectFit: 'contain' }} />
-            <span style={{ fontSize: 22, color: 'white' }}><span style={{ fontFamily: "'Playfair Display', serif", fontStyle: 'italic', fontWeight: 700 }}>Mana</span><span style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 400 }}>flow</span></span>
+            <span style={{ fontSize: 22, color: 'white' }}><span style={{ fontFamily: "'Yeseva One', serif" }}>Mana</span><span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 400 }}>flow</span></span>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
             <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.35)' }}>Déjà client ?</span>
@@ -137,7 +137,7 @@ function SouscrireContent() {
           <div>
             <div style={{ marginBottom: 24 }}>
               <span style={{ fontSize: 11, color: '#a855f7', fontWeight: 700, letterSpacing: '2px', textTransform: 'uppercase' }}>Souscription</span>
-              <h1 style={{ fontFamily: 'Manrope', fontWeight: 900, fontSize: isMobile ? 24 : 32, color: 'white', letterSpacing: '-1px', marginTop: 6, marginBottom: 6 }}>Choisissez votre plan</h1>
+              <h1 style={{ fontFamily: 'Comfortaa', fontWeight: 900, fontSize: isMobile ? 24 : 32, color: 'white', letterSpacing: '-1px', marginTop: 6, marginBottom: 6 }}>Choisissez votre plan</h1>
               <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.45)' }}>Abonnement mensuel sans engagement — résiliable à tout moment.</p>
             </div>
 
@@ -156,7 +156,7 @@ function SouscrireContent() {
                         </div>
                         <div>
                           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 2, flexWrap: 'wrap' }}>
-                            <span style={{ fontFamily: 'Manrope', fontWeight: 800, fontSize: 16, color: 'white' }}>{p.nom}</span>
+                            <span style={{ fontFamily: 'Comfortaa', fontWeight: 800, fontSize: 16, color: 'white' }}>{p.nom}</span>
                             {p.popular && <span style={{ fontSize: 11, background: 'linear-gradient(135deg, #a855f7, #ec4899)', color: 'white', borderRadius: 20, padding: '2px 8px', fontWeight: 700 }}>Recommandé</span>}
                           </div>
                           <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.40)' }}>{p.description}</span>
@@ -164,7 +164,7 @@ function SouscrireContent() {
                       </div>
                       <div style={{ textAlign: 'right', flexShrink: 0 }}>
                         <div style={{ display: 'flex', alignItems: 'baseline', gap: 2 }}>
-                          <span style={{ fontFamily: 'Manrope', fontWeight: 900, fontSize: 20, color: 'white' }}>{p.prix} €</span>
+                          <span style={{ fontFamily: 'Comfortaa', fontWeight: 900, fontSize: 20, color: 'white' }}>{p.prix} €</span>
                           <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)' }}>/mois</span>
                         </div>
                         <span style={{ fontSize: 11, color: p.couleur, fontWeight: 600 }}>+ {p.commission} au succès</span>
@@ -184,7 +184,7 @@ function SouscrireContent() {
 
             {/* CGV */}
             <div style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 14, padding: '18px 20px' }}>
-              <h3 style={{ fontFamily: 'Manrope', fontWeight: 700, fontSize: 14, color: 'white', marginBottom: 12 }}>Acceptation des conditions</h3>
+              <h3 style={{ fontFamily: 'Comfortaa', fontWeight: 700, fontSize: 14, color: 'white', marginBottom: 12 }}>Acceptation des conditions</h3>
               <div className="scroll-box" style={{ background: 'rgba(0,0,0,0.2)', borderRadius: 10, padding: '12px 14px', marginBottom: 14, fontSize: 12, color: 'rgba(255,255,255,0.50)', lineHeight: 1.75, maxHeight: 140, overflowY: 'auto' }}>
                 <p style={{ fontWeight: 600, marginBottom: 6, color: 'rgba(255,255,255,0.70)' }}>Mandat de recouvrement et conditions d'utilisation</p>
                 <p style={{ marginBottom: 6 }}>En souscrivant à ManaFlow, vous mandatez ManaFlow pour effectuer, en votre nom et pour votre compte, des relances amiables auprès de vos débiteurs par email et/ou SMS.</p>
@@ -206,15 +206,15 @@ function SouscrireContent() {
           {/* DROITE — Récapitulatif */}
           <div>
             <div style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', backdropFilter: 'blur(16px)', borderRadius: 16, padding: isMobile ? '20px' : '28px 24px', position: isMobile ? 'static' : 'sticky', top: 24 }}>
-              <h3 style={{ fontFamily: 'Manrope', fontWeight: 800, fontSize: 15, color: 'white', marginBottom: 18 }}>Récapitulatif</h3>
+              <h3 style={{ fontFamily: 'Comfortaa', fontWeight: 800, fontSize: 15, color: 'white', marginBottom: 18 }}>Récapitulatif</h3>
 
               <div style={{ background: plan.bg, border: `1px solid ${plan.border}`, borderRadius: 12, padding: '14px', marginBottom: 18 }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
-                  <span style={{ fontFamily: 'Manrope', fontWeight: 800, fontSize: 16, color: 'white' }}>Plan {plan.nom}</span>
+                  <span style={{ fontFamily: 'Comfortaa', fontWeight: 800, fontSize: 16, color: 'white' }}>Plan {plan.nom}</span>
                   <span style={{ fontSize: 11, background: 'linear-gradient(135deg, #a855f7, #ec4899)', color: 'white', borderRadius: 6, padding: '2px 8px', fontWeight: 700 }}>MENSUEL</span>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, marginBottom: 4 }}>
-                  <span style={{ fontFamily: 'Manrope', fontWeight: 900, fontSize: 28, color: 'white' }}>{plan.prix} €</span>
+                  <span style={{ fontFamily: 'Comfortaa', fontWeight: 900, fontSize: 28, color: 'white' }}>{plan.prix} €</span>
                   <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.35)' }}>/mois</span>
                 </div>
                 <span style={{ fontSize: 12, color: plan.couleur, fontWeight: 600 }}>+ {plan.commission} prélevé sur chaque facture recouvrée</span>
