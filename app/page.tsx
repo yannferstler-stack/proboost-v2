@@ -2,6 +2,11 @@
 import { useRouter } from 'next/navigation'
 import { useEffect, useRef, useState } from 'react'
 
+const EARLY_BIRD_DISCOUNT = 0.20
+function formatPrix(n: number) {
+  return n.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+}
+
 function useInView() {
   const ref = useRef<HTMLDivElement>(null)
   const [inView, setInView] = useState(false)
@@ -32,7 +37,7 @@ const CAROUSEL_IMAGES = [
 
 const PLANS = [
   {
-    nom: 'Starter', prix: '19,99', couleur: '#a855f7', bg: 'rgba(168,85,247,0.1)', border: 'rgba(168,85,247,0.25)', commission: '14%',
+    nom: 'Starter', prixBase: 19.99, couleur: '#a855f7', bg: 'rgba(168,85,247,0.1)', border: 'rgba(168,85,247,0.25)', commission: '14%',
     description: 'Idéal pour les indépendants et petites structures',
     features: [
       { label: '10 factures / mois', ok: true, bold: false },
@@ -46,7 +51,7 @@ const PLANS = [
     popular: false, popularLabel: '',
   },
   {
-    nom: 'Premium', prix: '49,99', couleur: '#ec4899', bg: 'rgba(236,72,153,0.1)', border: 'rgba(236,72,153,0.25)', commission: '12%',
+    nom: 'Premium', prixBase: 49.99, couleur: '#ec4899', bg: 'rgba(236,72,153,0.1)', border: 'rgba(236,72,153,0.25)', commission: '12%',
     description: 'Pour les TPE avec un volume de factures régulier',
     features: [
       { label: '50 factures / mois', ok: true, bold: true },
@@ -60,7 +65,7 @@ const PLANS = [
     popular: false, popularLabel: '',
   },
   {
-    nom: 'Pro', prix: '149,99', couleur: '#c084fc', bg: 'rgba(192,132,252,0.1)', border: 'rgba(192,132,252,0.25)', commission: '10%',
+    nom: 'Pro', prixBase: 149.99, couleur: '#c084fc', bg: 'rgba(192,132,252,0.1)', border: 'rgba(192,132,252,0.25)', commission: '10%',
     description: 'Pour les cabinets et entreprises à fort volume',
     features: [
       { label: "Jusqu'à 200 factures / mois", ok: true, bold: true },
@@ -362,12 +367,20 @@ export default function Home() {
                         {plan.popularLabel}
                       </div>
                     )}
+                    {/* Badge -20% */}
+                    <div style={{ position: 'absolute', top: plan.popular ? 18 : -11, right: 16, background: 'linear-gradient(135deg, #a855f7, #ec4899)', color: 'white', borderRadius: 6, padding: '2px 8px', fontSize: 11, fontWeight: 700 }}>
+                      -20% lancement
+                    </div>
+
                     <div style={{ marginBottom: 20 }}>
                       <h3 style={{ fontFamily: 'Comfortaa', fontWeight: 800, fontSize: 22, color: 'white', marginBottom: 6 }}>{plan.nom}</h3>
                       <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)', marginBottom: 16, lineHeight: 1.5 }}>{plan.description}</p>
-                      <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, marginBottom: 10 }}>
-                        <span style={{ fontFamily: 'Comfortaa', fontWeight: 900, fontSize: 36, color: 'white' }}>{plan.prix} €</span>
+                      <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, marginBottom: 4 }}>
+                        <span style={{ fontFamily: 'Comfortaa', fontWeight: 900, fontSize: 36, color: 'white' }}>{formatPrix(plan.prixBase * (1 - EARLY_BIRD_DISCOUNT))} €</span>
                         <span style={{ fontSize: 14, color: 'rgba(255,255,255,0.35)' }}>/mois</span>
+                      </div>
+                      <div style={{ marginBottom: 10 }}>
+                        <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.30)', textDecoration: 'line-through' }}>puis {formatPrix(plan.prixBase)}€/mois</span>
                       </div>
                       <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: plan.bg, border: `1px solid ${plan.border}`, borderRadius: 8, padding: '5px 12px' }}>
                         <span style={{ fontSize: 12, color: plan.couleur, fontWeight: 600 }}>{plan.commission} prélevé sur chaque facture recouvrée</span>
