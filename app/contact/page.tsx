@@ -86,6 +86,7 @@ export default function ContactPage() {
               <span className="nav-a" onClick={() => router.push('/')} style={{ fontSize: 14 }}>Accueil</span>
               <span className="nav-a" onClick={() => router.push('/comment-ca-marche')} style={{ fontSize: 14 }}>Comment ça marche ?</span>
               <span className="nav-a" onClick={() => router.push('/blog')} style={{ fontSize: 14 }}>Blog</span>
+              <span className="nav-a" onClick={() => router.push('/nous-connaitre')} style={{ fontSize: 14 }}>Nous connaître</span>
               <button className="btn-connexion" onClick={() => router.push('/login')}>
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
                 Connexion
@@ -112,7 +113,7 @@ export default function ContactPage() {
             Une question ?<br/>
             <span style={{ background: 'linear-gradient(135deg, #a855f7, #ec4899)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>On est là.</span>
           </h1>
-          <p style={{ fontSize: isMobile ? 14 : 16, color: 'rgba(255,255,255,0.45)', maxWidth: 440, margin: '0 auto', fontWeight: 300, lineHeight: 1.7 }}>
+          <p style={{ fontSize: isMobile ? 14 : 16, color: 'rgba(255,255,255,0.65)', maxWidth: 440, margin: '0 auto', fontWeight: 300, lineHeight: 1.7 }}>
             Que ce soit pour une question sur le service, un problème technique ou une suggestion, écrivez-nous.
           </p>
         </div>
@@ -142,20 +143,20 @@ export default function ContactPage() {
               {!sent ? (
                 <>
                   <h2 style={{ fontFamily: 'Comfortaa', fontWeight: 800, fontSize: 20, color: 'white', marginBottom: 6 }}>Envoyez-nous un message</h2>
-                  <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.40)', marginBottom: 28 }}>Tous les champs sont obligatoires.</p>
+                  <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.60)', marginBottom: 28 }}>Tous les champs sont obligatoires.</p>
                   <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
                     <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 16 }}>
                       <div>
-                        <label style={{ fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.45)', display: 'block', marginBottom: 7, textTransform: 'uppercase', letterSpacing: '0.4px' }}>Nom</label>
+                        <label style={{ fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.65)', display: 'block', marginBottom: 7, textTransform: 'uppercase', letterSpacing: '0.4px' }}>Nom</label>
                         <input type="text" placeholder="Votre nom" required value={form.nom} onChange={e => setForm(f => ({ ...f, nom: e.target.value }))} className="input-field" />
                       </div>
                       <div>
-                        <label style={{ fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.45)', display: 'block', marginBottom: 7, textTransform: 'uppercase', letterSpacing: '0.4px' }}>Email</label>
+                        <label style={{ fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.65)', display: 'block', marginBottom: 7, textTransform: 'uppercase', letterSpacing: '0.4px' }}>Email</label>
                         <input type="email" placeholder="vous@entreprise.com" required value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))} className="input-field" />
                       </div>
                     </div>
                     <div>
-                      <label style={{ fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.45)', display: 'block', marginBottom: 7, textTransform: 'uppercase', letterSpacing: '0.4px' }}>Sujet</label>
+                      <label style={{ fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.65)', display: 'block', marginBottom: 7, textTransform: 'uppercase', letterSpacing: '0.4px' }}>Sujet</label>
                       <select required value={form.sujet} onChange={e => setForm(f => ({ ...f, sujet: e.target.value }))} className="input-field" style={{ cursor: 'pointer' }}>
                         <option value="" disabled>Choisissez un sujet</option>
                         <option value="question-service">Question sur le service</option>
@@ -166,7 +167,7 @@ export default function ContactPage() {
                       </select>
                     </div>
                     <div>
-                      <label style={{ fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.45)', display: 'block', marginBottom: 7, textTransform: 'uppercase', letterSpacing: '0.4px' }}>Message</label>
+                      <label style={{ fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.65)', display: 'block', marginBottom: 7, textTransform: 'uppercase', letterSpacing: '0.4px' }}>Message</label>
                       <textarea placeholder="Décrivez votre question ou problème..." required rows={5} value={form.message} onChange={e => setForm(f => ({ ...f, message: e.target.value }))} className="input-field" style={{ resize: 'vertical', minHeight: 120 }} />
                     </div>
                     {sendError && <p style={{ color: '#FCA5A5', fontSize: 13, marginBottom: 4 }}>{sendError}</p>}
@@ -181,7 +182,7 @@ export default function ContactPage() {
                     <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#c084fc" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
                   </div>
                   <h3 style={{ fontFamily: 'Comfortaa', fontWeight: 800, fontSize: 20, color: 'white', marginBottom: 8 }}>Message envoyé !</h3>
-                  <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.45)', lineHeight: 1.7 }}>Nous reviendrons vers vous à l&apos;adresse <span style={{ color: '#c084fc', fontWeight: 600 }}>{form.email}</span> sous 48h ouvrées.</p>
+                  <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.65)', lineHeight: 1.7 }}>Nous reviendrons vers vous à l&apos;adresse <span style={{ color: '#c084fc', fontWeight: 600 }}>{form.email}</span> sous 48h ouvrées.</p>
                 </div>
               )}
             </div>
@@ -192,7 +193,7 @@ export default function ContactPage() {
               {FAQ_RAPIDE.map((faq, i) => (
                 <div key={i} className="faq-item" style={{ background: 'rgba(255,255,255,0.03)', backdropFilter: 'blur(12px)', borderRadius: 14, padding: '18px 20px' }}>
                   <p style={{ fontFamily: 'Comfortaa', fontWeight: 700, color: 'white', fontSize: 13, marginBottom: 6 }}>{faq.q}</p>
-                  <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)', lineHeight: 1.6 }}>{faq.r}</p>
+                  <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.65)', lineHeight: 1.6 }}>{faq.r}</p>
                 </div>
               ))}
 

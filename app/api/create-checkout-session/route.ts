@@ -14,7 +14,11 @@ const PLAN_CONFIG: Record<string, { amount: number, name: string, commission: st
 
 export async function POST(req: NextRequest) {
   try {
-    const { plan } = await req.json()
+    const { plan, cgv_accepted } = await req.json()
+
+    if (!cgv_accepted) {
+      return NextResponse.json({ error: 'Vous devez accepter les CGV pour continuer.' }, { status: 400 })
+    }
 
     if (!PLAN_CONFIG[plan]) {
       return NextResponse.json({ error: 'Plan invalide' }, { status: 400 })

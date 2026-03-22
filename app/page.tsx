@@ -409,12 +409,7 @@ export default function Home() {
           const planActif = planManuel ? PLANS.find(p => p.nom === planManuel) || planAuto : planAuto
           const tauxCommission = parseFloat(planActif.commission) / 100
           const gainBrut = montant * 0.80
-          // Commission = max(taux%, 5€ min par facture recouvrée)
-          const nbFactures = Math.max(1, Math.round(montant / 500))
-          const nbRecouvertes = Math.ceil(nbFactures * 0.80)
-          const commissionPct = gainBrut * tauxCommission
-          const commissionMin = nbRecouvertes * 5
-          const commission = Math.max(commissionPct, commissionMin)
+          const commission = gainBrut * tauxCommission
           const gainNet = gainBrut - commission - planActif.prixBase
           const roi = planActif.prixBase > 0 ? Math.round(gainNet / planActif.prixBase) : 0
           return (
@@ -471,18 +466,30 @@ export default function Home() {
                   </div>
 
                   {/* PLAN SELECTOR */}
-                  <div style={{ display: 'flex', gap: 8, marginBottom: 20 }}>
-                    {PLANS.map(p => {
-                      const isAuto = !planManuel && p.nom === planAuto.nom
-                      const isSelected = planManuel === p.nom || isAuto
-                      return (
-                        <button key={p.nom} onClick={() => setPlanManuel(planManuel === p.nom ? null : p.nom)}
-                          style={{ flex: 1, background: isSelected ? p.bg : 'transparent', border: `1.5px solid ${isSelected ? p.border : 'rgba(255,255,255,0.10)'}`, borderRadius: 8, padding: '6px 4px', cursor: 'pointer', transition: 'all 0.15s' }}>
-                          <span style={{ fontSize: 12, fontWeight: 700, color: isSelected ? p.couleur : 'rgba(255,255,255,0.35)', display: 'block' }}>{p.nom}</span>
-                          {isAuto && <span style={{ fontSize: 9, color: 'rgba(255,255,255,0.35)' }}>recommandé</span>}
+                  <div style={{ marginBottom: 20 }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+                      <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.45)', fontWeight: 600, textTransform: 'uppercase' as const, letterSpacing: '0.5px' }}>
+                        Plan {planManuel ? '· sélection manuelle' : '· sélection automatique'}
+                      </p>
+                      {planManuel && (
+                        <button onClick={() => setPlanManuel(null)} style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,0.45)', fontSize: 11, cursor: 'pointer', fontFamily: 'Inter, sans-serif', textDecoration: 'underline', padding: 0 }}>
+                          Réinitialiser
                         </button>
-                      )
-                    })}
+                      )}
+                    </div>
+                    <div style={{ display: 'flex', gap: 8 }}>
+                      {PLANS.map(p => {
+                        const isAuto = !planManuel && p.nom === planAuto.nom
+                        const isSelected = planManuel === p.nom || isAuto
+                        return (
+                          <button key={p.nom} onClick={() => setPlanManuel(planManuel === p.nom ? null : p.nom)}
+                            style={{ flex: 1, background: isSelected ? p.bg : 'transparent', border: `1.5px solid ${isSelected ? p.border : 'rgba(255,255,255,0.10)'}`, borderRadius: 8, padding: '7px 4px', cursor: 'pointer', transition: 'all 0.15s' }}>
+                            <span style={{ fontSize: 12, fontWeight: 700, color: isSelected ? p.couleur : 'rgba(255,255,255,0.50)', display: 'block' }}>{p.nom}</span>
+                            <span style={{ fontSize: 9, color: isAuto ? 'rgba(255,255,255,0.40)' : 'transparent', display: 'block' }}>auto</span>
+                          </button>
+                        )
+                      })}
+                    </div>
                   </div>
 
                   {/* RÉSULTATS */}
@@ -492,7 +499,7 @@ export default function Home() {
                       { label: `Abonnement ${planActif.nom}`, value: `−${formatPrix(planActif.prixBase)} €/mois`, color: 'rgba(255,255,255,0.45)' },
                     ].map((item, i) => (
                       <div key={i} style={{ padding: '10px 12px', background: 'rgba(255,255,255,0.03)', borderRadius: 10, border: '1px solid rgba(255,255,255,0.06)' }}>
-                        <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.40)', marginBottom: 4 }}>{item.label}</p>
+                        <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.60)', marginBottom: 4 }}>{item.label}</p>
                         <p style={{ fontFamily: 'Comfortaa', fontWeight: 900, fontSize: 15, color: item.color, letterSpacing: '-0.3px' }}>{item.value}</p>
                       </div>
                     ))}
@@ -517,8 +524,8 @@ export default function Home() {
                   <button className="btn-primary" onClick={() => router.push(`/souscrire?plan=${planActif.nom.toLowerCase()}`)} style={{ width: '100%', justifyContent: 'center', fontSize: 14, padding: '12px' }}>
                     Essayer gratuitement — plan {planActif.nom} →
                   </button>
-                  <p style={{ fontSize: 10, color: 'rgba(255,255,255,0.20)', textAlign: 'center' as const, marginTop: 8 }}>
-                    Estimation basée sur 80% de taux de recouvrement moyen. Résultats variables.
+                  <p style={{ fontSize: 10, color: 'rgba(255,255,255,0.30)', textAlign: 'center' as const, marginTop: 8 }}>
+                    Simulation sur taux de recouvrement moyen de 80 %. Commission calculée au taux du plan, hors minimum de 5 €/facture. Résultats variables.
                   </p>
                 </div>
               </div>
@@ -541,7 +548,7 @@ export default function Home() {
                 Nous serons votre allié pour la gestion de vos impayés.
               </p>
               <button className="btn-primary" onClick={() => router.push('/souscrire')} style={{ fontSize: 15, padding: '14px 32px' }}>
-                Essayer gratuitement 14 jours →
+                Commencer gratuitement — 14 jours d&apos;essai →
               </button>
               <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.25)', marginTop: 12 }}>0 € pendant 14 jours · Annulable avant la fin de l&apos;essai</p>
             </div>
