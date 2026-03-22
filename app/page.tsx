@@ -44,8 +44,8 @@ const PLANS = [
       { label: 'Import CSV & PDF', ok: true, bold: false },
       { label: 'Dashboard complet', ok: true, bold: false },
       { label: 'Relances email uniquement', ok: true, bold: false },
+      { label: 'Historique des relances', ok: true, bold: false },
       { label: 'Délais personnalisables', ok: false, bold: false },
-      { label: 'Historique des relances', ok: false, bold: false },
     ],
     popular: false, popularLabel: '',
   },
@@ -351,7 +351,7 @@ export default function Home() {
                 <div style={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', alignItems: 'center', gap: 12, marginBottom: 24, justifyContent: 'center' }}>
                   <div style={{ display: 'inline-flex', flexDirection: 'column', alignItems: 'center', gap: 2, background: 'rgba(29,185,84,0.15)', border: '1.5px solid rgba(29,185,84,0.4)', borderRadius: 16, padding: '12px 28px', boxShadow: '0 4px 20px rgba(29,185,84,0.20)' }}>
                     <span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 900, fontSize: 30, color: '#4ade80', lineHeight: 1, letterSpacing: '-1px' }}>14 jours gratuits</span>
-                    <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.65)', fontWeight: 500 }}>Sans CB · Accès complet</span>
+                    <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.65)', fontWeight: 500 }}>CB requise · 0 € débité pendant 14j</span>
                   </div>
                 </div>
                 <h2 style={{ fontFamily: 'Comfortaa', fontWeight: 900, fontSize: isMobile ? 28 : 38, color: 'white', letterSpacing: '-1px', marginBottom: 8 }}>Simple et transparent.</h2>
@@ -522,7 +522,7 @@ export default function Home() {
               <button className="btn-primary" onClick={() => router.push('/souscrire')} style={{ fontSize: 15, padding: '14px 32px' }}>
                 Essayer gratuitement 14 jours →
               </button>
-              <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.25)', marginTop: 12 }}>Sans CB requise · Sans engagement · Accès complet pendant 14 jours</p>
+              <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.25)', marginTop: 12 }}>CB requise · 0 € pendant 14 jours · Sans engagement</p>
             </div>
           </Reveal>
         </section>

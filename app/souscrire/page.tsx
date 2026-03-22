@@ -217,7 +217,7 @@ function SouscrireContent() {
                 {/* Badge essai gratuit */}
                 <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'rgba(29,185,84,0.2)', border: '1px solid rgba(29,185,84,0.4)', borderRadius: 6, padding: '4px 10px', marginBottom: 10 }}>
                   <span style={{ fontSize: 13 }}>🎁</span>
-                  <span style={{ fontSize: 12, color: '#4ade80', fontWeight: 700 }}>14 jours gratuits, sans engagement</span>
+                  <span style={{ fontSize: 12, color: '#4ade80', fontWeight: 700 }}>14 jours gratuits · CB requise, rien débité</span>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, marginBottom: 2 }}>
                   <span style={{ fontFamily: 'Comfortaa', fontWeight: 900, fontSize: 28, color: 'white' }}>0 €</span>
@@ -262,7 +262,7 @@ function SouscrireContent() {
               )}
 
               <div style={{ marginTop: 14, display: 'flex', flexDirection: 'column', gap: 7 }}>
-                {['14 jours gratuits, aucune CB requise', 'Paiement sécurisé par Stripe', 'Sans engagement — résiliable à tout moment', 'Accès immédiat après inscription'].map((t, i) => (
+                {['14 jours gratuits · 0 € débité pendant l\'essai', 'Paiement sécurisé par Stripe', 'Sans engagement — résiliable à tout moment', 'Accès immédiat après inscription'].map((t, i) => (
                   <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                     <span style={{ color: i === 0 ? '#4ade80' : '#a855f7', fontWeight: 700, fontSize: 12 }}>✓</span>
                     <span style={{ fontSize: 12, color: i === 0 ? '#4ade80' : 'rgba(255,255,255,0.40)', fontWeight: i === 0 ? 600 : 400 }}>{t}</span>
