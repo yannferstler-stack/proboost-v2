@@ -347,8 +347,9 @@ export default function Home() {
             <Reveal>
               <div style={{ textAlign: 'center', marginBottom: 40 }}>
                 <span style={{ fontSize: 11, color: '#a855f7', fontWeight: 700, letterSpacing: '2px', textTransform: 'uppercase', display: 'block', marginBottom: 12 }}>Tarifs</span>
-                <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'linear-gradient(135deg, rgba(168,85,247,0.18), rgba(236,72,153,0.18))', border: '1px solid rgba(168,85,247,0.40)', borderRadius: 20, padding: '7px 18px', marginBottom: 18 }}>
-                  <span style={{ fontSize: 13, color: '#c084fc', fontWeight: 700 }}>Offre de lancement — <strong style={{ color: 'white' }}>-20%</strong> pour les 50 premiers abonnés</span>
+                <div style={{ display: 'inline-flex', flexDirection: 'column', alignItems: 'center', gap: 4, background: 'linear-gradient(135deg, #a855f7, #ec4899)', borderRadius: 16, padding: '14px 32px', marginBottom: 24, boxShadow: '0 6px 28px rgba(168,85,247,0.45)' }}>
+                  <span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 900, fontSize: 34, color: 'white', lineHeight: 1, letterSpacing: '-1px' }}>-20%</span>
+                  <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.88)', fontWeight: 500 }}>Offre de lancement · 50 premiers clients uniquement</span>
                 </div>
                 <h2 style={{ fontFamily: 'Comfortaa', fontWeight: 900, fontSize: isMobile ? 28 : 38, color: 'white', letterSpacing: '-1px', marginBottom: 8 }}>Simple et transparent.</h2>
                 <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.50)', lineHeight: 1.8, maxWidth: 560, margin: '0 auto' }}>
@@ -362,13 +363,8 @@ export default function Home() {
                   <div className="plan-card"
                     onClick={() => router.push(`/souscrire?plan=${plan.nom.toLowerCase()}`)}
                     style={{ background: 'rgba(255,255,255,0.04)', backdropFilter: 'blur(12px)', borderRadius: 20, padding: '32px 24px', border: '1px solid rgba(255,255,255,0.08)', boxShadow: 'none', position: 'relative', display: 'flex', flexDirection: 'column' }}>
-                    {plan.popular && (
-                      <div style={{ position: 'absolute', top: -14, left: '50%', transform: 'translateX(-50%)', background: 'linear-gradient(135deg, #a855f7, #ec4899)', color: 'white', borderRadius: 20, padding: '4px 16px', fontSize: 12, fontWeight: 700, whiteSpace: 'nowrap' }}>
-                        {plan.popularLabel}
-                      </div>
-                    )}
                     {/* Badge -20% */}
-                    <div style={{ position: 'absolute', top: plan.popular ? 18 : -11, right: 16, background: 'linear-gradient(135deg, #a855f7, #ec4899)', color: 'white', borderRadius: 6, padding: '2px 8px', fontSize: 11, fontWeight: 700 }}>
+                    <div style={{ position: 'absolute', top: -11, right: 16, background: 'linear-gradient(135deg, #a855f7, #ec4899)', color: 'white', borderRadius: 6, padding: '2px 8px', fontSize: 11, fontWeight: 700 }}>
                       -20% lancement
                     </div>
 
