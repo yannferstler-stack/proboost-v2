@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 import { useEffect, useState } from 'react'
 import { createClient } from '../../lib/supabase'
 import { usePathname } from 'next/navigation'
@@ -211,10 +211,9 @@ export default function DashboardPricingPage() {
       <div style={{ display: 'flex', minHeight: '100vh', background: '#F4F6F8', fontFamily: 'Inter, sans-serif' }}>
 
         {/* Sidebar */}
-        <div style={{ width: 230, background: 'white', borderRight: '1px solid #EAECEF', padding: '24px 16px', display: 'flex', flexDirection: 'column', position: 'sticky', top: 0, height: '100vh' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 32, paddingLeft: 8, cursor: 'pointer' }} onClick={() => window.location.href = '/'}>
-            <img src="/logo.png" style={{ height: 32, width: 'auto', objectFit: 'contain' }} />
-            <span style={{ fontSize: 18, color: '#111' }}>
+        <div style={{ width: 230, background: 'linear-gradient(180deg, #0d0620 0%, #150a30 60%, #0f0a2e 100%)', borderRight: '1px solid rgba(255,255,255,0.07)', padding: '24px 16px', display: 'flex', flexDirection: 'column', position: 'sticky', top: 0, height: '100vh' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 32, paddingLeft: 8, cursor: 'pointer' }} onClick={() => window.location.href = '/'}><img src="/logo.png" style={{ height: 32, width: "auto", objectFit: "contain", filter: "drop-shadow(0 0 12px rgba(236,72,153,0.6)) drop-shadow(0 0 4px rgba(168,85,247,0.4))" }} />
+            <span style={{ fontSize: 18, color: 'white' }}>
               <span style={{ fontFamily: "'Yeseva One', serif", fontWeight: 700 }}>Mana</span>
               <span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 400 }}>flow</span>
             </span>
@@ -223,8 +222,8 @@ export default function DashboardPricingPage() {
             {NAV_ITEMS.map(item => (
               <a key={item.href} href={item.href} className="nav-item"
                 style={{
-                  background: pathname === item.href ? 'rgba(124,58,237,0.08)' : 'transparent',
-                  color: pathname === item.href ? '#7C3AED' : '#555',
+                  background: pathname === item.href ? 'rgba(255,255,255,0.10)' : 'transparent',
+                  color: pathname === item.href ? 'white' : 'rgba(255,255,255,0.55)',
                   fontWeight: pathname === item.href ? 700 : 500,
                 }}>
                 <span>{item.icon}</span>
@@ -232,16 +231,16 @@ export default function DashboardPricingPage() {
               </a>
             ))}
           </nav>
-          <div style={{ borderTop: '1px solid #F3F4F6', paddingTop: 12, marginBottom: 8 }}>
-            <a href="/blog" style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '8px 14px', borderRadius: 10, textDecoration: 'none', fontSize: 13, color: '#9CA3AF', marginBottom: 2, transition: 'color 0.15s' }}>
+          <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: 12, marginBottom: 8 }}>
+            <a href="/blog" style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '8px 14px', borderRadius: 10, textDecoration: 'none', fontSize: 13, color: 'rgba(255,255,255,0.45)', marginBottom: 2, transition: 'color 0.15s' }}>
               📖 Blog
             </a>
-            <a href="/contact" style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '8px 14px', borderRadius: 10, textDecoration: 'none', fontSize: 13, color: '#9CA3AF', transition: 'color 0.15s' }}>
+            <a href="/contact" style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '8px 14px', borderRadius: 10, textDecoration: 'none', fontSize: 13, color: 'rgba(255,255,255,0.45)', transition: 'color 0.15s' }}>
               💬 Aide &amp; contact
             </a>
           </div>
           <button onClick={async () => { await supabase.auth.signOut(); window.location.href = '/login' }}
-            style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '10px 14px', borderRadius: 10, background: 'none', border: 'none', cursor: 'pointer', fontSize: 13, color: '#9CA3AF', fontFamily: 'Inter, sans-serif', width: '100%', textAlign: 'left' }}>
+            style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '10px 14px', borderRadius: 10, background: 'none', border: 'none', cursor: 'pointer', fontSize: 13, color: 'rgba(255,255,255,0.45)', fontFamily: 'Inter, sans-serif', width: '100%', textAlign: 'left' }}>
             🚪 Déconnexion
           </button>
         </div>
@@ -370,3 +369,4 @@ export default function DashboardPricingPage() {
     </>
   )
 }
+

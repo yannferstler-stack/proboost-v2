@@ -194,7 +194,7 @@ export default function SettingsPage() {
         .input-field:focus { border-color: #a855f7 !important; box-shadow: 0 0 0 3px rgba(168,85,247,0.10); }
         .delai-input:focus { border-color: #a855f7 !important; box-shadow: 0 0 0 3px rgba(168,85,247,0.10); }
         .sidebar-link { transition: all 0.15s; border-radius: 8px; cursor: pointer; }
-        .sidebar-link:hover { background: rgba(168,85,247,0.08) !important; color: #a855f7 !important; }
+        .sidebar-link:hover { background: rgba(255,255,255,0.08) !important; color: white !important; }
         .canal-btn { transition: all 0.15s; cursor: pointer; }
         .canal-btn:hover:not(:disabled) { border-color: #a855f7 !important; }
         .seq-row { display: flex; align-items: center; gap: 10px; padding: 11px 0; border-bottom: 1px solid #F3F4F6; }
@@ -213,39 +213,39 @@ export default function SettingsPage() {
           .canal-wrap { flex-direction: column !important; }
           .compte-row { flex-direction: column !important; align-items: flex-start !important; gap: 12px !important; }
           .sidebar-overlay { display: block; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 299; }
-          .mobile-sidebar { position: fixed; top: 0; left: 0; height: 100vh; width: 260px; z-index: 300; background: white; animation: slideIn 0.25s ease; display: flex; flex-direction: column; padding: 24px 16px; border-right: 1px solid #EAECEF; }
+          .mobile-sidebar { position: fixed; top: 0; left: 0; height: 100vh; width: 260px; z-index: 300; background: linear-gradient(180deg, #0d0620 0%, #0f0a2e 100%); animation: slideIn 0.25s ease; display: flex; flex-direction: column; padding: 24px 16px; border-right: 1px solid rgba(255,255,255,0.07); }
         }
       `}</style>
 
       <div style={{ display: 'flex', minHeight: '100vh', fontFamily: 'Inter, sans-serif', background: '#F4F6F8' }}>
 
         {/* SIDEBAR DESKTOP */}
-        <aside className="desktop-sidebar" style={{ width: 240, background: 'white', borderRight: '1px solid #EAECEF', flexDirection: 'column', padding: '24px 16px', position: 'fixed', top: 0, left: 0, height: '100vh' }}>
+        <aside className="desktop-sidebar" style={{ width: 240, background: 'linear-gradient(180deg, #0d0620 0%, #150a30 60%, #0f0a2e 100%)', borderRight: '1px solid rgba(255,255,255,0.07)', flexDirection: 'column', padding: '24px 16px', position: 'fixed', top: 0, left: 0, height: '100vh' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 2, padding: '0 8px', marginBottom: 36 }}>
-            <img src="/logo.png" style={{ height: 44, width: 'auto', objectFit: 'contain' }} />
-            <span onClick={() => window.location.href = '/'} style={{ fontSize: 22, color: '#111', cursor: 'pointer' }}><span style={{ fontFamily: "'Yeseva One', serif", fontWeight: 700 }}>Mana</span><span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 400 }}>flow</span></span>
+            <img src="/logo.png" style={{ height: 44, width: "auto", objectFit: "contain", filter: "drop-shadow(0 0 14px rgba(236,72,153,0.6)) drop-shadow(0 0 4px rgba(168,85,247,0.4))" }} />
+            <span onClick={() => window.location.href = '/'} style={{ fontSize: 22, color: 'white', cursor: 'pointer' }}><span style={{ fontFamily: "'Yeseva One', serif", fontWeight: 700 }}>Mana</span><span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 400 }}>flow</span></span>
           </div>
           <nav style={{ display: 'flex', flexDirection: 'column', gap: 4, flex: 1 }}>
             {NAV_ITEMS.map(item => (
               <div key={item.label} className="sidebar-link" onClick={() => window.location.href = item.href}
-                style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 12px', color: pathname === item.href ? '#a855f7' : '#6B7280', fontSize: 14, fontWeight: pathname === item.href ? 600 : 400, background: pathname === item.href ? 'rgba(168,85,247,0.08)' : 'transparent' }}>
+                style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 12px', color: pathname === item.href ? 'white' : 'rgba(255,255,255,0.55)', fontSize: 14, fontWeight: pathname === item.href ? 600 : 400, background: pathname === item.href ? 'rgba(255,255,255,0.10)' : 'transparent' }}>
                 {item.label}
               </div>
             ))}
             <div style={{ marginTop: 'auto', paddingTop: 12 }}>
-              <a href="/blog" style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '9px 12px', color: '#9CA3AF', fontSize: 13, textDecoration: 'none', borderRadius: 8 }}>📖 Blog</a>
-              <a href="/contact" style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '9px 12px', color: '#9CA3AF', fontSize: 13, textDecoration: 'none', borderRadius: 8 }}>💬 Aide &amp; contact</a>
+              <a href="/blog" style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '9px 12px', color: 'rgba(255,255,255,0.45)', fontSize: 13, textDecoration: 'none', borderRadius: 8 }}>📖 Blog</a>
+              <a href="/contact" style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '9px 12px', color: 'rgba(255,255,255,0.45)', fontSize: 13, textDecoration: 'none', borderRadius: 8 }}>💬 Aide &amp; contact</a>
             </div>
           </nav>
-          <div style={{ borderTop: '1px solid #EAECEF', paddingTop: 16 }}>
+          <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: 16 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 12px' }}>
               <div style={{ width: 32, height: 32, background: 'linear-gradient(135deg, #a855f7, #ec4899)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                 <span style={{ fontSize: 13, color: 'white', fontWeight: 700 }}>{user?.email?.[0]?.toUpperCase()}</span>
               </div>
               <div style={{ flex: 1, overflow: 'hidden' }}>
-                <p style={{ fontSize: 12, fontWeight: 600, color: '#111', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{user?.email}</p>
+                <p style={{ fontSize: 12, fontWeight: 600, color: 'white', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{user?.email}</p>
                 <button onClick={async () => { await supabase.auth.signOut(); window.location.href = '/login' }}
-                  style={{ fontSize: 11, color: '#999', background: 'none', border: 'none', cursor: 'pointer', padding: 0, fontFamily: 'Inter, sans-serif' }}>
+                  style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', background: 'none', border: 'none', cursor: 'pointer', padding: 0, fontFamily: 'Inter, sans-serif' }}>
                   Déconnexion
                 </button>
               </div>
@@ -263,27 +263,27 @@ export default function SettingsPage() {
                   <div style={{ width: 32, height: 32, background: 'linear-gradient(135deg, #a855f7, #ec4899)', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     <span style={{ color: 'white', fontFamily: 'Comfortaa, sans-serif', fontWeight: 800, fontSize: 14 }}>P</span>
                   </div>
-                  <span style={{ fontSize: 22, color: '#111' }}><span style={{ fontFamily: "'Yeseva One', serif", fontWeight: 700 }}>Mana</span><span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 400 }}>flow</span></span>
+                  <span style={{ fontSize: 22, color: 'white' }}><span style={{ fontFamily: "'Yeseva One', serif", fontWeight: 700 }}>Mana</span><span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 400 }}>flow</span></span>
                 </div>
                 <button onClick={() => setSidebarOpen(false)} style={{ background: '#F3F4F6', border: 'none', borderRadius: 8, width: 32, height: 32, cursor: 'pointer', fontSize: 18, color: '#6B7280' }}>×</button>
               </div>
               <nav style={{ display: 'flex', flexDirection: 'column', gap: 4, flex: 1 }}>
                 {NAV_ITEMS.map(item => (
                   <div key={item.label} className="sidebar-link" onClick={() => { window.location.href = item.href; setSidebarOpen(false) }}
-                    style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '12px 14px', color: pathname === item.href ? '#a855f7' : '#6B7280', fontSize: 15, fontWeight: pathname === item.href ? 600 : 400, background: pathname === item.href ? 'rgba(168,85,247,0.08)' : 'transparent' }}>
+                    style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '12px 14px', color: pathname === item.href ? 'white' : 'rgba(255,255,255,0.55)', fontSize: 15, fontWeight: pathname === item.href ? 600 : 400, background: pathname === item.href ? 'rgba(255,255,255,0.10)' : 'transparent' }}>
                     {item.label}
                   </div>
                 ))}
               </nav>
-              <div style={{ borderTop: '1px solid #EAECEF', paddingTop: 16 }}>
+              <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: 16 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 12px' }}>
                   <div style={{ width: 30, height: 30, background: 'linear-gradient(135deg, #a855f7, #ec4899)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     <span style={{ fontSize: 12, color: 'white', fontWeight: 700 }}>{user?.email?.[0]?.toUpperCase()}</span>
                   </div>
                   <div style={{ flex: 1, overflow: 'hidden' }}>
-                    <p style={{ fontSize: 12, fontWeight: 600, color: '#111', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{user?.email}</p>
+                    <p style={{ fontSize: 12, fontWeight: 600, color: 'white', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{user?.email}</p>
                     <button onClick={async () => { await supabase.auth.signOut(); window.location.href = '/login' }}
-                      style={{ fontSize: 11, color: '#999', background: 'none', border: 'none', cursor: 'pointer', padding: 0, fontFamily: 'Inter, sans-serif' }}>
+                      style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', background: 'none', border: 'none', cursor: 'pointer', padding: 0, fontFamily: 'Inter, sans-serif' }}>
                       Déconnexion
                     </button>
                   </div>
@@ -648,3 +648,4 @@ export default function SettingsPage() {
     </>
   )
 }
+
