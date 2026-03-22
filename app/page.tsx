@@ -97,6 +97,7 @@ export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
   const [montantImpaye, setMontantImpaye] = useState(5000)
+  const [planManuel, setPlanManuel] = useState<string | null>(null)
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768)
@@ -365,11 +366,6 @@ export default function Home() {
                   <div className="plan-card"
                     onClick={() => router.push(`/souscrire?plan=${plan.nom.toLowerCase()}`)}
                     style={{ background: 'rgba(255,255,255,0.04)', backdropFilter: 'blur(12px)', borderRadius: 20, padding: '32px 24px', border: '1px solid rgba(255,255,255,0.08)', boxShadow: 'none', position: 'relative', display: 'flex', flexDirection: 'column' }}>
-                    {/* Badge essai gratuit */}
-                    <div style={{ position: 'absolute', top: -11, right: 16, background: 'rgba(29,185,84,0.9)', color: 'white', borderRadius: 6, padding: '2px 8px', fontSize: 11, fontWeight: 700 }}>
-                      14 jours gratuits
-                    </div>
-
                     <div style={{ marginBottom: 20 }}>
                       <h3 style={{ fontFamily: 'Comfortaa', fontWeight: 800, fontSize: 22, color: 'white', marginBottom: 6 }}>{plan.nom}</h3>
                       <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)', marginBottom: 16, lineHeight: 1.5, minHeight: 40 }}>{plan.description}</p>
@@ -407,103 +403,102 @@ export default function Home() {
 
         {/* SIMULATEUR ROI */}
         {(() => {
-          const nbFactures = Math.max(1, Math.round(montantImpaye / 500))
-          const planRec = montantImpaye <= 5000 ? PLANS[0] : montantImpaye <= 25000 ? PLANS[1] : PLANS[2]
-          const tauxCommission = parseFloat(planRec.commission) / 100
+          const planAuto = montantImpaye <= 5000 ? PLANS[0] : montantImpaye <= 25000 ? PLANS[1] : PLANS[2]
+          const planActif = planManuel ? PLANS.find(p => p.nom === planManuel) || planAuto : planAuto
+          const tauxCommission = parseFloat(planActif.commission) / 100
           const gainBrut = montantImpaye * 0.80
           const commission = gainBrut * tauxCommission
-          const gainNet = gainBrut - commission - planRec.prixBase
-          const roi = planRec.prixBase > 0 ? Math.round(gainNet / planRec.prixBase) : 0
-          const montantRecupere = gainBrut - commission
+          const gainNet = gainBrut - commission - planActif.prixBase
+          const roi = planActif.prixBase > 0 ? Math.round(gainNet / planActif.prixBase) : 0
           return (
-            <section style={{ padding: isMobile ? '60px 20px' : '80px 40px', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
-              <div style={{ maxWidth: 800, margin: '0 auto' }}>
+            <section style={{ padding: isMobile ? '48px 20px' : '64px 40px', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+              <div style={{ maxWidth: 680, margin: '0 auto' }}>
                 <Reveal>
-                  <div style={{ textAlign: 'center', marginBottom: 40 }}>
-                    <span style={{ fontSize: 11, color: '#a855f7', fontWeight: 700, letterSpacing: '2px', textTransform: 'uppercase' as const, display: 'block', marginBottom: 12 }}>Simulateur ROI</span>
-                    <h2 style={{ fontFamily: 'Comfortaa', fontWeight: 900, fontSize: isMobile ? 26 : 36, color: 'white', letterSpacing: '-1px', marginBottom: 8 }}>Combien allez-vous récupérer ?</h2>
-                    <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.45)', lineHeight: 1.7 }}>Estimez votre gain net avec ManaFlow en quelques secondes.</p>
+                  <div style={{ textAlign: 'center', marginBottom: 28 }}>
+                    <span style={{ fontSize: 11, color: '#a855f7', fontWeight: 700, letterSpacing: '2px', textTransform: 'uppercase' as const, display: 'block', marginBottom: 10 }}>Simulateur</span>
+                    <h2 style={{ fontFamily: 'Comfortaa', fontWeight: 900, fontSize: isMobile ? 22 : 28, color: 'white', letterSpacing: '-0.5px', marginBottom: 6 }}>Combien allez-vous récupérer ?</h2>
                   </div>
                 </Reveal>
 
-                <div style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 24, padding: isMobile ? '28px 20px' : '40px', backdropFilter: 'blur(12px)' }}>
+                <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 20, padding: isMobile ? '20px 16px' : '28px 32px', backdropFilter: 'blur(12px)' }}>
                   {/* INPUT */}
-                  <div style={{ marginBottom: 32 }}>
-                    <label style={{ display: 'block', fontSize: 14, color: 'rgba(255,255,255,0.70)', fontWeight: 600, marginBottom: 16 }}>
-                      💸 Vous avez combien d'impayés en ce moment ?
-                    </label>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap' as const }}>
-                      <div style={{ position: 'relative' as const, flex: 1, minWidth: 200 }}>
+                  <div style={{ marginBottom: 20 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' as const, marginBottom: 10 }}>
+                      <div style={{ position: 'relative' as const, flex: 1, minWidth: 160 }}>
                         <input
                           type="number"
-                          min={500}
+                          min={100}
                           max={500000}
-                          step={500}
+                          step={100}
                           value={montantImpaye}
-                          onChange={e => setMontantImpaye(Math.max(500, Math.min(500000, Number(e.target.value) || 500)))}
-                          style={{ width: '100%', background: 'rgba(255,255,255,0.07)', border: '1.5px solid rgba(168,85,247,0.4)', borderRadius: 12, padding: '14px 50px 14px 16px', fontSize: 22, fontWeight: 700, color: 'white', fontFamily: 'Comfortaa, sans-serif', outline: 'none' }}
+                          onChange={e => setMontantImpaye(Math.max(100, Math.min(500000, Number(e.target.value) || 100)))}
+                          style={{ width: '100%', background: 'rgba(255,255,255,0.07)', border: '1.5px solid rgba(168,85,247,0.35)', borderRadius: 10, padding: '10px 40px 10px 14px', fontSize: 18, fontWeight: 700, color: 'white', fontFamily: 'Comfortaa, sans-serif', outline: 'none' }}
                         />
-                        <span style={{ position: 'absolute' as const, right: 16, top: '50%', transform: 'translateY(-50%)', fontSize: 18, color: 'rgba(255,255,255,0.40)', fontWeight: 700 }}>€</span>
+                        <span style={{ position: 'absolute' as const, right: 12, top: '50%', transform: 'translateY(-50%)', fontSize: 15, color: 'rgba(255,255,255,0.35)', fontWeight: 700 }}>€</span>
                       </div>
-                      <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.35)', whiteSpace: 'nowrap' as const }}>≈ {nbFactures} facture{nbFactures > 1 ? 's' : ''} impayée{nbFactures > 1 ? 's' : ''}</span>
+                      <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.30)', whiteSpace: 'nowrap' as const }}>d&apos;impayés</span>
                     </div>
                     <input
                       type="range"
-                      min={500}
+                      min={100}
                       max={100000}
-                      step={500}
+                      step={100}
                       value={Math.min(montantImpaye, 100000)}
                       onChange={e => setMontantImpaye(Number(e.target.value))}
-                      style={{ width: '100%', marginTop: 14, accentColor: '#a855f7', height: 6, cursor: 'pointer' }}
+                      style={{ width: '100%', accentColor: '#a855f7', cursor: 'pointer' }}
                     />
-                    <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 4 }}>
-                      <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.25)' }}>500 €</span>
-                      <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.25)' }}>100 000 €</span>
-                    </div>
+                  </div>
+
+                  {/* PLAN SELECTOR */}
+                  <div style={{ display: 'flex', gap: 8, marginBottom: 20 }}>
+                    {PLANS.map(p => {
+                      const isAuto = !planManuel && p.nom === planAuto.nom
+                      const isSelected = planManuel === p.nom || isAuto
+                      return (
+                        <button key={p.nom} onClick={() => setPlanManuel(planManuel === p.nom ? null : p.nom)}
+                          style={{ flex: 1, background: isSelected ? p.bg : 'transparent', border: `1.5px solid ${isSelected ? p.border : 'rgba(255,255,255,0.10)'}`, borderRadius: 8, padding: '6px 4px', cursor: 'pointer', transition: 'all 0.15s' }}>
+                          <span style={{ fontSize: 12, fontWeight: 700, color: isSelected ? p.couleur : 'rgba(255,255,255,0.35)', display: 'block' }}>{p.nom}</span>
+                          {isAuto && <span style={{ fontSize: 9, color: 'rgba(255,255,255,0.35)' }}>recommandé</span>}
+                        </button>
+                      )
+                    })}
                   </div>
 
                   {/* RÉSULTATS */}
-                  <div style={{ background: 'rgba(168,85,247,0.07)', border: '1px solid rgba(168,85,247,0.20)', borderRadius: 16, padding: isMobile ? '20px' : '28px 32px', marginBottom: 24 }}>
-                    <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)', marginBottom: 20, fontWeight: 500 }}>
-                      Avec ManaFlow ({planRec.nom} — recommandé pour votre volume) :
-                    </p>
-                    <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(2,1fr)', gap: 16, marginBottom: 20 }}>
-                      {[
-                        { label: 'Montant potentiellement récupéré', value: `${gainBrut.toLocaleString('fr-FR', { maximumFractionDigits: 0 })} €`, sub: '(80% de taux de recouvrement moyen)', color: 'white' },
-                        { label: 'Commission ManaFlow', value: `−${commission.toLocaleString('fr-FR', { maximumFractionDigits: 0 })} €`, sub: `(${planRec.commission} sur le récupéré)`, color: '#fca5a5' },
-                        { label: 'Abonnement mensuel', value: `−${formatPrix(planRec.prixBase)} €/mois`, sub: `Plan ${planRec.nom}`, color: 'rgba(255,255,255,0.55)' },
-                        { label: 'Net encaissé par vous', value: `+${montantRecupere.toLocaleString('fr-FR', { maximumFractionDigits: 0 })} €`, sub: `après notre commission`, color: '#4ade80' },
-                      ].map((item, i) => (
-                        <div key={i} style={{ padding: '14px 16px', background: 'rgba(255,255,255,0.04)', borderRadius: 12, border: '1px solid rgba(255,255,255,0.06)' }}>
-                          <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.45)', marginBottom: 6 }}>{item.label}</p>
-                          <p style={{ fontFamily: 'Comfortaa', fontWeight: 900, fontSize: 20, color: item.color, letterSpacing: '-0.5px' }}>{item.value}</p>
-                          <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.30)', marginTop: 2 }}>{item.sub}</p>
-                        </div>
-                      ))}
-                    </div>
-                    {/* Gain net total + ROI */}
-                    <div style={{ background: 'linear-gradient(135deg, rgba(29,185,84,0.15), rgba(74,222,128,0.10))', border: '1.5px solid rgba(29,185,84,0.35)', borderRadius: 14, padding: '20px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap' as const, gap: 16 }}>
-                      <div>
-                        <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.50)', marginBottom: 4 }}>Votre gain net estimé</p>
-                        <p style={{ fontFamily: 'Comfortaa', fontWeight: 900, fontSize: isMobile ? 32 : 42, color: gainNet >= 0 ? '#4ade80' : '#fca5a5', letterSpacing: '-1px' }}>
-                          {gainNet >= 0 ? '+' : ''}{gainNet.toLocaleString('fr-FR', { maximumFractionDigits: 0 })} €
-                        </p>
+                  <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr 1fr' : 'repeat(3,1fr)', gap: 8, marginBottom: 16 }}>
+                    {[
+                      { label: 'Récupéré (80%)', value: `${gainBrut.toLocaleString('fr-FR', { maximumFractionDigits: 0 })} €`, color: 'white' },
+                      { label: `Commission (${planActif.commission})`, value: `−${commission.toLocaleString('fr-FR', { maximumFractionDigits: 0 })} €`, color: '#fca5a5' },
+                      { label: `Abonnement ${planActif.nom}`, value: `−${formatPrix(planActif.prixBase)} €/mois`, color: 'rgba(255,255,255,0.45)' },
+                    ].map((item, i) => (
+                      <div key={i} style={{ padding: '10px 12px', background: 'rgba(255,255,255,0.03)', borderRadius: 10, border: '1px solid rgba(255,255,255,0.06)' }}>
+                        <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.40)', marginBottom: 4 }}>{item.label}</p>
+                        <p style={{ fontFamily: 'Comfortaa', fontWeight: 900, fontSize: 15, color: item.color, letterSpacing: '-0.3px' }}>{item.value}</p>
                       </div>
-                      {roi > 0 && (
-                        <div style={{ textAlign: 'right' as const }}>
-                          <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.50)', marginBottom: 4 }}>Retour sur investissement</p>
-                          <p style={{ fontFamily: 'Comfortaa', fontWeight: 900, fontSize: isMobile ? 28 : 38, color: '#4ade80', letterSpacing: '-1px' }}>{roi}x</p>
-                          <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)' }}>votre abonnement</p>
-                        </div>
-                      )}
-                    </div>
+                    ))}
                   </div>
 
-                  <button className="btn-primary" onClick={() => router.push(`/souscrire?plan=${planRec.nom.toLowerCase()}`)} style={{ width: '100%', justifyContent: 'center', fontSize: 15, padding: '16px' }}>
-                    Commencer avec le plan {planRec.nom} — 14 jours gratuits →
+                  {/* GAIN NET */}
+                  <div style={{ background: 'linear-gradient(135deg, rgba(29,185,84,0.12), rgba(74,222,128,0.07))', border: '1.5px solid rgba(29,185,84,0.30)', borderRadius: 12, padding: '14px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, marginBottom: 16 }}>
+                    <div>
+                      <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.45)', marginBottom: 2 }}>Gain net estimé</p>
+                      <p style={{ fontFamily: 'Comfortaa', fontWeight: 900, fontSize: isMobile ? 24 : 30, color: gainNet >= 0 ? '#4ade80' : '#fca5a5', letterSpacing: '-0.5px' }}>
+                        {gainNet >= 0 ? '+' : ''}{gainNet.toLocaleString('fr-FR', { maximumFractionDigits: 0 })} €
+                      </p>
+                    </div>
+                    {roi > 0 && (
+                      <div style={{ textAlign: 'right' as const }}>
+                        <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.45)', marginBottom: 2 }}>ROI</p>
+                        <p style={{ fontFamily: 'Comfortaa', fontWeight: 900, fontSize: isMobile ? 22 : 28, color: '#4ade80', letterSpacing: '-0.5px' }}>{roi}x</p>
+                      </div>
+                    )}
+                  </div>
+
+                  <button className="btn-primary" onClick={() => router.push(`/souscrire?plan=${planActif.nom.toLowerCase()}`)} style={{ width: '100%', justifyContent: 'center', fontSize: 14, padding: '12px' }}>
+                    Essayer gratuitement — plan {planActif.nom} →
                   </button>
-                  <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.25)', textAlign: 'center' as const, marginTop: 10 }}>
-                    Estimation basée sur un taux de recouvrement moyen de 80%. Résultats variables selon les cas.
+                  <p style={{ fontSize: 10, color: 'rgba(255,255,255,0.20)', textAlign: 'center' as const, marginTop: 8 }}>
+                    Estimation basée sur 80% de taux de recouvrement moyen. Résultats variables.
                   </p>
                 </div>
               </div>

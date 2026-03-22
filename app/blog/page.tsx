@@ -199,7 +199,9 @@ export default function BlogPage() {
             </div>
             <div className="nav-links">
               <span className="nav-a" onClick={() => router.push('/')} style={{ fontSize: 14 }}>Accueil</span>
-              <span style={{ fontSize: 14, color: '#c084fc', fontWeight: 600 }}>Blog</span>
+              <span style={{ fontSize: 14, color: '#c084fc', fontWeight: 700 }}>Blog</span>
+              <span className="nav-a" onClick={() => router.push('/comment-ca-marche')} style={{ fontSize: 14 }}>Comment ça marche ?</span>
+              <span className="nav-a" onClick={() => router.push('/nous-connaitre')} style={{ fontSize: 14 }}>Nous connaître</span>
               <button onClick={() => router.push('/login')} style={{ background: 'linear-gradient(135deg, #a855f7, #ec4899)', color: 'white', border: 'none', borderRadius: 10, padding: '9px 20px', fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}>
                 Connexion
               </button>
@@ -213,8 +215,11 @@ export default function BlogPage() {
           </div>
           {menuOpen && (
             <div className="mobile-menu" style={{ padding: '8px 20px 20px', borderTop: '1px solid rgba(255,255,255,0.08)', display: 'flex', flexDirection: 'column', gap: 4 }}>
-              <button onClick={() => { router.push('/'); setMenuOpen(false) }} style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,0.80)', fontSize: 15, fontWeight: 500, padding: '12px 8px', cursor: 'pointer', fontFamily: 'Inter, sans-serif', textAlign: 'left' }}>Accueil</button>
-              <button onClick={() => router.push('/login')} style={{ background: 'linear-gradient(135deg, #a855f7, #ec4899)', color: 'white', border: 'none', borderRadius: 10, padding: '12px', fontSize: 14, fontWeight: 600, cursor: 'pointer', fontFamily: 'Inter, sans-serif', marginTop: 4 }}>Connexion</button>
+              {[{ label: 'Accueil', href: '/' }, { label: 'Comment ça marche ?', href: '/comment-ca-marche' }, { label: 'Nous connaître', href: '/nous-connaitre' }].map(item => (
+                <button key={item.label} onClick={() => { router.push(item.href); setMenuOpen(false) }}
+                  style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,0.80)', fontSize: 15, fontWeight: 500, padding: '12px 8px', cursor: 'pointer', fontFamily: 'Inter, sans-serif', textAlign: 'left' as const }}>{item.label}</button>
+              ))}
+              <button onClick={() => { router.push('/login'); setMenuOpen(false) }} style={{ background: 'linear-gradient(135deg, #a855f7, #ec4899)', color: 'white', border: 'none', borderRadius: 10, padding: '12px', fontSize: 14, fontWeight: 600, cursor: 'pointer', fontFamily: 'Inter, sans-serif', marginTop: 4 }}>Connexion</button>
             </div>
           )}
         </nav>
