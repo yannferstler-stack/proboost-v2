@@ -16,8 +16,16 @@ export default function FacturationPage() {
   const [factures, setFactures] = useState<any[]>([])
   const [plan, setPlan] = useState<'starter' | 'premium' | 'pro'>('starter')
   const [loading, setLoading] = useState(true)
+  const [isMobile, setIsMobile] = useState(false)
   const supabase = createClient()
   const router = useRouter()
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768)
+    check()
+    window.addEventListener('resize', check)
+    return () => window.removeEventListener('resize', check)
+  }, [])
 
   useEffect(() => {
     const getData = async () => {
@@ -66,7 +74,7 @@ export default function FacturationPage() {
         <DashboardSidebar user={user} title="Facturation" />
 
         {/* CONTENU */}
-        <div style={{ marginLeft: 240, flex: 1, padding: '32px 32px' }}>
+        <div className="dash-main">
 
           <div style={{ marginBottom: 32, animation: 'fadeUp 0.4s ease both' }}>
             <h1 style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 800, fontSize: 24, color: '#111', marginBottom: 4 }}>Facturation</h1>
@@ -74,7 +82,7 @@ export default function FacturationPage() {
           </div>
 
           {/* Bandeau plan actuel */}
-          <div style={{ background: 'linear-gradient(135deg, #a855f7, #ec4899)', borderRadius: 16, padding: '24px 28px', marginBottom: 28, display: 'flex', alignItems: 'center', justifyContent: 'space-between', animation: 'fadeUp 0.4s ease 0.05s both', boxShadow: '0 4px 24px rgba(168,85,247,0.30)' }}>
+          <div style={{ background: 'linear-gradient(135deg, #a855f7, #ec4899)', borderRadius: 16, padding: '24px 28px', marginBottom: 28, display: 'flex', flexWrap: 'wrap', gap: 16, alignItems: 'center', justifyContent: 'space-between', animation: 'fadeUp 0.4s ease 0.05s both', boxShadow: '0 4px 24px rgba(168,85,247,0.30)' }}>
             <div>
               <p style={{ color: 'rgba(255,255,255,0.60)', fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '1px', marginBottom: 8 }}>Votre plan actuel</p>
               <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 6 }}>
@@ -93,7 +101,7 @@ export default function FacturationPage() {
           </div>
 
           {/* 3 stats */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 20, marginBottom: 28, animation: 'fadeUp 0.4s ease 0.1s both' }}>
+          <div className="dash-grid-3" style={{ animation: 'fadeUp 0.4s ease 0.1s both' }}>
             <div className="card" style={{ background: 'white', borderRadius: 14, padding: '22px 20px', boxShadow: '0 1px 4px rgba(0,0,0,0.06)', border: '1px solid #EAECEF' }}>
               <p style={{ fontSize: 11, color: '#9CA3AF', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.4px', marginBottom: 12 }}>Total recouvré</p>
               <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, marginBottom: 6 }}>

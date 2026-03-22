@@ -85,8 +85,16 @@ export default function DashboardPricingPage() {
   const [confirmPlan, setConfirmPlan] = useState<string | null>(null)
   const [changing, setChanging] = useState(false)
   const [result, setResult] = useState<{ type: 'success' | 'error'; msg: string } | null>(null)
+  const [isMobile, setIsMobile] = useState(false)
   const supabase = createClient()
   const router = useRouter()
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768)
+    check()
+    window.addEventListener('resize', check)
+    return () => window.removeEventListener('resize', check)
+  }, [])
 
   useEffect(() => {
     const getUser = async () => {
@@ -211,7 +219,7 @@ export default function DashboardPricingPage() {
         <DashboardSidebar user={user} title="Plans" />
 
         {/* Main */}
-        <div style={{ flex: 1, overflowY: 'auto' }}>
+        <div style={{ marginLeft: isMobile ? 0 : 240, flex: 1, overflowY: 'auto', paddingTop: isMobile ? 60 : 0 }}>
           {/* Hero */}
           <div style={{ textAlign: 'center', padding: '56px 24px 32px', animation: 'fadeUp 0.4s ease both' }}>
             <h1 style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 800, fontSize: 32, color: '#111', marginBottom: 10 }}>

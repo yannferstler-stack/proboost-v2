@@ -46,8 +46,16 @@ export default function Dashboard() {
   const [relanceMsg, setRelanceMsg] = useState<{ id: string; ok: boolean } | null>(null)
   const [welcome, setWelcome] = useState<{ prenom: string; euros: number; isNew: boolean } | null>(null)
   const [showWelcome, setShowWelcome] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
   const supabase = createClient()
   const router = useRouter()
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768)
+    check()
+    window.addEventListener('resize', check)
+    return () => window.removeEventListener('resize', check)
+  }, [])
 
   useEffect(() => {
     const getUser = async () => {
@@ -277,20 +285,22 @@ export default function Dashboard() {
   if (loading) return (
     <div style={{ display: 'flex', minHeight: '100vh', background: '#F4F6F8', fontFamily: 'Inter, sans-serif' }}>
       <style>{`@keyframes shimmer { 0% { background-position: -600px 0; } 100% { background-position: 600px 0; } } .sk { background: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%); background-size: 600px 100%; animation: shimmer 1.4s infinite; border-radius: 8px; }`}</style>
-      {/* Sidebar skeleton */}
-      <aside style={{ width: 240, background: 'white', borderRight: '1px solid #EAECEF', padding: '24px 16px', flexShrink: 0 }}>
-        <div className="sk" style={{ height: 36, width: 120, marginBottom: 36 }} />
-        {[1,2,3,4].map(i => <div key={i} className="sk" style={{ height: 36, borderRadius: 10, marginBottom: 8 }} />)}
-      </aside>
+      {/* Sidebar skeleton — hidden on mobile */}
+      {!isMobile && (
+        <aside style={{ width: 240, background: 'white', borderRight: '1px solid #EAECEF', padding: '24px 16px', flexShrink: 0 }}>
+          <div className="sk" style={{ height: 36, width: 120, marginBottom: 36 }} />
+          {[1,2,3,4].map(i => <div key={i} className="sk" style={{ height: 36, borderRadius: 10, marginBottom: 8 }} />)}
+        </aside>
+      )}
       {/* Main skeleton */}
-      <div style={{ flex: 1, padding: '32px', minWidth: 0 }}>
+      <div className="dash-main">
         {/* Header */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 32 }}>
           <div className="sk" style={{ height: 28, width: 180 }} />
           <div className="sk" style={{ height: 40, width: 160, borderRadius: 10 }} />
         </div>
         {/* Stats */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 20, marginBottom: 28 }}>
+        <div className="dash-grid-3">
           {[1,2,3].map(i => (
             <div key={i} style={{ background: 'white', borderRadius: 16, padding: 24, border: '1px solid #EAECEF' }}>
               <div className="sk" style={{ height: 12, width: 100, marginBottom: 16 }} />
@@ -376,7 +386,7 @@ export default function Dashboard() {
         <DashboardSidebar user={user} title="Tableau de bord" />
 
         {/* MAIN */}
-        <div style={{ marginLeft: 240, flex: 1, padding: '32px 32px', minWidth: 0 }}>
+        <div className="dash-main">
 
           {/* BANDEAU BIENVENUE */}
           {showWelcome && welcome && (
@@ -402,9 +412,9 @@ export default function Dashboard() {
           )}
 
           {/* HEADER */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 32, animation: 'fadeUp 0.4s ease both' }}>
+          <div style={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', justifyContent: 'space-between', alignItems: isMobile ? 'flex-start' : 'center', gap: isMobile ? 12 : 0, marginBottom: 32, animation: 'fadeUp 0.4s ease both' }}>
             <h1 style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 800, fontSize: 24, color: '#111' }}>Tableau de bord</h1>
-            <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+            <div style={{ display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap' }}>
               {factures.length > 0 && (
                 <button className="btn-export" onClick={handleExportCSV}>
                   ↓ Exporter CSV
@@ -419,11 +429,11 @@ export default function Dashboard() {
 
           {/* BANNIÈRE STRIPE CONNECT */}
           {!profile?.stripe_connect_account_id && (
-            <div style={{ background: 'linear-gradient(135deg, #fffbeb, #fef3c7)', border: '1.5px solid #f59e0b', borderRadius: 14, padding: '16px 20px', marginBottom: 24, display: 'flex', alignItems: 'center', gap: 14, animation: 'fadeUp 0.4s ease 0.05s both' }}>
+            <div style={{ background: 'linear-gradient(135deg, #fffbeb, #fef3c7)', border: '1.5px solid #f59e0b', borderRadius: 14, padding: '16px 20px', marginBottom: 24, display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 14, animation: 'fadeUp 0.4s ease 0.05s both' }}>
               <div style={{ width: 40, height: 40, background: '#f59e0b', borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, fontSize: 20 }}>
                 ⚡
               </div>
-              <div style={{ flex: 1 }}>
+              <div style={{ flex: 1, minWidth: 180 }}>
                 <p style={{ fontSize: 14, fontWeight: 700, color: '#92400e', marginBottom: 2, fontFamily: 'Comfortaa, sans-serif' }}>
                   Activez les paiements en ligne
                 </p>
@@ -433,14 +443,14 @@ export default function Dashboard() {
               </div>
               <button
                 onClick={() => router.push('/dashboard/settings')}
-                style={{ background: '#f59e0b', color: 'white', border: 'none', borderRadius: 8, padding: '9px 16px', fontSize: 13, fontWeight: 700, cursor: 'pointer', fontFamily: 'Inter, sans-serif', whiteSpace: 'nowrap', flexShrink: 0 }}>
+                style={{ background: '#f59e0b', color: 'white', border: 'none', borderRadius: 8, padding: '9px 16px', fontSize: 13, fontWeight: 700, cursor: 'pointer', fontFamily: 'Inter, sans-serif', whiteSpace: 'nowrap' }}>
                 Configurer →
               </button>
             </div>
           )}
 
           {/* STATS */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 20, marginBottom: 28, animation: 'fadeUp 0.4s ease 0.1s both' }}>
+          <div className="dash-grid-3" style={{ animation: 'fadeUp 0.4s ease 0.1s both' }}>
             <div className="card" style={{ background: 'white', borderRadius: 16, padding: '24px', boxShadow: '0 1px 4px rgba(0,0,0,0.06)', border: '1px solid #EAECEF' }}>
               <p style={{ fontSize: 11, color: '#9CA3AF', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: 12 }}>Relances effectuées</p>
               <span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 800, fontSize: 36, color: '#a855f7' }}>{totalRelances}</span>
@@ -463,8 +473,8 @@ export default function Dashboard() {
 
           {/* BANNERS */}
           {!profile?.company_name && (
-            <div style={{ background: '#FFF7ED', border: '1px solid #FED7AA', borderRadius: 12, padding: '14px 20px', marginBottom: 16, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <p style={{ fontSize: 13, color: '#EA580C' }}>Renseignez le nom de votre société pour personnaliser vos relances</p>
+            <div style={{ background: '#FFF7ED', border: '1px solid #FED7AA', borderRadius: 12, padding: '14px 20px', marginBottom: 16, display: 'flex', flexWrap: 'wrap', gap: 12, justifyContent: 'space-between', alignItems: 'center' }}>
+              <p style={{ fontSize: 13, color: '#EA580C', flex: 1, minWidth: 160 }}>Renseignez le nom de votre société pour personnaliser vos relances</p>
               <button onClick={() => router.push('/dashboard/settings')}
                 style={{ background: '#EA580C', color: 'white', border: 'none', borderRadius: 8, padding: '7px 14px', fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: 'Inter, sans-serif', whiteSpace: 'nowrap' }}>
                 Configurer →
@@ -473,8 +483,8 @@ export default function Dashboard() {
           )}
 
           {!isPro && (
-            <div style={{ background: 'linear-gradient(135deg, #a855f7, #7c3aed)', borderRadius: 12, padding: '14px 20px', marginBottom: 20, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <p style={{ fontSize: 13, color: 'white' }}>Les relances SMS multiplient les taux de recouvrement — disponibles en <strong>Plan Pro</strong></p>
+            <div style={{ background: 'linear-gradient(135deg, #a855f7, #7c3aed)', borderRadius: 12, padding: '14px 20px', marginBottom: 20, display: 'flex', flexWrap: 'wrap', gap: 12, justifyContent: 'space-between', alignItems: 'center' }}>
+              <p style={{ fontSize: 13, color: 'white', flex: 1, minWidth: 160 }}>Les relances SMS multiplient les taux de recouvrement — disponibles en <strong>Plan Pro</strong></p>
               <button onClick={() => router.push('/souscrire?plan=pro')}
                 style={{ background: 'white', color: '#7c3aed', border: 'none', borderRadius: 8, padding: '7px 14px', fontSize: 13, fontWeight: 700, cursor: 'pointer', fontFamily: 'Inter, sans-serif', whiteSpace: 'nowrap' }}>
                 Passer Pro →
@@ -484,13 +494,13 @@ export default function Dashboard() {
 
           {/* EMPTY STATE */}
           {factures.length === 0 && (
-            <div style={{ background: 'linear-gradient(135deg, #a855f7, #ec4899)', borderRadius: 16, padding: '32px 36px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', boxShadow: '0 4px 24px rgba(168,85,247,0.30)' }}>
-              <div>
+            <div style={{ background: 'linear-gradient(135deg, #a855f7, #ec4899)', borderRadius: 16, padding: isMobile ? '24px 20px' : '32px 36px', display: 'flex', flexWrap: 'wrap', gap: 16, justifyContent: 'space-between', alignItems: 'center', boxShadow: '0 4px 24px rgba(168,85,247,0.30)' }}>
+              <div style={{ flex: 1, minWidth: 160 }}>
                 <h2 style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 800, fontSize: 20, color: 'white', marginBottom: 6 }}>Commencez maintenant</h2>
                 <p style={{ color: 'rgba(255,255,255,0.75)', fontSize: 14 }}>Importez votre premier fichier CSV et automatisez vos relances</p>
               </div>
               <button onClick={() => router.push('/dashboard/importer')}
-                style={{ background: 'white', color: '#a855f7', border: 'none', borderRadius: 10, padding: '12px 24px', fontSize: 14, fontWeight: 700, cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}>
+                style={{ background: 'white', color: '#a855f7', border: 'none', borderRadius: 10, padding: '12px 24px', fontSize: 14, fontWeight: 700, cursor: 'pointer', fontFamily: 'Inter, sans-serif', whiteSpace: 'nowrap' }}>
                 Importer maintenant
               </button>
             </div>
@@ -499,12 +509,12 @@ export default function Dashboard() {
           {/* TABLE */}
           {factures.length > 0 && (
             <div style={{ background: 'white', borderRadius: 16, overflow: 'hidden', boxShadow: '0 1px 4px rgba(0,0,0,0.06)', border: '1px solid #EAECEF', animation: 'fadeUp 0.4s ease 0.2s both' }}>
-              <div style={{ padding: '18px 24px', borderBottom: '1px solid #EAECEF', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div style={{ padding: '18px 24px', borderBottom: '1px solid #EAECEF', display: 'flex', flexWrap: 'wrap', gap: 10, justifyContent: 'space-between', alignItems: 'center' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                   <h2 style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 700, fontSize: 15, color: '#111' }}>Factures</h2>
                   <span style={{ fontSize: 12, color: '#9CA3AF', background: '#F4F6F8', padding: '3px 10px', borderRadius: 20, fontWeight: 500 }}>{factures.length}</span>
                 </div>
-                <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
+                <div style={{ display: 'flex', gap: 6, alignItems: 'center', flexWrap: 'wrap' }}>
                   <span style={{ fontSize: 12, color: '#9CA3AF', marginRight: 4 }}>Trier par</span>
                   {([
                     { key: 'date', label: 'Date' },

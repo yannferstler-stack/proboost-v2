@@ -370,16 +370,17 @@ export default function Home() {
 
                     <div style={{ marginBottom: 20 }}>
                       <h3 style={{ fontFamily: 'Comfortaa', fontWeight: 800, fontSize: 22, color: 'white', marginBottom: 6 }}>{plan.nom}</h3>
-                      <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)', marginBottom: 16, lineHeight: 1.5 }}>{plan.description}</p>
+                      <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)', marginBottom: 16, lineHeight: 1.5, minHeight: 40 }}>{plan.description}</p>
                       <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, marginBottom: 4 }}>
                         <span style={{ fontFamily: 'Comfortaa', fontWeight: 900, fontSize: 36, color: 'white' }}>{formatPrix(plan.prixBase * (1 - EARLY_BIRD_DISCOUNT))} €</span>
                         <span style={{ fontSize: 14, color: 'rgba(255,255,255,0.35)' }}>/ 1er mois</span>
                       </div>
-                      <div style={{ marginBottom: 10 }}>
+                      <div style={{ marginBottom: 12 }}>
                         <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.45)' }}>puis {formatPrix(plan.prixBase)}€/mois</span>
                       </div>
-                      <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: plan.bg, border: `1px solid ${plan.border}`, borderRadius: 8, padding: '5px 12px' }}>
-                        <span style={{ fontSize: 12, color: plan.couleur, fontWeight: 600 }}>{plan.commission} prélevé sur chaque facture recouvrée</span>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 6, background: plan.bg, border: `1px solid ${plan.border}`, borderRadius: 8, padding: '6px 12px' }}>
+                        <span style={{ fontSize: 13, color: plan.couleur, fontWeight: 700, letterSpacing: '-0.3px' }}>{plan.commission}</span>
+                        <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.50)', fontWeight: 400 }}>prélevé sur chaque facture recouvrée</span>
                       </div>
                     </div>
                     <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: 20, flex: 1, marginBottom: 20 }}>
@@ -388,7 +389,7 @@ export default function Home() {
                           <div style={{ width: 20, height: 20, borderRadius: '50%', background: f.ok ? plan.bg : 'rgba(255,255,255,0.04)', border: f.ok ? `1px solid ${plan.border}` : '1px solid rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                             <span style={{ fontSize: 10, color: f.ok ? plan.couleur : 'rgba(255,255,255,0.2)', fontWeight: 700 }}>{f.ok ? '✓' : '✗'}</span>
                           </div>
-                          <span style={{ fontSize: 13, color: f.ok ? 'rgba(255,255,255,0.85)' : 'rgba(255,255,255,0.25)', fontWeight: f.bold ? 700 : 400 }}>{f.label}</span>
+                          <span style={{ fontSize: 13, color: f.ok ? 'rgba(255,255,255,0.85)' : 'rgba(255,255,255,0.25)', fontWeight: 500 }}>{f.label}</span>
                         </div>
                       ))}
                     </div>

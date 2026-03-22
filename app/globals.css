@@ -60,3 +60,27 @@ body {
     border-right: 1px solid rgba(255,255,255,0.07);
   }
 }
+
+/* ─── Dashboard main content (responsive) ────────────── */
+.dash-main {
+  margin-left: 240px;
+  flex: 1;
+  padding: 32px;
+  min-width: 0;
+}
+.dash-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-bottom: 28px;
+}
+@media (max-width: 768px) {
+  .dash-main {
+    margin-left: 0 !important;
+    padding: 76px 16px 28px !important;
+  }
+  .dash-grid-3 {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+}
