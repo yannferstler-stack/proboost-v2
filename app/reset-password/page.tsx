@@ -57,8 +57,8 @@ export default function ResetPasswordPage() {
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 40, cursor: 'pointer', justifyContent: 'center' }} onClick={() => router.push('/')}>
           <img src="/logo.png" style={{ height: 36, width: 'auto', objectFit: 'contain' }} />
           <span style={{ fontSize: 20, color: 'white' }}>
-            <span style={{ fontFamily: "'Yeseva One', serif", fontWeight: 700 }}>Mana</span>
-            <span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 400 }}>flow</span>
+            <span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 700 }}>Mana</span>
+            <span style={{ fontFamily: "'Yeseva One', serif", fontWeight: 400 }}>flow</span>
           </span>
         </div>
 

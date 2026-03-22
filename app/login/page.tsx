@@ -85,7 +85,7 @@ export default function LoginPage() {
             {/* Logo */}
             <div style={{ display: 'flex', alignItems: 'center', gap: 20, cursor: 'pointer', marginBottom: 40 }} onClick={() => router.push('/')}>
               <img src="/logo.png" style={{ height: 44, width: 'auto', objectFit: 'contain' }} />
-              <span style={{ fontSize: 22, color: 'white' }}><span style={{ fontFamily: "'Yeseva One', serif", fontWeight: 700 }}>Mana</span><span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 400 }}>flow</span></span>
+              <span style={{ fontSize: 22, color: 'white' }}><span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 700 }}>Mana</span><span style={{ fontFamily: "'Yeseva One', serif", fontWeight: 400 }}>flow</span></span>
             </div>
 
             {/* Card formulaire */}
@@ -170,7 +170,7 @@ export default function LoginPage() {
               {/* Logo */}
               <div style={{ display: 'flex', alignItems: 'center', gap: 20, cursor: 'pointer' }} onClick={() => router.push('/')}>
                 <img src="/logo.png" style={{ height: 44, width: 'auto', objectFit: 'contain' }} />
-                <span style={{ fontSize: 22, color: 'white' }}><span style={{ fontFamily: "'Yeseva One', serif", fontWeight: 700 }}>Mana</span><span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 400 }}>flow</span></span>
+                <span style={{ fontSize: 22, color: 'white' }}><span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 700 }}>Mana</span><span style={{ fontFamily: "'Yeseva One', serif", fontWeight: 400 }}>flow</span></span>
               </div>
 
               {/* Centre */}

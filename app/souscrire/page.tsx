@@ -114,7 +114,7 @@ function SouscrireContent() {
         <nav style={{ height: 64, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 20px', borderBottom: '1px solid rgba(255,255,255,0.06)', position: 'relative', zIndex: 10 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 20, cursor: 'pointer' }} onClick={() => router.push('/')}>
             <img src="/logo.png" style={{ height: 44, width: 'auto', objectFit: 'contain' }} />
-            <span style={{ fontSize: 22, color: 'white' }}><span style={{ fontFamily: "'Yeseva One', serif", fontWeight: 700 }}>Mana</span><span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 400 }}>flow</span></span>
+            <span style={{ fontSize: 22, color: 'white' }}><span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 700 }}>Mana</span><span style={{ fontFamily: "'Yeseva One', serif", fontWeight: 400 }}>flow</span></span>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
             <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.35)' }}>Déjà client ?</span>
