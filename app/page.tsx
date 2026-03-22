@@ -2,7 +2,6 @@
 import { useRouter } from 'next/navigation'
 import { useEffect, useRef, useState } from 'react'
 
-const EARLY_BIRD_DISCOUNT = 0.20
 function formatPrix(n: number) {
   return n.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
 }
@@ -353,11 +352,6 @@ export default function Home() {
                     <span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 900, fontSize: 30, color: '#4ade80', lineHeight: 1, letterSpacing: '-1px' }}>14 jours gratuits</span>
                     <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.65)', fontWeight: 500 }}>Sans CB · Accès complet</span>
                   </div>
-                  <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.30)' }}>+</span>
-                  <div style={{ display: 'inline-flex', flexDirection: 'column', alignItems: 'center', gap: 2, background: 'linear-gradient(135deg, rgba(168,85,247,0.2), rgba(236,72,153,0.2))', border: '1.5px solid rgba(168,85,247,0.3)', borderRadius: 16, padding: '12px 28px' }}>
-                    <span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 900, fontSize: 30, color: 'white', lineHeight: 1, letterSpacing: '-1px' }}>-20% le 1er mois</span>
-                    <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.55)', fontWeight: 500 }}>Offre de lancement · 50 premiers clients</span>
-                  </div>
                 </div>
                 <h2 style={{ fontFamily: 'Comfortaa', fontWeight: 900, fontSize: isMobile ? 28 : 38, color: 'white', letterSpacing: '-1px', marginBottom: 8 }}>Simple et transparent.</h2>
                 <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.50)', lineHeight: 1.8, maxWidth: 560, margin: '0 auto' }}>
@@ -384,7 +378,7 @@ export default function Home() {
                         <span style={{ fontSize: 14, color: 'rgba(255,255,255,0.35)' }}>/ 14 jours</span>
                       </div>
                       <div style={{ marginBottom: 12 }}>
-                        <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.45)' }}>puis {formatPrix(plan.prixBase * (1 - EARLY_BIRD_DISCOUNT))}€ le 1er mois (−20%), ensuite {formatPrix(plan.prixBase)}€/mois</span>
+                        <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.45)' }}>puis {formatPrix(plan.prixBase)}€/mois</span>
                       </div>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 6, background: plan.bg, border: `1px solid ${plan.border}`, borderRadius: 8, padding: '6px 12px' }}>
                         <span style={{ fontSize: 13, color: plan.couleur, fontWeight: 700, letterSpacing: '-0.3px' }}>{plan.commission}</span>

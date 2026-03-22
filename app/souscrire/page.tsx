@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { Suspense } from 'react'
 
-const EARLY_BIRD_DISCOUNT = 0.20
 function formatPrix(n: number) {
   return n.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
 }
@@ -166,10 +165,9 @@ function SouscrireContent() {
                       </div>
                       <div style={{ textAlign: 'right', flexShrink: 0 }}>
                         <div style={{ display: 'flex', alignItems: 'baseline', gap: 2 }}>
-                          <span style={{ fontFamily: 'Comfortaa', fontWeight: 900, fontSize: 20, color: 'white' }}>{formatPrix(p.prixBase * (1 - EARLY_BIRD_DISCOUNT))} €</span>
-                          <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)' }}>/ 1er mois</span>
+                          <span style={{ fontFamily: 'Comfortaa', fontWeight: 900, fontSize: 20, color: 'white' }}>{formatPrix(p.prixBase)} €</span>
+                          <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)' }}>/ mois</span>
                         </div>
-                        <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.45)' }}>puis {formatPrix(p.prixBase)}€/mois</div>
                         <span style={{ fontSize: 11, color: p.couleur, fontWeight: 600 }}>+ {p.commission} au succès</span>
                       </div>
                     </div>
@@ -226,7 +224,7 @@ function SouscrireContent() {
                   <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.35)' }}>/ aujourd'hui</span>
                 </div>
                 <div style={{ marginBottom: 6 }}>
-                  <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.45)' }}>puis {formatPrix(plan.prixBase * (1 - EARLY_BIRD_DISCOUNT))}€ le 1er mois (−20%), ensuite {formatPrix(plan.prixBase)}€/mois</span>
+                  <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.45)' }}>puis {formatPrix(plan.prixBase)}€/mois</span>
                 </div>
                 <span style={{ fontSize: 12, color: plan.couleur, fontWeight: 600 }}>+ {plan.commission} prélevé sur chaque facture recouvrée</span>
               </div>
@@ -234,7 +232,7 @@ function SouscrireContent() {
               <div style={{ marginBottom: 18 }}>
                 {[
                   { label: 'Essai 14 jours', value: '0 €' },
-                  { label: `1er paiement (J+14, −20%)`, value: `${formatPrix(plan.prixBase * (1 - EARLY_BIRD_DISCOUNT))} €` },
+                  { label: `1er paiement (J+14)`, value: `${formatPrix(plan.prixBase)} €` },
                   { label: 'Dû maintenant', value: '0 €', bold: true },
                 ].map((row, i) => (
                   <div key={i} style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 0', borderBottom: i < 2 ? '1px solid rgba(255,255,255,0.06)' : 'none' }}>

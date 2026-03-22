@@ -5,7 +5,7 @@ function getStripe() {
   return new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: '2023-10-16' })
 }
 
-// Montants en centimes HT — prix plein (le coupon early bird gère le -20% sur le 1er mois)
+// Montants en centimes HT — prix plein
 const PLAN_CONFIG: Record<string, { amount: number, name: string, commission: string }> = {
   starter:  { amount: 1999,  name: 'ManaFlow Starter',  commission: '14%' },
   premium:  { amount: 4999,  name: 'ManaFlow Premium',  commission: '12%' },
@@ -49,13 +49,6 @@ export async function POST(req: NextRequest) {
         metadata: { plan },
         trial_period_days: 14,
       },
-      // Coupon early bird : -20% sur le 1er mois uniquement (duration: once)
-      // S'applique au 1er paiement, après la période d'essai de 14 jours
-      // Créer dans Stripe Dashboard > Coupons : percent_off=20, duration=once, name="Offre de lancement"
-      // Puis ajouter STRIPE_COUPON_EARLY_BIRD=coupon_id dans .env.local
-      ...(process.env.STRIPE_COUPON_EARLY_BIRD
-        ? { discounts: [{ coupon: process.env.STRIPE_COUPON_EARLY_BIRD }] }
-        : {}),
       locale: 'fr',
     })
 
