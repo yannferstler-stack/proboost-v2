@@ -112,6 +112,7 @@ export default function BlogPage() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [storyNom, setStoryNom] = useState('')
   const [storyActivite, setStoryActivite] = useState('')
+  const [storyEmail, setStoryEmail] = useState('')
   const [storyMessage, setStoryMessage] = useState('')
   const [storySending, setStorySending] = useState(false)
   const [storySent, setStorySent] = useState(false)
@@ -137,14 +138,14 @@ export default function BlogPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           nom: storyNom,
-          email: storyActivite || 'Non renseigné',
+          email: storyEmail || 'Non renseigné',
           sujet: `[Blog] Histoire de TPE — ${storyNom}`,
           message: `Activité : ${storyActivite || 'Non renseignée'}\n\n${storyMessage}`,
         }),
       })
       if (res.ok) {
         setStorySent(true)
-        setStoryNom(''); setStoryActivite(''); setStoryMessage('')
+        setStoryNom(''); setStoryActivite(''); setStoryEmail(''); setStoryMessage('')
       } else {
         setStoryError('Une erreur est survenue, veuillez réessayer.')
       }
@@ -360,6 +361,14 @@ export default function BlogPage() {
                       style={{ width: '100%', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 10, color: 'white', fontFamily: 'Inter, sans-serif', fontSize: 14, padding: '12px 14px', outline: 'none', boxSizing: 'border-box' }}
                     />
                   </div>
+                </div>
+                <div>
+                  <label style={{ display: 'block', fontSize: 12, color: 'rgba(255,255,255,0.45)', fontWeight: 600, marginBottom: 6, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Votre adresse email</label>
+                  <input
+                    type="email" value={storyEmail} onChange={e => setStoryEmail(e.target.value)}
+                    placeholder="vous@exemple.fr"
+                    style={{ width: '100%', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 10, color: 'white', fontFamily: 'Inter, sans-serif', fontSize: 14, padding: '12px 14px', outline: 'none', boxSizing: 'border-box' }}
+                  />
                 </div>
                 <div>
                   <label style={{ display: 'block', fontSize: 12, color: 'rgba(255,255,255,0.45)', fontWeight: 600, marginBottom: 6, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Votre histoire *</label>

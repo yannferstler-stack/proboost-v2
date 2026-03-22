@@ -5,7 +5,7 @@ import { createClient } from '../lib/supabase'
 
 const NAV_ITEMS = [
   { label: 'Tableau de bord', href: '/dashboard', icon: '📊' },
-  { label: 'Analytics', href: '/dashboard/analytics', icon: '📈' },
+  { label: 'Analyses', href: '/dashboard/analytics', icon: '📈' },
   { label: 'Importer', href: '/dashboard/importer', icon: '📤' },
   { label: 'Facturation', href: '/dashboard/facturation', icon: '🧾' },
   { label: 'Paramètres', href: '/dashboard/settings', icon: '⚙️' },

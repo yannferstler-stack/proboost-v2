@@ -69,9 +69,16 @@ export default function SettingsPage() {
       const res = await fetch('/api/subscription/portal', { method: 'POST' })
       const data = await res.json()
       if (data.url) window.location.href = data.url
-      else alert(data.error || 'Erreur portail Stripe.')
+      else {
+        const msg = data.error || ''
+        if (msg.toLowerCase().includes('no such customer') || msg.toLowerCase().includes('customer') || res.status === 404) {
+          setPlanMessage('⚠️ Portail indisponible : aucun abonnement actif trouvé. Si vous venez de souscrire, patientez quelques instants puis réessayez.')
+        } else {
+          setPlanMessage('⚠️ Impossible d\'accéder au portail de paiement. Contactez-nous à contact@manaflow.fr si le problème persiste.')
+        }
+      }
     } catch {
-      alert('Erreur réseau.')
+      setPlanMessage('⚠️ Erreur réseau. Vérifiez votre connexion et réessayez.')
     }
     setPortalLoading(false)
   }
@@ -114,8 +121,9 @@ export default function SettingsPage() {
 
   useEffect(() => {
     const getProfile = async () => {
-      const { data: { user } } = await supabase.auth.getUser()
-      if (!user) { router.push('/login'); return }
+      const { data: { session } } = await supabase.auth.getSession()
+      if (!session) { router.push('/login'); return }
+      const user = session.user
       setUser(user)
       const { data } = await supabase.from('profiles').select('*').eq('id', user.id).single()
       if (data) {

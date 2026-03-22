@@ -29,8 +29,9 @@ export default function FacturationPage() {
 
   useEffect(() => {
     const getData = async () => {
-      const { data: { user } } = await supabase.auth.getUser()
-      if (!user) { router.push('/login'); return }
+      const { data: { session } } = await supabase.auth.getSession()
+      if (!session) { router.push('/login'); return }
+      const user = session.user
       setUser(user)
       const { data: profile } = await supabase.from('profiles').select('plan').eq('id', user.id).single()
       if (profile?.plan) setPlan(profile.plan)

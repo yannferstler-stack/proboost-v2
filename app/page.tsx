@@ -352,7 +352,7 @@ export default function Home() {
                 <div style={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', alignItems: 'center', gap: 12, marginBottom: 24, justifyContent: 'center' }}>
                   <div style={{ display: 'inline-flex', flexDirection: 'column', alignItems: 'center', gap: 2, background: 'rgba(29,185,84,0.15)', border: '1.5px solid rgba(29,185,84,0.4)', borderRadius: 16, padding: '12px 28px', boxShadow: '0 4px 20px rgba(29,185,84,0.20)' }}>
                     <span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 900, fontSize: 30, color: '#4ade80', lineHeight: 1, letterSpacing: '-1px' }}>14 jours gratuits</span>
-                    <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.65)', fontWeight: 500 }}>CB requise · 0 € débité pendant 14j</span>
+                    <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.65)', fontWeight: 500 }}>0 € débité pendant 14 jours</span>
                   </div>
                 </div>
                 <h2 style={{ fontFamily: 'Comfortaa', fontWeight: 900, fontSize: isMobile ? 28 : 38, color: 'white', letterSpacing: '-1px', marginBottom: 8 }}>Simple et transparent.</h2>
@@ -486,10 +486,9 @@ export default function Home() {
                   </div>
 
                   {/* RÉSULTATS */}
-                  <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr 1fr' : 'repeat(3,1fr)', gap: 8, marginBottom: 16 }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginBottom: 16 }}>
                     {[
-                      { label: 'Récupéré (80%)', value: `${gainBrut.toLocaleString('fr-FR', { maximumFractionDigits: 0 })} €`, color: 'white' },
-                      { label: `Commission (${planActif.commission}, min 5€/facture)`, value: `−${commission.toLocaleString('fr-FR', { maximumFractionDigits: 0 })} €`, color: '#fca5a5' },
+                      { label: `Recouvré (après commission ${planActif.commission})`, value: `${(gainBrut - commission).toLocaleString('fr-FR', { maximumFractionDigits: 0 })} €`, color: 'rgba(255,255,255,0.85)' },
                       { label: `Abonnement ${planActif.nom}`, value: `−${formatPrix(planActif.prixBase)} €/mois`, color: 'rgba(255,255,255,0.45)' },
                     ].map((item, i) => (
                       <div key={i} style={{ padding: '10px 12px', background: 'rgba(255,255,255,0.03)', borderRadius: 10, border: '1px solid rgba(255,255,255,0.06)' }}>
@@ -534,8 +533,9 @@ export default function Home() {
             <div style={{ maxWidth: 680, margin: '0 auto', textAlign: 'center', position: 'relative', zIndex: 1 }}>
               <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.25)', fontWeight: 600, letterSpacing: '3px', textTransform: 'uppercase', marginBottom: 20 }}>Notre engagement</p>
               <h2 style={{ fontFamily: 'Comfortaa', fontWeight: 900, fontSize: 'clamp(26px, 4vw, 48px)', color: 'white', letterSpacing: '-1.5px', lineHeight: 1.15, marginBottom: 16 }}>
-                Vous n&apos;aurez plus à courir après{' '}
-                <span style={{ background: 'linear-gradient(135deg, #a855f7, #ec4899)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>le temps et l&apos;argent.</span>
+                Vous n&apos;aurez plus à courir{' '}
+                <span style={{ whiteSpace: 'nowrap' }}>après <span style={{ background: 'linear-gradient(135deg, #a855f7, #ec4899)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>le temps</span></span>
+                {' '}et <span style={{ background: 'linear-gradient(135deg, #a855f7, #ec4899)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>l&apos;argent.</span>
               </h2>
               <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.50)', marginBottom: 32 }}>
                 Nous serons votre allié pour la gestion de vos impayés.
@@ -543,7 +543,7 @@ export default function Home() {
               <button className="btn-primary" onClick={() => router.push('/souscrire')} style={{ fontSize: 15, padding: '14px 32px' }}>
                 Essayer gratuitement 14 jours →
               </button>
-              <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.25)', marginTop: 12 }}>CB requise · 0 € pendant 14 jours · Sans engagement</p>
+              <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.25)', marginTop: 12 }}>0 € pendant 14 jours · Annulable avant la fin de l&apos;essai</p>
             </div>
           </Reveal>
         </section>

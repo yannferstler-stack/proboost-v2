@@ -6,7 +6,6 @@ const FAQ_RAPIDE = [
   { q: 'Délai de réponse ?', r: 'Nous répondons sous 24 à 48h ouvrées.' },
   { q: 'Support technique', r: 'Pour les bugs ou problèmes sur votre compte, précisez votre email de connexion.' },
   { q: 'Questions de facturation', r: 'Pour tout litige sur un paiement ou une commission, joignez le numéro de facture concerné.' },
-  { q: 'Plan Pro — support prioritaire', r: 'Les abonnés Pro bénéficient d\'un délai de réponse prioritaire sous 4h ouvrées.' },
 ]
 
 export default function ContactPage() {
@@ -86,6 +85,7 @@ export default function ContactPage() {
             <div className="nav-links" style={{ display: 'flex', alignItems: 'center', gap: 28 }}>
               <span className="nav-a" onClick={() => router.push('/')} style={{ fontSize: 14 }}>Accueil</span>
               <span className="nav-a" onClick={() => router.push('/comment-ca-marche')} style={{ fontSize: 14 }}>Comment ça marche ?</span>
+              <span className="nav-a" onClick={() => router.push('/blog')} style={{ fontSize: 14 }}>Blog</span>
               <button className="btn-connexion" onClick={() => router.push('/login')}>
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
                 Connexion
@@ -94,8 +94,16 @@ export default function ContactPage() {
           </div>
         </nav>
 
+        {/* BACK BUTTON */}
+        <div style={{ padding: isMobile ? '20px 20px 0' : '24px 40px 0', maxWidth: 1100, margin: '0 auto', position: 'relative', zIndex: 1 }}>
+          <button onClick={() => router.back()} style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 10, padding: '8px 16px', color: 'rgba(255,255,255,0.65)', fontSize: 13, fontFamily: 'Inter, sans-serif', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 6, transition: 'all 0.15s' }}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+            Retour
+          </button>
+        </div>
+
         {/* HEADER */}
-        <div style={{ textAlign: 'center', padding: isMobile ? '48px 20px 36px' : '72px 20px 48px', position: 'relative', zIndex: 1 }}>
+        <div style={{ textAlign: 'center', padding: isMobile ? '32px 20px 36px' : '48px 20px 48px', position: 'relative', zIndex: 1 }}>
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(168,85,247,0.12)', border: '1px solid rgba(168,85,247,0.25)', borderRadius: 20, padding: '6px 16px', marginBottom: 20 }}>
             <div style={{ width: 6, height: 6, background: '#a855f7', borderRadius: '50%', animation: 'pulse 2s infinite' }} />
             <span style={{ fontSize: 12, color: '#c084fc', fontWeight: 600 }}>Réponse sous 48h</span>
@@ -112,42 +120,18 @@ export default function ContactPage() {
         {/* GRILLE PRINCIPALE */}
         <section style={{ padding: isMobile ? '0 20px 80px' : '0 40px 100px', maxWidth: 1040, margin: '0 auto', position: 'relative', zIndex: 1 }}>
 
-          {/* Infos de contact */}
-          <div className="contact-grid" style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3,1fr)', gap: 16, marginBottom: 48 }}>
-            {[
-              {
-                icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#c084fc" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>,
-                titre: 'Email',
-                valeur: 'contact@manaflow.fr',
-                detail: 'Réponse sous 24–48h ouvrées',
-                couleur: '#a855f7',
-              },
-              {
-                icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f472b6" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>,
-                titre: 'Horaires',
-                valeur: 'Lun–Ven, 9h–18h',
-                detail: 'Heure de Paris (CET/CEST)',
-                couleur: '#ec4899',
-              },
-              {
-                icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#c084fc" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>,
-                titre: 'Localisation',
-                valeur: 'Paris, France',
-                detail: 'Entreprise française',
-                couleur: '#a855f7',
-              },
-            ].map((item, i) => (
-              <div key={i} className="info-card" style={{ background: 'rgba(255,255,255,0.04)', backdropFilter: 'blur(12px)', borderRadius: 16, padding: '24px 22px', display: 'flex', gap: 14, alignItems: 'flex-start' }}>
-                <div style={{ width: 44, height: 44, background: `rgba(${item.couleur === '#a855f7' ? '168,85,247' : '236,72,153'},0.12)`, border: `1px solid rgba(${item.couleur === '#a855f7' ? '168,85,247' : '236,72,153'},0.25)`, borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                  {item.icon}
-                </div>
-                <div>
-                  <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: 4 }}>{item.titre}</p>
-                  <p style={{ fontFamily: 'Comfortaa', fontWeight: 700, color: 'white', fontSize: 14, marginBottom: 2 }}>{item.valeur}</p>
-                  <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.35)' }}>{item.detail}</p>
-                </div>
+          {/* Info email */}
+          <div style={{ marginBottom: 40 }}>
+            <div className="info-card" style={{ background: 'rgba(255,255,255,0.04)', backdropFilter: 'blur(12px)', borderRadius: 16, padding: '22px 24px', display: 'flex', gap: 14, alignItems: 'flex-start', maxWidth: 400 }}>
+              <div style={{ width: 44, height: 44, background: 'rgba(168,85,247,0.12)', border: '1px solid rgba(168,85,247,0.25)', borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#c084fc" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
               </div>
-            ))}
+              <div>
+                <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: 4 }}>Email</p>
+                <p style={{ fontFamily: 'Comfortaa', fontWeight: 700, color: 'white', fontSize: 14, marginBottom: 2 }}>contact@manaflow.fr</p>
+                <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.35)' }}>Réponse sous 24–48h ouvrées</p>
+              </div>
+            </div>
           </div>
 
           {/* Formulaire + FAQ rapide */}
