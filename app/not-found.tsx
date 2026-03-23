@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 import { useRouter } from 'next/navigation'
 
 export default function NotFound() {
@@ -15,8 +15,8 @@ export default function NotFound() {
       <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 56, cursor: 'pointer', animation: 'fadeUp 0.5s ease both' }} onClick={() => router.push('/')}>
         <img src="/logo.png" style={{ height: 40, width: 'auto', objectFit: 'contain' }} />
         <span style={{ fontSize: 22, color: 'white' }}>
-          <span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 700 }}>Mana</span>
-          <span style={{ fontFamily: "'Yeseva One', serif", fontWeight: 400 }}>flow</span>
+          <span style={{ fontFamily: "'Yeseva One', serif", fontWeight: 400 }}>Mana</span>
+          <span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 700 }}>flow</span>
         </span>
       </div>
 
