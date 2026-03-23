@@ -89,7 +89,29 @@ En cas de résiliation, les données de l'utilisateur sont conservées 12 mois p
 Toute reproduction, modification ou exploitation non autorisée est strictement interdite. L'utilisateur conserve la propriété de ses données (factures, informations clients) qu'il importe sur la plateforme.`,
   },
   {
-    titre: 'Article 10 — Droit applicable et litiges',
+    titre: 'Article 10 — Traitement des données personnelles (DPA)',
+    contenu: `En utilisant ManaFlow, vous nous confiez des données personnelles de tiers (vos débiteurs). À ce titre, les dispositions suivantes s'appliquent conformément à l'article 28 du RGPD :
+
+Rôles respectifs
+• Vous êtes responsable de traitement pour les données de vos débiteurs
+• ManaFlow agit en qualité de sous-traitant et traite ces données uniquement sur vos instructions, dans le cadre du service de relance
+
+Vos engagements en tant que responsable de traitement
+• Vous garantissez disposer d'une base légale pour transmettre à ManaFlow les données personnelles de vos débiteurs (intérêt légitime de recouvrement de créance)
+• Vous vous engagez à n'importer que des données exactes et pertinentes pour le recouvrement
+• Vous informez vos débiteurs, dans vos conditions de vente ou mentions légales, que leurs données peuvent être transmises à un prestataire de recouvrement
+
+Engagements de ManaFlow en tant que sous-traitant
+• Traitement des données uniquement aux fins du service de relance
+• Non-utilisation des données à des fins propres ou commerciales
+• Confidentialité garantie par contrat aux collaborateurs habilités
+• Notification sans délai de toute violation de données
+
+Sous-traitants ultérieurs
+ManaFlow peut faire appel à des sous-traitants ultérieurs (Supabase, Resend, Twilio, Anthropic) pour l'exécution du service. La liste à jour est disponible dans notre Politique de Confidentialité. ManaFlow reste responsable de leurs agissements vis-à-vis de vous.`,
+  },
+  {
+    titre: 'Article 11 — Droit applicable et litiges',
     contenu: `Les présentes CGU sont soumises au droit français. En cas de litige, les parties s'engagent à rechercher une solution amiable avant tout recours judiciaire.
 
 À défaut d'accord amiable dans un délai de 30 jours, les tribunaux compétents de Paris seront seuls compétents pour connaître du litige.
