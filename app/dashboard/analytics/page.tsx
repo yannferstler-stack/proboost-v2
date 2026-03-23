@@ -17,7 +17,7 @@ export default function AnalyticsPage() {
       setUser(user)
       const { data } = await supabase
         .from('factures')
-        .select('*')
+        .select('id, montant, statut, date_echeance, created_at, nombre_relances, sequence_active')
         .eq('user_id', user.id)
         .order('created_at', { ascending: false })
       setFactures(data || [])

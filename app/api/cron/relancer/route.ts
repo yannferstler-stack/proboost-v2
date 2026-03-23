@@ -111,9 +111,10 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ processed: 0, message: 'Aucune relance à envoyer' })
   }
 
-  const results: { id: string; status: string; numero?: number; error?: string }[] = []
+  // Traitement parallèle par lots de 20 pour éviter la saturation des APIs externes
+  const BATCH_SIZE = 20
 
-  for (const facture of factures) {
+  async function processFacture(facture: any): Promise<{ id: string; status: string; numero?: number; error?: string }> {
     const profile = facture.profiles as any
     const company = profile?.company_name || 'Votre société'
     const canal = profile?.canal_relance || 'email'
@@ -122,7 +123,7 @@ export async function GET(request: NextRequest) {
     const delais = getDelais(profile)
 
     try {
-      // ── Lien de paiement (généré avant l'envoi) ──
+      // ── Lien de paiement ──
       let paymentUrl: string | undefined
       if (facture.user_id) {
         paymentUrl = await getOrCreatePaymentUrl(
@@ -137,8 +138,7 @@ export async function GET(request: NextRequest) {
       // ── Envoi Email ──
       if (canal === 'email' || canal === 'both') {
         if (!facture.client_email) {
-          results.push({ id: facture.id, status: 'skip', error: 'Pas d\'email client' })
-          continue
+          return { id: facture.id, status: 'skip', error: 'Pas d\'email client' }
         }
         const { subject, html } = getEmailContent({
           clientNom: facture.client_nom,
@@ -182,37 +182,44 @@ export async function GET(request: NextRequest) {
       const nextDate = calcNextRelanceDate(facture.date_echeance, numeroRelance, delais)
       const moreRelances = numeroRelance < maxRelances && nextDate !== null
 
-      // ── Mettre à jour la facture ──
-      await supabase.from('factures').update({
-        nombre_relances: numeroRelance,
-        statut: 'relancée',
-        sequence_active: moreRelances,
-        next_relance_date: moreRelances ? nextDate!.toISOString() : null,
-      }).eq('id', facture.id)
+      // ── Mettre à jour facture + historique en parallèle ──
+      await Promise.all([
+        supabase.from('factures').update({
+          nombre_relances: numeroRelance,
+          statut: 'relancée',
+          sequence_active: moreRelances,
+          next_relance_date: moreRelances ? nextDate!.toISOString() : null,
+        }).eq('id', facture.id),
+        supabase.from('relances').insert({
+          facture_id: facture.id,
+          type: canal,
+          numero_relance: numeroRelance,
+          envoye_le: new Date().toISOString(),
+          statut: 'envoyé',
+        }),
+      ])
 
-      // ── Enregistrer dans l'historique ──
-      await supabase.from('relances').insert({
-        facture_id: facture.id,
-        type: canal,
-        numero_relance: numeroRelance,
-        envoye_le: new Date().toISOString(),
-        statut: 'envoyé',
-      })
-
-      results.push({ id: facture.id, status: 'ok', numero: numeroRelance })
+      return { id: facture.id, status: 'ok', numero: numeroRelance }
     } catch (err) {
       console.error(`[CRON] Erreur facture ${facture.id}:`, err)
-
-      // Enregistrer l'erreur dans l'historique
       await supabase.from('relances').insert({
         facture_id: facture.id,
         type: canal,
-        numero_relance: numeroRelance,
+        numero_relance: (facture.nombre_relances || 0) + 1,
         envoye_le: new Date().toISOString(),
         statut: 'erreur',
       }).then(null, () => {})
+      return { id: facture.id, status: 'error', error: String(err) }
+    }
+  }
 
-      results.push({ id: facture.id, status: 'error', error: String(err) })
+  // Traitement par lots
+  const results: { id: string; status: string; numero?: number; error?: string }[] = []
+  for (let i = 0; i < factures.length; i += BATCH_SIZE) {
+    const batch = factures.slice(i, i + BATCH_SIZE)
+    const settled = await Promise.allSettled(batch.map(processFacture))
+    for (const r of settled) {
+      results.push(r.status === 'fulfilled' ? r.value : { id: '?', status: 'error', error: String((r as any).reason) })
     }
   }
 
