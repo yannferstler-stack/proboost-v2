@@ -87,13 +87,16 @@ export default function SettingsPage() {
     if (!user || !profile) return
     setConnectLoading(true)
     try {
+      const { data: { session } } = await supabase.auth.getSession()
       const res = await fetch('/api/stripe-connect', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${session?.access_token ?? ''}`,
+        },
         body: JSON.stringify({
           email: user.email,
           company: profile.company_name || '',
-          userId: user.id,
         }),
       })
       const data = await res.json()

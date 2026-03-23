@@ -268,10 +268,14 @@ export default function Dashboard() {
   const handleMarquerPayee = async (facture: Facture) => {
     setMarkingPaidId(facture.id)
     try {
+      const { data: { session: s } } = await supabase.auth.getSession()
       const res = await fetch('/api/marquer-payee', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ factureId: facture.id, userId: user?.id }),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${s?.access_token ?? ''}`,
+        },
+        body: JSON.stringify({ factureId: facture.id }),
       })
       if (res.ok) {
         setFactures(prev => prev.map(f => f.id === facture.id
@@ -291,9 +295,13 @@ export default function Dashboard() {
     if (!facture.client_email) { setRelanceMsg({ id: facture.id, ok: false }); setTimeout(() => setRelanceMsg(null), 3000); return }
     setRelancingId(facture.id)
     try {
+      const { data: { session: s } } = await supabase.auth.getSession()
       const res = await fetch('/api/relancer', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${s?.access_token ?? ''}`,
+        },
         body: JSON.stringify({
           factureId: facture.id,
           clientEmail: facture.client_email,
@@ -307,7 +315,6 @@ export default function Dashboard() {
           companyAddress: profile?.company_address,
           companyPhone: profile?.company_phone,
           typeRelance: getCanalForFacture(facture.id),
-          userId: user?.id,
         }),
       })
       if (res.ok) {

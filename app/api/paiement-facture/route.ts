@@ -25,7 +25,33 @@ function getSupabaseAdmin() {
  *   numeroFacture   string   — référence facture (libellé)
  *   userId          string   — ID de l'utilisateur ManaFlow (pour récupérer son compte Connect + plan)
  */
+/**
+ * Vérifie que l'appel vient d'un contexte autorisé :
+ * - Appel serveur-à-serveur interne (CRON_SECRET)
+ * - Ou utilisateur authentifié via JWT Supabase
+ */
+async function isAuthorized(request: NextRequest): Promise<boolean> {
+  const authHeader = request.headers.get('Authorization')
+  if (!authHeader?.startsWith('Bearer ')) return false
+  const token = authHeader.slice(7)
+
+  // Appels internes (cron, relancer) → secret partagé
+  if (process.env.CRON_SECRET && token === process.env.CRON_SECRET) return true
+
+  // Appels depuis le dashboard → JWT Supabase
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  )
+  const { data: { user } } = await supabase.auth.getUser(token)
+  return !!user
+}
+
 export async function POST(request: NextRequest) {
+  if (!(await isAuthorized(request))) {
+    return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+  }
+
   try {
     const { factureId, montant, clientNom, numeroFacture, userId } =
       await request.json()

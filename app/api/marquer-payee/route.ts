@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { Resend } from 'resend'
+import { getAuthUserId } from '../../lib/auth'
 
 const getResend = () => new Resend(process.env.RESEND_API_KEY)
 const getSupabaseAdmin = () => createClient(
@@ -9,20 +10,26 @@ const getSupabaseAdmin = () => createClient(
 )
 
 export async function POST(request: NextRequest) {
+  // ── Auth : vérifier le JWT et récupérer l'ID depuis le token ──
+  const authenticatedId = await getAuthUserId(request)
+  if (!authenticatedId) {
+    return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+  }
+
   try {
-    const { factureId, userId } = await request.json()
-    if (!factureId || !userId) {
-      return NextResponse.json({ error: 'Paramètres manquants' }, { status: 400 })
+    const { factureId } = await request.json()
+    if (!factureId) {
+      return NextResponse.json({ error: 'factureId manquant' }, { status: 400 })
     }
 
     const supabase = getSupabaseAdmin()
 
-    // 1. Vérifier que la facture appartient bien à cet utilisateur
+    // 1. Vérifier que la facture appartient bien à l'utilisateur authentifié
     const { data: facture, error: factureError } = await supabase
       .from('factures')
       .select('id, client_nom, montant, numero_facture, statut, user_id')
       .eq('id', factureId)
-      .eq('user_id', userId)
+      .eq('user_id', authenticatedId)
       .single()
 
     if (factureError || !facture) {
@@ -58,7 +65,7 @@ export async function POST(request: NextRequest) {
     const { data: profile } = await supabase
       .from('profiles')
       .select('email, company_name')
-      .eq('id', userId)
+      .eq('id', authenticatedId)
       .single()
 
     if (profile?.email) {
@@ -88,7 +95,7 @@ export async function POST(request: NextRequest) {
             </p>
           </div>
         `,
-      }).then(null, () => {}) // Ne pas bloquer sur la notification
+      }).then(null, () => {})
     }
 
     return NextResponse.json({ success: true })

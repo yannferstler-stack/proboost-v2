@@ -153,6 +153,9 @@ export default function ImporterPage() {
     cancelRef.current = false
     setProgress({ done: 0, total: files.length })
 
+    const { data: { session } } = await supabase.auth.getSession()
+    const token = session?.access_token ?? ''
+
     const resultats: FacturePreview[] = []
     const BATCH = 5
 
@@ -163,7 +166,11 @@ export default function ImporterPage() {
         batch.map(async (file) => {
           const formData = new FormData(); formData.append('pdf', file)
           try {
-            const res = await fetch('/api/analyser-pdf', { method: 'POST', body: formData })
+            const res = await fetch('/api/analyser-pdf', {
+              method: 'POST',
+              body: formData,
+              headers: { 'Authorization': `Bearer ${token}` },
+            })
             const data = await res.json()
             return { ...data, fichier: file.name, doublonWarning: isDublon(data.numero_facture) }
           } catch {
