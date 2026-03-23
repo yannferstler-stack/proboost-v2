@@ -112,7 +112,7 @@ export async function POST(req: NextRequest) {
           .eq('id', userId)
           .single()
         const plan = profileFull?.plan || 'starter'
-        const feePercent = plan === 'pro' ? 12 : plan === 'premium' ? 14 : 16
+        const feePercent = plan === 'pro' ? 10 : plan === 'premium' ? 12 : 14
         const commission = Math.max(
           Math.round(Number(facture.montant) * feePercent) / 100,
           5

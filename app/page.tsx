@@ -37,7 +37,7 @@ const CAROUSEL_IMAGES = [
 
 const PLANS = [
   {
-    nom: 'Starter', prixBase: 19.99, couleur: '#a855f7', bg: 'rgba(168,85,247,0.1)', border: 'rgba(168,85,247,0.25)', commission: '16%',
+    nom: 'Starter', prixBase: 19.99, couleur: '#a855f7', bg: 'rgba(168,85,247,0.1)', border: 'rgba(168,85,247,0.25)', commission: '14%',
     description: 'Idéal pour les indépendants et petites structures',
     features: [
       { label: '10 factures / mois', ok: true, bold: false },
@@ -51,7 +51,7 @@ const PLANS = [
     popular: false, popularLabel: '',
   },
   {
-    nom: 'Premium', prixBase: 49.99, couleur: '#ec4899', bg: 'rgba(236,72,153,0.1)', border: 'rgba(236,72,153,0.25)', commission: '14%',
+    nom: 'Premium', prixBase: 49.99, couleur: '#ec4899', bg: 'rgba(236,72,153,0.1)', border: 'rgba(236,72,153,0.25)', commission: '12%',
     description: 'Pour les TPE avec un volume de factures régulier',
     features: [
       { label: '50 factures / mois', ok: true, bold: true },
@@ -65,7 +65,7 @@ const PLANS = [
     popular: false, popularLabel: '',
   },
   {
-    nom: 'Pro', prixBase: 149.99, couleur: '#c084fc', bg: 'rgba(192,132,252,0.1)', border: 'rgba(192,132,252,0.25)', commission: '12%',
+    nom: 'Pro', prixBase: 149.99, couleur: '#c084fc', bg: 'rgba(192,132,252,0.1)', border: 'rgba(192,132,252,0.25)', commission: '10%',
     description: 'Pour les cabinets et entreprises à fort volume',
     features: [
       { label: "Jusqu'à 200 factures / mois", ok: true, bold: true },
