@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { Resend } from 'resend'
 import { createClient } from '@supabase/supabase-js'
 import { getEmailContent, getSmsContent } from '../../lib/email-templates'
+import { getAuthUserId } from '../../lib/auth'
 
 function getStripe() {
   const Stripe = require('stripe')
@@ -9,14 +10,14 @@ function getStripe() {
 }
 
 const getResend = () => new Resend(process.env.RESEND_API_KEY)
-const getSupabase = () => createClient(
+const getSupabaseAdmin = () => createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
 )
 
 /**
  * Crée (ou réutilise) un lien de paiement Stripe Checkout pour une facture.
- * Retourne null silencieusement si Stripe n'est pas configuré.
+ * Appelle la route interne /api/paiement-facture avec le secret interne.
  */
 async function getOrCreatePaymentUrl(
   factureId: string,
@@ -33,7 +34,11 @@ async function getOrCreatePaymentUrl(
 
     const response = await fetch(`${baseUrl}/api/paiement-facture`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        // Secret interne pour appels serveur-à-serveur
+        'Authorization': `Bearer ${process.env.CRON_SECRET}`,
+      },
       body: JSON.stringify({ factureId, montant, clientNom, numeroFacture, userId }),
     })
     if (!response.ok) return null
@@ -45,24 +50,27 @@ async function getOrCreatePaymentUrl(
 }
 
 export async function POST(request: NextRequest) {
+  // ── Auth : vérifier le JWT et récupérer l'ID depuis le token ──
+  const authenticatedId = await getAuthUserId(request)
+  if (!authenticatedId) {
+    return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+  }
+
   try {
     const {
       factureId, clientEmail, clientNom, clientTelephone,
       montant, dateEcheance, nombreRelances, numeroFacture,
       companyName, companyAddress, companyPhone,
       typeRelance = 'email', // 'email' | 'sms' | 'both'
-      userId,               // ID de l'utilisateur ManaFlow (pour le lien de paiement)
     } = await request.json()
 
-    // Sécurité : lire le plan depuis la DB (ne jamais faire confiance au client)
-    const supabaseAdmin = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!
-    )
+    const supabaseAdmin = getSupabaseAdmin()
+
+    // Lire le plan depuis la DB (ne jamais faire confiance au client)
     const { data: profile } = await supabaseAdmin
       .from('profiles')
       .select('plan, template_relance_1, template_relance_2, template_relance_3')
-      .eq('id', userId)
+      .eq('id', authenticatedId)
       .single()
     const userPlan: string = profile?.plan ?? 'starter'
 
@@ -71,7 +79,7 @@ export async function POST(request: NextRequest) {
     const templateKey = `template_relance_${Math.min(numeroRelanceForTemplate, 3)}` as keyof typeof profile
     const customMessage: string | undefined = profile?.[templateKey] || undefined
 
-    // Sécurité : bloquer SMS si plan non Pro
+    // Bloquer SMS si plan non Pro
     const canSms = userPlan === 'pro'
     const sendEmail = typeRelance === 'email' || typeRelance === 'both'
     const sendSms = (typeRelance === 'sms' || typeRelance === 'both') && canSms
@@ -85,9 +93,9 @@ export async function POST(request: NextRequest) {
 
     // ── LIEN DE PAIEMENT (généré une fois, avant l'envoi) ──
     let paymentUrl: string | undefined
-    if (factureId && userId) {
+    if (factureId) {
       paymentUrl = await getOrCreatePaymentUrl(
-        factureId, montant, clientNom, numeroFacture, userId
+        factureId, montant, clientNom, numeroFacture, authenticatedId
       ) ?? undefined
     }
 
@@ -126,11 +134,12 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // ── MISE À JOUR SUPABASE ──
-    const { error: dbError } = await getSupabase()
+    // ── MISE À JOUR SUPABASE (service role + vérification ownership) ──
+    const { error: dbError } = await supabaseAdmin
       .from('factures')
       .update({ nombre_relances: numeroRelance, statut: 'relancée' })
       .eq('id', factureId)
+      .eq('user_id', authenticatedId)
 
     if (dbError) {
       console.error('ERREUR SUPABASE:', dbError)
@@ -138,7 +147,7 @@ export async function POST(request: NextRequest) {
     }
 
     const typeLog = sendEmail && sendSms ? 'email+sms' : sendSms ? 'sms' : 'email'
-    await getSupabase().from('relances').insert({
+    await supabaseAdmin.from('relances').insert({
       facture_id: factureId,
       type: typeLog,
       numero_relance: numeroRelance,

@@ -24,7 +24,10 @@ async function getOrCreatePaymentUrl(
 
     const response = await fetch(`${baseUrl}/api/paiement-facture`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${process.env.CRON_SECRET}`,
+      },
       body: JSON.stringify({ factureId, montant, clientNom, numeroFacture, userId }),
     })
     if (!response.ok) return null

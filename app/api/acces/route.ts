@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 
-const SITE_PASSWORD = process.env.SITE_PASSWORD ?? 'manaflow2024'
+const SITE_PASSWORD = process.env.SITE_PASSWORD
+if (!SITE_PASSWORD) throw new Error('[acces] SITE_PASSWORD env var is required')
 const COOKIE_NAME = 'site_access'
 
 export async function POST(req: NextRequest) {

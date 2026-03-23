@@ -1,17 +1,34 @@
 import Anthropic from '@anthropic-ai/sdk'
 import { NextRequest, NextResponse } from 'next/server'
+import { getAuthUserId } from '../../lib/auth'
 
 const client = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
 })
 
+const MAX_PDF_SIZE = 10 * 1024 * 1024 // 10 Mo
+
 export async function POST(request: NextRequest) {
+  // ── Auth : seuls les utilisateurs connectés peuvent analyser un PDF ──
+  const userId = await getAuthUserId(request)
+  if (!userId) {
+    return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+  }
+
   try {
     const formData = await request.formData()
     const file = formData.get('pdf') as File
 
     if (!file) {
       return NextResponse.json({ error: 'Aucun fichier reçu' }, { status: 400 })
+    }
+
+    // ── Validation du fichier ──
+    if (file.size > MAX_PDF_SIZE) {
+      return NextResponse.json({ error: 'Fichier trop volumineux (max 10 Mo)' }, { status: 400 })
+    }
+    if (file.type !== 'application/pdf') {
+      return NextResponse.json({ error: 'Seuls les fichiers PDF sont acceptés' }, { status: 400 })
     }
 
     const bytes = await file.arrayBuffer()
