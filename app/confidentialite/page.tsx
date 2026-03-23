@@ -7,7 +7,10 @@ const SECTIONS = [
     titre: '1. Qui sommes-nous ?',
     contenu: `ManaFlow est une plateforme d'automatisation de relances de factures impayées, éditée par ManaFlow SAS, dont le siège social est en France.
 
-En tant que responsable de traitement au sens du Règlement Général sur la Protection des Données (RGPD — Règlement UE 2016/679), ManaFlow s'engage à traiter vos données personnelles avec la plus grande transparence et dans le respect de la vie privée.
+ManaFlow intervient en deux qualités distinctes selon les traitements :
+
+• Responsable de traitement : pour les données de ses propres utilisateurs (compte, abonnement, facturation ManaFlow)
+• Sous-traitant au sens de l'article 28 du RGPD : pour les données des débiteurs que vous nous confiez dans le cadre du recouvrement. Dans ce cas, vous êtes responsable de traitement et ManaFlow agit sur vos instructions.
 
 Pour toute question relative à vos données : contact@manaflow.fr`,
   },
@@ -22,17 +25,30 @@ Données d'inscription
 • Informations de facturation (traitées par Stripe)
 
 Données d'utilisation de la plateforme
-• Factures importées (montant, date d'échéance, coordonnées du débiteur)
+• Factures importées (montant, date d'échéance, références)
+• Contenu des factures PDF analysé par traitement automatisé (voir section 3)
 • Historique des relances envoyées
 • Données de connexion (adresse IP, horodatage)
 
-Données transmises par vos débiteurs
-• Les coordonnées email et téléphoniques de vos clients que vous renseignez pour les relances
+Données de vos débiteurs (traitées en qualité de sous-traitant)
+• Nom, adresse email et numéro de téléphone des clients que vous renseignez pour les relances
 
 ManaFlow ne collecte aucune donnée bancaire directement — les paiements sont gérés par Stripe, certifié PCI-DSS.`,
   },
   {
-    titre: '3. Finalités du traitement',
+    titre: '3. Traitement automatisé par intelligence artificielle',
+    contenu: `ManaFlow utilise des outils d'intelligence artificielle pour analyser le contenu des factures importées au format PDF, afin d'en extraire automatiquement les informations nécessaires aux relances (montant, date d'échéance, coordonnées du débiteur).
+
+Ce traitement automatisé implique :
+• La transmission temporaire du contenu des factures à l'API d'Anthropic (modèle Claude)
+• Un traitement sur des serveurs localisés aux États-Unis, encadré par les Clauses Contractuelles Types (CCT/SCC) approuvées par la Commission européenne
+• Aucune utilisation de vos données pour l'entraînement des modèles d'IA (contractuellement garanti par Anthropic)
+• Aucune conservation des données par Anthropic au-delà du traitement immédiat
+
+Alternative : vous pouvez renseigner vos factures manuellement (saisie des champs) pour ne pas utiliser le traitement automatisé par IA.`,
+  },
+  {
+    titre: '4. Finalités du traitement',
     contenu: `Vos données sont traitées pour les finalités suivantes :
 
 • Exécution du contrat : fourniture du service de relance automatisée, gestion de votre abonnement
@@ -42,38 +58,42 @@ ManaFlow ne collecte aucune donnée bancaire directement — les paiements sont 
 • Obligations légales : conservation des données comptables conformément à la loi française`,
   },
   {
-    titre: '4. Base légale des traitements',
+    titre: '5. Base légale des traitements',
     contenu: `Selon les cas, les traitements reposent sur :
 
 • L'exécution du contrat (CGU acceptées lors de l'inscription) : traitement des factures, envoi des relances, gestion de l'abonnement
-• L'intérêt légitime de ManaFlow : amélioration du service, prévention de la fraude, sécurité
+• L'intérêt légitime : envoi des relances amiables aux débiteurs (recouvrement de créance), amélioration du service, prévention de la fraude
 • Le consentement : envoi de communications marketing (révocable à tout moment)
 • L'obligation légale : conservation des données comptables (10 ans)`,
   },
   {
-    titre: '5. Durée de conservation',
+    titre: '6. Durée de conservation',
     contenu: `Vos données sont conservées selon les durées suivantes :
 
-• Données de compte actif : pendant toute la durée de l'abonnement + 12 mois après résiliation
+• Données de compte : pendant toute la durée de l'abonnement + 3 ans après résiliation (prescription civile)
+• Données des débiteurs (email, téléphone) : 5 ans après règlement ou clôture du dossier de recouvrement
 • Factures et historique de relances : 5 ans à compter de leur création (prescription commerciale)
-• Données de facturation ManaFlow : 10 ans (obligation comptable)
+• Données de facturation ManaFlow : 10 ans (obligation comptable — article L123-22 du Code de commerce)
 • Données de connexion (logs) : 12 mois
 
 À l'expiration de ces délais, vos données sont supprimées ou anonymisées de manière irréversible.`,
   },
   {
-    titre: '6. Partage des données',
-    contenu: `ManaFlow ne vend jamais vos données personnelles. Nous pouvons partager vos données uniquement avec :
+    titre: '7. Sous-traitants et transferts hors UE',
+    contenu: `ManaFlow ne vend jamais vos données personnelles. Nous faisons appel aux sous-traitants suivants, tous liés par un contrat de traitement (DPA) conforme au RGPD :
 
-• Stripe (paiements) : certifié PCI-DSS, données chiffrées
-• Supabase (base de données) : hébergement en Europe, certifié ISO 27001
-• Prestataires d'envoi email/SMS : dans la stricte limite des besoins du service
-• Autorités légales : uniquement sur réquisition judiciaire
+• Supabase — base de données, hébergement UE (AWS eu-west-1, Irlande), certifié SOC 2 Type II
+• Stripe — paiements et commissions, certifié PCI-DSS, SCC approuvées UE (États-Unis)
+• Resend — envoi des emails de relance, SCC approuvées UE (États-Unis)
+• Twilio — envoi des SMS de relance, certifié ISO 27001, SCC approuvées UE (États-Unis)
+• Anthropic — analyse IA des factures, SCC approuvées UE (États-Unis), pas d'entraînement sur vos données
 
-Tous nos sous-traitants sont liés par des contrats de traitement conformes au RGPD (DPA).`,
+Transferts hors UE : les prestataires basés aux États-Unis sont encadrés par les Clauses Contractuelles Types (CCT) approuvées par la Commission européenne (décision d'exécution 2021/914), garantissant un niveau de protection équivalent au RGPD.
+
+Autorités légales : vos données peuvent être communiquées aux autorités compétentes uniquement sur réquisition judiciaire.`,
   },
   {
-    titre: '7. Vos droits (RGPD)',
+    titre: '9. Vos droits (RGPD)',
     contenu: `Conformément au RGPD, vous disposez des droits suivants sur vos données personnelles :
 
 • Droit d'accès : obtenir une copie de vos données
@@ -83,23 +103,22 @@ Tous nos sous-traitants sont liés par des contrats de traitement conformes au R
 • Droit d'opposition : vous opposer à certains traitements basés sur l'intérêt légitime
 • Droit à la limitation : restreindre temporairement un traitement
 
-Pour exercer vos droits : contact@manaflow.fr
+Pour exercer vos droits : contact@manaflow.fr — réponse sous 30 jours (délai légal RGPD).
 Vous pouvez également introduire une réclamation auprès de la CNIL (cnil.fr).`,
   },
   {
-    titre: '8. Sécurité des données',
+    titre: '10. Sécurité des données',
     contenu: `ManaFlow met en œuvre les mesures techniques et organisationnelles appropriées pour protéger vos données :
 
 • Chiffrement en transit (TLS 1.3) et au repos (AES-256)
 • Accès aux données restreint aux seuls collaborateurs habilités
-• Authentification sécurisée via Supabase Auth
-• Audits de sécurité réguliers
-• Hébergement en Europe (Union Européenne)
+• Authentification sécurisée via Supabase Auth (tokens JWT, sessions expirantes)
+• Hébergement en Europe (AWS eu-west-1, Irlande)
 
-En cas de violation de données susceptible d'engendrer un risque pour vos droits et libertés, vous en serez informé dans les 72 heures conformément à l'article 33 du RGPD.`,
+En cas de violation de données susceptible d'engendrer un risque pour vos droits et libertés, vous en serez informé dans les 72 heures conformément à l'article 33 du RGPD, et la CNIL sera notifiée.`,
   },
   {
-    titre: '9. Cookies',
+    titre: '11. Cookies',
     contenu: `ManaFlow utilise des cookies strictement nécessaires au fonctionnement du service (authentification, session). Aucun cookie publicitaire ou de tracking tiers n'est utilisé sans votre consentement préalable.
 
 Cookies utilisés :
@@ -109,12 +128,12 @@ Cookies utilisés :
 Vous pouvez configurer votre navigateur pour refuser les cookies, ce qui peut affecter certaines fonctionnalités du service.`,
   },
   {
-    titre: '10. Modifications de cette politique',
+    titre: '12. Modifications de cette politique',
     contenu: `ManaFlow se réserve le droit de modifier la présente politique de confidentialité à tout moment. Toute modification substantielle vous sera notifiée par email et/ou via une notification dans votre tableau de bord, au moins 15 jours avant son entrée en vigueur.
 
 La politique en vigueur est toujours accessible à l'adresse manaflow.fr/confidentialite.
 
-Dernière mise à jour : janvier 2025`,
+Dernière mise à jour : mars 2025`,
   },
 ]
 
