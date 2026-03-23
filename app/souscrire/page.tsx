@@ -169,8 +169,8 @@ function SouscrireContent() {
                           <span style={{ fontFamily: 'Comfortaa', fontWeight: 900, fontSize: 20, color: 'white' }}>{formatPrix(p.prixBase)} €</span>
                           <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)' }}>/ mois</span>
                         </div>
-                        <span style={{ fontSize: 11, color: p.couleur, fontWeight: 600 }}>+ {p.commission} au succès — tout compris</span>
-                        <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.40)', fontWeight: 400 }}>frais bancaires inclus — min. 5 €</span>
+                        <span style={{ fontSize: 11, color: p.couleur, fontWeight: 600, display: 'block' }}>+ {p.commission} au succès — tout compris</span>
+                        <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.40)', fontWeight: 400, display: 'block', marginTop: 2 }}>frais bancaires inclus — min. 5 €</span>
                       </div>
                     </div>
                     {isSelected && (
