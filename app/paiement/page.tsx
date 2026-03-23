@@ -9,8 +9,14 @@ import {
   useElements,
 } from "@stripe/react-stripe-js";
 
+// Direct Charges : Stripe.js doit être initialisé avec le compte connecté
+// pour que confirmPayment retrouve le PaymentIntent créé sur ce compte.
+// NOTE : ceci est une page de démonstration — le flux réel de paiement de factures
+// utilise des Checkout Sessions via /api/paiement-facture.
+const DEMO_CONNECTED_ACCOUNT = "acct_1T9VMoGwg9253b3F"
 const stripePromise = loadStripe(
-  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
+  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!,
+  { stripeAccount: DEMO_CONNECTED_ACCOUNT }
 );
 
 function CheckoutForm({ amount }: { amount: number }) {
@@ -99,7 +105,7 @@ export default function PaiementPage() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         amount,
-        connectedAccountId: "acct_1T9VMoGwg9253b3F",
+        connectedAccountId: DEMO_CONNECTED_ACCOUNT,
         plan: "starter",
       }),
     })
