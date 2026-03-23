@@ -113,7 +113,7 @@ export async function POST(request: NextRequest) {
     // Stripe collecte et alloue : commission → ManaFlow, reste → client.
     if (profile?.stripe_connect_account_id) {
       const plan = profile.plan || 'starter'
-      const feePercent = plan === 'pro' ? 10 : plan === 'premium' ? 12 : 14
+      const feePercent = plan === 'pro' ? 12 : plan === 'premium' ? 14 : 16
       const feeAmount = Math.max(
         Math.round((montantCentimes * feePercent) / 100),
         500 // minimum 5€

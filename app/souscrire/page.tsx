@@ -16,7 +16,7 @@ const PLANS = [
     couleur: '#a855f7',
     bg: 'rgba(168,85,247,0.12)',
     border: 'rgba(168,85,247,0.25)',
-    commission: '14%',
+    commission: '16%',
     description: 'Idéal pour les indépendants et petites structures',
     features: ['10 factures / mois', '3 relances par facture', 'Email uniquement', 'Import CSV & PDF', 'Dashboard complet'],
   },
@@ -27,7 +27,7 @@ const PLANS = [
     couleur: '#ec4899',
     bg: 'rgba(236,72,153,0.12)',
     border: 'rgba(236,72,153,0.25)',
-    commission: '12%',
+    commission: '14%',
     description: 'Pour les TPE avec un volume de factures régulier',
     features: ['50 factures / mois', '5 relances par facture', 'Email uniquement', 'Délais personnalisables', 'Historique des relances'],
   },
@@ -38,7 +38,7 @@ const PLANS = [
     couleur: '#c084fc',
     bg: 'rgba(192,132,252,0.12)',
     border: 'rgba(192,132,252,0.25)',
-    commission: '10%',
+    commission: '12%',
     description: 'Pour les cabinets et entreprises à fort volume',
     features: ["Jusqu'à 200 factures / mois", '5 relances par facture', 'Email + SMS', 'Délais personnalisables'],
     popular: true,
@@ -169,8 +169,8 @@ function SouscrireContent() {
                           <span style={{ fontFamily: 'Comfortaa', fontWeight: 900, fontSize: 20, color: 'white' }}>{formatPrix(p.prixBase)} €</span>
                           <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)' }}>/ mois</span>
                         </div>
-                        <span style={{ fontSize: 11, color: p.couleur, fontWeight: 600 }}>+ {p.commission} au succès</span>
-                        <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.40)', fontWeight: 400 }}>min. 5 €/facture</span>
+                        <span style={{ fontSize: 11, color: p.couleur, fontWeight: 600 }}>+ {p.commission} au succès — tout compris</span>
+                        <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.40)', fontWeight: 400 }}>frais bancaires inclus — min. 5 €</span>
                       </div>
                     </div>
                     {isSelected && (
@@ -228,8 +228,8 @@ function SouscrireContent() {
                 <div style={{ marginBottom: 6 }}>
                   <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.65)' }}>puis {formatPrix(plan.prixBase)}€/mois</span>
                 </div>
-                <span style={{ fontSize: 12, color: plan.couleur, fontWeight: 600 }}>+ {plan.commission} prélevé sur chaque facture recouvrée</span>
-                <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.40)', display: 'block', marginTop: 2 }}>min. 5 €/facture</span>
+                <span style={{ fontSize: 12, color: plan.couleur, fontWeight: 600 }}>+ {plan.commission} au succès — tout compris</span>
+                <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.40)', display: 'block', marginTop: 2 }}>frais bancaires inclus — min. 5 €</span>
               </div>
 
               <div style={{ marginBottom: 18 }}>

@@ -37,7 +37,7 @@ const CAROUSEL_IMAGES = [
 
 const PLANS = [
   {
-    nom: 'Starter', prixBase: 19.99, couleur: '#a855f7', bg: 'rgba(168,85,247,0.1)', border: 'rgba(168,85,247,0.25)', commission: '14%',
+    nom: 'Starter', prixBase: 19.99, couleur: '#a855f7', bg: 'rgba(168,85,247,0.1)', border: 'rgba(168,85,247,0.25)', commission: '16%',
     description: 'Idéal pour les indépendants et petites structures',
     features: [
       { label: '10 factures / mois', ok: true, bold: false },
@@ -51,7 +51,7 @@ const PLANS = [
     popular: false, popularLabel: '',
   },
   {
-    nom: 'Premium', prixBase: 49.99, couleur: '#ec4899', bg: 'rgba(236,72,153,0.1)', border: 'rgba(236,72,153,0.25)', commission: '12%',
+    nom: 'Premium', prixBase: 49.99, couleur: '#ec4899', bg: 'rgba(236,72,153,0.1)', border: 'rgba(236,72,153,0.25)', commission: '14%',
     description: 'Pour les TPE avec un volume de factures régulier',
     features: [
       { label: '50 factures / mois', ok: true, bold: true },
@@ -65,7 +65,7 @@ const PLANS = [
     popular: false, popularLabel: '',
   },
   {
-    nom: 'Pro', prixBase: 149.99, couleur: '#c084fc', bg: 'rgba(192,132,252,0.1)', border: 'rgba(192,132,252,0.25)', commission: '10%',
+    nom: 'Pro', prixBase: 149.99, couleur: '#c084fc', bg: 'rgba(192,132,252,0.1)', border: 'rgba(192,132,252,0.25)', commission: '12%',
     description: 'Pour les cabinets et entreprises à fort volume',
     features: [
       { label: "Jusqu'à 200 factures / mois", ok: true, bold: true },
@@ -381,9 +381,9 @@ export default function Home() {
                       <div style={{ background: plan.bg, border: `1px solid ${plan.border}`, borderRadius: 8, padding: '8px 12px' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'nowrap' }}>
                           <span style={{ fontSize: 13, color: plan.couleur, fontWeight: 700, letterSpacing: '-0.3px', flexShrink: 0 }}>{plan.commission}</span>
-                          <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.55)', fontWeight: 400, whiteSpace: 'nowrap' }}>prélevé sur chaque facture recouvrée</span>
+                          <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.55)', fontWeight: 400, whiteSpace: 'nowrap' }}>au succès — tout compris</span>
                         </div>
-                        <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.40)', fontWeight: 400, display: 'block', marginTop: 4 }}>min. 5 €/facture</span>
+                        <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.40)', fontWeight: 400, display: 'block', marginTop: 4 }}>frais bancaires inclus — min. 5 €</span>
                       </div>
                     </div>
                     <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: 20, flex: 1, marginBottom: 20 }}>
@@ -499,7 +499,7 @@ export default function Home() {
                   {/* RÉSULTATS */}
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginBottom: 16 }}>
                     {[
-                      { label: `Recouvré (après commission ${planActif.commission})`, value: `${(gainBrut - commission).toLocaleString('fr-FR', { maximumFractionDigits: 0 })} €`, color: 'rgba(255,255,255,0.85)' },
+                      { label: `Net perçu — tout compris (${planActif.commission})`, value: `${(gainBrut - commission).toLocaleString('fr-FR', { maximumFractionDigits: 0 })} €`, color: 'rgba(255,255,255,0.85)' },
                       { label: `Abonnement ${planActif.nom}`, value: `−${formatPrix(planActif.prixBase)} €/mois`, color: 'rgba(255,255,255,0.45)' },
                     ].map((item, i) => (
                       <div key={i} style={{ padding: '10px 12px', background: 'rgba(255,255,255,0.03)', borderRadius: 10, border: '1px solid rgba(255,255,255,0.06)' }}>
@@ -529,7 +529,7 @@ export default function Home() {
                     Essayer gratuitement — plan {planActif.nom} →
                   </button>
                   <p style={{ fontSize: 10, color: 'rgba(255,255,255,0.30)', textAlign: 'center' as const, marginTop: 8 }}>
-                    Simulation sur taux de recouvrement moyen de 80 %. Commission calculée au taux du plan, hors minimum de 5 €/facture. Résultats variables.
+                    Simulation sur taux de recouvrement moyen de 80 %. Commission tout compris (frais bancaires inclus), hors minimum de 5 €/facture. Résultats indicatifs.
                   </p>
                 </div>
               </div>
