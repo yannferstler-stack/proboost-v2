@@ -14,14 +14,18 @@ export async function POST(req: NextRequest) {
       500
     );
 
-    const paymentIntent = await getStripe().paymentIntents.create({
-      amount,
-      currency: "eur",
-      application_fee_amount: feeAmount,
-      transfer_data: {
-        destination: connectedAccountId,
+    // Direct Charges : le PaymentIntent est créé SUR le compte connecté
+    // (stripeAccount option). Les fonds vont directement au compte connecté ;
+    // ManaFlow perçoit uniquement l'application_fee_amount sans jamais détenir les fonds.
+    const stripe = getStripe()
+    const paymentIntent = await stripe.paymentIntents.create(
+      {
+        amount,
+        currency: "eur",
+        application_fee_amount: feeAmount,
       },
-    });
+      connectedAccountId ? { stripeAccount: connectedAccountId } : undefined
+    );
 
     return NextResponse.json({
       clientSecret: paymentIntent.client_secret,
