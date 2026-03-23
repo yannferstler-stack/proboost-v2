@@ -3,6 +3,23 @@ import { Resend } from 'resend'
 
 const getResend = () => new Resend(process.env.RESEND_API_KEY)
 
+// ── Rate limiting en mémoire : 5 requêtes max par IP par fenêtre de 10 min ──
+const WINDOW_MS = 10 * 60 * 1000 // 10 minutes
+const MAX_REQUESTS = 5
+const rateLimitMap = new Map<string, { count: number; resetAt: number }>()
+
+function checkRateLimit(ip: string): boolean {
+  const now = Date.now()
+  const entry = rateLimitMap.get(ip)
+  if (!entry || now > entry.resetAt) {
+    rateLimitMap.set(ip, { count: 1, resetAt: now + WINDOW_MS })
+    return true
+  }
+  if (entry.count >= MAX_REQUESTS) return false
+  entry.count++
+  return true
+}
+
 function escapeHtml(str: string): string {
   return str
     .replace(/&/g, '&amp;')
@@ -13,6 +30,18 @@ function escapeHtml(str: string): string {
 }
 
 export async function POST(request: NextRequest) {
+  // Vérification rate limit
+  const ip =
+    request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
+    request.headers.get('x-real-ip') ||
+    'unknown'
+  if (!checkRateLimit(ip)) {
+    return NextResponse.json(
+      { error: 'Trop de demandes. Réessayez dans quelques minutes.' },
+      { status: 429 }
+    )
+  }
+
   try {
     const { nom, email, sujet, message } = await request.json()
 
