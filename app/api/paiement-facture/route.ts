@@ -107,7 +107,10 @@ export async function POST(request: NextRequest) {
       expires_at: Math.floor(Date.now() / 1000) + 86_400,
     }
 
-    // ── 4. Activer Stripe Connect si le ManaFlow a un compte connecté ──
+    // ── 4. Direct Charges sur le compte connecté du client ──
+    // Les fonds vont directement sur le compte Stripe du client ManaFlow.
+    // ManaFlow ne détient jamais les fonds (pas de risque EP/ACPR).
+    // Stripe collecte et alloue : commission → ManaFlow, reste → client.
     if (profile?.stripe_connect_account_id) {
       const plan = profile.plan || 'starter'
       const feePercent = plan === 'pro' ? 10 : plan === 'premium' ? 12 : 14
@@ -115,15 +118,18 @@ export async function POST(request: NextRequest) {
         Math.round((montantCentimes * feePercent) / 100),
         500 // minimum 5€
       )
+      // application_fee_amount : commission prélevée par ManaFlow
+      // stripeAccount option   : la session est créée SUR le compte connecté
       sessionParams.payment_intent_data = {
         application_fee_amount: feeAmount,
-        transfer_data: {
-          destination: profile.stripe_connect_account_id,
-        },
       }
     }
 
-    const session = await stripe.checkout.sessions.create(sessionParams)
+    const connectAccountId = profile?.stripe_connect_account_id
+    const session = await stripe.checkout.sessions.create(
+      sessionParams,
+      connectAccountId ? { stripeAccount: connectAccountId } : undefined
+    )
 
     // ── 5. Sauvegarder l'URL dans Supabase ──
     await supabase
