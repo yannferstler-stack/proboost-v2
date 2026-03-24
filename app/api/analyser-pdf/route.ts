@@ -1,6 +1,7 @@
 import Anthropic from '@anthropic-ai/sdk'
 import { NextRequest, NextResponse } from 'next/server'
 import { getAuthUserId } from '../../lib/auth'
+import { sendCreditAlertEmail } from '../cron/check-credits/route'
 
 const client = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
@@ -93,11 +94,14 @@ Règles :
   } catch (error: any) {
     const raw = error?.message || ''
     console.error('Erreur analyse PDF:', raw)
+    const isCreditError = raw.toLowerCase().includes('credit') || raw.toLowerCase().includes('balance')
+    // Envoyer une alerte email admin si les crédits sont épuisés (cooldown 24h)
+    if (isCreditError) await sendCreditAlertEmail()
     const message = error?.status === 401
       ? 'Clé API Anthropic invalide — vérifiez ANTHROPIC_API_KEY'
       : error?.status === 404
         ? 'Modèle IA indisponible — vérifiez le nom du modèle'
-        : raw.toLowerCase().includes('credit') || raw.toLowerCase().includes('balance')
+        : isCreditError
           ? 'Crédits Anthropic insuffisants — rechargez sur console.anthropic.com'
           : raw.toLowerCase().includes('rate') || raw.toLowerCase().includes('limit')
             ? 'Limite d\'appels API atteinte — réessayez dans quelques instants'
