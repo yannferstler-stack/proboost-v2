@@ -9,6 +9,7 @@ type Relance = {
   date: string
   type: 'email' | 'sms'
   numero: number
+  statut?: string
 }
 
 type Facture = {
@@ -27,17 +28,59 @@ type Facture = {
   relances_history?: Relance[]
 }
 
+type Profile = {
+  id: string
+  email: string
+  company_name?: string
+  company_address?: string
+  company_phone?: string
+  plan: 'starter' | 'premium' | 'pro' | null
+  payment_status: 'active' | 'past_due' | 'unpaid' | 'canceled' | null
+  current_period_end?: string | null
+  canal_relance?: 'email' | 'sms' | 'both'
+  sequence_j1?: number
+  sequence_j2?: number
+  sequence_j3?: number
+  sequence_j4?: number | null
+  sequence_j5?: number | null
+  template_relance_1?: string | null
+  template_relance_2?: string | null
+  template_relance_3?: string | null
+  stripe_connect_account_id?: string | null
+}
+
+type AuthUser = {
+  id: string
+  email?: string
+}
+
+type RelanceRecord = {
+  id?: string
+  facture_id: string
+  type: string
+  numero_relance: number | null
+  envoye_le: string
+  statut: string
+}
+
+type StatutBadge = {
+  color: string
+  bg: string
+  border: string
+  label: string
+}
+
 export default function Dashboard() {
-  const [user, setUser] = useState<any>(null)
+  const [user, setUser] = useState<AuthUser | null>(null)
   const [factures, setFactures] = useState<Facture[]>([])
-  const [profile, setProfile] = useState<any>(null)
+  const [profile, setProfile] = useState<Profile | null>(null)
   const [loading, setLoading] = useState(true)
   const [canaux, setCanaux] = useState<Record<string, string>>({})
   const [sortBy, setSortBy] = useState<'date' | 'relances' | 'ouvertes' | 'recouvrees'>('date')
   const [selectedFacture, setSelectedFacture] = useState<Facture | null>(null)
   const [historyFacture, setHistoryFacture] = useState<Facture | null>(null)
   const [confirmDelete, setConfirmDelete] = useState<string | null>(null)
-  const [realHistory, setRealHistory] = useState<Record<string, any[]>>({})
+  const [realHistory, setRealHistory] = useState<Record<string, RelanceRecord[]>>({})
   const [loadingHistory, setLoadingHistory] = useState(false)
   const [previewFacture, setPreviewFacture] = useState<Facture | null>(null)
   const [showOnboarding, setShowOnboarding] = useState(false)
@@ -75,7 +118,7 @@ export default function Dashboard() {
       setLoading(false)
 
       // Message de bienvenue personnalisé
-      const totalActuel = (data || []).filter((f: any) => f.statut === 'payée').reduce((s: number, f: any) => s + (f.montant || 0), 0)
+      const totalActuel = (data || []).filter((f: Facture) => f.statut === 'payée').reduce((s: number, f: Facture) => s + (f.montant || 0), 0)
       const key = `manaflow_last_total_${user.id}`
       const lastTotal = parseFloat(typeof window !== 'undefined' ? (localStorage.getItem(key) || '0') : '0')
       const diff = Math.max(0, totalActuel - lastTotal)
@@ -109,7 +152,7 @@ export default function Dashboard() {
       .select('*')
       .eq('facture_id', historyFacture.id)
       .order('envoye_le', { ascending: true })
-      .then(({ data }: { data: any }) => {
+      .then(({ data }: { data: RelanceRecord[] | null }) => {
         if (data) {
           setRealHistory(prev => ({ ...prev, [historyFacture.id]: data }))
         }
@@ -147,13 +190,13 @@ export default function Dashboard() {
     return copy
   }
 
-  const getStatutBadge = (statut: string) => {
-    const config: any = {
+  const getStatutBadge = (statut: string): StatutBadge => {
+    const config: Record<string, StatutBadge> = {
       impayée: { color: '#DC2626', bg: '#FEF2F2', border: '#FECACA', label: 'Impayée' },
       relancée: { color: '#EA580C', bg: '#FFF7ED', border: '#FED7AA', label: 'En cours' },
       payée: { color: '#16A34A', bg: '#F0FDF4', border: '#BBF7D0', label: 'Recouvrée' },
     }
-    return config[statut] || { color: '#6B7280', bg: '#F3F4F6', border: '#E5E7EB', label: statut }
+    return config[statut] ?? { color: '#6B7280', bg: '#F3F4F6', border: '#E5E7EB', label: statut }
   }
 
   const getDelais = () => [
@@ -438,7 +481,7 @@ export default function Dashboard() {
 
       <div style={{ display: 'flex', minHeight: '100vh', fontFamily: 'Inter, sans-serif', background: '#F4F6F8' }}>
 
-        <DashboardSidebar user={user} title="Tableau de bord" />
+        <DashboardSidebar user={user ? { email: user.email ?? '' } : null} title="Tableau de bord" />
 
         {/* MAIN */}
         <div className="dash-main">
@@ -895,8 +938,8 @@ export default function Dashboard() {
                       {new Date(r.date).toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
                     </p>
                   </div>
-                  <span style={{ fontSize: 12, fontWeight: 600, color: (r as any).statut === 'erreur' ? '#EF4444' : '#16A34A' }}>
-                    {(r as any).statut === 'erreur' ? 'Erreur' : 'Envoyée'}
+                  <span style={{ fontSize: 12, fontWeight: 600, color: r.statut === 'erreur' ? '#EF4444' : '#16A34A' }}>
+                    {r.statut === 'erreur' ? 'Erreur' : 'Envoyée'}
                   </span>
                 </div>
               ))

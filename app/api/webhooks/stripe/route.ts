@@ -44,6 +44,16 @@ export async function POST(req: NextRequest) {
       const userId    = session.metadata.user_id
 
       if (factureId) {
+        // Idempotence : ne rien faire si déjà marquée payée
+        const { data: existing } = await supabase
+          .from('factures')
+          .select('statut')
+          .eq('id', factureId)
+          .single()
+        if (existing?.statut === 'payée') {
+          return NextResponse.json({ received: true })
+        }
+
         await supabase
           .from('factures')
           .update({

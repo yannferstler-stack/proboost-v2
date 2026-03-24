@@ -161,9 +161,12 @@ export default function Home() {
         .slide-dot { width: 8px; height: 8px; border-radius: 50%; border: none; cursor: pointer; transition: all 0.3s; padding: 0; }
         .mobile-menu { animation: slideDown 0.2s ease; }
         .hamburger { display: none; background: none; border: none; cursor: pointer; padding: 4px; }
+        .mobile-only { display: none !important; }
         @media (max-width: 768px) {
           .nav-links { display: none !important; }
           .hamburger { display: flex !important; flex-direction: column; gap: 5px; }
+          .mobile-only { display: flex !important; }
+          .nav-brand-text { display: none !important; }
           .steps-grid { grid-template-columns: 1fr !important; }
           .plans-grid { grid-template-columns: 1fr !important; }
           .stats-grid { grid-template-columns: 1fr !important; }
@@ -190,7 +193,7 @@ export default function Home() {
           <div style={{ height: 72, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 20px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 20, cursor: 'pointer' }} onClick={() => router.push('/')}>
               <Image src="/logo.png" height={44} width={120} alt="ManaFlow" style={{ width: 'auto', height: 44, objectFit: 'contain' }} />
-              <span style={{ fontSize: 22, color: 'white' }}><span style={{ fontFamily: "'Yeseva One', serif", fontWeight: 400 }}>Mana</span><span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 700 }}>flow</span></span>
+              <span className="nav-brand-text" style={{ fontSize: 22, color: 'white' }}><span style={{ fontFamily: "'Yeseva One', serif", fontWeight: 400 }}>Mana</span><span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 700 }}>flow</span></span>
             </div>
             <div className="nav-links" style={{ display: 'flex', alignItems: 'center', gap: 28 }}>
               <span className="nav-a" onClick={() => router.push('/blog')} style={{ fontSize: 14, fontWeight: 500 }}>Blog</span>
@@ -201,12 +204,17 @@ export default function Home() {
                 Connexion
               </button>
             </div>
-            <button className="hamburger" onClick={() => setMenuOpen(o => !o)} aria-label="Menu">
-              {menuOpen
-                ? <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
-                : <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round"><line x1="3" y1="6" x2="21" y2="6" /><line x1="3" y1="12" x2="21" y2="12" /><line x1="3" y1="18" x2="21" y2="18" /></svg>
-              }
-            </button>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+              <button className="btn-connexion mobile-only" onClick={() => router.push('/login')} style={{ fontSize: 13, padding: '8px 16px' }}>
+                Connexion
+              </button>
+              <button className="hamburger" onClick={() => setMenuOpen(o => !o)} aria-label="Menu">
+                {menuOpen
+                  ? <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
+                  : <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round"><line x1="3" y1="6" x2="21" y2="6" /><line x1="3" y1="12" x2="21" y2="12" /><line x1="3" y1="18" x2="21" y2="18" /></svg>
+                }
+              </button>
+            </div>
           </div>
           {menuOpen && (
             <div className="mobile-menu" style={{ padding: '8px 20px 20px', borderTop: '1px solid rgba(255,255,255,0.08)', display: 'flex', flexDirection: 'column', gap: 4 }}>
@@ -566,7 +574,7 @@ export default function Home() {
               <Image src="/logo.png" height={44} width={120} alt="ManaFlow" style={{ width: 'auto', height: 44, objectFit: 'contain' }} />
               <span style={{ fontSize: 15, color: 'white' }}><span style={{ fontFamily: "'Yeseva One', serif", fontWeight: 400 }}>Mana</span><span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 700 }}>flow</span></span>
             </div>
-            <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.25)', textAlign: 'center' }}>© 2025 ManaFlow — Tous droits réservés</p>
+            <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.25)', textAlign: 'center' }}>© 2026 ManaFlow — Tous droits réservés</p>
             <div style={{ display: 'flex', gap: 20 }}>
               <span className="nav-a" onClick={() => router.push('/cgu')} style={{ fontSize: 12, cursor: 'pointer' }}>CGU</span>
               <span className="nav-a" onClick={() => router.push('/confidentialite')} style={{ fontSize: 12, cursor: 'pointer' }}>Confidentialité</span>

@@ -155,7 +155,7 @@ export async function GET(request: NextRequest) {
           paymentUrl,
         })
         await getResend().emails.send({
-          from: `ManaFlow <onboarding@resend.dev>`,
+          from: `ManaFlow <noreply@manaflow.fr>`,
           to: facture.client_email,
           subject,
           html,

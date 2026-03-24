@@ -4,6 +4,23 @@ import { createClient } from '@supabase/supabase-js'
 import { getEmailContent, getSmsContent } from '../../lib/email-templates'
 import { getAuthUserId } from '../../lib/auth'
 
+// ── Rate limiting : 20 relances max par utilisateur par fenêtre de 10 min ──
+const RELANCER_WINDOW_MS = 10 * 60 * 1000
+const RELANCER_MAX = 20
+const relancerRateMap = new Map<string, { count: number; resetAt: number }>()
+
+function checkRelancerRateLimit(userId: string): boolean {
+  const now = Date.now()
+  const entry = relancerRateMap.get(userId)
+  if (!entry || now > entry.resetAt) {
+    relancerRateMap.set(userId, { count: 1, resetAt: now + RELANCER_WINDOW_MS })
+    return true
+  }
+  if (entry.count >= RELANCER_MAX) return false
+  entry.count++
+  return true
+}
+
 function getStripe() {
   const Stripe = require('stripe')
   return new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: '2023-10-16' })
@@ -54,6 +71,13 @@ export async function POST(request: NextRequest) {
   const authenticatedId = await getAuthUserId(request)
   if (!authenticatedId) {
     return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+  }
+
+  if (!checkRelancerRateLimit(authenticatedId)) {
+    return NextResponse.json(
+      { error: 'Trop de relances envoyées. Réessayez dans quelques minutes.' },
+      { status: 429 }
+    )
   }
 
   try {
@@ -108,7 +132,7 @@ export async function POST(request: NextRequest) {
         paymentUrl, customMessage,
       })
       const { error: emailError } = await getResend().emails.send({
-        from: `ManaFlow <onboarding@resend.dev>`,
+        from: `ManaFlow <noreply@manaflow.fr>`,
         to: clientEmail,
         subject,
         html,

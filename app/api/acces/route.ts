@@ -13,7 +13,7 @@ export async function POST(req: NextRequest) {
 
   const response = NextResponse.json({ success: true, redirect: redirect ?? '/' })
 
-  response.cookies.set(COOKIE_NAME, SITE_PASSWORD, {
+  response.cookies.set(COOKIE_NAME, SITE_PASSWORD!, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',
