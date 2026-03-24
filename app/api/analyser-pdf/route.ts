@@ -36,7 +36,7 @@ export async function POST(request: NextRequest) {
     const base64 = Buffer.from(bytes).toString('base64')
 
     const response = await client.messages.create({
-      model: 'claude-sonnet-4-20250514',
+      model: 'claude-3-5-sonnet-20241022',
       max_tokens: 1024,
       messages: [
         {
@@ -92,9 +92,11 @@ Règles :
 
     return NextResponse.json(data)
   } catch (error: any) {
-    const raw = error?.message || ''
-    console.error('Erreur analyse PDF:', raw)
-    const isCreditError = raw.toLowerCase().includes('credit') || raw.toLowerCase().includes('balance')
+    // Récupérer le message le plus précis (SDK Anthropic expose error.error.message)
+    const rawMsg = error?.error?.message || error?.message || ''
+    const raw = rawMsg.toLowerCase()
+    console.error('Erreur analyse PDF — status:', error?.status, '— type:', error?.error?.type, '— message:', rawMsg)
+    const isCreditError = raw.includes('credit') || raw.includes('balance')
     // Envoyer une alerte email admin si les crédits sont épuisés (cooldown 24h)
     if (isCreditError) await sendCreditAlertEmail()
     const message = error?.status === 401
@@ -103,9 +105,11 @@ Règles :
         ? 'Modèle IA indisponible — vérifiez le nom du modèle'
         : isCreditError
           ? 'Crédits Anthropic insuffisants — rechargez sur console.anthropic.com'
-          : raw.toLowerCase().includes('rate') || raw.toLowerCase().includes('limit')
+          : raw.includes('rate') || raw.includes('limit')
             ? 'Limite d\'appels API atteinte — réessayez dans quelques instants'
-            : 'Erreur lors de l\'analyse du PDF'
+            : rawMsg
+              ? `Erreur IA (${error?.status || '?'}) : ${rawMsg.slice(0, 120)}`
+              : 'Erreur lors de l\'analyse du PDF'
     return NextResponse.json({ error: message }, { status: 500 })
   }
 }
