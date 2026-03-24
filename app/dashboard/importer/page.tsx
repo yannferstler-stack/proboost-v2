@@ -721,7 +721,8 @@ export default function ImporterPage() {
                     {files.map((f, i) => (
                       <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '7px 10px', background: 'rgba(168,85,247,0.05)', border: '1px solid rgba(168,85,247,0.15)', borderRadius: 8, marginBottom: 5 }}>
                         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#a855f7" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-                        <span style={{ fontSize: 13, color: '#111' }}>{f.name}</span>
+                        <span style={{ fontSize: 13, color: '#111', flex: 1 }}>{f.name}</span>
+                        <button onClick={() => setFiles(prev => prev.filter((_, idx) => idx !== i))} title="Retirer" style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#9CA3AF', fontSize: 18, lineHeight: 1, padding: '0 2px', display: 'flex', alignItems: 'center' }}>×</button>
                       </div>
                     ))}
                     {/* Barre de progression */}
@@ -762,7 +763,7 @@ export default function ImporterPage() {
                     <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 500 }}>
                       <thead>
                         <tr style={{ background: '#F9FAFB' }}>
-                          {['Fichier', 'Client', 'N° Facture', 'Total', 'Restant', 'Échéance'].map(h => (
+                          {['Fichier', 'Client', 'N° Facture', 'Total', 'Restant', 'Échéance', ''].map(h => (
                             <th key={h} style={{ textAlign: 'left', padding: '8px 14px', fontSize: 10, color: '#9CA3AF', fontWeight: 600, textTransform: 'uppercase', borderBottom: '1px solid #EAECEF' }}>{h}</th>
                           ))}
                         </tr>
@@ -782,6 +783,19 @@ export default function ImporterPage() {
                             <td style={{ padding: '10px 14px', fontWeight: 700, color: '#111', fontSize: 12 }}>{f.montant_total ? `${f.montant_total} €` : f.montant ? `${f.montant} €` : '—'}</td>
                             <td style={{ padding: '10px 14px', fontWeight: 700, color: '#a855f7', fontSize: 12 }}>{f.montant_restant ? `${f.montant_restant} €` : '—'}</td>
                             <td style={{ padding: '10px 14px', fontSize: 12, color: '#6B7280' }}>{f.date_echeance || '—'}</td>
+                            <td style={{ padding: '4px 8px', textAlign: 'right' }}>
+                              <button
+                                onClick={() => {
+                                  const nom = factures[i].fichier
+                                  setFactures(prev => prev.filter((_, idx) => idx !== i))
+                                  if (nom) setFiles(prev => prev.filter(file => file.name !== nom))
+                                }}
+                                title="Retirer"
+                                style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#D1D5DB', fontSize: 18, lineHeight: 1, padding: '2px 6px', borderRadius: 4, transition: 'color 0.15s' }}
+                                onMouseEnter={e => (e.currentTarget.style.color = '#EF4444')}
+                                onMouseLeave={e => (e.currentTarget.style.color = '#D1D5DB')}
+                              >×</button>
+                            </td>
                           </tr>
                         ))}
                       </tbody>
