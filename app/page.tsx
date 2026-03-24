@@ -287,7 +287,7 @@ export default function Home() {
           <div className="stats-grid" style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3,1fr)', gap: 0, maxWidth: 960, margin: '0 auto' }}>
             {[
               { value: '42', unit: 'jours', label: 'Retard moyen de paiement des TPE', color: '#a855f7' },
-              { value: '+16', unit: '%', label: 'Augmentation des impayés pour les TPE et PME en 2024', color: '#ec4899' },
+              { value: '+16', unit: '%', label: 'Augmentation des impayés pour les TPE et PME en 2025', color: '#ec4899' },
               { value: '80', unit: '%', label: 'Des fonds récupérés grâce à une relance efficace', color: '#c084fc' },
             ].map((s, i) => (
               <Reveal key={i} delay={i * 0.1}>

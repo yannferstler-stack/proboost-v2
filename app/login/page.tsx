@@ -195,7 +195,7 @@ export default function LoginPage() {
                       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#c084fc" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
                     </div>
                     <div style={{ flex: 1 }}>
-                      <p style={{ fontSize: 13, fontWeight: 600, color: 'white', marginBottom: 2 }}>Relance envoyée — FACT-2024-089</p>
+                      <p style={{ fontSize: 13, fontWeight: 600, color: 'white', marginBottom: 2 }}>Relance envoyée — FACT-2026-089</p>
                       <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)' }}>Martin & Associés · 3 500 € · il y a 2 min</p>
                     </div>
                     <span style={{ fontSize: 11, background: 'rgba(168,85,247,0.2)', color: '#c084fc', border: '1px solid rgba(168,85,247,0.3)', borderRadius: 6, padding: '3px 9px', fontWeight: 700, whiteSpace: 'nowrap' }}>Envoyé</span>
@@ -206,7 +206,7 @@ export default function LoginPage() {
                       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f472b6" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
                     </div>
                     <div style={{ flex: 1 }}>
-                      <p style={{ fontSize: 13, fontWeight: 600, color: 'white', marginBottom: 2 }}>Paiement reçu — FACT-2024-071</p>
+                      <p style={{ fontSize: 13, fontWeight: 600, color: 'white', marginBottom: 2 }}>Paiement reçu — FACT-2026-071</p>
                       <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)' }}>Dupont SAS · 8 200 € récupérés</p>
                     </div>
                     <span style={{ fontSize: 11, background: 'rgba(236,72,153,0.2)', color: '#f472b6', border: '1px solid rgba(236,72,153,0.3)', borderRadius: 6, padding: '3px 9px', fontWeight: 700, whiteSpace: 'nowrap' }}>Récupéré</span>
@@ -227,7 +227,7 @@ export default function LoginPage() {
                 </div>
               </div>
 
-              <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.2)' }}>© 2025 ManaFlow</p>
+              <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.2)' }}>© 2026 ManaFlow</p>
             </div>
 
             {/* RIGHT — formulaire */}

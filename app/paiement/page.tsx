@@ -219,9 +219,9 @@ export default function PaiementPage() {
             {/* Détails */}
             <div style={{ borderTop: "1px solid #1e293b", paddingTop: 28 }}>
               {[
-                { label: "Référence", value: "FAC-2024-0892" },
+                { label: "Référence", value: "FAC-2026-0892" },
                 { label: "Émetteur", value: "Entreprise SAS" },
-                { label: "Date d'émission", value: "01/11/2024" },
+                { label: "Date d'émission", value: "01/03/2026" },
                 { label: "Échéance", value: "Dépassée", color: "#f87171" },
               ].map(({ label, value, color }) => (
                 <div key={label} style={{

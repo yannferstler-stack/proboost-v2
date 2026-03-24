@@ -95,7 +95,7 @@ export default function ImporterPage() {
 
   const downloadTemplate = () => {
     const headers = 'raison_sociale,adresse,email_facturation,telephone,numero_facture,date_facture,date_echeance,montant_total,montant_restant'
-    const example = 'SARL Dupont,12 rue de la Paix 75001 Paris,compta@dupont.fr,0600000000,FACT-2024-001,2024-11-01,2024-12-31,5000.00,3500.00'
+    const example = 'SARL Dupont,12 rue de la Paix 75001 Paris,compta@dupont.fr,0600000000,FACT-2026-001,2026-01-15,2026-02-28,5000.00,3500.00'
     const blob = new Blob([headers + '\n' + example], { type: 'text/csv' })
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')

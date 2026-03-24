@@ -133,7 +133,7 @@ Vous pouvez configurer votre navigateur pour refuser les cookies, ce qui peut af
 
 La politique en vigueur est toujours accessible à l'adresse manaflow.fr/confidentialite.
 
-Dernière mise à jour : mars 2025`,
+Dernière mise à jour : mars 2026`,
   },
 ]
 
@@ -235,7 +235,7 @@ export default function ConfidentialitePage() {
               <img src="/logo.png" style={{ height: 44, width: 'auto', objectFit: 'contain' }} />
               <span style={{ fontSize: 15, color: 'white' }}><span style={{ fontFamily: "'Yeseva One', serif", fontWeight: 400 }}>Mana</span><span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 700 }}>flow</span></span>
             </div>
-            <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.25)', textAlign: 'center' }}>© 2025 ManaFlow — Tous droits réservés</p>
+            <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.25)', textAlign: 'center' }}>© 2026 ManaFlow — Tous droits réservés</p>
             <div style={{ display: 'flex', gap: 20 }}>
               <span className="nav-a" onClick={() => router.push('/cgu')} style={{ fontSize: 12 }}>CGU</span>
               <span className="nav-a" style={{ fontSize: 12, fontWeight: 700, color: '#c084fc' }}>Confidentialité</span>

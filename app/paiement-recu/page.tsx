@@ -4,11 +4,10 @@ export const dynamic = 'force-dynamic'
 
 import { useEffect, useState, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
-import Link from 'next/link'
 
 export default function PaiementRecuPage() {
   return (
-    <Suspense fallback={<div style={{ minHeight: '100vh', background: '#020617' }} />}>
+    <Suspense fallback={<div style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #0d0620 0%, #1a0a3d 50%, #0d1a2e 100%)' }} />}>
       <PaiementRecuContent />
     </Suspense>
   )
@@ -20,57 +19,71 @@ function PaiementRecuContent() {
   const [status, setStatus] = useState<'loading' | 'success' | 'error'>('loading')
 
   useEffect(() => {
-    // On peut vérifier le statut de la session, mais le webhook a déjà tout mis à jour
-    // Ici on affiche simplement une page de confirmation
-    if (sessionId) {
-      setStatus('success')
-    } else {
-      setStatus('error')
-    }
+    setStatus(sessionId ? 'success' : 'error')
   }, [sessionId])
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-purple-950/20 to-slate-950 flex items-center justify-center px-4">
-      <div className="max-w-md w-full bg-white/5 border border-white/10 rounded-2xl p-8 text-center">
-        {status === 'loading' && (
-          <div className="animate-pulse">
-            <div className="w-16 h-16 bg-white/10 rounded-full mx-auto mb-4" />
-            <div className="h-4 bg-white/10 rounded w-2/3 mx-auto" />
-          </div>
-        )}
+    <>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Comfortaa:wght@300;400;700&display=swap');
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes pulse-ring { 0%,100%{transform:scale(1);opacity:0.6}50%{transform:scale(1.06);opacity:1} }
+      `}</style>
+      <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #0d0620 0%, #1a0a3d 50%, #0d1a2e 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '40px 20px', fontFamily: 'Inter, sans-serif' }}>
+        <div style={{ maxWidth: 480, width: '100%', animation: status !== 'loading' ? 'fadeUp 0.5s ease both' : undefined }}>
 
-        {status === 'success' && (
-          <>
-            <div className="w-20 h-20 bg-green-500/20 border border-green-500/30 rounded-full flex items-center justify-center mx-auto mb-6">
-              <svg className="w-10 h-10 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-              </svg>
+          {status === 'loading' && (
+            <div style={{ textAlign: 'center' }}>
+              <div style={{ width: 56, height: 56, background: 'rgba(255,255,255,0.06)', borderRadius: '50%', margin: '0 auto 16px', animation: 'pulse-ring 1.5s ease infinite' }} />
+              <div style={{ height: 12, background: 'rgba(255,255,255,0.08)', borderRadius: 6, width: 160, margin: '0 auto' }} />
             </div>
-            <h1 className="text-2xl font-bold text-white mb-3">Paiement confirmé !</h1>
-            <p className="text-slate-400 leading-relaxed mb-6">
-              Votre paiement a bien été reçu. La facture a été mise à jour automatiquement.
-              Vous pouvez fermer cette page.
-            </p>
-            <p className="text-slate-500 text-sm">
-              Un email de confirmation vous a été envoyé.
-            </p>
-          </>
-        )}
+          )}
 
-        {status === 'error' && (
-          <>
-            <div className="w-20 h-20 bg-red-500/20 border border-red-500/30 rounded-full flex items-center justify-center mx-auto mb-6">
-              <svg className="w-10 h-10 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </div>
-            <h1 className="text-2xl font-bold text-white mb-3">Une erreur est survenue</h1>
-            <p className="text-slate-400 leading-relaxed">
-              Nous n'avons pas pu confirmer votre paiement. Veuillez contacter l'émetteur de la facture.
-            </p>
-          </>
-        )}
+          {status === 'success' && (
+            <>
+              <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 28 }}>
+                <div style={{ width: 80, height: 80, background: 'rgba(34,197,94,0.15)', border: '2px solid rgba(34,197,94,0.4)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', animation: 'pulse-ring 2s ease infinite' }}>
+                  <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#22c55e" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="20 6 9 17 4 12"/>
+                  </svg>
+                </div>
+              </div>
+              <div style={{ background: 'rgba(255,255,255,0.05)', backdropFilter: 'blur(20px)', border: '1px solid rgba(255,255,255,0.10)', borderRadius: 24, padding: '36px 32px', textAlign: 'center' }}>
+                <h1 style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 900, fontSize: 26, color: 'white', letterSpacing: '-0.5px', marginBottom: 12 }}>
+                  Paiement confirmé !
+                </h1>
+                <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.6)', lineHeight: 1.7, marginBottom: 12 }}>
+                  Votre paiement a bien été reçu. La facture a été mise à jour automatiquement.
+                </p>
+                <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.35)' }}>
+                  Un email de confirmation vous a été envoyé. Vous pouvez fermer cette page.
+                </p>
+              </div>
+            </>
+          )}
+
+          {status === 'error' && (
+            <>
+              <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 28 }}>
+                <div style={{ width: 80, height: 80, background: 'rgba(239,68,68,0.15)', border: '2px solid rgba(239,68,68,0.4)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#ef4444" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                  </svg>
+                </div>
+              </div>
+              <div style={{ background: 'rgba(255,255,255,0.05)', backdropFilter: 'blur(20px)', border: '1px solid rgba(255,255,255,0.10)', borderRadius: 24, padding: '36px 32px', textAlign: 'center' }}>
+                <h1 style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 900, fontSize: 26, color: 'white', letterSpacing: '-0.5px', marginBottom: 12 }}>
+                  Une erreur est survenue
+                </h1>
+                <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.6)', lineHeight: 1.7 }}>
+                  Nous n&apos;avons pas pu confirmer votre paiement. Veuillez contacter l&apos;émetteur de la facture.
+                </p>
+              </div>
+            </>
+          )}
+        </div>
       </div>
-    </div>
+    </>
   )
 }

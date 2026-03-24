@@ -467,14 +467,14 @@ export default function SettingsPage() {
                         {p
                           .replace(/\{client\}/g, 'Jean Dupont')
                           .replace(/\{montant\}/g, '1 500')
-                          .replace(/\{facture\}/g, 'FAC-2025-001')
-                          .replace(/\{echeance\}/g, '01/12/2025')
+                          .replace(/\{facture\}/g, 'FAC-2026-001')
+                          .replace(/\{echeance\}/g, '01/03/2026')
                           .replace(/\{entreprise\}/g, companyName || 'Votre Société')}
                       </p>
                     ))}
                     <div style={{ background: '#F0FDF4', border: '1px solid #BBF7D0', borderRadius: 10, padding: 16, margin: '20px 0' }}>
                       <p style={{ margin: 0, color: '#6B7280', fontSize: 12 }}>Référence facture</p>
-                      <p style={{ margin: '4px 0 8px', fontWeight: 700, color: '#111' }}>FAC-2025-001</p>
+                      <p style={{ margin: '4px 0 8px', fontWeight: 700, color: '#111' }}>FAC-2026-001</p>
                       <p style={{ margin: 0, color: '#6B7280', fontSize: 12 }}>Montant à régler</p>
                       <p style={{ margin: '4px 0 0', fontWeight: 800, color: '#16A34A', fontSize: 20 }}>1 500 €</p>
                     </div>
