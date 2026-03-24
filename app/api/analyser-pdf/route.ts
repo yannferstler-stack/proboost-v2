@@ -1,7 +1,7 @@
 import Anthropic from '@anthropic-ai/sdk'
 import { NextRequest, NextResponse } from 'next/server'
 import { getAuthUserId } from '../../lib/auth'
-import { sendCreditAlertEmail } from '../cron/check-credits/route'
+import { sendCreditAlertEmail } from '../../lib/credit-alert'
 
 const client = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
