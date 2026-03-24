@@ -708,7 +708,7 @@ export default function ImporterPage() {
             <div style={{ maxWidth: 800, animation: 'fadeUp 0.3s ease both' }}>
               <div style={{ background: 'white', borderRadius: 14, padding: 24, border: '1px solid #EAECEF', marginBottom: 16 }}>
                 <label className="drop-zone" style={{ display: 'block' }}>
-                  <input type="file" accept=".pdf" multiple onChange={(e) => setFiles(Array.from(e.target.files || []))} style={{ display: 'none' }} />
+                  <input type="file" accept=".pdf" multiple onChange={(e) => { setFiles(Array.from(e.target.files || [])); e.target.value = '' }} style={{ display: 'none' }} />
                   <div style={{ width: 48, height: 48, background: 'rgba(236,72,153,0.10)', border: '1px solid rgba(236,72,153,0.25)', borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 12px' }}>
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ec4899" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
                   </div>
