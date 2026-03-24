@@ -24,6 +24,7 @@ type FacturePreview = {
   montant?: string
   fichier?: string
   erreur?: boolean
+  erreurMessage?: string
   doublonWarning?: boolean
 }
 
@@ -173,7 +174,7 @@ export default function ImporterPage() {
             })
             const data = await res.json()
             if (!res.ok || data.error) {
-              return { fichier: file.name, erreur: true }
+              return { fichier: file.name, erreur: true, erreurMessage: data.error || 'Erreur inconnue' }
             }
             return { ...data, fichier: file.name, doublonWarning: isDublon(data.numero_facture) }
           } catch {
@@ -186,10 +187,18 @@ export default function ImporterPage() {
     }
 
     const valides = resultats.filter(f => !f.erreur)
-    const limitees = [...resultats.filter(f => f.erreur), ...valides.slice(0, placesRestantes)]
+    const erreurs = resultats.filter(f => f.erreur)
+    const limitees = [...erreurs, ...valides.slice(0, placesRestantes)]
     setFactures(limitees)
     setProgress(null)
     setLoading(false)
+    // Bannière d'erreur si tous les PDFs ont échoué
+    if (erreurs.length > 0 && valides.length === 0) {
+      const firstMsg = erreurs[0]?.erreurMessage || 'Erreur inconnue'
+      setMessage(`Analyse échouée : ${firstMsg}`)
+    } else if (erreurs.length > 0) {
+      setMessage(`${erreurs.length} PDF non reconnu${erreurs.length > 1 ? 's' : ''} · ${valides.length} analysé${valides.length > 1 ? 's' : ''} avec succès`)
+    }
   }
 
   const annulerAnalyse = () => {
@@ -762,7 +771,11 @@ export default function ImporterPage() {
                         {factures.map((f, i) => (
                           <tr key={i} className={f.doublonWarning ? 'row-dublon' : ''} style={{ borderBottom: '1px solid #F3F4F6' }}>
                             <td style={{ padding: '10px 14px', fontSize: 12, color: '#6B7280' }}>{f.fichier}</td>
-                            <td style={{ padding: '10px 14px', fontWeight: 600, color: '#111', fontSize: 12 }}>{f.erreur ? 'Erreur' : (f.raison_sociale || f.client_nom)}</td>
+                            <td style={{ padding: '10px 14px', fontWeight: 600, color: f.erreur ? '#DC2626' : '#111', fontSize: 12 }}>
+                              {f.erreur
+                                ? <span title={f.erreurMessage || 'Erreur'}>⚠ {f.erreurMessage ? f.erreurMessage.slice(0, 40) + (f.erreurMessage.length > 40 ? '…' : '') : 'Erreur'}</span>
+                                : (f.raison_sociale || f.client_nom)}
+                            </td>
                             <td style={{ padding: '10px 14px', fontSize: 12 }}>
                               {f.doublonWarning ? <span style={{ color: '#EA580C', fontWeight: 700 }}>{f.numero_facture} ⚠</span> : <span style={{ color: '#111' }}>{f.numero_facture || '—'}</span>}
                             </td>

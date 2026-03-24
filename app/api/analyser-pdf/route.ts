@@ -91,12 +91,17 @@ Règles :
 
     return NextResponse.json(data)
   } catch (error: any) {
-    console.error('Erreur analyse PDF:', error?.message || error)
+    const raw = error?.message || ''
+    console.error('Erreur analyse PDF:', raw)
     const message = error?.status === 401
-      ? 'Clé API Anthropic invalide'
+      ? 'Clé API Anthropic invalide — vérifiez ANTHROPIC_API_KEY'
       : error?.status === 404
-        ? 'Modèle IA indisponible'
-        : 'Erreur lors de l\'analyse du PDF'
+        ? 'Modèle IA indisponible — vérifiez le nom du modèle'
+        : raw.toLowerCase().includes('credit') || raw.toLowerCase().includes('balance')
+          ? 'Crédits Anthropic insuffisants — rechargez sur console.anthropic.com'
+          : raw.toLowerCase().includes('rate') || raw.toLowerCase().includes('limit')
+            ? 'Limite d\'appels API atteinte — réessayez dans quelques instants'
+            : 'Erreur lors de l\'analyse du PDF'
     return NextResponse.json({ error: message }, { status: 500 })
   }
 }
