@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
     const base64 = Buffer.from(bytes).toString('base64')
 
     const response = await client.messages.create({
-      model: 'claude-opus-4-6',
+      model: 'claude-sonnet-4-20250514',
       max_tokens: 1024,
       messages: [
         {
@@ -51,13 +51,21 @@ export async function POST(request: NextRequest) {
             },
             {
               type: 'text',
-              text: `Analyse cette facture et extrais les informations suivantes en JSON uniquement, sans texte autour :
+              text: `Analyse cette facture et extrais les informations suivantes en JSON uniquement, sans texte autour.
+Règles :
+- "montant" doit être un nombre décimal (ex: 1500.00), pas une chaîne.
+- Les dates doivent être au format YYYY-MM-DD.
+- Si une information est absente, mets null.
+- Si pas de date d'échéance, utilise la date de facture + 30 jours.
+
 {
-  "client_nom": "nom du client ou de la société à qui on doit de l'argent",
+  "numero_facture": "numéro ou référence de la facture",
+  "client_nom": "nom du client ou de la société débitrice",
   "client_email": "email du client si présent sinon null",
   "client_telephone": "téléphone du client si présent sinon null",
-  "montant": "montant total TTC en nombre décimal",
-  "date_echeance": "date d'échéance au format YYYY-MM-DD si présente, sinon date de la facture + 30 jours"
+  "montant": 0.00,
+  "date_facture": "YYYY-MM-DD",
+  "date_echeance": "YYYY-MM-DD"
 }`,
             },
           ],
@@ -66,12 +74,29 @@ export async function POST(request: NextRequest) {
     })
 
     const text = response.content[0].type === 'text' ? response.content[0].text : ''
-    const clean = text.replace(/```json|```/g, '').trim()
-    const data = JSON.parse(clean)
+
+    // Extraction JSON robuste : chercher le premier { … } dans la réponse
+    const jsonMatch = text.match(/\{[\s\S]*\}/)
+    if (!jsonMatch) {
+      console.error('Analyse PDF : pas de JSON trouvé dans la réponse Claude:', text)
+      return NextResponse.json({ error: 'Impossible d\'extraire les données de la facture' }, { status: 422 })
+    }
+
+    const data = JSON.parse(jsonMatch[0])
+
+    // Normaliser montant en nombre
+    if (typeof data.montant === 'string') {
+      data.montant = parseFloat(data.montant.replace(/[^\d.,-]/g, '').replace(',', '.')) || 0
+    }
 
     return NextResponse.json(data)
-  } catch (error) {
-    console.error('Erreur analyse PDF:', error)
-    return NextResponse.json({ error: 'Erreur lors de l\'analyse' }, { status: 500 })
+  } catch (error: any) {
+    console.error('Erreur analyse PDF:', error?.message || error)
+    const message = error?.status === 401
+      ? 'Clé API Anthropic invalide'
+      : error?.status === 404
+        ? 'Modèle IA indisponible'
+        : 'Erreur lors de l\'analyse du PDF'
+    return NextResponse.json({ error: message }, { status: 500 })
   }
 }

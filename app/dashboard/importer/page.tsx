@@ -172,6 +172,9 @@ export default function ImporterPage() {
               headers: { 'Authorization': `Bearer ${token}` },
             })
             const data = await res.json()
+            if (!res.ok || data.error) {
+              return { fichier: file.name, erreur: true }
+            }
             return { ...data, fichier: file.name, doublonWarning: isDublon(data.numero_facture) }
           } catch {
             return { fichier: file.name, erreur: true }
