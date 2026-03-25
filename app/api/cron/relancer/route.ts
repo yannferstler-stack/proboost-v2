@@ -164,7 +164,7 @@ export async function GET(request: NextRequest) {
 
       // ── SMS via Twilio ──
       if (canal === 'sms' || canal === 'both') {
-        const smsBody = getSmsContent(facture.client_nom, facture.montant, facture.numero_facture || '', company, numeroRelance)
+        const smsBody = getSmsContent(facture.client_nom, facture.montant, facture.numero_facture || '', company, numeroRelance, facture.date_echeance)
         const sid = process.env.TWILIO_ACCOUNT_SID
         const twilioToken = process.env.TWILIO_AUTH_TOKEN
         const from = process.env.TWILIO_PHONE

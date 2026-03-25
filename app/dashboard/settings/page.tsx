@@ -135,9 +135,9 @@ export default function SettingsPage() {
         setCompanyAddress(data.company_address || '')
         setCompanyPhone(data.company_phone || '')
         setCanalRelance(data.canal_relance || 'email')
-        setSeqJ1(data.sequence_j1 || 7)
-        setSeqJ2(data.sequence_j2 || 15)
-        setSeqJ3(data.sequence_j3 || 30)
+        setSeqJ1(data.sequence_j1 || 3)
+        setSeqJ2(data.sequence_j2 || 7)
+        setSeqJ3(data.sequence_j3 || 21)
         setSeqJ4(data.sequence_j4 || null)
         setSeqJ5(data.sequence_j5 || null)
         setTemplates([

@@ -82,7 +82,7 @@ export default function ImporterPage() {
   const getFirstRelanceDate = (dateEcheance: string): Date => {
     const today = new Date(); today.setHours(0, 0, 0, 0)
     const echeance = new Date(dateEcheance); echeance.setHours(0, 0, 0, 0)
-    const j1 = 7
+    const j1 = 3
     const limitePassee = new Date(today); limitePassee.setDate(limitePassee.getDate() - j1)
     if (echeance <= limitePassee) return today
     const d = new Date(echeance); d.setDate(d.getDate() + j1)

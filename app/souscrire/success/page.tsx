@@ -87,9 +87,9 @@ function SuccessContent() {
         stripe_session_id: sessionId,
         created_at: new Date().toISOString(),
         canal_relance: 'email',
-        sequence_j1: 7,
-        sequence_j2: 15,
-        sequence_j3: 30,
+        sequence_j1: 3,
+        sequence_j2: 7,
+        sequence_j3: 21,
       })
 
       // Enrichir avec les données Stripe (polling — webhook peut arriver avec du retard)

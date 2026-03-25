@@ -145,7 +145,7 @@ export async function POST(request: NextRequest) {
 
     // ── SMS via Twilio ──
     if (sendSms) {
-      const smsBody = getSmsContent(clientNom, montant, numeroFacture, company, numeroRelance)
+      const smsBody = getSmsContent(clientNom, montant, numeroFacture, company, numeroRelance, dateEcheance)
       const sid = process.env.TWILIO_ACCOUNT_SID
       const token = process.env.TWILIO_AUTH_TOKEN
       const from = process.env.TWILIO_PHONE
