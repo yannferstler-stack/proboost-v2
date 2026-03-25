@@ -84,8 +84,8 @@ export function getEmailContent(params: EmailParams): { subject: string; html: s
     </div>` : ''
 
   const subjects = [
-    `Suivi facture n°${refFacture}`,
-    `Deuxième relance – facture n°${refFacture}`,
+    `Rappel de paiement — Facture ${refFacture} — ${montantStr} €`,
+    `2ème relance — Facture ${refFacture} impayée — ${montantStr} €`,
     `Dernière relance avant mise en recouvrement – facture n°${refFacture}`,
   ]
 
