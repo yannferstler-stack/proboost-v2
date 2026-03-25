@@ -315,8 +315,11 @@ function AccesContent() {
 
           {/* Logo */}
           <div className="logo-wrap">
-            <Image src="/logo.png" alt="ManaFlow" width={36} height={36} style={{ borderRadius: 8 }} />
-            <span className="logo-name">ManaFlow</span>
+            <Image src="/logo.png" alt="Manaflow" width={36} height={36} style={{ borderRadius: 8 }} />
+            <span className="logo-name">
+              <span style={{ fontFamily: "'Yeseva One', serif", fontWeight: 400 }}>Mana</span>
+              <span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 700 }}>flow</span>
+            </span>
           </div>
 
           {/* Badge */}
@@ -333,7 +336,7 @@ function AccesContent() {
 
           {/* Sous-titre */}
           <p className="subtitle">
-            ManaFlow arrive très prochainement.<br />
+            Manaflow arrive très prochainement.<br />
             En attendant, les équipes sont à pied d'œuvre pour vous offrir la meilleure expérience possible.
           </p>
 
