@@ -89,7 +89,7 @@ function SuccessContent() {
         canal_relance: 'email',
         sequence_j1: 3,
         sequence_j2: 7,
-        sequence_j3: 21,
+        sequence_j3: 15,
       })
 
       // Enrichir avec les données Stripe (polling — webhook peut arriver avec du retard)

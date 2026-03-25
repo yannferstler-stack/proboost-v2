@@ -137,7 +137,7 @@ export default function SettingsPage() {
         setCanalRelance(data.canal_relance || 'email')
         setSeqJ1(data.sequence_j1 || 3)
         setSeqJ2(data.sequence_j2 || 7)
-        setSeqJ3(data.sequence_j3 || 21)
+        setSeqJ3(data.sequence_j3 || 15)
         setSeqJ4(data.sequence_j4 || null)
         setSeqJ5(data.sequence_j5 || null)
         setTemplates([
