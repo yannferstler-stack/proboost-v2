@@ -39,10 +39,9 @@ export async function POST(request: NextRequest) {
     const bytes = await file.arrayBuffer()
     const base64 = Buffer.from(bytes).toString('base64')
 
-    const response = await client.beta.messages.create({
-      model: 'claude-3-5-sonnet-20241022',
+    const response = await client.messages.create({
+      model: 'claude-haiku-4-5-20251001',
       max_tokens: 1024,
-      betas: ['pdfs-2024-09-25'],
       messages: [
         {
           role: 'user',
