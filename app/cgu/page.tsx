@@ -211,6 +211,7 @@ export default function CguPage() {
             <div style={{ display: 'flex', gap: 20 }}>
               <span className="nav-a" style={{ fontSize: 12, fontWeight: 700, color: '#c084fc' }}>CGU</span>
               <span className="nav-a" onClick={() => router.push('/confidentialite')} style={{ fontSize: 12 }}>Confidentialité</span>
+              <span className="nav-a" onClick={() => router.push('/mentions-legales')} style={{ fontSize: 12 }}>Mentions légales</span>
               <span className="nav-a" onClick={() => router.push('/contact')} style={{ fontSize: 12 }}>Contact</span>
             </div>
           </div>

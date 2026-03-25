@@ -239,6 +239,7 @@ export default function ConfidentialitePage() {
             <div style={{ display: 'flex', gap: 20 }}>
               <span className="nav-a" onClick={() => router.push('/cgu')} style={{ fontSize: 12 }}>CGU</span>
               <span className="nav-a" style={{ fontSize: 12, fontWeight: 700, color: '#c084fc' }}>Confidentialité</span>
+              <span className="nav-a" onClick={() => router.push('/mentions-legales')} style={{ fontSize: 12 }}>Mentions légales</span>
               <span className="nav-a" onClick={() => router.push('/contact')} style={{ fontSize: 12 }}>Contact</span>
             </div>
           </div>
