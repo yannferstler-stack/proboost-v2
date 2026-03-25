@@ -3,10 +3,6 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getAuthUserId } from '../../lib/auth'
 import { sendCreditAlertEmail } from '../../lib/credit-alert'
 
-const client = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY,
-})
-
 const MAX_PDF_SIZE = 10 * 1024 * 1024 // 10 Mo
 
 export async function POST(request: NextRequest) {
@@ -15,6 +11,14 @@ export async function POST(request: NextRequest) {
   if (!userId) {
     return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
   }
+
+  // ── Vérification clé API ──
+  if (!process.env.ANTHROPIC_API_KEY) {
+    console.error('ANTHROPIC_API_KEY manquante dans les variables d\'environnement')
+    return NextResponse.json({ error: 'Configuration serveur manquante : ANTHROPIC_API_KEY non définie' }, { status: 500 })
+  }
+
+  const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
 
   try {
     const formData = await request.formData()
