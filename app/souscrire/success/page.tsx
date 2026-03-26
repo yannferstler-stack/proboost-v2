@@ -1,6 +1,7 @@
 ﻿'use client'
 import { useState, useEffect, Suspense } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
+import Image from 'next/image'
 import { createClient } from '../../lib/supabase'
 
 const PLAN_LABELS: Record<string, string> = { starter: 'Starter', premium: 'Premium', pro: 'Pro' }
@@ -197,7 +198,7 @@ function SuccessContent() {
         {/* NAV */}
         <nav style={{ background: 'white', borderBottom: '1px solid #EAECEF', height: 60, display: 'flex', alignItems: 'center', padding: '0 40px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-            <img src="/logo.png" style={{ height: 44, width: 'auto', objectFit: 'contain' }} />
+            <Image src="/logo.png" alt="ManaFlow" width={44} height={44} style={{ height: 44, width: 'auto', objectFit: 'contain' }} />
             <span style={{ fontSize: 22, color: '#111' }}><span style={{ fontFamily: "'Yeseva One', serif", fontWeight: 400 }}>Mana</span><span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 700 }}>flow</span></span>
           </div>
         </nav>
@@ -360,11 +361,11 @@ function SuccessContent() {
               </form>
             )}
 
-            {/* ÉTAPE 3 — STRIPE CONNECT (obligatoire) */}
+            {/* ÉTAPE 3 — STRIPE CONNECT (recommandé) */}
             {step === 'stripe' && (
               <div>
                 <h2 style={{ fontFamily: 'Comfortaa', fontWeight: 800, fontSize: 20, color: '#111', marginBottom: 6 }}>Connectez votre compte Stripe</h2>
-                <p style={{ fontSize: 13, color: '#9CA3AF', marginBottom: 24 }}>Pour recevoir les paiements de vos clients directement sur votre compte bancaire.</p>
+                <p style={{ fontSize: 13, color: '#9CA3AF', marginBottom: 24 }}>Pour recevoir les paiements directement sur votre compte bancaire. Vous pouvez le configurer maintenant ou plus tard depuis les Paramètres.</p>
 
                 {/* Explication visuelle du flux */}
                 <div style={{ background: '#F0FDF4', border: '1px solid #BBF7D0', borderRadius: 12, padding: '16px 18px', marginBottom: 20 }}>
@@ -402,15 +403,15 @@ function SuccessContent() {
                   ) : '🔗 Connecter mon compte Stripe →'}
                 </button>
 
-                {/* Accès sans Stripe — visible mais pas prioritaire */}
-                <div style={{ textAlign: 'center', paddingTop: 4 }}>
+                {/* Accès sans Stripe — option visible */}
+                <div style={{ paddingTop: 4 }}>
                   <button
                     onClick={() => { setStep('done'); setTimeout(() => router.push('/dashboard'), 1800) }}
                     disabled={loading}
-                    style={{ background: 'none', border: 'none', color: '#9CA3AF', fontSize: 12, cursor: 'pointer', fontFamily: 'Inter, sans-serif', textDecoration: 'underline', lineHeight: 1.6 }}>
+                    style={{ background: 'transparent', border: '1px solid #D1D5DB', borderRadius: 10, color: '#6B7280', fontSize: 13, cursor: loading ? 'not-allowed' : 'pointer', fontFamily: 'Inter, sans-serif', padding: '10px 16px', width: '100%', fontWeight: 500 }}>
                     Configurer plus tard depuis les Paramètres
                   </button>
-                  <p style={{ fontSize: 11, color: '#D1D5DB', marginTop: 2 }}>
+                  <p style={{ fontSize: 11, color: '#D1D5DB', marginTop: 6, textAlign: 'center' }}>
                     Sans Stripe, les liens de paiement ne seront pas inclus dans vos emails.
                   </p>
                 </div>

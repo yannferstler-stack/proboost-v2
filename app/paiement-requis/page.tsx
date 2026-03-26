@@ -1,6 +1,7 @@
 ﻿'use client'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import Image from 'next/image'
 import { createClient } from '../lib/supabase'
 
 export default function PaiementRequisPage() {
@@ -46,7 +47,7 @@ export default function PaiementRequisPage() {
         {/* NAV */}
         <nav style={{ height: 64, display: 'flex', alignItems: 'center', padding: '0 24px', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 20, cursor: 'pointer' }} onClick={() => router.push('/')}>
-            <img src="/logo.png" style={{ height: 44, width: 'auto', objectFit: 'contain' }} />
+            <Image src="/logo.png" alt="ManaFlow" width={44} height={44} style={{ height: 44, width: 'auto', objectFit: 'contain' }} />
             <span style={{ fontSize: 22, color: 'white' }}><span style={{ fontFamily: "'Yeseva One', serif", fontWeight: 400 }}>Mana</span><span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 700 }}>flow</span></span>
           </div>
         </nav>

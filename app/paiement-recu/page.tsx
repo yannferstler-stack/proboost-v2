@@ -19,7 +19,13 @@ function PaiementRecuContent() {
   const [status, setStatus] = useState<'loading' | 'success' | 'error'>('loading')
 
   useEffect(() => {
-    setStatus(sessionId ? 'success' : 'error')
+    // Vérification réelle auprès de Stripe — pas de fake success possible
+    if (!sessionId) { setStatus('error'); return }
+
+    fetch(`/api/verify-payment?session_id=${encodeURIComponent(sessionId)}`)
+      .then(r => r.json())
+      .then(data => setStatus(data.paid ? 'success' : 'error'))
+      .catch(() => setStatus('error'))
   }, [sessionId])
 
   return (
@@ -29,14 +35,15 @@ function PaiementRecuContent() {
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes pulse-ring { 0%,100%{transform:scale(1);opacity:0.6}50%{transform:scale(1.06);opacity:1} }
+        @keyframes spin { to { transform: rotate(360deg); } }
       `}</style>
       <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #0d0620 0%, #1a0a3d 50%, #0d1a2e 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '40px 20px', fontFamily: 'Inter, sans-serif' }}>
         <div style={{ maxWidth: 480, width: '100%', animation: status !== 'loading' ? 'fadeUp 0.5s ease both' : undefined }}>
 
           {status === 'loading' && (
             <div style={{ textAlign: 'center' }}>
-              <div style={{ width: 56, height: 56, background: 'rgba(255,255,255,0.06)', borderRadius: '50%', margin: '0 auto 16px', animation: 'pulse-ring 1.5s ease infinite' }} />
-              <div style={{ height: 12, background: 'rgba(255,255,255,0.08)', borderRadius: 6, width: 160, margin: '0 auto' }} />
+              <div style={{ width: 56, height: 56, border: '3px solid rgba(255,255,255,0.1)', borderTop: '3px solid rgba(168,85,247,0.8)', borderRadius: '50%', margin: '0 auto 20px', animation: 'spin 0.8s linear infinite' }} />
+              <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.4)' }}>Vérification du paiement...</p>
             </div>
           )}
 

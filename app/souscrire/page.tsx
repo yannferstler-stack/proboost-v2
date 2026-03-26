@@ -40,7 +40,7 @@ const PLANS = [
     border: 'rgba(192,132,252,0.25)',
     commission: '10%',
     description: 'Pour les cabinets et entreprises à fort volume',
-    features: ["Jusqu'à 200 factures / mois", '5 relances par facture', 'Email + SMS', 'Délais personnalisables'],
+    features: ["Jusqu'à 200 factures / mois", '5 relances par facture', 'Email + SMS', 'Délais personnalisables', 'Historique des relances'],
     popular: true,
   },
 ]

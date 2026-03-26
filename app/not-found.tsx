@@ -1,5 +1,6 @@
 ﻿'use client'
 import { useRouter } from 'next/navigation'
+import Image from 'next/image'
 
 export default function NotFound() {
   const router = useRouter()
@@ -13,7 +14,7 @@ export default function NotFound() {
 
       {/* Logo */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 56, cursor: 'pointer', animation: 'fadeUp 0.5s ease both' }} onClick={() => router.push('/')}>
-        <img src="/logo.png" style={{ height: 40, width: 'auto', objectFit: 'contain' }} />
+        <Image src="/logo.png" alt="ManaFlow" width={40} height={40} style={{ height: 40, width: 'auto', objectFit: 'contain' }} />
         <span style={{ fontSize: 22, color: 'white' }}>
           <span style={{ fontFamily: "'Yeseva One', serif", fontWeight: 400 }}>Mana</span>
           <span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 700 }}>flow</span>

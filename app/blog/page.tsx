@@ -1,6 +1,7 @@
 ﻿'use client'
 import { useRouter } from 'next/navigation'
 import { useState, useEffect } from 'react'
+import Image from 'next/image'
 
 const ARTICLES = [
   {
@@ -195,7 +196,7 @@ export default function BlogPage() {
         <nav style={{ borderBottom: '1px solid rgba(255,255,255,0.06)', position: 'sticky', top: 0, zIndex: 100, background: 'rgba(13,6,32,0.92)', backdropFilter: 'blur(20px)' }}>
           <div style={{ height: 72, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 20px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 20, cursor: 'pointer' }} onClick={() => router.push('/')}>
-              <img src="/logo.png" style={{ height: 44, width: 'auto', objectFit: 'contain' }} />
+              <Image src="/logo.png" alt="ManaFlow" width={44} height={44} style={{ height: 44, width: 'auto', objectFit: 'contain' }} />
               <span style={{ fontSize: 22, color: 'white' }}><span style={{ fontFamily: "'Yeseva One', serif", fontWeight: 400 }}>Mana</span><span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 700 }}>flow</span></span>
             </div>
             <div className="nav-links">
@@ -252,9 +253,11 @@ export default function BlogPage() {
                   {article.id === 'facturation-electronique' ? (
                     <FacturationVisuel size={imgSize} />
                   ) : article.image ? (
-                    <img
+                    <Image
                       src={article.image}
                       alt={article.titre}
+                      width={140}
+                      height={140}
                       style={{
                         width: imgSize, height: imgSize,
                         objectFit: 'cover',
