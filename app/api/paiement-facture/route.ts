@@ -1,12 +1,50 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
-import { getStripe } from '../../lib/stripe'
+import { timingSafeEqual } from 'node:crypto'
+import { getStripe, getFeePercent } from '../../lib/stripe'
 
 function getSupabaseAdmin() {
   return createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!
   )
+}
+
+/**
+ * Vérifie l'autorisation et retourne le contexte :
+ * - isInternal = true  → appel serveur-à-serveur (cron, relancer) via CRON_SECRET
+ * - userId            → ID de l'utilisateur si appel JWT Supabase
+ */
+async function getAuthContext(request: NextRequest): Promise<{
+  authorized: boolean
+  isInternal?: boolean
+  userId?: string
+}> {
+  const authHeader = request.headers.get('Authorization')
+  if (!authHeader?.startsWith('Bearer ')) return { authorized: false }
+  const token = authHeader.slice(7)
+
+  // Appels internes (cron, relancer) → CRON_SECRET timing-safe
+  const cronSecret = process.env.CRON_SECRET
+  if (cronSecret) {
+    try {
+      if (
+        token.length === cronSecret.length &&
+        timingSafeEqual(Buffer.from(token), Buffer.from(cronSecret))
+      ) {
+        return { authorized: true, isInternal: true }
+      }
+    } catch { /* fallthrough vers JWT */ }
+  }
+
+  // Appels depuis le dashboard → JWT Supabase
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  )
+  const { data: { user } } = await supabase.auth.getUser(token)
+  if (!user) return { authorized: false }
+  return { authorized: true, userId: user.id }
 }
 
 /**
@@ -21,38 +59,9 @@ function getSupabaseAdmin() {
  *   numeroFacture   string   — référence facture (libellé)
  *   userId          string   — ID de l'utilisateur ManaFlow (pour récupérer son compte Connect + plan)
  */
-/**
- * Vérifie que l'appel vient d'un contexte autorisé :
- * - Appel serveur-à-serveur interne (CRON_SECRET)
- * - Ou utilisateur authentifié via JWT Supabase
- */
-async function isAuthorized(request: NextRequest): Promise<boolean> {
-  const authHeader = request.headers.get('Authorization')
-  if (!authHeader?.startsWith('Bearer ')) return false
-  const token = authHeader.slice(7)
-
-  // Appels internes (cron, relancer) → secret partagé (timingSafeEqual)
-  if (process.env.CRON_SECRET) {
-    try {
-      const { timingSafeEqual } = require('node:crypto')
-      if (token.length === process.env.CRON_SECRET.length &&
-          timingSafeEqual(Buffer.from(token), Buffer.from(process.env.CRON_SECRET))) {
-        return true
-      }
-    } catch { /* fallthrough to JWT check */ }
-  }
-
-  // Appels depuis le dashboard → JWT Supabase
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  )
-  const { data: { user } } = await supabase.auth.getUser(token)
-  return !!user
-}
-
 export async function POST(request: NextRequest) {
-  if (!(await isAuthorized(request))) {
+  const auth = await getAuthContext(request)
+  if (!auth.authorized) {
     return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
   }
 
@@ -67,14 +76,24 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    // ── Vérification ownership : si appel JWT, le userId doit correspondre à l'utilisateur authentifié ──
+    if (!auth.isInternal && auth.userId !== userId) {
+      return NextResponse.json({ error: 'Non autorisé' }, { status: 403 })
+    }
+
     const supabase = getSupabaseAdmin()
 
     // ── 1. Vérifier si un lien de paiement actif existe déjà ──
     const { data: facture } = await supabase
       .from('factures')
-      .select('payment_session_id, payment_url, statut')
+      .select('payment_session_id, payment_url, statut, user_id')
       .eq('id', factureId)
       .single()
+
+    // Double vérification ownership via la DB (fiable même pour les appels internes)
+    if (facture && facture.user_id !== userId) {
+      return NextResponse.json({ error: 'Non autorisé' }, { status: 403 })
+    }
 
     // Si la facture est déjà payée, on retourne quand même l'URL existante
     if (facture?.payment_url) {
@@ -142,8 +161,7 @@ export async function POST(request: NextRequest) {
     // ManaFlow ne détient jamais les fonds (pas de risque EP/ACPR).
     // Stripe collecte et alloue : commission → ManaFlow, reste → client.
     if (profile?.stripe_connect_account_id) {
-      const plan = profile.plan || 'starter'
-      const feePercent = plan === 'pro' ? 10 : plan === 'premium' ? 12 : 14
+      const feePercent = getFeePercent(profile.plan)
       const feeAmount = Math.max(
         Math.round((montantCentimes * feePercent) / 100),
         500 // minimum 5€

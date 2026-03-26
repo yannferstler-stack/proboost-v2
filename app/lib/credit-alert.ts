@@ -55,8 +55,8 @@ export async function sendCreditAlertEmail(): Promise<void> {
 </div>
       `,
     })
-    console.log('[ALERT CREDITS] Email envoyé à', ADMIN_EMAIL)
-  } catch (err) {
-    console.error('[ALERT CREDITS] Erreur envoi email:', err)
+    // Email envoyé — pas de log pour ne pas exposer l'adresse admin
+  } catch {
+    // Erreur d'envoi silencieuse — ne pas exposer les détails en log
   }
 }

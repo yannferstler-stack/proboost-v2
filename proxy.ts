@@ -3,12 +3,14 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 import { createHmac } from 'node:crypto'
 
-const SITE_PASSWORD = process.env.SITE_PASSWORD ?? 'manaflow2024'
+const SITE_PASSWORD = process.env.SITE_PASSWORD
+if (!SITE_PASSWORD) throw new Error('[proxy] SITE_PASSWORD env var is required')
 const COOKIE_NAME = 'site_access'
 
 /** Doit correspondre exactement à createAccessToken dans api/acces/route.ts */
 function createAccessToken(password: string): string {
-  const secret = process.env.CRON_SECRET || process.env.SITE_PASSWORD || 'manaflow-secret'
+  // Utilise CRON_SECRET si dispo (préféré), sinon SITE_PASSWORD (garanti défini ci-dessus)
+  const secret = process.env.CRON_SECRET ?? SITE_PASSWORD!
   return createHmac('sha256', secret).update(password).digest('hex')
 }
 

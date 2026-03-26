@@ -11,6 +11,9 @@ export async function getOrCreatePaymentUrl(
   numeroFacture: string,
   userId: string,
 ): Promise<string | null> {
+  const controller = new AbortController()
+  const timeoutId = setTimeout(() => controller.abort(), 10_000) // 10 s max
+
   try {
     const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://manaflow.fr'
     const baseUrl = process.env.VERCEL_URL
@@ -24,11 +27,14 @@ export async function getOrCreatePaymentUrl(
         'Authorization': `Bearer ${process.env.CRON_SECRET}`,
       },
       body: JSON.stringify({ factureId, montant, clientNom, numeroFacture, userId }),
+      signal: controller.signal,
     })
+    clearTimeout(timeoutId)
     if (!response.ok) return null
     const data = await response.json()
     return data.url ?? null
   } catch {
+    clearTimeout(timeoutId)
     return null
   }
 }

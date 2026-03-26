@@ -21,8 +21,9 @@ const nextConfig: NextConfig = {
             key: 'Content-Security-Policy',
             value: [
               "default-src 'self'",
-              // Next.js App Router nécessite unsafe-inline pour les scripts hydratation
-              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://js.stripe.com https://app.posthog.com",
+              // Next.js App Router nécessite unsafe-inline pour les scripts d'hydratation
+              // 'unsafe-eval' supprimé — non nécessaire avec App Router en production
+              "script-src 'self' 'unsafe-inline' https://js.stripe.com https://app.posthog.com",
               // Styles inline utilisés massivement dans les composants
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
               "font-src 'self' https://fonts.gstatic.com data:",

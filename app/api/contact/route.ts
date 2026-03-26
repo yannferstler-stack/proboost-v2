@@ -77,7 +77,6 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ success: true })
   } catch (err: any) {
-    console.error('[API /contact]', err)
     return NextResponse.json({ error: 'Erreur lors de l\'envoi. Réessayez plus tard.' }, { status: 500 })
   }
 }

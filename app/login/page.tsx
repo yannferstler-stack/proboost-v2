@@ -1,6 +1,7 @@
 ﻿'use client'
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import Image from 'next/image'
 import { createClient } from '../lib/supabase'
 
 export default function LoginPage() {
@@ -84,7 +85,7 @@ export default function LoginPage() {
           <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '40px 20px', position: 'relative', zIndex: 1 }}>
             {/* Logo */}
             <div style={{ display: 'flex', alignItems: 'center', gap: 20, cursor: 'pointer', marginBottom: 40 }} onClick={() => router.push('/')}>
-              <img src="/logo.png" style={{ height: 44, width: 'auto', objectFit: 'contain' }} />
+              <Image src="/logo.png" alt="ManaFlow" width={44} height={44} style={{ height: 44, width: 'auto', objectFit: 'contain' }} />
               <span style={{ fontSize: 22, color: 'white' }}><span style={{ fontFamily: "'Yeseva One', serif", fontWeight: 400 }}>Mana</span><span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 700 }}>flow</span></span>
             </div>
 
@@ -169,7 +170,7 @@ export default function LoginPage() {
             <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: '40px 48px', position: 'relative', zIndex: 1 }}>
               {/* Logo */}
               <div style={{ display: 'flex', alignItems: 'center', gap: 20, cursor: 'pointer' }} onClick={() => router.push('/')}>
-                <img src="/logo.png" style={{ height: 44, width: 'auto', objectFit: 'contain' }} />
+                <Image src="/logo.png" alt="ManaFlow" width={44} height={44} style={{ height: 44, width: 'auto', objectFit: 'contain' }} />
                 <span style={{ fontSize: 22, color: 'white' }}><span style={{ fontFamily: "'Yeseva One', serif", fontWeight: 400 }}>Mana</span><span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 700 }}>flow</span></span>
               </div>
 

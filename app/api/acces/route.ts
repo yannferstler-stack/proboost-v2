@@ -10,7 +10,8 @@ export const COOKIE_NAME = 'site_access'
  * On stocke ce hash dans le cookie (jamais le mot de passe en clair).
  */
 export function createAccessToken(password: string): string {
-  const secret = process.env.CRON_SECRET || process.env.SITE_PASSWORD || 'manaflow-secret'
+  // SITE_PASSWORD est garanti défini (throw au démarrage si absent)
+  const secret = process.env.CRON_SECRET ?? process.env.SITE_PASSWORD!
   return createHmac('sha256', secret).update(password).digest('hex')
 }
 

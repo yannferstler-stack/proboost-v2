@@ -14,8 +14,7 @@ export async function POST(request: NextRequest) {
 
   // ── Vérification clé API ──
   if (!process.env.ANTHROPIC_API_KEY) {
-    console.error('ANTHROPIC_API_KEY manquante dans les variables d\'environnement')
-    return NextResponse.json({ error: 'Configuration serveur manquante : ANTHROPIC_API_KEY non définie' }, { status: 500 })
+    return NextResponse.json({ error: 'Configuration serveur incomplète' }, { status: 500 })
   }
 
   const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
@@ -83,7 +82,6 @@ Règles :
     // Extraction JSON robuste : chercher le premier { … } dans la réponse
     const jsonMatch = text.match(/\{[\s\S]*\}/)
     if (!jsonMatch) {
-      console.error('Analyse PDF : pas de JSON trouvé dans la réponse Claude:', text)
       return NextResponse.json({ error: 'Impossible d\'extraire les données de la facture' }, { status: 422 })
     }
 
@@ -99,7 +97,7 @@ Règles :
     // Récupérer le message le plus précis (SDK Anthropic expose error.error.message)
     const rawMsg = error?.error?.message || error?.message || ''
     const raw = rawMsg.toLowerCase()
-    console.error('Erreur analyse PDF — status:', error?.status, '— type:', error?.error?.type, '— message:', rawMsg)
+    // Erreur silencieuse — les détails sont transmis dans la réponse JSON
     const isCreditError = raw.includes('credit') || raw.includes('balance')
     // Envoyer une alerte email admin si les crédits sont épuisés (cooldown 24h)
     if (isCreditError) await sendCreditAlertEmail()

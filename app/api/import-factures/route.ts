@@ -71,7 +71,6 @@ export async function POST(request: NextRequest) {
       skipped: rows.length - rowsToInsert.length,
     })
   } catch (e) {
-    console.error('ERREUR import-factures:', e)
-    return NextResponse.json({ error: String(e) }, { status: 500 })
+    return NextResponse.json({ error: 'Erreur lors de l\'import des factures' }, { status: 500 })
   }
 }

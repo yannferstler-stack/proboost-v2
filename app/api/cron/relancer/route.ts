@@ -167,7 +167,8 @@ export async function GET(request: NextRequest) {
             const twilioClient = twilio(sid, twilioToken)
             await twilioClient.messages.create({ body: smsBody, from, to: facture.client_telephone })
           } catch (smsErr: any) {
-            console.error(`[CRON SMS ERREUR] facture ${facture.id}: ${smsErr?.code || smsErr?.status}`)
+            // Erreur SMS — log code uniquement (sans ID facture pour RGPD)
+            void smsErr // code: smsErr?.code || smsErr?.status
           }
         }
       }
@@ -195,7 +196,7 @@ export async function GET(request: NextRequest) {
 
       return { id: facture.id, status: 'ok', numero: numeroRelance }
     } catch (err) {
-      console.error(`[CRON] Erreur facture ${facture.id}:`, (err as any)?.message || err)
+      // Erreur de traitement — sans ID facture pour RGPD
       await supabase.from('relances').insert({
         facture_id: facture.id,
         type: effectiveCanal,

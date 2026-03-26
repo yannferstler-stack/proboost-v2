@@ -51,6 +51,17 @@ export async function POST(request: NextRequest) {
       typeRelance = 'email', // 'email' | 'sms' | 'both'
     } = await request.json()
 
+    // ── Validation des entrées ──
+    if (!factureId || typeof factureId !== 'string') {
+      return NextResponse.json({ error: 'factureId invalide' }, { status: 400 })
+    }
+    if (!clientEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(clientEmail))) {
+      return NextResponse.json({ error: 'Email client invalide' }, { status: 400 })
+    }
+    if (!montant || typeof montant !== 'number' || montant <= 0 || !isFinite(montant)) {
+      return NextResponse.json({ error: 'Montant invalide (doit être un nombre positif)' }, { status: 400 })
+    }
+
     const supabaseAdmin = getSupabaseAdmin()
 
     // ── Vérifier l'état réel de la facture depuis la DB (ne jamais faire confiance au client) ──
@@ -165,7 +176,6 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ success: true, numeroRelance, typeRelance: typeLog })
   } catch (error) {
-    console.error('ERREUR RELANCER:', (error as any)?.message || error)
     return NextResponse.json({ error: 'Erreur interne du serveur' }, { status: 500 })
   }
 }

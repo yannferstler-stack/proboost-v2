@@ -1,27 +1,72 @@
-﻿'use client'
+'use client'
 import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { createClient } from '../lib/supabase'
+
+/** Traduit les messages d'erreur Supabase en français lisible */
+function translateError(msg: string): string {
+  const m = msg.toLowerCase()
+  if (m.includes('expired') || m.includes('invalid') || m.includes('token')) {
+    return 'Ce lien de réinitialisation a expiré ou est invalide. Veuillez en demander un nouveau.'
+  }
+  if (m.includes('same password')) {
+    return "Le nouveau mot de passe doit être différent de l'ancien."
+  }
+  if (m.includes('weak') || m.includes('short')) {
+    return 'Mot de passe trop faible. Choisissez-en un plus sécurisé.'
+  }
+  return msg
+}
 
 export default function ResetPasswordPage() {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const [password, setPassword] = useState('')
   const [passwordConfirm, setPasswordConfirm] = useState('')
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState('')
   const [done, setDone] = useState(false)
+  const [tokenExpired, setTokenExpired] = useState(false)
 
   const supabase = createClient()
 
-  // Supabase envoie le token dans le hash de l'URL → il gère ça automatiquement
-  // On vérifie juste que la session est valide avant de permettre la réinitialisation
   useEffect(() => {
-    supabase.auth.onAuthStateChange((event: string) => {
+    // Supabase redirige avec ?error=... si le token est invalide/expiré
+    const urlError = searchParams.get('error')
+    const urlErrorCode = searchParams.get('error_code')
+    const urlErrorDescription = searchParams.get('error_description')
+
+    if (urlError || urlErrorCode) {
+      setTokenExpired(true)
+      setMessage(
+        urlErrorDescription
+          ? decodeURIComponent(urlErrorDescription.replace(/\+/g, ' '))
+          : 'Ce lien de réinitialisation a expiré ou est invalide.'
+      )
+      return
+    }
+
+    // Écoute l'événement Supabase pour détecter un token valide
+    let hasValidSession = false
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event: string) => {
       if (event === 'PASSWORD_RECOVERY') {
-        // Supabase a détecté le token dans l'URL — OK
+        hasValidSession = true
       }
     })
-  }, [])
+
+    // Si après 3 s aucun événement PASSWORD_RECOVERY → token probablement expiré
+    const timer = setTimeout(() => {
+      if (!hasValidSession) {
+        setTokenExpired(true)
+        setMessage('Ce lien de réinitialisation a expiré ou est invalide. Veuillez en demander un nouveau.')
+      }
+    }, 3000)
+
+    return () => {
+      clearTimeout(timer)
+      subscription.unsubscribe()
+    }
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleReset = async () => {
     if (password.length < 8) { setMessage('Le mot de passe doit contenir au moins 8 caractères.'); return }
@@ -29,7 +74,7 @@ export default function ResetPasswordPage() {
     setLoading(true); setMessage('')
     const { error } = await supabase.auth.updateUser({ password })
     if (error) {
-      setMessage(error.message)
+      setMessage(translateError(error.message))
     } else {
       setDone(true)
       setTimeout(() => router.push('/dashboard'), 2500)
@@ -50,12 +95,15 @@ export default function ResetPasswordPage() {
         .btn-submit { transition: all 0.2s; background: linear-gradient(135deg, #a855f7, #ec4899); color: white; border: none; border-radius: 12px; padding: 15px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: Inter, sans-serif; width: 100%; box-shadow: 0 4px 24px rgba(168,85,247,0.45); display: flex; align-items: center; justify-content: center; gap: 8px; }
         .btn-submit:hover:not(:disabled) { transform: translateY(-2px); }
         .btn-submit:disabled { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.3); cursor: not-allowed; }
+        .btn-secondary { transition: all 0.2s; background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.8); border: 1px solid rgba(255,255,255,0.15); border-radius: 12px; padding: 13px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: Inter, sans-serif; width: 100%; }
+        .btn-secondary:hover { background: rgba(255,255,255,0.12); }
       `}</style>
 
       <div style={{ width: '100%', maxWidth: 420, animation: 'fadeUp 0.5s ease both' }}>
         {/* Logo */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 40, cursor: 'pointer', justifyContent: 'center' }} onClick={() => router.push('/')}>
-          <img src="/logo.png" style={{ height: 36, width: 'auto', objectFit: 'contain' }} />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/logo.png" alt="ManaFlow" style={{ height: 36, width: 'auto', objectFit: 'contain' }} />
           <span style={{ fontSize: 20, color: 'white' }}>
             <span style={{ fontFamily: "'Yeseva One', serif", fontWeight: 400 }}>Mana</span>
             <span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 700 }}>flow</span>
@@ -68,6 +116,19 @@ export default function ResetPasswordPage() {
               <div style={{ fontSize: 48, marginBottom: 16 }}>✓</div>
               <h2 style={{ fontFamily: 'Comfortaa', fontWeight: 700, fontSize: 22, color: 'white', marginBottom: 8 }}>Mot de passe mis à jour !</h2>
               <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.5)' }}>Redirection vers votre dashboard...</p>
+            </div>
+          ) : tokenExpired ? (
+            /* ── État : lien expiré / invalide ── */
+            <div style={{ textAlign: 'center', padding: '8px 0' }}>
+              <div style={{ fontSize: 48, marginBottom: 16 }}>⏱️</div>
+              <h2 style={{ fontFamily: 'Comfortaa', fontWeight: 700, fontSize: 20, color: 'white', marginBottom: 10 }}>Lien expiré</h2>
+              <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.55)', marginBottom: 24, lineHeight: 1.6 }}>
+                Ce lien de réinitialisation a expiré ou a déjà été utilisé.<br />
+                Demandez-en un nouveau depuis la page de connexion.
+              </p>
+              <button className="btn-secondary" onClick={() => router.push('/login')}>
+                ← Retour à la connexion
+              </button>
             </div>
           ) : (
             <>

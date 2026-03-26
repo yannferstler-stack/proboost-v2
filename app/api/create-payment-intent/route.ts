@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getStripe } from "../../lib/stripe";
+import { getStripe, getFeePercent } from "../../lib/stripe";
 import { getAuthUserId } from "../../lib/auth";
 
 export async function POST(req: NextRequest) {
@@ -12,7 +12,7 @@ export async function POST(req: NextRequest) {
   try {
     const { amount, connectedAccountId, plan } = await req.json();
 
-    const feePercent = plan === "pro" ? 10 : plan === "premium" ? 12 : 14;
+    const feePercent = getFeePercent(plan);
 
     const feeAmount = Math.max(
       Math.round((amount * feePercent) / 100),
