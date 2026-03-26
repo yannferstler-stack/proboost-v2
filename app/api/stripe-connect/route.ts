@@ -1,11 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { getAuthUserId } from '../../lib/auth'
-
-function getStripe() {
-  const Stripe = require('stripe')
-  return new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: '2023-10-16' })
-}
+import { getStripe } from '../../lib/stripe'
 
 function getSupabaseAdmin() {
   return createClient(

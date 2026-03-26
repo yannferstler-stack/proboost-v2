@@ -1,9 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-
-function getStripe() {
-  const Stripe = require('stripe')
-  return new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: '2023-10-16' })
-}
+import { getStripe } from '../../lib/stripe'
 
 // Montants en centimes HT — prix plein
 const PLAN_CONFIG: Record<string, { amount: number, name: string, commission: string }> = {
@@ -58,7 +54,6 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ url: session.url })
   } catch (error: any) {
-    console.error('Stripe error:', error.message)
     return NextResponse.json({ error: error.message }, { status: 500 })
   }
 }

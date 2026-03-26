@@ -1,19 +1,38 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { createHmac, timingSafeEqual } from 'node:crypto'
 
 const SITE_PASSWORD = process.env.SITE_PASSWORD
 if (!SITE_PASSWORD) throw new Error('[acces] SITE_PASSWORD env var is required')
-const COOKIE_NAME = 'site_access'
+export const COOKIE_NAME = 'site_access'
+
+/**
+ * Crée un token HMAC-SHA256 du mot de passe.
+ * On stocke ce hash dans le cookie (jamais le mot de passe en clair).
+ */
+export function createAccessToken(password: string): string {
+  const secret = process.env.CRON_SECRET || process.env.SITE_PASSWORD || 'manaflow-secret'
+  return createHmac('sha256', secret).update(password).digest('hex')
+}
 
 export async function POST(req: NextRequest) {
   const { password, redirect } = await req.json()
 
-  if (password !== SITE_PASSWORD) {
+  const expected = SITE_PASSWORD!
+  const provided = String(password ?? '')
+
+  // Comparaison timing-safe pour éviter les timing attacks
+  const isValid =
+    provided.length === expected.length &&
+    timingSafeEqual(Buffer.from(provided), Buffer.from(expected))
+
+  if (!isValid) {
     return NextResponse.json({ error: 'Mot de passe incorrect' }, { status: 401 })
   }
 
   const response = NextResponse.json({ success: true, redirect: redirect ?? '/' })
 
-  response.cookies.set(COOKIE_NAME, SITE_PASSWORD!, {
+  // Stocke un HMAC du mot de passe — jamais le mot de passe en clair
+  response.cookies.set(COOKIE_NAME, createAccessToken(expected), {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',

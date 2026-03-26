@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createServerClient } from '@supabase/ssr'
 import { createClient } from '@supabase/supabase-js'
 import { cookies } from 'next/headers'
+import { getStripe } from '../../lib/stripe'
 
 const PLAN_ORDER: Record<string, number> = { starter: 1, premium: 2, pro: 3 }
 
@@ -12,11 +13,6 @@ function getPriceId(plan: string): string | null {
     pro: process.env.STRIPE_PRICE_PRO,
   }
   return ids[plan] ?? null
-}
-
-function getStripe() {
-  const Stripe = require('stripe')
-  return new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: '2023-10-16' })
 }
 
 export async function POST(req: NextRequest) {

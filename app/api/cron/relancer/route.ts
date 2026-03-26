@@ -1,40 +1,24 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import { timingSafeEqual } from 'node:crypto'
 import { Resend } from 'resend'
 import { getEmailContent, getSmsContent } from '../../../lib/email-templates'
+import { getOrCreatePaymentUrl } from '../../../lib/payment'
 
 const getResend = () => new Resend(process.env.RESEND_API_KEY)
 
 /**
- * Crée (ou réutilise) un lien de paiement Stripe Checkout pour une facture.
- * Appelle la route interne /api/paiement-facture.
+ * Vérifie le CRON_SECRET avec une comparaison timing-safe pour éviter les timing attacks.
  */
-async function getOrCreatePaymentUrl(
-  factureId: string,
-  montant: number,
-  clientNom: string,
-  numeroFacture: string,
-  userId: string,
-): Promise<string | null> {
+function verifyCronSecret(authHeader: string | null): boolean {
+  const cronSecret = process.env.CRON_SECRET
+  if (!cronSecret || !authHeader) return false
+  const expected = `Bearer ${cronSecret}`
+  if (authHeader.length !== expected.length) return false
   try {
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://manaflow.fr'
-    const baseUrl = process.env.VERCEL_URL
-      ? `https://${process.env.VERCEL_URL}`
-      : appUrl
-
-    const response = await fetch(`${baseUrl}/api/paiement-facture`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${process.env.CRON_SECRET}`,
-      },
-      body: JSON.stringify({ factureId, montant, clientNom, numeroFacture, userId }),
-    })
-    if (!response.ok) return null
-    const data = await response.json()
-    return data.url ?? null
+    return timingSafeEqual(Buffer.from(authHeader), Buffer.from(expected))
   } catch {
-    return null
+    return false
   }
 }
 
@@ -80,9 +64,9 @@ function calcNextRelanceDate(
 }
 
 export async function GET(request: NextRequest) {
-  // Vérification Vercel Cron (Authorization header)
+  // Vérification Vercel Cron (Authorization header) — timing-safe
   const authHeader = request.headers.get('Authorization')
-  if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+  if (!verifyCronSecret(authHeader)) {
     return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
   }
 
@@ -106,7 +90,6 @@ export async function GET(request: NextRequest) {
     .neq('statut', 'payée')
 
   if (error) {
-    console.error('[CRON] Erreur récupération factures:', error)
     return NextResponse.json({ error: error.message }, { status: 500 })
   }
 
@@ -125,6 +108,16 @@ export async function GET(request: NextRequest) {
     const maxRelances = profile?.plan === 'starter' ? 3 : 5
     const delais = getDelais(profile)
 
+    // Vérification côté serveur de la limite du plan
+    if ((facture.nombre_relances || 0) >= maxRelances) {
+      await supabase.from('factures').update({ sequence_active: false }).eq('id', facture.id)
+      return { id: facture.id, status: 'skip', error: 'Limite de relances atteinte' }
+    }
+
+    // Bloquer les SMS si le plan n'est pas Pro (enforce côté serveur)
+    const canSms = profile?.plan === 'pro'
+    const effectiveCanal = (!canSms && (canal === 'sms' || canal === 'both')) ? 'email' : canal
+
     try {
       // ── Lien de paiement ──
       let paymentUrl: string | undefined
@@ -139,7 +132,7 @@ export async function GET(request: NextRequest) {
       }
 
       // ── Envoi Email ──
-      if (canal === 'email' || canal === 'both') {
+      if (effectiveCanal === 'email' || effectiveCanal === 'both') {
         if (!facture.client_email) {
           return { id: facture.id, status: 'skip', error: 'Pas d\'email client' }
         }
@@ -162,8 +155,8 @@ export async function GET(request: NextRequest) {
         })
       }
 
-      // ── SMS via Twilio ──
-      if (canal === 'sms' || canal === 'both') {
+      // ── SMS via Twilio (Pro uniquement) ──
+      if (effectiveCanal === 'sms' || effectiveCanal === 'both') {
         const smsBody = getSmsContent(facture.client_nom, facture.montant, facture.numero_facture || '', company, numeroRelance, facture.date_echeance)
         const sid = process.env.TWILIO_ACCOUNT_SID
         const twilioToken = process.env.TWILIO_AUTH_TOKEN
@@ -173,11 +166,9 @@ export async function GET(request: NextRequest) {
             const twilio = require('twilio')
             const twilioClient = twilio(sid, twilioToken)
             await twilioClient.messages.create({ body: smsBody, from, to: facture.client_telephone })
-          } catch (smsErr) {
-            console.error(`[CRON SMS ERREUR] facture ${facture.id}:`, smsErr)
+          } catch (smsErr: any) {
+            console.error(`[CRON SMS ERREUR] facture ${facture.id}: ${smsErr?.code || smsErr?.status}`)
           }
-        } else {
-          console.log(`[CRON SMS non envoyé — Twilio non configuré] → ${facture.client_telephone}`)
         }
       }
 
@@ -195,7 +186,7 @@ export async function GET(request: NextRequest) {
         }).eq('id', facture.id),
         supabase.from('relances').insert({
           facture_id: facture.id,
-          type: canal,
+          type: effectiveCanal,
           numero_relance: numeroRelance,
           envoye_le: new Date().toISOString(),
           statut: 'envoyé',
@@ -204,15 +195,15 @@ export async function GET(request: NextRequest) {
 
       return { id: facture.id, status: 'ok', numero: numeroRelance }
     } catch (err) {
-      console.error(`[CRON] Erreur facture ${facture.id}:`, err)
+      console.error(`[CRON] Erreur facture ${facture.id}:`, (err as any)?.message || err)
       await supabase.from('relances').insert({
         facture_id: facture.id,
-        type: canal,
+        type: effectiveCanal,
         numero_relance: (facture.nombre_relances || 0) + 1,
         envoye_le: new Date().toISOString(),
         statut: 'erreur',
       }).then(null, () => {})
-      return { id: facture.id, status: 'error', error: String(err) }
+      return { id: facture.id, status: 'error', error: String((err as any)?.message || err) }
     }
   }
 
@@ -228,7 +219,6 @@ export async function GET(request: NextRequest) {
 
   const ok = results.filter(r => r.status === 'ok').length
   const errors = results.filter(r => r.status === 'error').length
-  console.log(`[CRON] Terminé — ${ok} envoyées, ${errors} erreurs`)
 
   return NextResponse.json({ processed: results.length, ok, errors, results })
 }

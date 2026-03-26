@@ -1,9 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
-import Stripe from "stripe";
-
-const getStripe = () => new Stripe(process.env.STRIPE_SECRET_KEY!);
+import { getStripe } from "../../lib/stripe";
+import { getAuthUserId } from "../../lib/auth";
 
 export async function POST(req: NextRequest) {
+  // Auth requise — ne pas permettre la création de PaymentIntent sans identité vérifiée
+  const userId = await getAuthUserId(req)
+  if (!userId) {
+    return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+  }
+
   try {
     const { amount, connectedAccountId, plan } = await req.json();
 
@@ -32,7 +37,6 @@ export async function POST(req: NextRequest) {
       feeAmount,
     });
   } catch (error: any) {
-    console.error("❌ Erreur Stripe:", error.message);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }

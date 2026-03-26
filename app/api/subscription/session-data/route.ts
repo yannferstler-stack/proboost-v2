@@ -1,11 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server'
-
-function getStripe() {
-  const Stripe = require('stripe')
-  return new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: '2023-10-16' })
-}
+import { getStripe } from '../../lib/stripe'
+import { getAuthUserId } from '../../lib/auth'
 
 export async function GET(req: NextRequest) {
+  // Auth requise — seul l'utilisateur connecté peut lire ses données de session
+  const userId = await getAuthUserId(req)
+  if (!userId) {
+    return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+  }
+
   const sessionId = req.nextUrl.searchParams.get('session_id')
   if (!sessionId) return NextResponse.json({ error: 'session_id manquant' }, { status: 400 })
 
@@ -26,7 +29,6 @@ export async function GET(req: NextRequest) {
       current_period_end: currentPeriodEnd,
     })
   } catch (err: any) {
-    console.error('session-data error:', err.message)
     return NextResponse.json({ error: err.message }, { status: 500 })
   }
 }

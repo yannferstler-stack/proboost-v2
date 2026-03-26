@@ -1,10 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
-
-function getStripe() {
-  const Stripe = require('stripe')
-  return new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: '2023-10-16' })
-}
+import { getStripe } from '../../lib/stripe'
 
 function getSupabaseAdmin() {
   return createClient(
@@ -35,8 +31,16 @@ async function isAuthorized(request: NextRequest): Promise<boolean> {
   if (!authHeader?.startsWith('Bearer ')) return false
   const token = authHeader.slice(7)
 
-  // Appels internes (cron, relancer) → secret partagé
-  if (process.env.CRON_SECRET && token === process.env.CRON_SECRET) return true
+  // Appels internes (cron, relancer) → secret partagé (timingSafeEqual)
+  if (process.env.CRON_SECRET) {
+    try {
+      const { timingSafeEqual } = require('node:crypto')
+      if (token.length === process.env.CRON_SECRET.length &&
+          timingSafeEqual(Buffer.from(token), Buffer.from(process.env.CRON_SECRET))) {
+        return true
+      }
+    } catch { /* fallthrough to JWT check */ }
+  }
 
   // Appels depuis le dashboard → JWT Supabase
   const supabase = createClient(
@@ -168,7 +172,6 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ url: session.url })
   } catch (error: any) {
-    console.error('[PAIEMENT-FACTURE] Erreur:', error)
-    return NextResponse.json({ error: String(error) }, { status: 500 })
+    return NextResponse.json({ error: error.message || 'Erreur interne' }, { status: 500 })
   }
 }

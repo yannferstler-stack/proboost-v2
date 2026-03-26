@@ -36,6 +36,16 @@ Je me permets donc de vous informer qu'à défaut de réponse ou de règlement s
 Je reste bien entendu disponible pour échanger si nécessaire et trouver une solution rapide. Si le règlement a été effectué entre-temps, merci d'ignorer ce message.`,
 ]
 
+/** Échappe les caractères HTML spéciaux pour prévenir les injections XSS. */
+function escapeHtml(str: string): string {
+  return String(str ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#x27;')
+}
+
 function applyVariables(msg: string, params: EmailParams): string {
   const montantStr = Number(params.montant).toLocaleString('fr-FR')
   const echeanceStr = new Date(params.dateEcheance).toLocaleDateString('fr-FR')
@@ -45,6 +55,18 @@ function applyVariables(msg: string, params: EmailParams): string {
     .replace(/\{facture\}/g, params.numeroFacture || 'N/A')
     .replace(/\{echeance\}/g, echeanceStr)
     .replace(/\{entreprise\}/g, params.companyName)
+}
+
+/** Même chose qu'applyVariables mais avec valeurs HTML-escapées pour usage dans des templates HTML. */
+function applyVariablesHtml(msg: string, params: EmailParams): string {
+  const montantStr = Number(params.montant).toLocaleString('fr-FR') // sûr : chiffre
+  const echeanceStr = new Date(params.dateEcheance).toLocaleDateString('fr-FR') // sûr : date
+  return msg
+    .replace(/\{client\}/g, escapeHtml(params.clientNom))
+    .replace(/\{montant\}/g, montantStr)
+    .replace(/\{facture\}/g, escapeHtml(params.numeroFacture || 'N/A'))
+    .replace(/\{echeance\}/g, echeanceStr)
+    .replace(/\{entreprise\}/g, escapeHtml(params.companyName))
 }
 
 export function getEmailContent(params: EmailParams): { subject: string; html: string } {
@@ -58,9 +80,21 @@ export function getEmailContent(params: EmailParams): { subject: string; html: s
   const echeanceStr = new Date(dateEcheance).toLocaleDateString('fr-FR')
   const refFacture = numeroFacture || 'N/A'
 
-  // Convertit le texte personnalisé (avec sauts de ligne) en paragraphes HTML
+  // Versions HTML-safe des données utilisateur (peuvent contenir des caractères spéciaux)
+  const safeClientNom = escapeHtml(clientNom)
+  const safeCompanyName = escapeHtml(companyName)
+  const safeCompanyAddress = escapeHtml(companyAddress)
+  const safeCompanyPhone = escapeHtml(companyPhone)
+  const safeRefFacture = escapeHtml(refFacture)
+  const safePaymentUrl = paymentUrl ? escapeHtml(paymentUrl) : undefined
+
+  // Convertit le texte personnalisé en paragraphes HTML sécurisés (anti-XSS)
   const buildCustomBody = (text: string) => {
-    const resolved = applyVariables(text, params)
+    // 1. Échapper les entités HTML du template brut (empêche l'injection HTML)
+    const safeTemplate = escapeHtml(text)
+    // 2. Remplacer les variables {xxx} avec des valeurs HTML-escapées
+    const resolved = applyVariablesHtml(safeTemplate, params)
+    // 3. Convertir les sauts de ligne en balises HTML
     return resolved
       .split(/\n\n+/)
       .map(p => `<p style="color:#6B7280;line-height:1.7;margin-bottom:12px;">${p.replace(/\n/g, '<br/>')}</p>`)
@@ -69,14 +103,14 @@ export function getEmailContent(params: EmailParams): { subject: string; html: s
 
   const footer = `
     <div style="margin-top:32px;padding-top:20px;border-top:1px solid #E5E7EB;">
-      <p style="margin:0;font-weight:700;color:#111;font-size:14px;">${companyName}</p>
-      ${companyAddress ? `<p style="margin:4px 0 0;color:#6B7280;font-size:13px;">${companyAddress}</p>` : ''}
-      ${companyPhone ? `<p style="margin:4px 0 0;color:#6B7280;font-size:13px;">Tél : ${companyPhone}</p>` : ''}
+      <p style="margin:0;font-weight:700;color:#111;font-size:14px;">${safeCompanyName}</p>
+      ${safeCompanyAddress ? `<p style="margin:4px 0 0;color:#6B7280;font-size:13px;">${safeCompanyAddress}</p>` : ''}
+      ${safeCompanyPhone ? `<p style="margin:4px 0 0;color:#6B7280;font-size:13px;">Tél : ${safeCompanyPhone}</p>` : ''}
     </div>`
 
-  const paymentButton = paymentUrl ? `
+  const paymentButton = safePaymentUrl ? `
     <div style="text-align:center;margin:28px 0;">
-      <a href="${paymentUrl}"
+      <a href="${safePaymentUrl}"
         style="display:inline-block;background:linear-gradient(135deg,#16A34A,#15803D);color:white;text-decoration:none;border-radius:10px;padding:14px 32px;font-weight:700;font-size:16px;letter-spacing:0.01em;">
         Payer maintenant →
       </a>
@@ -92,17 +126,17 @@ export function getEmailContent(params: EmailParams): { subject: string; html: s
   const bodies = [
     // ── Relance 1 : ton très doux, "simple contretemps" ──
     `<div style="font-family:Inter,sans-serif;max-width:600px;margin:0 auto;padding:40px 20px;color:#111;">
-      <p style="font-weight:800;font-size:20px;margin:0 0 32px;">${companyName}</p>
+      <p style="font-weight:800;font-size:20px;margin:0 0 32px;">${safeCompanyName}</p>
       <h2 style="font-size:22px;margin-bottom:20px;">Suivi de facture</h2>
       <p style="color:#6B7280;line-height:1.7;margin-bottom:12px;">Bonjour,</p>
       ${customMessage ? buildCustomBody(customMessage) : `
-        <p style="color:#6B7280;line-height:1.7;margin-bottom:12px;">Nous vous contactons concernant la facture <strong style="color:#111;">n°${refFacture}</strong>, émise par <strong style="color:#111;">${companyName}</strong> et dont l'échéance était fixée au <strong style="color:#111;">${echeanceStr}</strong>.</p>
+        <p style="color:#6B7280;line-height:1.7;margin-bottom:12px;">Nous vous contactons concernant la facture <strong style="color:#111;">n°${safeRefFacture}</strong>, émise par <strong style="color:#111;">${safeCompanyName}</strong> et dont l'échéance était fixée au <strong style="color:#111;">${echeanceStr}</strong>.</p>
         <p style="color:#6B7280;line-height:1.7;margin-bottom:12px;">Sauf erreur de notre part, son règlement ne semble pas avoir été pris en charge. Nous sommes certains qu'il s'agit d'un simple contretemps. Lorsque vous en aurez la possibilité, pourriez-vous nous confirmer que la facture est bien gérée ?</p>
         <p style="color:#6B7280;line-height:1.7;margin-bottom:24px;">Un grand merci par avance, et au plaisir d'échanger très prochainement.</p>
       `}
       <div style="background:#F0FDF4;border:1px solid #BBF7D0;border-radius:12px;padding:20px;margin:24px 0;">
         <p style="margin:0;color:#6B7280;font-size:13px;">Référence facture</p>
-        <p style="margin:4px 0 8px;font-weight:700;color:#111;">${refFacture}</p>
+        <p style="margin:4px 0 8px;font-weight:700;color:#111;">${safeRefFacture}</p>
         <p style="margin:0;color:#6B7280;font-size:13px;">Montant à régler</p>
         <p style="margin:4px 0 0;font-weight:800;color:#16A34A;font-size:22px;">${montantStr} €</p>
       </div>
@@ -112,20 +146,20 @@ export function getEmailContent(params: EmailParams): { subject: string; html: s
 
     // ── Relance 2 : ton neutre, demande date de règlement ──
     `<div style="font-family:Inter,sans-serif;max-width:600px;margin:0 auto;padding:40px 20px;color:#111;">
-      <p style="font-weight:800;font-size:20px;margin:0 0 32px;">${companyName}</p>
+      <p style="font-weight:800;font-size:20px;margin:0 0 32px;">${safeCompanyName}</p>
       <div style="background:#FFF7ED;border:1px solid #FED7AA;border-radius:10px;padding:14px 16px;margin-bottom:24px;">
-        <p style="margin:0;color:#EA580C;font-weight:600;font-size:14px;">⚠️ Deuxième relance — Facture n°${refFacture} toujours en attente</p>
+        <p style="margin:0;color:#EA580C;font-weight:600;font-size:14px;">⚠️ Deuxième relance — Facture n°${safeRefFacture} toujours en attente</p>
       </div>
       <h2 style="font-size:22px;margin-bottom:20px;">Deuxième relance</h2>
-      <p style="color:#6B7280;line-height:1.7;margin-bottom:12px;">Bonjour ${clientNom},</p>
+      <p style="color:#6B7280;line-height:1.7;margin-bottom:12px;">Bonjour ${safeClientNom},</p>
       ${customMessage ? buildCustomBody(customMessage) : `
-        <p style="color:#6B7280;line-height:1.7;margin-bottom:12px;">Je me permets de revenir vers vous concernant la facture <strong style="color:#111;">n°${refFacture}</strong>, arrivée à échéance le <strong style="color:#111;">${echeanceStr}</strong>, et pour laquelle nous n'avons pas encore reçu le règlement à ce jour.</p>
+        <p style="color:#6B7280;line-height:1.7;margin-bottom:12px;">Je me permets de revenir vers vous concernant la facture <strong style="color:#111;">n°${safeRefFacture}</strong>, arrivée à échéance le <strong style="color:#111;">${echeanceStr}</strong>, et pour laquelle nous n'avons pas encore reçu le règlement à ce jour.</p>
         <p style="color:#6B7280;line-height:1.7;margin-bottom:12px;">N'ayant pas eu de retour à mon précédent message, je préfère m'assurer que celui-ci vous est bien parvenu et que tout est en ordre de votre côté.</p>
         <p style="color:#6B7280;line-height:1.7;margin-bottom:24px;">Pourriez-vous, lorsque cela vous sera possible, me confirmer la date prévue de règlement ? Je reste bien entendu à votre disposition. Si le règlement a été effectué entre-temps, merci d'ignorer ce message.</p>
       `}
       <div style="background:#FEF2F2;border:1px solid #FECACA;border-radius:12px;padding:20px;margin:24px 0;">
         <p style="margin:0;color:#6B7280;font-size:13px;">Référence facture</p>
-        <p style="margin:4px 0 8px;font-weight:700;color:#111;">${refFacture}</p>
+        <p style="margin:4px 0 8px;font-weight:700;color:#111;">${safeRefFacture}</p>
         <p style="margin:0;color:#6B7280;font-size:13px;">Montant en attente</p>
         <p style="margin:4px 0 0;font-weight:800;color:#DC2626;font-size:22px;">${montantStr} €</p>
       </div>
@@ -135,21 +169,21 @@ export function getEmailContent(params: EmailParams): { subject: string; html: s
 
     // ── Relance 3 : ferme, dernière relance avant recouvrement ──
     `<div style="font-family:Inter,sans-serif;max-width:600px;margin:0 auto;padding:40px 20px;color:#111;">
-      <p style="font-weight:800;font-size:20px;margin:0 0 32px;">${companyName}</p>
+      <p style="font-weight:800;font-size:20px;margin:0 0 32px;">${safeCompanyName}</p>
       <div style="background:#FEF2F2;border:1px solid #FECACA;border-radius:10px;padding:14px 16px;margin-bottom:24px;">
-        <p style="margin:0;color:#DC2626;font-weight:600;font-size:14px;">🚨 Dernière relance — Facture n°${refFacture} — Action requise</p>
+        <p style="margin:0;color:#DC2626;font-weight:600;font-size:14px;">🚨 Dernière relance — Facture n°${safeRefFacture} — Action requise</p>
       </div>
       <h2 style="font-size:22px;margin-bottom:20px;">Dernière relance avant mise en recouvrement</h2>
-      <p style="color:#6B7280;line-height:1.7;margin-bottom:12px;">Bonjour ${clientNom},</p>
+      <p style="color:#6B7280;line-height:1.7;margin-bottom:12px;">Bonjour ${safeClientNom},</p>
       ${customMessage ? buildCustomBody(customMessage) : `
-        <p style="color:#6B7280;line-height:1.7;margin-bottom:12px;">Malgré mes précédents messages, la facture <strong style="color:#111;">n°${refFacture}</strong>, échue le <strong style="color:#111;">${echeanceStr}</strong>, demeure impayée à ce jour.</p>
+        <p style="color:#6B7280;line-height:1.7;margin-bottom:12px;">Malgré mes précédents messages, la facture <strong style="color:#111;">n°${safeRefFacture}</strong>, échue le <strong style="color:#111;">${echeanceStr}</strong>, demeure impayée à ce jour.</p>
         <p style="color:#6B7280;line-height:1.7;margin-bottom:12px;">Sauf erreur de ma part, nous n'avons reçu aucun retour de votre part concernant ce règlement.</p>
         <p style="color:#6B7280;line-height:1.7;margin-bottom:12px;">Je me permets donc de vous informer qu'à défaut de réponse ou de règlement sous huitaine, nous serions contraints d'engager une procédure de recouvrement, ce que je souhaiterais naturellement éviter compte tenu de la qualité de nos relations.</p>
         <p style="color:#6B7280;line-height:1.7;margin-bottom:24px;">Je reste bien entendu disponible pour échanger si nécessaire et trouver une solution rapide. Si le règlement a été effectué entre-temps, merci d'ignorer ce message.</p>
       `}
       <div style="background:#FEF2F2;border:2px solid #DC2626;border-radius:12px;padding:20px;margin:24px 0;">
         <p style="margin:0;color:#6B7280;font-size:13px;">Référence facture</p>
-        <p style="margin:4px 0 8px;font-weight:700;color:#111;">${refFacture}</p>
+        <p style="margin:4px 0 8px;font-weight:700;color:#111;">${safeRefFacture}</p>
         <p style="margin:0;color:#6B7280;font-size:13px;">Montant à régler sous huitaine</p>
         <p style="margin:4px 0 0;font-weight:800;color:#DC2626;font-size:24px;">${montantStr} €</p>
       </div>

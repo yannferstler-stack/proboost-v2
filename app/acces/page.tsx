@@ -386,7 +386,7 @@ function AccesContent() {
             </form>
           </div>
 
-          <p className="footer-note">© 2025 ManaFlow · Tous droits réservés</p>
+          <p className="footer-note">© 2026 ManaFlow · Tous droits réservés</p>
         </div>
       </div>
     </>

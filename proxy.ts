@@ -1,9 +1,16 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
+import { createHmac } from 'node:crypto'
 
 const SITE_PASSWORD = process.env.SITE_PASSWORD ?? 'manaflow2024'
 const COOKIE_NAME = 'site_access'
+
+/** Doit correspondre exactement à createAccessToken dans api/acces/route.ts */
+function createAccessToken(password: string): string {
+  const secret = process.env.CRON_SECRET || process.env.SITE_PASSWORD || 'manaflow-secret'
+  return createHmac('sha256', secret).update(password).digest('hex')
+}
 
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
@@ -21,7 +28,8 @@ export async function proxy(request: NextRequest) {
   // Pas de mot de passe en développement local
   if (process.env.NODE_ENV !== 'development') {
     const cookie = request.cookies.get(COOKIE_NAME)
-    if (cookie?.value !== SITE_PASSWORD) {
+    const expectedToken = createAccessToken(SITE_PASSWORD)
+    if (cookie?.value !== expectedToken) {
       const url = request.nextUrl.clone()
       url.pathname = '/acces'
       url.searchParams.set('redirect', pathname)

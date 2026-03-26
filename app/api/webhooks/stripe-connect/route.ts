@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { Resend } from 'resend'
+import { getStripe } from '../../lib/stripe'
 
 /**
  * POST /api/webhooks/stripe-connect
@@ -16,11 +17,6 @@ import { Resend } from 'resend'
  */
 
 const getResend = () => new Resend(process.env.RESEND_API_KEY)
-
-function getStripe() {
-  const Stripe = require('stripe')
-  return new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: '2023-10-16' })
-}
 
 function getSupabaseAdmin() {
   return createClient(
@@ -49,7 +45,6 @@ export async function POST(req: NextRequest) {
       process.env.STRIPE_CONNECT_WEBHOOK_SECRET!
     )
   } catch (err: any) {
-    console.error('[CONNECT WEBHOOK] Signature invalide:', err.message)
     return NextResponse.json({ error: `Webhook Error: ${err.message}` }, { status: 400 })
   }
 
