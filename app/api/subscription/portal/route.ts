@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createServerClient } from '@supabase/ssr'
 import { createClient } from '@supabase/supabase-js'
 import { cookies } from 'next/headers'
-import { getStripe } from '../../lib/stripe'
+import { getStripe } from '../../../lib/stripe'
 
 export async function POST(req: NextRequest) {
   const cookieStore = await cookies()

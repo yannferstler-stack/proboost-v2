@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createServerClient } from '@supabase/ssr'
 import { createClient } from '@supabase/supabase-js'
 import { cookies } from 'next/headers'
-import { getStripe } from '../../lib/stripe'
+import { getStripe } from '../../../lib/stripe'
 
 const PLAN_ORDER: Record<string, number> = { starter: 1, premium: 2, pro: 3 }
 

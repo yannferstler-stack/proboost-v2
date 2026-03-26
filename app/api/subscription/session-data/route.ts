@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getStripe } from '../../lib/stripe'
-import { getAuthUserId } from '../../lib/auth'
+import { getStripe } from '../../../lib/stripe'
+import { getAuthUserId } from '../../../lib/auth'
 
 export async function GET(req: NextRequest) {
   // Auth requise — seul l'utilisateur connecté peut lire ses données de session

@@ -30,7 +30,7 @@ export async function proxy(request: NextRequest) {
   // Pas de mot de passe en développement local
   if (process.env.NODE_ENV !== 'development') {
     const cookie = request.cookies.get(COOKIE_NAME)
-    const expectedToken = createAccessToken(SITE_PASSWORD)
+    const expectedToken = createAccessToken(SITE_PASSWORD!)
     if (cookie?.value !== expectedToken) {
       const url = request.nextUrl.clone()
       url.pathname = '/acces'

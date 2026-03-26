@@ -1,6 +1,7 @@
 'use client'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
+import Image from 'next/image'
 import { createClient } from '../lib/supabase'
 
 /** Traduit les messages d'erreur Supabase en français lisible */
@@ -18,7 +19,7 @@ function translateError(msg: string): string {
   return msg
 }
 
-export default function ResetPasswordPage() {
+function ResetPasswordContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const [password, setPassword] = useState('')
@@ -102,8 +103,7 @@ export default function ResetPasswordPage() {
       <div style={{ width: '100%', maxWidth: 420, animation: 'fadeUp 0.5s ease both' }}>
         {/* Logo */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 40, cursor: 'pointer', justifyContent: 'center' }} onClick={() => router.push('/')}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/logo.png" alt="ManaFlow" style={{ height: 36, width: 'auto', objectFit: 'contain' }} />
+          <Image src="/logo.png" alt="ManaFlow" width={36} height={36} style={{ height: 36, width: 'auto', objectFit: 'contain' }} />
           <span style={{ fontSize: 20, color: 'white' }}>
             <span style={{ fontFamily: "'Yeseva One', serif", fontWeight: 400 }}>Mana</span>
             <span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 700 }}>flow</span>
@@ -159,5 +159,13 @@ export default function ResetPasswordPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function ResetPasswordPage() {
+  return (
+    <Suspense fallback={<div style={{ minHeight: '100vh', background: 'linear-gradient(145deg, #0d0620 0%, #1a0533 35%, #0f0a2e 70%, #1a0320 100%)' }} />}>
+      <ResetPasswordContent />
+    </Suspense>
   )
 }
