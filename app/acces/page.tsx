@@ -1,7 +1,8 @@
-﻿'use client'
+'use client'
 
 import { useState, Suspense } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
+import Image from 'next/image'
 
 function AccesContent() {
   const [password, setPassword] = useState('')
@@ -35,145 +36,199 @@ function AccesContent() {
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Comfortaa:wght@300;400;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@700&family=Yeseva+One&family=Inter:wght@300;400;500;600&display=swap');
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        body { background: #fafafa; }
+        body { background: #0d0620; }
+
         @keyframes fadeUp {
-          from { opacity: 0; transform: translateY(14px); }
-          to { opacity: 1; transform: translateY(0); }
+          from { opacity: 0; transform: translateY(16px); }
+          to   { opacity: 1; transform: translateY(0); }
         }
-        input:focus { outline: none; }
+        @keyframes pulse-glow {
+          0%, 100% { opacity: 0.5; transform: scale(1); }
+          50%       { opacity: 0.8; transform: scale(1.05); }
+        }
+
+        .wrap {
+          min-height: 100vh;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          font-family: 'Inter', sans-serif;
+          padding: 32px 20px;
+          background: radial-gradient(ellipse 80% 60% at 50% -10%, rgba(168,85,247,0.2) 0%, transparent 60%),
+                      linear-gradient(180deg, #0d0620 0%, #0f0a2e 100%);
+        }
+
+        .content {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          text-align: center;
+          max-width: 400px;
+          width: 100%;
+          animation: fadeUp 0.5s ease forwards;
+        }
+
+        .logo-row {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          margin-bottom: 32px;
+        }
+
+        .badge {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          padding: 5px 14px;
+          border-radius: 100px;
+          background: rgba(168,85,247,0.15);
+          border: 1px solid rgba(168,85,247,0.3);
+          font-size: 13px;
+          font-weight: 500;
+          color: #c084fc;
+          margin-bottom: 16px;
+        }
+        .badge-dot {
+          width: 6px; height: 6px;
+          border-radius: 50%;
+          background: #a855f7;
+          box-shadow: 0 0 6px #a855f7;
+          animation: pulse-glow 2s ease-in-out infinite;
+        }
+
+        .tagline {
+          font-size: 15px;
+          font-weight: 300;
+          color: rgba(255,255,255,0.45);
+          margin-bottom: 40px;
+          line-height: 1.6;
+        }
+
+        .card {
+          width: 100%;
+          background: rgba(255,255,255,0.04);
+          border: 1px solid rgba(255,255,255,0.1);
+          border-radius: 16px;
+          padding: 28px 24px;
+        }
+
+        .card-label {
+          font-size: 11px;
+          font-weight: 500;
+          color: rgba(255,255,255,0.35);
+          text-transform: uppercase;
+          letter-spacing: 1px;
+          margin-bottom: 14px;
+          display: flex;
+          align-items: center;
+          gap: 6px;
+        }
+
+        .pw-input {
+          width: 100%;
+          padding: 13px 16px;
+          font-size: 15px;
+          border: 1.5px solid rgba(255,255,255,0.12);
+          border-radius: 10px;
+          font-family: 'Inter', sans-serif;
+          margin-bottom: 12px;
+          background: rgba(255,255,255,0.05);
+          color: white;
+          outline: none;
+          transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .pw-input::placeholder { color: rgba(255,255,255,0.2); }
         .pw-input:focus {
-          border-color: #1DB954 !important;
-          box-shadow: 0 0 0 3px rgba(29,185,84,0.08) !important;
+          border-color: rgba(168,85,247,0.6);
+          box-shadow: 0 0 0 3px rgba(168,85,247,0.1);
+        }
+        .pw-input.error { border-color: rgba(248,113,113,0.5); }
+
+        .error-msg {
+          color: #f87171;
+          font-size: 13px;
+          margin-bottom: 10px;
+          text-align: left;
+        }
+
+        .submit-btn {
+          width: 100%;
+          padding: 13px;
+          background: linear-gradient(135deg, #a855f7, #ec4899);
+          color: white;
+          border: none;
+          border-radius: 10px;
+          font-size: 15px;
+          font-weight: 600;
+          font-family: 'Inter', sans-serif;
+          cursor: pointer;
+          transition: opacity 0.2s, transform 0.15s;
+          box-shadow: 0 4px 18px rgba(168,85,247,0.3);
         }
         .submit-btn:hover:not(:disabled) {
-          background: #17a348 !important;
+          opacity: 0.92;
           transform: translateY(-1px);
-          box-shadow: 0 6px 20px rgba(29,185,84,0.35) !important;
         }
+        .submit-btn:disabled { opacity: 0.35; cursor: not-allowed; }
       `}</style>
 
-      <div style={{
-        minHeight: '100vh',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        background: '#fafafa',
-        fontFamily: 'Inter, sans-serif',
-        padding: 24,
-      }}>
-        <div style={{
-          background: 'white',
-          borderRadius: 16,
-          padding: '48px 40px',
-          maxWidth: 400,
-          width: '100%',
-          border: '1px solid #f0f0f0',
-          boxShadow: '0 4px 24px rgba(0,0,0,0.05)',
-          animation: 'fadeUp 0.4s ease forwards',
-          textAlign: 'center',
-        }}>
+      <div className="wrap">
+        <div className="content">
+
           {/* Logo */}
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, marginBottom: 40 }}>
-            <div style={{
-              width: 32, height: 32,
-              background: '#1DB954',
-              borderRadius: 8,
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-            }}>
-              <div style={{ width: 12, height: 12, background: 'white', borderRadius: 3 }} />
-            </div>
-            <span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 800, fontSize: 22, color: '#0a0a0a' }}>
-              ManaFlow
+          <div className="logo-row">
+            <Image src="/logo.png" alt="Manaflow" width={40} height={40} style={{ borderRadius: 8 }} />
+            <span style={{ fontSize: 26, color: 'white', lineHeight: 1 }}>
+              <span style={{ fontFamily: "'Yeseva One', serif", fontWeight: 400 }}>Mana</span>
+              <span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 700 }}>flow</span>
             </span>
           </div>
 
-          {/* Icône cadenas */}
-          <div style={{
-            width: 56, height: 56,
-            borderRadius: '50%',
-            background: '#f0fdf4',
-            border: '1.5px solid #bbf7d0',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            margin: '0 auto 20px',
-          }}>
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1DB954" strokeWidth="2.5">
-              <rect x="3" y="11" width="18" height="11" rx="2" />
-              <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-            </svg>
+          {/* Badge bientôt dispo */}
+          <div className="badge">
+            <span className="badge-dot" />
+            Bientôt disponible
           </div>
 
-          <h1 style={{
-            fontFamily: 'Comfortaa, sans-serif',
-            fontWeight: 900, fontSize: 22,
-            color: '#0a0a0a', marginBottom: 6,
-            letterSpacing: '-0.5px',
-          }}>
-            Accès restreint
-          </h1>
-          <p style={{
-            color: '#9CA3AF', fontSize: 14,
-            marginBottom: 32, fontWeight: 300, lineHeight: 1.6,
-          }}>
-            Ce site est en accès privé.<br />
-            Entrez le mot de passe pour continuer.
+          {/* Message d'attente */}
+          <p className="tagline">
+            Le site est en cours de finalisation.<br />
+            Entrez le mot de passe pour accéder à l&apos;aperçu.
           </p>
 
-          <form onSubmit={handleSubmit}>
-            <input
-              className="pw-input"
-              type="password"
-              placeholder="Mot de passe"
-              value={password}
-              onChange={e => setPassword(e.target.value)}
-              style={{
-                width: '100%',
-                padding: '13px 16px',
-                fontSize: 15,
-                border: error ? '1.5px solid #fed7d7' : '1.5px solid #e5e7eb',
-                borderRadius: 10,
-                fontFamily: 'Inter, sans-serif',
-                marginBottom: 10,
-                transition: 'all 0.15s',
-                background: '#fafafa',
-                color: '#0a0a0a',
-              }}
-              autoFocus
-            />
+          {/* Formulaire */}
+          <div className="card">
+            <p className="card-label">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <rect x="3" y="11" width="18" height="11" rx="2" />
+                <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+              </svg>
+              Accès anticipé
+            </p>
 
-            {error && (
-              <p style={{
-                color: '#c53030', fontSize: 13,
-                marginBottom: 12, textAlign: 'left',
-              }}>
-                ⚠️ {error}
-              </p>
-            )}
+            <form onSubmit={handleSubmit}>
+              <input
+                className={`pw-input${error ? ' error' : ''}`}
+                type="password"
+                placeholder="Mot de passe"
+                value={password}
+                onChange={e => { setPassword(e.target.value); setError('') }}
+                autoFocus
+              />
+              {error && <p className="error-msg">⚠ {error}</p>}
+              <button
+                type="submit"
+                disabled={!password || loading}
+                className="submit-btn"
+              >
+                {loading ? 'Vérification…' : 'Accéder →'}
+              </button>
+            </form>
+          </div>
 
-            <button
-              type="submit"
-              disabled={!password || loading}
-              className="submit-btn"
-              style={{
-                width: '100%',
-                padding: '13px',
-                background: '#1DB954',
-                color: 'white',
-                border: 'none',
-                borderRadius: 10,
-                fontSize: 15,
-                fontWeight: 600,
-                fontFamily: 'Inter, sans-serif',
-                cursor: !password || loading ? 'not-allowed' : 'pointer',
-                opacity: !password ? 0.5 : 1,
-                boxShadow: '0 4px 16px rgba(29,185,84,0.25)',
-                transition: 'all 0.18s',
-              }}
-            >
-              {loading ? 'Vérification...' : 'Accéder →'}
-            </button>
-          </form>
         </div>
       </div>
     </>
@@ -182,7 +237,7 @@ function AccesContent() {
 
 export default function AccesPage() {
   return (
-    <Suspense fallback={<div style={{ minHeight: '100vh', background: '#fafafa' }} />}>
+    <Suspense fallback={<div style={{ minHeight: '100vh', background: '#0d0620' }} />}>
       <AccesContent />
     </Suspense>
   )
