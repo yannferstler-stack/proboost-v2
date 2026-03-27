@@ -422,7 +422,7 @@ export default function Home() {
           const planAuto = montant <= 5000 ? PLANS[0] : montant <= 25000 ? PLANS[1] : PLANS[2]
           const planActif = planManuel ? PLANS.find(p => p.nom === planManuel) || planAuto : planAuto
           const tauxCommission = parseFloat(planActif.commission) / 100
-          const gainBrut = montant * 0.60
+          const gainBrut = montant * 0.75
           const commission = gainBrut * tauxCommission
           const gainNet = gainBrut - commission - planActif.prixBase
           const roi = planActif.prixBase > 0 ? Math.round(gainNet / planActif.prixBase) : 0
@@ -539,7 +539,7 @@ export default function Home() {
                     Essayer gratuitement — plan {planActif.nom} →
                   </button>
                   <p style={{ fontSize: 10, color: 'rgba(255,255,255,0.30)', textAlign: 'center' as const, marginTop: 8 }}>
-                    Simulation sur taux de recouvrement moyen de 60 %. Commission tout compris (frais bancaires inclus), hors minimum de 5 €/facture. Résultats indicatifs.
+                    Simulation sur taux de recouvrement moyen de 75 %. Commission tout compris (frais bancaires inclus), hors minimum de 5 €/facture. Résultats indicatifs.
                   </p>
                 </div>
               </div>
