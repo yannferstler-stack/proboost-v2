@@ -199,6 +199,7 @@ export default function Home() {
               <span className="nav-a" onClick={() => router.push('/blog')} style={{ fontSize: 14, fontWeight: 500 }}>Blog</span>
               <span className="nav-a" onClick={() => router.push('/comment-ca-marche')} style={{ fontSize: 14, fontWeight: 500 }}>Comment ça marche ?</span>
               <span className="nav-a" onClick={() => router.push('/nous-connaitre')} style={{ fontSize: 14, fontWeight: 500 }}>Nous connaître</span>
+              <span className="nav-a" onClick={() => document.getElementById('tarifs')?.scrollIntoView({ behavior: 'smooth' })} style={{ fontSize: 14, fontWeight: 500 }}>Tarifs</span>
               <button className="btn-connexion" onClick={() => router.push('/login')}>
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" /><polyline points="10 17 15 12 10 7" /><line x1="15" y1="12" x2="3" y2="12" /></svg>
                 Connexion
@@ -222,6 +223,7 @@ export default function Home() {
                 { label: 'Blog', href: '/blog' },
                 { label: 'Comment ça marche ?', href: '/comment-ca-marche' },
                 { label: 'Nous connaître', href: '/nous-connaitre' },
+                { label: 'Tarifs', href: '/#tarifs' },
               ].map(item => (
                 <button key={item.label} onClick={() => { router.push(item.href); setMenuOpen(false) }}
                   style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,0.80)', fontSize: 15, fontWeight: 500, padding: '12px 8px', cursor: 'pointer', fontFamily: 'Inter, sans-serif', textAlign: 'left', borderRadius: 8 }}>
@@ -288,7 +290,7 @@ export default function Home() {
             {[
               { value: '42', unit: 'jours', label: 'Retard moyen de paiement des TPE', color: '#a855f7' },
               { value: '+16', unit: '%', label: 'Augmentation des impayés pour les TPE et PME en 2025', color: '#ec4899' },
-              { value: '80', unit: '%', label: 'Des fonds récupérés grâce à une relance efficace', color: '#c084fc' },
+              { value: '75', unit: '%', label: 'Des créances récupérées grâce à une relance dans les 3 premiers mois', color: '#c084fc' },
             ].map((s, i) => (
               <Reveal key={i} delay={i * 0.1}>
                 <div style={{ padding: isMobile ? '32px 20px' : '40px 36px', borderRight: !isMobile && i < 2 ? '1px solid rgba(255,255,255,0.06)' : 'none', borderBottom: isMobile && i < 2 ? '1px solid rgba(255,255,255,0.06)' : 'none', textAlign: 'center' }}>
@@ -353,7 +355,7 @@ export default function Home() {
         </section>
 
         {/* TARIFS */}
-        <section style={{ borderTop: '1px solid rgba(255,255,255,0.06)', padding: isMobile ? '60px 20px' : '80px 40px' }}>
+        <section id="tarifs" style={{ borderTop: '1px solid rgba(255,255,255,0.06)', padding: isMobile ? '60px 20px' : '80px 40px' }}>
           <div style={{ maxWidth: 1060, margin: '0 auto' }}>
             <Reveal>
               <div style={{ textAlign: 'center', marginBottom: 40 }}>
@@ -391,7 +393,7 @@ export default function Home() {
                           <span style={{ fontSize: 13, color: plan.couleur, fontWeight: 700, letterSpacing: '-0.3px', flexShrink: 0 }}>{plan.commission}</span>
                           <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.55)', fontWeight: 400, whiteSpace: 'nowrap' }}>au succès — tout compris</span>
                         </div>
-                        <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.40)', fontWeight: 400, display: 'block', marginTop: 4 }}>frais bancaires inclus — min. 5 €</span>
+                        <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.40)', fontWeight: 400, display: 'block', marginTop: 4 }}>frais bancaires inclus — min. 5 € / facture recouvrée</span>
                       </div>
                     </div>
                     <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: 20, flex: 1, marginBottom: 20 }}>
@@ -420,7 +422,7 @@ export default function Home() {
           const planAuto = montant <= 5000 ? PLANS[0] : montant <= 25000 ? PLANS[1] : PLANS[2]
           const planActif = planManuel ? PLANS.find(p => p.nom === planManuel) || planAuto : planAuto
           const tauxCommission = parseFloat(planActif.commission) / 100
-          const gainBrut = montant * 0.80
+          const gainBrut = montant * 0.60
           const commission = gainBrut * tauxCommission
           const gainNet = gainBrut - commission - planActif.prixBase
           const roi = planActif.prixBase > 0 ? Math.round(gainNet / planActif.prixBase) : 0
@@ -537,7 +539,7 @@ export default function Home() {
                     Essayer gratuitement — plan {planActif.nom} →
                   </button>
                   <p style={{ fontSize: 10, color: 'rgba(255,255,255,0.30)', textAlign: 'center' as const, marginTop: 8 }}>
-                    Simulation sur taux de recouvrement moyen de 80 %. Commission tout compris (frais bancaires inclus), hors minimum de 5 €/facture. Résultats indicatifs.
+                    Simulation sur taux de recouvrement moyen de 60 %. Commission tout compris (frais bancaires inclus), hors minimum de 5 €/facture. Résultats indicatifs.
                   </p>
                 </div>
               </div>
@@ -576,6 +578,7 @@ export default function Home() {
             </div>
             <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.25)', textAlign: 'center' }}>© 2026 ManaFlow — Tous droits réservés</p>
             <div style={{ display: 'flex', gap: 20 }}>
+              <span className="nav-a" onClick={() => router.push('/mentions-legales')} style={{ fontSize: 12, cursor: 'pointer' }}>Mentions légales</span>
               <span className="nav-a" onClick={() => router.push('/cgu')} style={{ fontSize: 12, cursor: 'pointer' }}>CGU</span>
               <span className="nav-a" onClick={() => router.push('/confidentialite')} style={{ fontSize: 12, cursor: 'pointer' }}>Confidentialité</span>
               <span className="nav-a" onClick={() => router.push('/contact')} style={{ fontSize: 12, cursor: 'pointer' }}>Contact</span>

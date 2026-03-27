@@ -37,7 +37,9 @@ export async function POST(req: NextRequest) {
 
   const session = await stripe.billingPortal.sessions.create({
     customer: profile.stripe_customer_id,
-    return_url: `${appUrl}/dashboard/settings`,
+    // Retour vers paiement-requis avec ?retour=1 pour déclencher la re-vérification du statut.
+    // Si le paiement est confirmé (webhook reçu), la page redirige automatiquement vers /dashboard.
+    return_url: `${appUrl}/paiement-requis?retour=1`,
   })
 
   return NextResponse.json({ url: session.url })

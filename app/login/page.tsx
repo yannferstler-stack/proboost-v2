@@ -37,6 +37,13 @@ export default function LoginPage() {
   const handleAuth = async () => {
     setLoading(true)
     setMessage('')
+    // Lire le param ?redirect= injecté par le middleware (ex : /dashboard/settings)
+    // Sécurité : on s'assure que la destination est une route interne (commence par /)
+    const redirectParam = typeof window !== 'undefined'
+      ? new URLSearchParams(window.location.search).get('redirect')
+      : null
+    const safeRedirect = redirectParam?.startsWith('/') ? redirectParam : '/dashboard'
+
     if (isSignUp) {
       const { error } = await supabase.auth.signUp({ email, password })
       if (error) setMessage(error.message)
@@ -44,7 +51,7 @@ export default function LoginPage() {
     } else {
       const { error } = await supabase.auth.signInWithPassword({ email, password })
       if (error) setMessage('Email ou mot de passe incorrect')
-      else window.location.href = '/dashboard'
+      else window.location.href = safeRedirect
     }
     setLoading(false)
   }

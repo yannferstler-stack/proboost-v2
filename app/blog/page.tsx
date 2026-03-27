@@ -29,7 +29,7 @@ const ARTICLES = [
       `Ses clients ne sont jamais devenus de simples lignes dans un fichier. Sylvain les connaît par leur prénom. Beaucoup sont, comme lui, des entrepreneurs. Des relations construites avec le temps et la confiance.`,
       `Mais ces dernières années, la réalité économique s'est durcie. Les loyers augmentent, les outils nécessaires au métier d'agence coûtent toujours plus cher. Pour rester à flot, Sylvain a dû réduire son équipe. Aujourd'hui, il gère presque tout lui-même : devis, factures, administratif.`,
       `Relancer les paiements ? Ce n'est pas dans son tempérament. Quand il prend enfin le temps d'appeler un client, la discussion mène souvent vers un nouveau projet… et parfois une nouvelle facture en attente.`,
-      `Pourtant, près de 10 % de son chiffre d'affaires est aujourd'hui en retard de paiement. À un âge où il pourrait envisager une retraite bien méritée, cette trésorerie manquante l'oblige à continuer. Avec de simples relances structurées, jusqu'à 80 % de ces impayés pourraient être récupérés.`,
+      `Pourtant, près de 10 % de son chiffre d'affaires est aujourd'hui en retard de paiement. À un âge où il pourrait envisager une retraite bien méritée, cette trésorerie manquante l'oblige à continuer. Avec de simples relances structurées, jusqu'à 85 % de ces impayés pourraient être récupérés dans les deux premiers mois.`,
     ],
   },
   {

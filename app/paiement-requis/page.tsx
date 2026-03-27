@@ -1,5 +1,5 @@
 ﻿'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import { createClient } from '../lib/supabase'
@@ -8,6 +8,41 @@ export default function PaiementRequisPage() {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [checking, setChecking] = useState(false)
+  const [checkFailed, setCheckFailed] = useState(false)
+
+  // Quand l'utilisateur revient du portail Stripe (?retour=1), on vérifie automatiquement
+  // si le paiement a été traité par le webhook (jusqu'à 30s d'attente).
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    if (params.get('retour') === '1') {
+      void checkPaymentStatus()
+    }
+  }, [])
+
+  const checkPaymentStatus = async () => {
+    setChecking(true)
+    setCheckFailed(false)
+    const supabase = createClient()
+    for (let i = 0; i < 15; i++) {
+      await new Promise(r => setTimeout(r, 2000))
+      try {
+        const { data: { user } } = await supabase.auth.getUser()
+        if (!user) break
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('payment_status')
+          .eq('id', user.id)
+          .single()
+        if (profile?.payment_status === 'active') {
+          window.location.href = '/dashboard'
+          return
+        }
+      } catch { /* continue */ }
+    }
+    setChecking(false)
+    setCheckFailed(true)
+  }
 
   const handlePortal = async () => {
     setLoading(true)
@@ -40,6 +75,7 @@ export default function PaiementRequisPage() {
         body { background: linear-gradient(135deg, #0d0620 0%, #1a0a3d 50%, #0d1a2e 100%); min-height: 100vh; }
         @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes pulse-ring { 0%, 100% { transform: scale(1); opacity: 0.6; } 50% { transform: scale(1.08); opacity: 1; } }
+        @keyframes spin { to { transform: rotate(360deg); } }
       `}</style>
 
       <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #0d0620 0%, #1a0a3d 50%, #0d1a2e 100%)', display: 'flex', flexDirection: 'column', fontFamily: 'Inter, sans-serif' }}>
@@ -66,6 +102,20 @@ export default function PaiementRequisPage() {
                 </svg>
               </div>
             </div>
+
+            {/* Bannière de vérification post-portail */}
+            {checking && (
+              <div style={{ background: 'rgba(168,85,247,0.10)', border: '1px solid rgba(168,85,247,0.30)', borderRadius: 14, padding: '16px 20px', marginBottom: 20, display: 'flex', alignItems: 'center', gap: 12 }}>
+                <div style={{ width: 18, height: 18, border: '2px solid rgba(168,85,247,0.4)', borderTop: '2px solid #a855f7', borderRadius: '50%', flexShrink: 0, animation: 'spin 0.8s linear infinite' }} />
+                <p style={{ fontSize: 14, color: '#c084fc', fontWeight: 600 }}>Vérification de votre paiement en cours…</p>
+              </div>
+            )}
+            {checkFailed && (
+              <div style={{ background: 'rgba(251,191,36,0.10)', border: '1px solid rgba(251,191,36,0.30)', borderRadius: 14, padding: '14px 18px', marginBottom: 20 }}>
+                <p style={{ fontSize: 13, color: '#fbbf24', fontWeight: 600, marginBottom: 4 }}>⏳ Paiement pas encore confirmé</p>
+                <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.50)' }}>Le traitement peut prendre quelques secondes. Rechargez la page ou contactez-nous si le problème persiste.</p>
+              </div>
+            )}
 
             {/* Card principale */}
             <div style={{ background: 'rgba(255,255,255,0.05)', backdropFilter: 'blur(20px)', border: '1px solid rgba(255,255,255,0.10)', borderRadius: 24, padding: '36px 32px', textAlign: 'center' }}>

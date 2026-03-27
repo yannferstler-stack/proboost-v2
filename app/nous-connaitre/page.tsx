@@ -196,7 +196,7 @@ export default function NousConnaitrePage() {
           <div style={{ maxWidth: 960, margin: '0 auto' }}>
             <div className="stats-grid" style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3,1fr)', gap: 0 }}>
               {[
-                { value: '80%', label: 'des impayés récupérés avec des relances structurées', color: '#a855f7' },
+                { value: '75%', label: 'des créances récupérées avec des relances dans les 3 premiers mois', color: '#a855f7' },
                 { value: '42j', label: 'de retard moyen de paiement chez les TPE en France', color: '#ec4899' },
                 { value: '100%', label: 'alignés sur votre succès — aucun frais sans résultat', color: '#c084fc' },
               ].map((s, i) => (

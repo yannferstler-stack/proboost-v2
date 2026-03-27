@@ -2,7 +2,7 @@ import { createServerClient } from '@supabase/ssr'
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
-const SITE_PASSWORD = process.env.SITE_PASSWORD ?? 'proboost2024'
+const SITE_PASSWORD = process.env.SITE_PASSWORD
 const COOKIE_NAME = 'site_access'
 
 export async function proxy(request: NextRequest) {
@@ -16,8 +16,8 @@ export async function proxy(request: NextRequest) {
     return NextResponse.next()
   }
 
-  // Pas de mot de passe en développement local
-  if (process.env.NODE_ENV !== 'development') {
+  // Gate active uniquement en production et si SITE_PASSWORD est défini
+  if (SITE_PASSWORD && process.env.NODE_ENV !== 'development') {
     const cookie = request.cookies.get(COOKIE_NAME)
     if (cookie?.value !== SITE_PASSWORD) {
       const url = request.nextUrl.clone()
