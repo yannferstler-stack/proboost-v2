@@ -129,10 +129,15 @@ function SuccessContent() {
     if (!userId) return
     setLoading(true); setError('')
     try {
+      const supabase = createClient()
+      const { data: { session } } = await supabase.auth.getSession()
       const res = await fetch('/api/stripe-connect', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: form.email, company: form.societe, userId }),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${session?.access_token ?? ''}`,
+        },
+        body: JSON.stringify({ email: form.email, company: form.societe }),
       })
       const data = await res.json()
       if (data.url) {
