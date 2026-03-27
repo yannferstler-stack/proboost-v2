@@ -10,7 +10,8 @@ import { getOrCreatePaymentUrl } from '../../lib/payment'
 const RELANCER_MAX = 20
 const RELANCER_WINDOW_MIN = 10
 
-async function checkRelancerRateLimit(userId: string, supabase: ReturnType<typeof createClient>): Promise<boolean> {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function checkRelancerRateLimit(userId: string, supabase: any): Promise<boolean> {
   const since = new Date(Date.now() - RELANCER_WINDOW_MIN * 60 * 1000).toISOString()
   // On filtre via la jointure : relances → factures.user_id
   const { count } = await supabase
