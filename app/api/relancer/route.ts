@@ -146,7 +146,7 @@ export async function POST(request: NextRequest) {
       const smsBody = getSmsContent(clientNom, montant, numeroFacture, company, numeroRelance, dateEcheance)
       const sid = process.env.TWILIO_ACCOUNT_SID
       const token = process.env.TWILIO_AUTH_TOKEN
-      const from = process.env.TWILIO_PHONE
+      const from = process.env.TWILIO_SENDER || process.env.TWILIO_PHONE
       if (sid && token && from && clientTelephone) {
         const twilio = require('twilio')
         const twilioClient = twilio(sid, token)

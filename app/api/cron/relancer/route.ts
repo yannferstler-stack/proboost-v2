@@ -160,7 +160,7 @@ export async function GET(request: NextRequest) {
         const smsBody = getSmsContent(facture.client_nom, facture.montant, facture.numero_facture || '', company, numeroRelance, facture.date_echeance)
         const sid = process.env.TWILIO_ACCOUNT_SID
         const twilioToken = process.env.TWILIO_AUTH_TOKEN
-        const from = process.env.TWILIO_PHONE
+        const from = process.env.TWILIO_SENDER || process.env.TWILIO_PHONE
         if (sid && twilioToken && from && facture.client_telephone) {
           try {
             const twilio = require('twilio')
