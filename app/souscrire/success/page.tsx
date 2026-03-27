@@ -7,6 +7,18 @@ import { createClient } from '../../lib/supabase'
 const PLAN_LABELS: Record<string, string> = { starter: 'Starter', premium: 'Premium', pro: 'Pro' }
 const PLAN_COLORS: Record<string, string> = { starter: '#10b981', premium: '#3B82F6', pro: '#a855f7' }
 
+/** Validation SIRET par algorithme de Luhn (standard français). */
+function validateSiretLuhn(siret: string): boolean {
+  if (!/^\d{14}$/.test(siret)) return false
+  let sum = 0
+  for (let i = 0; i < 14; i++) {
+    let d = parseInt(siret[i], 10)
+    if (i % 2 === 0) { d *= 2; if (d > 9) d -= 9 }
+    sum += d
+  }
+  return sum % 10 === 0
+}
+
 function SuccessContent() {
   const searchParams = useSearchParams()
   const router = useRouter()
@@ -43,7 +55,9 @@ function SuccessContent() {
   }
 
   const siretDigits = form.siret.replace(/\D/g, '')
-  const siretValid = siretDigits.length === 14
+  const siretFull = siretDigits.length === 14
+  const siretValid = siretFull && validateSiretLuhn(siretDigits)
+  const siretLuhnFail = siretFull && !validateSiretLuhn(siretDigits)
   const siretPartial = siretDigits.length > 0 && siretDigits.length < 14
 
   const handleSubmitInfos = (e: React.FormEvent) => {
@@ -97,8 +111,8 @@ function SuccessContent() {
       if (sessionId) {
         try {
           let stripeData: any = null
-          for (let attempt = 0; attempt < 6; attempt++) {
-            if (attempt > 0) await new Promise(r => setTimeout(r, 2000))
+          for (let attempt = 0; attempt < 10; attempt++) {
+            if (attempt > 0) await new Promise(r => setTimeout(r, 3000))
             const stripeRes = await fetch(`/api/subscription/session-data?session_id=${sessionId}`)
             if (stripeRes.ok) {
               const sd = await stripeRes.json()
@@ -327,21 +341,22 @@ function SuccessContent() {
                   <div style={{ position: 'relative' }}>
                     <input
                       className="success-input"
-                      style={{ ...inputStyle, paddingRight: 40, borderColor: siretValid ? 'rgba(16,185,129,0.60)' : siretPartial ? 'rgba(239,68,68,0.60)' : 'rgba(255,255,255,0.15)' }}
+                      style={{ ...inputStyle, paddingRight: 40, borderColor: siretValid ? 'rgba(16,185,129,0.60)' : siretLuhnFail ? 'rgba(251,191,36,0.60)' : siretPartial ? 'rgba(239,68,68,0.60)' : 'rgba(255,255,255,0.15)' }}
                       value={form.siret}
                       onChange={e => handleChange('siret', e.target.value)}
                       placeholder="123 456 789 00012"
                     />
-                    {(siretValid || siretPartial) && (
-                      <span style={{ position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)', fontSize: 16, color: siretValid ? '#34d399' : '#f87171', pointerEvents: 'none' }}>
-                        {siretValid ? '✓' : '✗'}
+                    {(siretValid || siretLuhnFail || siretPartial) && (
+                      <span style={{ position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)', fontSize: 16, color: siretValid ? '#34d399' : siretLuhnFail ? '#fbbf24' : '#f87171', pointerEvents: 'none' }}>
+                        {siretValid ? '✓' : siretLuhnFail ? '⚠' : '✗'}
                       </span>
                     )}
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 5 }}>
                     {siretPartial && <span style={{ fontSize: 11, color: '#f87171' }}>14 chiffres requis ({siretDigits.length}/14)</span>}
+                    {siretLuhnFail && <span style={{ fontSize: 11, color: '#fbbf24' }}>Clé de contrôle incorrecte — vérifiez le numéro</span>}
                     {siretValid && <span style={{ fontSize: 11, color: '#34d399' }}>SIRET valide ✓</span>}
-                    {!siretPartial && !siretValid && <span />}
+                    {!siretPartial && !siretFull && <span />}
                     <a href="https://annuaire-entreprises.data.gouv.fr" target="_blank" rel="noopener noreferrer" style={{ fontSize: 11, color: '#a78bfa', textDecoration: 'none', fontWeight: 500 }}>
                       Trouver mon SIRET →
                     </a>

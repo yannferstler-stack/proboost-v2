@@ -143,6 +143,7 @@ export async function POST(request: NextRequest) {
     }
 
     // ── SMS via Twilio (Pro uniquement) ──
+    let smsSkipped = false
     if (sendSms) {
       const smsBody = getSmsContent(clientNom, montant, numeroFacture, company, numeroRelance, dateEcheance)
       const sid = process.env.TWILIO_ACCOUNT_SID
@@ -152,6 +153,9 @@ export async function POST(request: NextRequest) {
         const twilio = require('twilio')
         const twilioClient = twilio(sid, token)
         await twilioClient.messages.create({ body: smsBody, from, to: clientTelephone })
+      } else {
+        // SMS demandé mais canal non configuré (Twilio absent ou téléphone manquant)
+        smsSkipped = true
       }
     }
 
@@ -175,7 +179,7 @@ export async function POST(request: NextRequest) {
       statut: 'envoyé',
     })
 
-    return NextResponse.json({ success: true, numeroRelance, typeRelance: typeLog })
+    return NextResponse.json({ success: true, numeroRelance, typeRelance: typeLog, ...(smsSkipped ? { sms_skipped: true } : {}) })
   } catch (error) {
     return NextResponse.json({ error: 'Erreur interne du serveur' }, { status: 500 })
   }
