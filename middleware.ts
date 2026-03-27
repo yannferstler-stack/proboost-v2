@@ -1,18 +1,35 @@
+import { NextRequest, NextResponse } from 'next/server'
 import { createServerClient } from '@supabase/ssr'
-import { NextResponse } from 'next/server'
-import type { NextRequest } from 'next/server'
 
-/**
- * Middleware Next.js (Edge Runtime) — Protection des routes /dashboard
- *
- * 1. Rafraîchit le cookie de session Supabase (@supabase/ssr requis)
- * 2. Redirige vers /login si l'utilisateur n'est pas authentifié
- * 3. Redirige vers /paiement-requis si le compte est suspendu
- *    (past_due + délai de grâce de 3 jours expiré)
- *
- * Fail-safe : en cas d'erreur Supabase, la requête passe (fail-open).
- */
+const SITE_PASSWORD = process.env.SITE_PASSWORD
+const COOKIE_NAME = 'site_access'
+
 export async function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl
+
+  // ── 1. Site password gate (production only) ──
+  const bypassGate =
+    pathname === '/acces' ||
+    pathname === '/paiement-requis' ||
+    pathname === '/paiement-recu' ||
+    pathname === '/paiement-annule' ||
+    pathname.startsWith('/souscrire') ||
+    pathname.startsWith('/api/acces') ||
+    pathname.startsWith('/api/webhooks') ||
+    pathname.startsWith('/_next') ||
+    pathname.includes('.')
+
+  if (!bypassGate && SITE_PASSWORD && process.env.NODE_ENV !== 'development') {
+    const cookie = request.cookies.get(COOKIE_NAME)
+    if (cookie?.value !== SITE_PASSWORD) {
+      const url = request.nextUrl.clone()
+      url.pathname = '/acces'
+      url.searchParams.set('redirect', pathname)
+      return NextResponse.redirect(url)
+    }
+  }
+
+  // ── 2. Supabase auth guard (fail-safe) ──
   let supabaseResponse = NextResponse.next({ request })
 
   try {
@@ -21,10 +38,8 @@ export async function middleware(request: NextRequest) {
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
       {
         cookies: {
-          getAll() {
-            return request.cookies.getAll()
-          },
-          setAll(cookiesToSet) {
+          getAll: () => request.cookies.getAll(),
+          setAll: (cookiesToSet) => {
             cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value))
             supabaseResponse = NextResponse.next({ request })
             cookiesToSet.forEach(({ name, value, options }) =>
@@ -35,12 +50,8 @@ export async function middleware(request: NextRequest) {
       }
     )
 
-    // Valide le token côté serveur (plus sûr que getSession qui lit seulement le cookie)
     const { data: { user } } = await supabase.auth.getUser()
 
-    const { pathname } = request.nextUrl
-
-    // ── Protection /dashboard ──
     if (pathname.startsWith('/dashboard')) {
       if (!user) {
         const loginUrl = new URL('/login', request.url)
@@ -48,37 +59,38 @@ export async function middleware(request: NextRequest) {
         return NextResponse.redirect(loginUrl)
       }
 
-      // Vérification du statut de paiement
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('payment_status, payment_failed_at')
-        .eq('id', user.id)
-        .single()
+      if (!pathname.startsWith('/dashboard/pricing')) {
+        const { data: profile, error: profileError } = await supabase
+          .from('profiles')
+          .select('plan, payment_status, payment_failed_at')
+          .eq('id', user.id)
+          .single()
 
-      if (profile?.payment_status === 'past_due' && profile.payment_failed_at) {
-        const gracePeriodEnd = new Date(
-          new Date(profile.payment_failed_at).getTime() + 3 * 24 * 60 * 60 * 1000
-        )
-        if (Date.now() > gracePeriodEnd.getTime()) {
-          return NextResponse.redirect(new URL('/paiement-requis', request.url))
+        if (!profileError) {
+          const planActif = profile?.plan && ['starter', 'premium', 'pro'].includes(profile.plan)
+          if (!planActif) {
+            return NextResponse.redirect(new URL('/dashboard/pricing', request.url))
+          }
+
+          if (profile?.payment_status === 'past_due' && profile?.payment_failed_at) {
+            const failedAt = new Date(profile.payment_failed_at)
+            const joursDepuisEchec = (Date.now() - failedAt.getTime()) / (1000 * 60 * 60 * 24)
+            if (joursDepuisEchec >= 3) {
+              return NextResponse.redirect(new URL('/paiement-requis', request.url))
+            }
+          }
         }
       }
     }
 
-    // Rediriger les utilisateurs déjà connectés hors de /login
     if (pathname === '/login' && user) {
       return NextResponse.redirect(new URL('/dashboard', request.url))
     }
-  } catch {
-    // Fail-open : en cas d'erreur Supabase, on laisse passer la requête
-  }
+  } catch { /* fail-open — ne jamais bloquer l'utilisateur */ }
 
   return supabaseResponse
 }
 
 export const config = {
-  matcher: [
-    // Pages HTML uniquement — exclure assets statiques, API routes, etc.
-    '/((?!_next/static|_next/image|favicon\\.ico|api/|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|css|js|woff2?)$).*)',
-  ],
+  matcher: ['/((?!_next/static|_next/image|favicon.ico|logo.png|.*\\.png|.*\\.svg|.*\\.ico).*)'],
 }

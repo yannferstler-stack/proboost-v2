@@ -89,7 +89,7 @@ export default function Dashboard() {
   const [loadingMore, setLoadingMore] = useState(false)
   const PAGE_SIZE = 200
   const [relancingId, setRelancingId] = useState<string | null>(null)
-  const [relanceMsg, setRelanceMsg] = useState<{ id: string; ok: boolean; smsSkipped?: boolean } | null>(null)
+  const [relanceMsg, setRelanceMsg] = useState<{ id: string; ok: boolean; smsSkipped?: boolean; msg?: string } | null>(null)
   const [markingPaidId, setMarkingPaidId] = useState<string | null>(null)
   const [welcome, setWelcome] = useState<{ prenom: string; euros: number; isNew: boolean } | null>(null)
   const [showWelcome, setShowWelcome] = useState(false)
@@ -368,7 +368,8 @@ export default function Dashboard() {
         ))
         setRelanceMsg({ id: facture.id, ok: true, smsSkipped: !!data.sms_skipped })
       } else {
-        setRelanceMsg({ id: facture.id, ok: false })
+        const msg = res.status === 429 ? '✗ Trop vite' : res.status === 403 ? '✗ Quota atteint' : undefined
+        setRelanceMsg({ id: facture.id, ok: false, msg })
       }
     } catch {
       setRelanceMsg({ id: facture.id, ok: false })
@@ -506,22 +507,6 @@ export default function Dashboard() {
                 </div>
               </div>
               <button onClick={() => setShowWelcome(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#9CA3AF', fontSize: 18, lineHeight: 1, padding: '4px', flexShrink: 0 }}>×</button>
-            </div>
-          )}
-
-          {/* BANDEAU STRIPE CONNECT INCOMPLET */}
-          {profile && !profile.stripe_connect_account_id && (
-            <div style={{ background: 'linear-gradient(135deg, rgba(251,191,36,0.10), rgba(245,158,11,0.07))', border: '1px solid rgba(251,191,36,0.40)', borderRadius: 14, padding: '14px 20px', marginBottom: 20, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, animation: 'fadeUp 0.4s ease both' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                <span style={{ fontSize: 20, flexShrink: 0 }}>⚡</span>
-                <div>
-                  <p style={{ fontWeight: 700, fontSize: 14, color: '#92400E', marginBottom: 2 }}>Stripe non connecté — les liens de paiement sont désactivés</p>
-                  <p style={{ fontSize: 12, color: '#B45309', lineHeight: 1.5 }}>Connectez votre compte Stripe pour que vos clients puissent payer directement depuis les emails de relance.</p>
-                </div>
-              </div>
-              <a href="/dashboard/settings" style={{ flexShrink: 0, background: 'linear-gradient(135deg, #f59e0b, #d97706)', color: 'white', borderRadius: 8, padding: '8px 16px', fontSize: 13, fontWeight: 700, textDecoration: 'none', whiteSpace: 'nowrap', boxShadow: '0 2px 10px rgba(245,158,11,0.35)' }}>
-                🔗 Connecter Stripe →
-              </a>
             </div>
           )}
 
@@ -747,7 +732,7 @@ export default function Dashboard() {
                                 className="btn-relay"
                                 disabled={relancingId === f.id}
                                 onClick={(e) => { e.stopPropagation(); handleRelancerMaintenant(f) }}>
-                                {relancingId === f.id ? '⏳ Envoi...' : relanceMsg?.id === f.id ? (relanceMsg.ok ? (relanceMsg.smsSkipped ? '✓ Email (SMS non envoyé)' : '✓ Envoyée') : '✗ Erreur') : '⚡ Relancer'}
+                                {relancingId === f.id ? '⏳ Envoi...' : relanceMsg?.id === f.id ? (relanceMsg.ok ? (relanceMsg.smsSkipped ? '✓ Email (SMS non conf.)' : '✓ Envoyée') : (relanceMsg.msg || '✗ Erreur')) : '⚡ Relancer'}
                               </button>
                             </div>
                           )}
