@@ -89,7 +89,7 @@ export default function Dashboard() {
   const [loadingMore, setLoadingMore] = useState(false)
   const PAGE_SIZE = 200
   const [relancingId, setRelancingId] = useState<string | null>(null)
-  const [relanceMsg, setRelanceMsg] = useState<{ id: string; ok: boolean } | null>(null)
+  const [relanceMsg, setRelanceMsg] = useState<{ id: string; ok: boolean; smsSkipped?: boolean; msg?: string } | null>(null)
   const [markingPaidId, setMarkingPaidId] = useState<string | null>(null)
   const [welcome, setWelcome] = useState<{ prenom: string; euros: number; isNew: boolean } | null>(null)
   const [showWelcome, setShowWelcome] = useState(false)
@@ -366,9 +366,10 @@ export default function Dashboard() {
           ? { ...f, nombre_relances: data.numeroRelance, statut: 'relancée' }
           : f
         ))
-        setRelanceMsg({ id: facture.id, ok: true })
+        setRelanceMsg({ id: facture.id, ok: true, smsSkipped: !!data.sms_skipped })
       } else {
-        setRelanceMsg({ id: facture.id, ok: false })
+        const msg = res.status === 429 ? '✗ Trop vite' : res.status === 403 ? '✗ Quota atteint' : undefined
+        setRelanceMsg({ id: facture.id, ok: false, msg })
       }
     } catch {
       setRelanceMsg({ id: facture.id, ok: false })
@@ -731,7 +732,7 @@ export default function Dashboard() {
                                 className="btn-relay"
                                 disabled={relancingId === f.id}
                                 onClick={(e) => { e.stopPropagation(); handleRelancerMaintenant(f) }}>
-                                {relancingId === f.id ? '⏳ Envoi...' : relanceMsg?.id === f.id ? (relanceMsg.ok ? '✓ Envoyée' : '✗ Erreur') : '⚡ Relancer'}
+                                {relancingId === f.id ? '⏳ Envoi...' : relanceMsg?.id === f.id ? (relanceMsg.ok ? (relanceMsg.smsSkipped ? '✓ Email (SMS non conf.)' : '✓ Envoyée') : (relanceMsg.msg || '✗ Erreur')) : '⚡ Relancer'}
                               </button>
                             </div>
                           )}
