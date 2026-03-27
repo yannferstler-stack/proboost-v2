@@ -509,6 +509,22 @@ export default function Dashboard() {
             </div>
           )}
 
+          {/* BANDEAU STRIPE CONNECT INCOMPLET */}
+          {profile && !profile.stripe_connect_account_id && (
+            <div style={{ background: 'linear-gradient(135deg, rgba(251,191,36,0.10), rgba(245,158,11,0.07))', border: '1px solid rgba(251,191,36,0.40)', borderRadius: 14, padding: '14px 20px', marginBottom: 20, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, animation: 'fadeUp 0.4s ease both' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                <span style={{ fontSize: 20, flexShrink: 0 }}>⚡</span>
+                <div>
+                  <p style={{ fontWeight: 700, fontSize: 14, color: '#92400E', marginBottom: 2 }}>Stripe non connecté — les liens de paiement sont désactivés</p>
+                  <p style={{ fontSize: 12, color: '#B45309', lineHeight: 1.5 }}>Connectez votre compte Stripe pour que vos clients puissent payer directement depuis les emails de relance.</p>
+                </div>
+              </div>
+              <a href="/dashboard/settings" style={{ flexShrink: 0, background: 'linear-gradient(135deg, #f59e0b, #d97706)', color: 'white', borderRadius: 8, padding: '8px 16px', fontSize: 13, fontWeight: 700, textDecoration: 'none', whiteSpace: 'nowrap', boxShadow: '0 2px 10px rgba(245,158,11,0.35)' }}>
+                🔗 Connecter Stripe →
+              </a>
+            </div>
+          )}
+
           {/* HEADER */}
           <div style={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', justifyContent: 'space-between', alignItems: isMobile ? 'flex-start' : 'center', gap: isMobile ? 12 : 0, marginBottom: 32, animation: 'fadeUp 0.4s ease both' }}>
             <h1 style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 800, fontSize: 24, color: '#111' }}>Tableau de bord</h1>

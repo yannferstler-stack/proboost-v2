@@ -125,6 +125,8 @@ export default function ImporterPage() {
     a.href = url; a.download = `export-manaflow-${new Date().toISOString().split('T')[0]}.csv`; a.click()
   }
 
+  const REQUIRED_CSV_COLUMNS = ['raison_sociale', 'email_facturation', 'numero_facture', 'date_echeance', 'montant_total']
+
   const handleCSV = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file) return
@@ -133,7 +135,15 @@ export default function ImporterPage() {
     reader.onload = (event) => {
       const text = event.target?.result as string
       const lines = text.split('\n').filter(l => l.trim())
+      if (lines.length < 2) { setMessage('Le fichier CSV est vide ou ne contient pas de données.'); return }
       const headers = lines[0].split(',').map(h => h.trim().toLowerCase().replace(/"/g, ''))
+      // ── Validation des colonnes obligatoires ──
+      const manquantes = REQUIRED_CSV_COLUMNS.filter(col => !headers.includes(col))
+      if (manquantes.length > 0) {
+        setMessage(`Colonnes manquantes dans le CSV : ${manquantes.join(', ')}. Téléchargez le modèle pour voir le format attendu.`)
+        setFactures([])
+        return
+      }
       const rows: FacturePreview[] = lines.slice(1).map(line => {
         const values = line.split(',').map(v => v.trim().replace(/"/g, ''))
         const obj: any = {}

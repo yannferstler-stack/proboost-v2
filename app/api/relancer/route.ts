@@ -6,21 +6,19 @@ import { getAuthUserId } from '../../lib/auth'
 import { getOrCreatePaymentUrl } from '../../lib/payment'
 
 // ── Rate limiting : 20 relances max par utilisateur par fenêtre de 10 min ──
-// Note : en serverless, ce compteur est par instance. Pour une solution robuste, utiliser Redis.
-const RELANCER_WINDOW_MS = 10 * 60 * 1000
+// Stocké en Supabase (via join factures) pour être partagé entre toutes les instances serverless.
 const RELANCER_MAX = 20
-const relancerRateMap = new Map<string, { count: number; resetAt: number }>()
+const RELANCER_WINDOW_MIN = 10
 
-function checkRelancerRateLimit(userId: string): boolean {
-  const now = Date.now()
-  const entry = relancerRateMap.get(userId)
-  if (!entry || now > entry.resetAt) {
-    relancerRateMap.set(userId, { count: 1, resetAt: now + RELANCER_WINDOW_MS })
-    return true
-  }
-  if (entry.count >= RELANCER_MAX) return false
-  entry.count++
-  return true
+async function checkRelancerRateLimit(userId: string, supabase: ReturnType<typeof createClient>): Promise<boolean> {
+  const since = new Date(Date.now() - RELANCER_WINDOW_MIN * 60 * 1000).toISOString()
+  // On filtre via la jointure : relances → factures.user_id
+  const { count } = await supabase
+    .from('relances')
+    .select('factures!inner(user_id)', { count: 'exact', head: true })
+    .eq('factures.user_id', userId)
+    .gte('envoye_le', since)
+  return (count ?? 0) < RELANCER_MAX
 }
 
 const getResend = () => new Resend(process.env.RESEND_API_KEY)
@@ -36,7 +34,11 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
   }
 
-  if (!checkRelancerRateLimit(authenticatedId)) {
+  const supabaseAdmin = getSupabaseAdmin()
+
+  // ── Rate limiting persistant via Supabase (cross-instances) ──
+  const allowed = await checkRelancerRateLimit(authenticatedId, supabaseAdmin)
+  if (!allowed) {
     return NextResponse.json(
       { error: 'Trop de relances envoyées. Réessayez dans quelques minutes.' },
       { status: 429 }
@@ -61,8 +63,6 @@ export async function POST(request: NextRequest) {
     if (!montant || typeof montant !== 'number' || montant <= 0 || !isFinite(montant)) {
       return NextResponse.json({ error: 'Montant invalide (doit être un nombre positif)' }, { status: 400 })
     }
-
-    const supabaseAdmin = getSupabaseAdmin()
 
     // ── Vérifier l'état réel de la facture depuis la DB (ne jamais faire confiance au client) ──
     const { data: facture } = await supabaseAdmin
