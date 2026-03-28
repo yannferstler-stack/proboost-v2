@@ -131,6 +131,14 @@ export default function Dashboard() {
     getUser()
   }, [])
 
+  // Guard paiement : rediriger si abonnement expiré ou impayé
+  useEffect(() => {
+    if (!loading && profile) {
+      const bad = profile.payment_status === 'past_due' || profile.payment_status === 'unpaid' || profile.payment_status === 'canceled'
+      if (bad) router.replace('/paiement-requis')
+    }
+  }, [loading, profile])
+
   // Afficher le modal d'onboarding à la première visite
   useEffect(() => {
     if (!loading) {

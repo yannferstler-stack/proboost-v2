@@ -100,14 +100,16 @@ export default function SettingsPage() {
         }),
       })
       const data = await res.json()
-      if (data.url) window.location.href = data.url
-      else if (data.already_connected) {
-        alert('Votre compte Stripe est déjà connecté et actif.')
+      if (data.url) {
+        setPlanMessage('info:Redirection vers Stripe en cours...')
+        window.location.href = data.url
+      } else if (data.already_connected) {
+        setPlanMessage('success:Votre compte Stripe est déjà connecté et actif.')
       } else {
-        alert(data.error || 'Erreur lors de la connexion Stripe.')
+        setPlanMessage('error:' + (data.error || 'Erreur lors de la connexion Stripe.'))
       }
     } catch {
-      alert('Erreur réseau.')
+      setPlanMessage('error:Erreur réseau. Vérifiez votre connexion.')
     }
     setConnectLoading(false)
   }

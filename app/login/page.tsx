@@ -49,9 +49,25 @@ export default function LoginPage() {
       if (error) setMessage(error.message)
       else window.location.href = '/dashboard'
     } else {
-      const { error } = await supabase.auth.signInWithPassword({ email, password })
+      const { data: signInData, error } = await supabase.auth.signInWithPassword({ email, password })
       if (error) setMessage('Email ou mot de passe incorrect')
-      else window.location.href = safeRedirect
+      else {
+        try {
+          const uid = signInData.user?.id
+          if (uid) {
+            const { data: profileData } = await supabase.from('profiles').select('payment_status').eq('id', uid).single()
+            if (profileData?.payment_status === 'past_due' || profileData?.payment_status === 'unpaid' || profileData?.payment_status === 'canceled') {
+              window.location.href = '/paiement-requis'
+            } else {
+              window.location.href = safeRedirect
+            }
+          } else {
+            window.location.href = safeRedirect
+          }
+        } catch {
+          window.location.href = safeRedirect
+        }
+      }
     }
     setLoading(false)
   }

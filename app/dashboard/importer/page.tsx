@@ -465,10 +465,15 @@ export default function ImporterPage() {
             </div>
           )}
 
-          {!limiteAtteinte && getLimiteFactures() !== Infinity && facturesCeMois >= getLimiteFactures() * 0.8 && (
-            <div className="banner-row" style={{ background: '#FFF7ED', border: '1px solid #FED7AA', borderRadius: 12, padding: '12px 16px', marginBottom: 16, display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 10 }}>
-              <p style={{ fontSize: 13, color: '#EA580C' }}>Il reste <strong>{placesRestantes}</strong> facture{placesRestantes > 1 ? 's' : ''} ce mois-ci</p>
-              <button onClick={() => router.push('/souscrire')} style={{ background: '#EA580C', color: 'white', border: 'none', borderRadius: 8, padding: '6px 12px', fontSize: 12, fontWeight: 700, cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}>Upgrader →</button>
+          {!limiteAtteinte && getLimiteFactures() !== Infinity && (placesRestantes <= 5 || facturesCeMois >= getLimiteFactures() * 0.8) && (
+            <div className="banner-row" style={{ background: placesRestantes <= 2 ? '#FEF2F2' : '#FFF7ED', border: `1px solid ${placesRestantes <= 2 ? '#FECACA' : '#FED7AA'}`, borderRadius: 12, padding: '12px 16px', marginBottom: 16, display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 10 }}>
+              <p style={{ fontSize: 13, color: placesRestantes <= 2 ? '#DC2626' : '#EA580C' }}>
+                {placesRestantes <= 2
+                  ? <><strong>Attention :</strong> il ne reste que <strong>{placesRestantes}</strong> import{placesRestantes > 1 ? 's' : ''} ce mois-ci</>
+                  : <>Il reste <strong>{placesRestantes}</strong> facture{placesRestantes > 1 ? 's' : ''} importable{placesRestantes > 1 ? 's' : ''} ce mois-ci ({facturesCeMois}/{getLimiteFactures()})</>
+                }
+              </p>
+              <button onClick={() => router.push('/souscrire')} style={{ background: placesRestantes <= 2 ? '#DC2626' : '#EA580C', color: 'white', border: 'none', borderRadius: 8, padding: '6px 12px', fontSize: 12, fontWeight: 700, cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}>Upgrader →</button>
             </div>
           )}
 
@@ -525,7 +530,7 @@ export default function ImporterPage() {
                     <div className="step-num">1</div>
                     <div>
                       <p style={{ fontWeight: 600, color: '#111', marginBottom: 2, fontSize: 14 }}>Téléchargez le template CSV</p>
-                      <p style={{ fontSize: 12, color: '#9CA3AF' }}>Raison sociale, adresse, email, téléphone, n° facture, dates, montants</p>
+                      <p style={{ fontSize: 12, color: '#9CA3AF' }}>Colonnes <strong style={{ color: '#DC2626' }}>requises</strong> : raison_sociale, email_facturation, numero_facture, date_echeance, montant_total</p>
                     </div>
                   </div>
                   <button className="step-row-btn" onClick={downloadTemplate} style={{ background: 'rgba(168,85,247,0.08)', color: '#7c3aed', border: '1.5px solid rgba(168,85,247,0.25)', borderRadius: 10, padding: '9px 16px', fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: 'Inter, sans-serif', whiteSpace: 'nowrap' }}>
@@ -553,6 +558,13 @@ export default function ImporterPage() {
                   </label>
                 </div>
               </div>
+
+              {message && factures.length === 0 && (
+                <div style={{ background: '#FEF2F2', border: '1px solid #FECACA', borderRadius: 12, padding: '14px 18px', marginBottom: 12, display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
+                  <p style={{ fontSize: 13, color: '#DC2626', fontWeight: 600 }}>{message}</p>
+                  <button onClick={() => { setMessage(''); setFileName(''); setFactures([]) }} style={{ background: '#DC2626', color: 'white', border: 'none', borderRadius: 8, padding: '6px 14px', fontSize: 12, fontWeight: 700, cursor: 'pointer', fontFamily: 'Inter, sans-serif', whiteSpace: 'nowrap' }}>↺ Réessayer</button>
+                </div>
+              )}
 
               {factures.length > 0 && (
                 <div style={{ background: 'white', borderRadius: 14, overflow: 'hidden', border: '1px solid #EAECEF' }}>

@@ -66,6 +66,7 @@ function SuccessContent() {
     if (form.siret) {
       const siretClean = form.siret.replace(/[\s.-]/g, '')
       if (!/^\d{14}$/.test(siretClean)) { setError('Le SIRET doit contenir exactement 14 chiffres.'); return }
+      if (!validateSiretLuhn(siretClean)) { setError('SIRET invalide : la clé de contrôle est incorrecte. Vérifiez le numéro sur annuaire-entreprises.data.gouv.fr'); return }
     }
     setError(''); setStep('password')
   }
