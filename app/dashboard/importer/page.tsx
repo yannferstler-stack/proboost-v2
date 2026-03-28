@@ -235,7 +235,7 @@ export default function ImporterPage() {
         client_telephone: f.telephone || f.client_telephone,
         adresse: f.adresse,
         numero_facture: f.numero_facture,
-        date_facture: f.date_facture,
+        date_facture: f.date_facture || null,
         montant_total: parseFloat(f.montant_total || f.montant || '0'),
         montant_restant: parseFloat(f.montant_restant || f.montant || '0'),
         montant: parseFloat(f.montant_restant || f.montant_total || f.montant || '0'),
