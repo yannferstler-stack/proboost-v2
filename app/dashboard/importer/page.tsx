@@ -186,6 +186,10 @@ export default function ImporterPage() {
             if (!res.ok || data.error) {
               return { fichier: file.name, erreur: true, erreurMessage: data.error || 'Erreur inconnue' }
             }
+            const email = data.client_email || data.email_facturation || data.email || null
+            if (!email) {
+              return { ...data, fichier: file.name, erreur: true, erreurMessage: 'Email client manquant' }
+            }
             return { ...data, fichier: file.name, doublonWarning: isDublon(data.numero_facture) }
           } catch {
             return { fichier: file.name, erreur: true }
