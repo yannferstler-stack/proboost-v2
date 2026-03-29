@@ -71,7 +71,7 @@ export async function proxy(request: NextRequest) {
     if (!profileError) {
       const planActif = profile?.plan && ['starter', 'premium', 'pro'].includes(profile.plan)
       if (!planActif) {
-        return NextResponse.redirect(new URL('/dashboard/pricing', request.url))
+        return NextResponse.redirect(new URL('/souscrire', request.url))
       }
     }
 

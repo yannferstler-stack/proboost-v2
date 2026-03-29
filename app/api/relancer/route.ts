@@ -83,7 +83,7 @@ export async function POST(request: NextRequest) {
     // ── Lire le plan depuis la DB (ne jamais faire confiance au client) ──
     const { data: profile } = await supabaseAdmin
       .from('profiles')
-      .select('plan, template_relance_1, template_relance_2, template_relance_3')
+      .select('plan, email, template_relance_1, template_relance_2, template_relance_3')
       .eq('id', authenticatedId)
       .single()
     const userPlan: string = profile?.plan ?? 'starter'
@@ -133,6 +133,7 @@ export async function POST(request: NextRequest) {
       })
       const { error: emailError } = await getResend().emails.send({
         from: `ManaFlow <noreply@manaflow.fr>`,
+        replyTo: profile?.email || undefined,
         to: clientEmail,
         subject,
         html,

@@ -169,8 +169,8 @@ function SouscrireContent() {
                           <span style={{ fontFamily: 'Comfortaa', fontWeight: 900, fontSize: 20, color: 'white' }}>{formatPrix(p.prixBase)} €</span>
                           <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)' }}>/ mois</span>
                         </div>
-                        <span style={{ fontSize: 11, color: p.couleur, fontWeight: 600, display: 'block' }}>+ {p.commission} au succès — tout compris</span>
-                        <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.40)', fontWeight: 400, display: 'block', marginTop: 2 }}>frais bancaires inclus — min. 5 €</span>
+                        <span style={{ fontSize: 11, color: p.couleur, fontWeight: 600, display: 'block' }}>+ {p.commission} au succès</span>
+                        <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.40)', fontWeight: 400, display: 'block', marginTop: 2 }}>dont ~2% frais bancaires Stripe — min. 5 €</span>
                       </div>
                     </div>
                     {isSelected && (
@@ -195,12 +195,18 @@ function SouscrireContent() {
                 <p style={{ marginBottom: 6 }}>La commission de succès est prélevée uniquement sur les montants effectivement recouvrés. L'abonnement mensuel est dû indépendamment des résultats obtenus.</p>
                 <p>Vous pouvez résilier à tout moment depuis votre espace client, sans frais. La résiliation prend effet à la fin de la période en cours.</p>
               </div>
-              <label style={{ display: 'flex', alignItems: 'flex-start', gap: 10, cursor: 'pointer' }} onClick={() => setCgvAccepted(!cgvAccepted)}>
-                <div style={{ width: 20, height: 20, border: `2px solid ${cgvAccepted ? '#a855f7' : 'rgba(255,255,255,0.2)'}`, borderRadius: 6, background: cgvAccepted ? '#a855f7' : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 1, transition: 'all 0.15s' }}>
+              <label style={{ display: 'flex', alignItems: 'flex-start', gap: 10, cursor: 'pointer' }}>
+                <input
+                  type="checkbox"
+                  checked={cgvAccepted}
+                  onChange={e => setCgvAccepted(e.target.checked)}
+                  style={{ position: 'absolute', opacity: 0, width: 20, height: 20, cursor: 'pointer' }}
+                />
+                <div aria-hidden="true" style={{ width: 20, height: 20, border: `2px solid ${cgvAccepted ? '#a855f7' : 'rgba(255,255,255,0.2)'}`, borderRadius: 6, background: cgvAccepted ? '#a855f7' : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 1, transition: 'all 0.15s', pointerEvents: 'none' }}>
                   {cgvAccepted && <span style={{ color: 'white', fontSize: 12, fontWeight: 700 }}>✓</span>}
                 </div>
                 <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.55)', lineHeight: 1.6 }}>
-                  J'accepte les <span style={{ color: '#c084fc', fontWeight: 600 }}>Conditions Générales de Vente</span> et le mandat de recouvrement amiable confié à ManaFlow.
+                  J&apos;accepte les <a href="/cgu" target="_blank" rel="noopener noreferrer" style={{ color: '#c084fc', fontWeight: 600, textDecoration: 'underline' }}>Conditions Générales de Vente</a> et le mandat de recouvrement amiable confié à ManaFlow.
                 </span>
               </label>
             </div>
@@ -228,8 +234,8 @@ function SouscrireContent() {
                 <div style={{ marginBottom: 6 }}>
                   <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.65)' }}>puis {formatPrix(plan.prixBase)}€/mois</span>
                 </div>
-                <span style={{ fontSize: 12, color: plan.couleur, fontWeight: 600 }}>+ {plan.commission} au succès — tout compris</span>
-                <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.40)', display: 'block', marginTop: 2 }}>frais bancaires inclus — min. 5 €</span>
+                <span style={{ fontSize: 12, color: plan.couleur, fontWeight: 600 }}>+ {plan.commission} au succès</span>
+                <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.40)', display: 'block', marginTop: 2 }}>dont ~2% frais bancaires Stripe — min. 5 €</span>
               </div>
 
               <div style={{ marginBottom: 18 }}>

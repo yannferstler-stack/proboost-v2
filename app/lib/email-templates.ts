@@ -211,9 +211,9 @@ export function getSmsContent(
   const datePart = echeanceStr ? ` arrivée à échéance le ${echeanceStr}` : ''
 
   const messages = [
-    `Bonjour, message rapide concernant la facture n°${ref}${datePart}. Sauf oubli, nous n'avons pas encore reçu le règlement. Pouvez-vous me confirmer sa prise en compte ? Merci d'avance. ${companyName}`,
-    `Bonjour ${clientNom}, je me permets de revenir vers vous pour la facture n°${ref}${datePart}, toujours en attente de règlement à ce jour. Pouvez-vous me confirmer la date prévue de paiement ? Merci d'avance. ${companyName}`,
-    `Bonjour ${clientNom}, malgré mes relances précédentes, la facture n°${ref} reste impayée. Sans retour sous quelques jours, je serai contraint d'engager une procédure de recouvrement. Je préfère bien sûr éviter cela. Merci de votre retour rapide. ${companyName}`,
+    `Bonjour, facture n°${ref}${datePart} toujours en attente. Merci de confirmer sa prise en charge. ${companyName}`,
+    `Bonjour ${clientNom}, 2e relance facture n°${ref}. Règlement toujours attendu. Merci de confirmer la date prévue. ${companyName}`,
+    `Bonjour ${clientNom}, facture n°${ref} impayée malgré nos relances. Sans réponse sous 8j, procédure de recouvrement engagée. ${companyName}`,
   ]
   return messages[Math.min(numeroRelance - 1, 2)]
 }

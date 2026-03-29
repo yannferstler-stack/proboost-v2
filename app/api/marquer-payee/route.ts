@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { Resend } from 'resend'
 import { getAuthUserId } from '../../lib/auth'
+import { getFeePercent } from '../../lib/stripe'
 
 const getResend = () => new Resend(process.env.RESEND_API_KEY)
 const getSupabaseAdmin = () => createClient(
@@ -64,12 +65,18 @@ export async function POST(request: NextRequest) {
     // 4. Notifier l'utilisateur par email
     const { data: profile } = await supabase
       .from('profiles')
-      .select('email, company_name')
+      .select('email, company_name, plan')
       .eq('id', authenticatedId)
       .single()
 
     if (profile?.email) {
-      const montantStr = Number(facture.montant).toLocaleString('fr-FR')
+      const montant = Number(facture.montant)
+      const montantStr = montant.toLocaleString('fr-FR', { minimumFractionDigits: 2 })
+      const tauxPct = getFeePercent(profile?.plan)
+      const commission = Math.max(montant * (tauxPct / 100), 5)
+      const net = montant - commission
+      const commissionStr = commission.toLocaleString('fr-FR', { minimumFractionDigits: 2 })
+      const netStr = net.toLocaleString('fr-FR', { minimumFractionDigits: 2 })
       await getResend().emails.send({
         from: 'ManaFlow <noreply@manaflow.fr>',
         to: profile.email,
@@ -81,14 +88,27 @@ export async function POST(request: NextRequest) {
               <p style="margin:0;color:#16A34A;font-weight:700;font-size:15px;">✅ Facture marquée comme payée</p>
             </div>
             <p style="color:#6B7280;line-height:1.7;margin-bottom:16px;">
-              Vous avez manuellement marqué la facture
+              Vous avez marqué la facture
               <strong style="color:#111;">${facture.numero_facture || factureId}</strong>
               de <strong style="color:#111;">${facture.client_nom}</strong>
-              comme payée — montant de <strong style="color:#16A34A;">${montantStr} €</strong>.
+              comme payée.
             </p>
-            <p style="color:#6B7280;line-height:1.7;margin-bottom:24px;">
-              La séquence de relances a été arrêtée et la facture est maintenant
-              <strong style="color:#16A34A;">soldée</strong> dans votre dashboard.
+            <table style="width:100%;border-collapse:collapse;margin-bottom:24px;">
+              <tr style="border-bottom:1px solid #E5E7EB;">
+                <td style="padding:10px 0;color:#6B7280;font-size:14px;">Montant recouvré</td>
+                <td style="padding:10px 0;text-align:right;font-weight:600;color:#111;font-size:14px;">${montantStr} €</td>
+              </tr>
+              <tr style="border-bottom:1px solid #E5E7EB;">
+                <td style="padding:10px 0;color:#6B7280;font-size:14px;">Commission ManaFlow (${tauxPct}% dont ~2% frais Stripe)</td>
+                <td style="padding:10px 0;text-align:right;font-weight:600;color:#EC4899;font-size:14px;">−${commissionStr} €</td>
+              </tr>
+              <tr>
+                <td style="padding:12px 0;font-weight:700;color:#111;font-size:15px;">Net perçu</td>
+                <td style="padding:12px 0;text-align:right;font-weight:800;color:#16A34A;font-size:16px;">${netStr} €</td>
+              </tr>
+            </table>
+            <p style="color:#9CA3AF;font-size:12px;line-height:1.6;margin-bottom:24px;">
+              Retrouvez le détail de toutes vos commissions dans la section <strong>Facturation</strong> de votre dashboard.
             </p>
             <p style="color:#6B7280;line-height:1.7;">
               Cordialement,<br/>L'équipe ManaFlow

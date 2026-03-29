@@ -46,7 +46,7 @@ const PLANS = [
       { label: 'Dashboard complet', ok: true, bold: false },
       { label: 'Relances email uniquement', ok: true, bold: false },
       { label: 'Historique des relances', ok: true, bold: false },
-      { label: 'Délais personnalisables', ok: false, bold: false },
+      { label: 'Délais personnalisables', ok: true, bold: false },
     ],
     popular: false, popularLabel: '',
   },
@@ -196,10 +196,10 @@ export default function Home() {
               <span className="nav-brand-text" style={{ fontSize: 22, color: 'white' }}><span style={{ fontFamily: "'Yeseva One', serif", fontWeight: 400 }}>Mana</span><span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 700 }}>flow</span></span>
             </div>
             <div className="nav-links" style={{ display: 'flex', alignItems: 'center', gap: 28 }}>
-              <span className="nav-a" onClick={() => router.push('/blog')} style={{ fontSize: 14, fontWeight: 500 }}>Blog</span>
-              <span className="nav-a" onClick={() => router.push('/comment-ca-marche')} style={{ fontSize: 14, fontWeight: 500 }}>Comment ça marche ?</span>
-              <span className="nav-a" onClick={() => router.push('/nous-connaitre')} style={{ fontSize: 14, fontWeight: 500 }}>Nous connaître</span>
-              <span className="nav-a" onClick={() => document.getElementById('tarifs')?.scrollIntoView({ behavior: 'smooth' })} style={{ fontSize: 14, fontWeight: 500 }}>Tarifs</span>
+              <a href="/blog" className="nav-a" style={{ fontSize: 14, fontWeight: 500, textDecoration: 'none' }}>Blog</a>
+              <a href="/comment-ca-marche" className="nav-a" style={{ fontSize: 14, fontWeight: 500, textDecoration: 'none' }}>Comment ça marche ?</a>
+              <a href="/nous-connaitre" className="nav-a" style={{ fontSize: 14, fontWeight: 500, textDecoration: 'none' }}>Nous connaître</a>
+              <a href="/#tarifs" className="nav-a" onClick={e => { e.preventDefault(); document.getElementById('tarifs')?.scrollIntoView({ behavior: 'smooth' }) }} style={{ fontSize: 14, fontWeight: 500, textDecoration: 'none' }}>Tarifs</a>
               <button className="btn-connexion" onClick={() => router.push('/login')}>
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" /><polyline points="10 17 15 12 10 7" /><line x1="15" y1="12" x2="3" y2="12" /></svg>
                 Connexion
@@ -261,7 +261,7 @@ export default function Home() {
             </p>
             <div className="hero-buttons" style={{ display: 'flex', gap: 12, justifyContent: 'center', alignItems: 'center', flexWrap: 'wrap', width: isMobile ? '100%' : 'auto', padding: isMobile ? '0 4px' : 0 }}>
               <button className="btn-primary" onClick={() => router.push('/souscrire')}>
-                Souscrire un abonnement
+                Essayer gratuitement — 14 jours
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" /></svg>
               </button>
               <button className="btn-secondary" onClick={() => router.push('/comment-ca-marche')}>
@@ -391,9 +391,9 @@ export default function Home() {
                       <div style={{ background: plan.bg, border: `1px solid ${plan.border}`, borderRadius: 8, padding: '8px 12px' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'nowrap' }}>
                           <span style={{ fontSize: 13, color: plan.couleur, fontWeight: 700, letterSpacing: '-0.3px', flexShrink: 0 }}>{plan.commission}</span>
-                          <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.55)', fontWeight: 400, whiteSpace: 'nowrap' }}>au succès — tout compris</span>
+                          <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.55)', fontWeight: 400, whiteSpace: 'nowrap' }}>au succès</span>
                         </div>
-                        <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.40)', fontWeight: 400, display: 'block', marginTop: 4 }}>frais bancaires inclus — min. 5 € / facture recouvrée</span>
+                        <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.40)', fontWeight: 400, display: 'block', marginTop: 4 }}>dont ~2% frais bancaires Stripe — min. 5 €</span>
                       </div>
                     </div>
                     <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: 20, flex: 1, marginBottom: 20 }}>
@@ -509,7 +509,7 @@ export default function Home() {
                   {/* RÉSULTATS */}
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginBottom: 16 }}>
                     {[
-                      { label: `Net perçu — tout compris (${planActif.commission})`, value: `${(gainBrut - commission).toLocaleString('fr-FR', { maximumFractionDigits: 0 })} €`, color: 'rgba(255,255,255,0.85)' },
+                      { label: `Net perçu après commission (${planActif.commission})`, value: `${(gainBrut - commission).toLocaleString('fr-FR', { maximumFractionDigits: 0 })} €`, color: 'rgba(255,255,255,0.85)' },
                       { label: `Abonnement ${planActif.nom}`, value: `−${formatPrix(planActif.prixBase)} €/mois`, color: 'rgba(255,255,255,0.45)' },
                     ].map((item, i) => (
                       <div key={i} style={{ padding: '10px 12px', background: 'rgba(255,255,255,0.03)', borderRadius: 10, border: '1px solid rgba(255,255,255,0.06)' }}>
@@ -539,7 +539,7 @@ export default function Home() {
                     Essayer gratuitement — plan {planActif.nom} →
                   </button>
                   <p style={{ fontSize: 10, color: 'rgba(255,255,255,0.30)', textAlign: 'center' as const, marginTop: 8 }}>
-                    Simulation sur taux de recouvrement moyen de 75 %. Commission tout compris (frais bancaires inclus), hors minimum de 5 €/facture. Résultats indicatifs.
+                    Simulation sur taux de recouvrement moyen de 75 %. Commission dont ~2% frais bancaires Stripe, hors minimum de 5 €/facture. Résultats indicatifs.
                   </p>
                 </div>
               </div>

@@ -1,6 +1,23 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getStripe } from '../../lib/stripe'
 
+// Rate limiting in-memory par IP : 5 sessions max / 10 min
+const RL_MAX = 5
+const RL_WINDOW_MS = 10 * 60 * 1000
+const rlMap = new Map<string, { count: number; resetAt: number }>()
+
+function checkRateLimit(ip: string): boolean {
+  const now = Date.now()
+  const entry = rlMap.get(ip)
+  if (!entry || now > entry.resetAt) {
+    rlMap.set(ip, { count: 1, resetAt: now + RL_WINDOW_MS })
+    return true
+  }
+  if (entry.count >= RL_MAX) return false
+  entry.count++
+  return true
+}
+
 // Montants en centimes HT — prix plein
 const PLAN_CONFIG: Record<string, { amount: number, name: string, commission: string }> = {
   starter:  { amount: 1999,  name: 'ManaFlow Starter',  commission: '14%' },
@@ -9,6 +26,11 @@ const PLAN_CONFIG: Record<string, { amount: number, name: string, commission: st
 }
 
 export async function POST(req: NextRequest) {
+  const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown'
+  if (!checkRateLimit(ip)) {
+    return NextResponse.json({ error: 'Trop de tentatives. Réessayez dans quelques minutes.' }, { status: 429 })
+  }
+
   try {
     const { plan, cgv_accepted } = await req.json()
 

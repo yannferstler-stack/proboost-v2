@@ -81,7 +81,7 @@ export async function GET(request: NextRequest) {
     .select(`
       *,
       profiles:user_id (
-        company_name, company_address, company_phone, plan,
+        email, company_name, company_address, company_phone, plan,
         canal_relance, sequence_j1, sequence_j2, sequence_j3, sequence_j4, sequence_j5
       )
     `)
@@ -149,6 +149,7 @@ export async function GET(request: NextRequest) {
         })
         await getResend().emails.send({
           from: `ManaFlow <noreply@manaflow.fr>`,
+          replyTo: profile?.email || undefined,
           to: facture.client_email,
           subject,
           html,
