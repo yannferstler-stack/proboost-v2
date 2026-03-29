@@ -1,14 +1,124 @@
-﻿'use client'
+'use client'
 import { useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
-import Image from 'next/image'
+import { useEffect, useRef, useState } from 'react'
+
+function useInView(threshold = 0.2) {
+  const ref = useRef<HTMLDivElement>(null)
+  const [visible, setVisible] = useState(false)
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) setVisible(true) }, { threshold })
+    obs.observe(el)
+    return () => obs.disconnect()
+  }, [threshold])
+  return { ref, visible }
+}
+
+function TimelineStep({ step, index, isMobile }: { step: any; index: number; isMobile: boolean }) {
+  const { ref, visible } = useInView(0.15)
+  const isRight = index % 2 === 0
+
+  return (
+    <div ref={ref} style={{
+      display: 'flex',
+      flexDirection: isMobile ? 'row' : (isRight ? 'row' : 'row-reverse'),
+      alignItems: 'flex-start',
+      gap: isMobile ? 20 : 40,
+      position: 'relative',
+      opacity: visible ? 1 : 0,
+      transform: visible ? 'translateY(0)' : 'translateY(40px)',
+      transition: 'opacity 0.6s ease, transform 0.6s ease',
+      transitionDelay: `${index * 0.08}s`,
+    }}>
+
+      {/* Node sur la ligne */}
+      <div style={{
+        position: isMobile ? 'relative' : 'absolute',
+        left: isMobile ? undefined : '50%',
+        transform: isMobile ? undefined : 'translateX(-50%)',
+        zIndex: 2,
+        flexShrink: 0,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        marginTop: isMobile ? 4 : 0,
+      }}>
+        <div style={{
+          width: isMobile ? 48 : 64,
+          height: isMobile ? 48 : 64,
+          borderRadius: '50%',
+          background: step.bg,
+          border: `2px solid ${step.color}`,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          boxShadow: `0 0 24px ${step.color}44`,
+          transition: 'box-shadow 0.4s ease',
+          flexShrink: 0,
+        }}>
+          <span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 900, fontSize: isMobile ? 14 : 16, color: step.color }}>{step.num}</span>
+        </div>
+      </div>
+
+      {/* Card (side) */}
+      <div style={{
+        flex: isMobile ? 1 : undefined,
+        width: isMobile ? undefined : 'calc(50% - 52px)',
+        marginLeft: isMobile ? 0 : (isRight ? 0 : 'auto'),
+        marginRight: isMobile ? 0 : (isRight ? 0 : undefined),
+        background: 'rgba(255,255,255,0.04)',
+        border: `1px solid ${step.color}30`,
+        borderRadius: 20,
+        padding: isMobile ? '20px 20px' : '28px 32px',
+        backdropFilter: 'blur(16px)',
+        position: 'relative',
+        overflow: 'hidden',
+      }}>
+        {/* Glow corner */}
+        <div style={{
+          position: 'absolute',
+          top: -40,
+          right: -40,
+          width: 120,
+          height: 120,
+          background: `radial-gradient(circle, ${step.color}20 0%, transparent 70%)`,
+          borderRadius: '50%',
+          pointerEvents: 'none',
+        }} />
+
+        <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 12, position: 'relative', zIndex: 1 }}>
+          <div style={{
+            width: isMobile ? 40 : 48,
+            height: isMobile ? 40 : 48,
+            borderRadius: 14,
+            background: step.bg,
+            border: `1px solid ${step.color}44`,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexShrink: 0,
+          }}>
+            {step.icon}
+          </div>
+          <h3 style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 800, fontSize: isMobile ? 17 : 20, color: 'white' }}>{step.title}</h3>
+        </div>
+        <p style={{ fontSize: isMobile ? 13 : 14, color: 'rgba(255,255,255,0.60)', lineHeight: 1.75, position: 'relative', zIndex: 1 }}>{step.desc}</p>
+      </div>
+
+      {/* Spacer côté vide (desktop seulement) */}
+      {!isMobile && <div style={{ width: 'calc(50% - 52px)', flexShrink: 0 }} />}
+    </div>
+  )
+}
 
 export default function CommentCaMarchePage() {
   const router = useRouter()
   const [isMobile, setIsMobile] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
   const [openFaq, setOpenFaq] = useState<number | null>(null)
-  const [carouselStep, setCarouselStep] = useState(0)
+  const timelineRef = useRef<HTMLDivElement>(null)
+  const [lineProgress, setLineProgress] = useState(0)
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768)
@@ -17,39 +127,29 @@ export default function CommentCaMarchePage() {
     return () => window.removeEventListener('resize', check)
   }, [])
 
+  useEffect(() => {
+    const onScroll = () => {
+      const el = timelineRef.current
+      if (!el) return
+      const rect = el.getBoundingClientRect()
+      const windowH = window.innerHeight
+      const progress = Math.max(0, Math.min(1, (windowH - rect.top) / (rect.height + windowH * 0.3)))
+      setLineProgress(progress)
+    }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    onScroll()
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+
   const faqs = [
-    {
-      q: 'Je connais bien mes clients — est-ce que ManaFlow va abîmer la relation ?',
-      r: 'Non. Nos relances sont pensées pour rester dans le registre amiable et professionnel. Le ton est adapté, jamais agressif. L\'objectif est de récupérer l\'argent sans jamais compromettre la relation humaine que vous avez construite avec vos clients.',
-    },
-    {
-      q: 'Je suis artisan ou indépendant — est-ce que c\'est fait pour moi ?',
-      r: 'Absolument. ManaFlow a été conçu pour les TPE, artisans, et indépendants. Vous importez vos factures en quelques clics (CSV ou PDF), et on s\'occupe du reste. Pas besoin de compétences techniques.',
-    },
-    {
-      q: 'Comment fonctionne la commission ?',
-      r: 'La commission est prélevée uniquement sur les factures effectivement recouvrées. Si rien n\'est récupéré, vous ne payez rien en plus de votre abonnement mensuel. Notre intérêt est donc directement aligné avec le vôtre.',
-    },
-    {
-      q: 'Que se passe-t-il si une facture date de plusieurs mois ?',
-      r: 'Plus une facture est ancienne, plus elle est difficile à récupérer — mais pas impossible. ManaFlow calcule automatiquement la première relance en fonction de la date d\'échéance, même si celle-ci est déjà dépassée.',
-    },
-    {
-      q: 'Quels formats de fichiers puis-je importer ?',
-      r: 'ManaFlow accepte les fichiers CSV et les PDF. Pour les PDF, notre IA extrait automatiquement les informations : nom du client, montant, date d\'échéance. Vous n\'avez rien à ressaisir.',
-    },
-    {
-      q: 'La facturation électronique va-t-elle changer quelque chose pour moi ?',
-      r: 'Oui. À partir de septembre 2026, toutes les entreprises françaises devront émettre et recevoir des factures électroniques dans un format structuré. Bien gérer ses factures dès maintenant, c\'est anticiper cette obligation et avoir de meilleures habitudes de trésorerie.',
-    },
-    {
-      q: 'Puis-je personnaliser la séquence de relances ?',
-      r: 'Oui, à partir du plan Premium. Vous choisissez les délais entre chaque relance (J+7, J+15, J+30…) et le canal utilisé. Le plan Pro ajoute les relances par SMS en plus de l\'email.',
-    },
-    {
-      q: 'Mes données sont-elles sécurisées ?',
-      r: 'Toutes vos données sont chiffrées et hébergées en Europe. Nous ne partageons jamais vos informations avec des tiers. Vous restez propriétaire de vos données à tout moment.',
-    },
+    { q: 'Je connais bien mes clients — est-ce que ManaFlow va abîmer la relation ?', r: 'Non. Nos relances sont pensées pour rester dans le registre amiable et professionnel. Le ton est adapté, jamais agressif. L\'objectif est de récupérer l\'argent sans jamais compromettre la relation humaine que vous avez construite avec vos clients.' },
+    { q: 'Je suis artisan ou indépendant — est-ce que c\'est fait pour moi ?', r: 'Absolument. ManaFlow a été conçu pour les TPE, artisans, et indépendants. Vous importez vos factures en quelques clics (CSV ou PDF), et on s\'occupe du reste. Pas besoin de compétences techniques.' },
+    { q: 'Comment fonctionne la commission ?', r: 'La commission est prélevée uniquement sur les factures effectivement recouvrées. Si rien n\'est récupéré, vous ne payez rien en plus de votre abonnement mensuel. Notre intérêt est donc directement aligné avec le vôtre.' },
+    { q: 'Que se passe-t-il si une facture date de plusieurs mois ?', r: 'Plus une facture est ancienne, plus elle est difficile à récupérer — mais pas impossible. ManaFlow calcule automatiquement la première relance en fonction de la date d\'échéance, même si celle-ci est déjà dépassée.' },
+    { q: 'Quels formats de fichiers puis-je importer ?', r: 'ManaFlow accepte les fichiers CSV et les PDF. Pour les PDF, notre IA extrait automatiquement les informations : nom du client, montant, date d\'échéance. Vous n\'avez rien à ressaisir.' },
+    { q: 'La facturation électronique va-t-elle changer quelque chose pour moi ?', r: 'Oui. À partir de septembre 2026, toutes les entreprises françaises devront émettre et recevoir des factures électroniques dans un format structuré. Bien gérer ses factures dès maintenant, c\'est anticiper cette obligation et avoir de meilleures habitudes de trésorerie.' },
+    { q: 'Puis-je personnaliser la séquence de relances ?', r: 'Oui, à partir du plan Premium. Vous choisissez les délais entre chaque relance (J+7, J+15, J+30…) et le canal utilisé. Le plan Pro ajoute les relances par SMS en plus de l\'email.' },
+    { q: 'Mes données sont-elles sécurisées ?', r: 'Toutes vos données sont chiffrées et hébergées en Europe. Nous ne partageons jamais vos informations avec des tiers. Vous restez propriétaire de vos données à tout moment.' },
   ]
 
   const steps = [
@@ -57,14 +157,7 @@ export default function CommentCaMarchePage() {
       num: '01',
       title: 'Créez votre compte',
       desc: 'Inscrivez-vous en 2 minutes. Choisissez votre plan et démarrez votre essai gratuit de 14 jours — sans rien débourser.',
-      icon: (
-        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-          <circle cx="12" cy="7" r="4"/>
-          <line x1="15" y1="3" x2="20" y2="3"/>
-          <line x1="17.5" y1="0.5" x2="17.5" y2="5.5"/>
-        </svg>
-      ),
+      icon: <svg width={isMobile ? 20 : 24} height={isMobile ? 20 : 24} viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/><line x1="15" y1="3" x2="20" y2="3"/><line x1="17.5" y1="0.5" x2="17.5" y2="5.5"/></svg>,
       color: '#a855f7',
       bg: 'linear-gradient(135deg, rgba(168,85,247,0.25), rgba(168,85,247,0.10))',
     },
@@ -72,12 +165,7 @@ export default function CommentCaMarchePage() {
       num: '02',
       title: 'Connectez Stripe',
       desc: 'Reliez votre compte Stripe existant ou créez-en un en quelques clics. C\'est ce qui permet à vos clients de payer directement depuis l\'email de relance.',
-      icon: (
-        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-          <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
-          <line x1="1" y1="10" x2="23" y2="10"/>
-        </svg>
-      ),
+      icon: <svg width={isMobile ? 20 : 24} height={isMobile ? 20 : 24} viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>,
       color: '#ec4899',
       bg: 'linear-gradient(135deg, rgba(236,72,153,0.25), rgba(236,72,153,0.10))',
     },
@@ -85,13 +173,7 @@ export default function CommentCaMarchePage() {
       num: '03',
       title: 'Importez vos factures',
       desc: 'Glissez vos factures en CSV ou PDF. Notre IA lit et organise tout automatiquement : client, montant, échéance. En quelques secondes, votre liste est prête.',
-      icon: (
-        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-          <polyline points="17 8 12 3 7 8"/>
-          <line x1="12" y1="3" x2="12" y2="15"/>
-        </svg>
-      ),
+      icon: <svg width={isMobile ? 20 : 24} height={isMobile ? 20 : 24} viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>,
       color: '#c084fc',
       bg: 'linear-gradient(135deg, rgba(192,132,252,0.25), rgba(192,132,252,0.10))',
     },
@@ -99,11 +181,7 @@ export default function CommentCaMarchePage() {
       num: '04',
       title: 'ManaFlow relance',
       desc: 'Activez la séquence sur chaque facture. Les relances partent automatiquement au bon moment, avec le bon ton. Vous n\'avez plus à y penser.',
-      icon: (
-        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-          <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
-        </svg>
-      ),
+      icon: <svg width={isMobile ? 20 : 24} height={isMobile ? 20 : 24} viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>,
       color: '#f472b6',
       bg: 'linear-gradient(135deg, rgba(244,114,182,0.25), rgba(244,114,182,0.10))',
     },
@@ -111,18 +189,11 @@ export default function CommentCaMarchePage() {
       num: '05',
       title: 'Vous encaissez',
       desc: 'Vos clients paient directement depuis le lien dans l\'email. L\'argent arrive sur votre compte bancaire via Stripe. On prélève uniquement sur ce qui est réellement récupéré.',
-      icon: (
-        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-          <line x1="12" y1="1" x2="12" y2="23"/>
-          <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
-        </svg>
-      ),
+      icon: <svg width={isMobile ? 20 : 24} height={isMobile ? 20 : 24} viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>,
       color: '#4ade80',
       bg: 'linear-gradient(135deg, rgba(74,222,128,0.25), rgba(74,222,128,0.10))',
     },
   ]
-
-  const currentStep = steps[carouselStep]
 
   return (
     <>
@@ -131,7 +202,6 @@ export default function CommentCaMarchePage() {
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         body { background: #0d0620; }
         @keyframes slideDown { from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)} }
-        @keyframes fadeIn { from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)} }
         .nav-a { transition: color 0.15s; cursor: pointer; color: rgba(255,255,255,0.6); }
         .nav-a:hover { color: #c084fc !important; }
         .btn-connexion { background: linear-gradient(135deg, #a855f7, #ec4899); color: white; border: none; cursor: pointer; font-family: Inter,sans-serif; font-weight: 600; transition: all 0.18s; border-radius: 12px; padding: 10px 22px; font-size: 14px; display: flex; align-items: center; gap: 8px; box-shadow: 0 2px 12px rgba(168,85,247,0.35); }
@@ -141,10 +211,6 @@ export default function CommentCaMarchePage() {
         .faq-answer { overflow: hidden; transition: max-height 0.35s ease, opacity 0.25s ease; }
         .btn-cta { background: linear-gradient(135deg, #a855f7, #ec4899); color: white; border: none; cursor: pointer; font-family: Inter,sans-serif; font-weight: 700; transition: all 0.2s; border-radius: 14px; padding: 14px 36px; font-size: 15px; box-shadow: 0 4px 24px rgba(168,85,247,0.40); display: inline-flex; align-items: center; justify-content: center; }
         .btn-cta:hover { transform: translateY(-2px); box-shadow: 0 10px 36px rgba(168,85,247,0.55) !important; }
-        .step-dot { width: 10px; height: 10px; border-radius: 50%; border: none; cursor: pointer; transition: all 0.3s; padding: 0; }
-        .carousel-nav { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; padding: 8px 16px; cursor: pointer; color: rgba(255,255,255,0.7); font-size: 14px; font-family: Inter,sans-serif; font-weight: 500; transition: all 0.2s; display: flex; align-items: center; gap: 6px; }
-        .carousel-nav:hover { background: rgba(168,85,247,0.15); border-color: rgba(168,85,247,0.4); color: #c084fc; }
-        .carousel-nav:disabled { opacity: 0.3; cursor: not-allowed; }
         .hamburger { display: none; background: none; border: none; cursor: pointer; padding: 4px; }
         .nav-links { display: flex; align-items: center; gap: 28px; }
         .mobile-menu { animation: slideDown 0.2s ease; }
@@ -167,7 +233,7 @@ export default function CommentCaMarchePage() {
         <nav style={{ position: 'sticky', top: 0, zIndex: 300, background: 'rgba(13,6,32,0.90)', backdropFilter: 'blur(20px)', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
           <div style={{ height: 72, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 20px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 20, cursor: 'pointer' }} onClick={() => router.push('/')}>
-              <Image src="/logo.png" alt="ManaFlow" width={44} height={44} style={{ height: 44, width: 'auto', objectFit: 'contain' }} />
+              <img src="/logo.png" style={{ height: 44, width: 'auto', objectFit: 'contain' }} />
               <span style={{ fontSize: 22, color: 'white' }}><span style={{ fontFamily: "'Yeseva One', serif", fontWeight: 400 }}>Mana</span><span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 700 }}>flow</span></span>
             </div>
             <div className="nav-links">
@@ -205,66 +271,82 @@ export default function CommentCaMarchePage() {
 
         {/* HEADER */}
         <div style={{ textAlign: 'center', padding: isMobile ? '48px 20px 36px' : '72px 20px 48px', position: 'relative', zIndex: 1 }}>
-          <h1 style={{ fontFamily: 'Comfortaa', fontWeight: 900, fontSize: 'clamp(30px, 5vw, 60px)', color: 'white', letterSpacing: '-1.5px', lineHeight: 1.1, marginBottom: 14 }}>
-            Tout savoir sur<br/>
-            <span style={{ background: 'linear-gradient(135deg, #a855f7, #ec4899)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>ManaFlow</span>
+          <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.30)', fontWeight: 600, letterSpacing: '2.5px', textTransform: 'uppercase', display: 'block', marginBottom: 14 }}>Découvrez le processus</span>
+          <h1 style={{ fontFamily: 'Comfortaa', fontWeight: 900, fontSize: 'clamp(30px, 5vw, 60px)', color: 'white', letterSpacing: '-1.5px', lineHeight: 1.1, marginBottom: 16 }}>
+            5 étapes pour<br />
+            <span style={{ background: 'linear-gradient(135deg, #a855f7, #ec4899)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>récupérer vos impayés</span>
           </h1>
+          <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: isMobile ? 14 : 16, maxWidth: 480, margin: '0 auto' }}>
+            De l'inscription à l'encaissement — tout est automatisé.
+          </p>
         </div>
 
-        {/* CAROUSEL ÉTAPES */}
-        <section style={{ padding: isMobile ? '0 20px 60px' : '0 40px 80px', position: 'relative', zIndex: 1 }}>
-          <div style={{ maxWidth: 860, margin: '0 auto' }}>
-            <div style={{ textAlign: 'center', marginBottom: 36 }}>
-              <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.25)', fontWeight: 600, letterSpacing: '2px', textTransform: 'uppercase' }}>01 — En pratique</span>
-              <h2 style={{ fontFamily: 'Comfortaa', fontWeight: 800, fontSize: isMobile ? 22 : 28, color: 'white', letterSpacing: '-0.5px', marginTop: 8 }}>Comment ça fonctionne, étape par étape</h2>
+        {/* TIMELINE VERTICALE */}
+        <section style={{ padding: isMobile ? '0 20px 80px' : '0 40px 100px', position: 'relative', zIndex: 1 }}>
+          <div style={{ maxWidth: 960, margin: '0 auto', position: 'relative' }} ref={timelineRef}>
+
+            {/* Ligne verticale desktop */}
+            {!isMobile && (
+              <>
+                {/* Track gris */}
+                <div style={{
+                  position: 'absolute',
+                  left: '50%',
+                  top: 32,
+                  bottom: 32,
+                  width: 2,
+                  background: 'rgba(255,255,255,0.08)',
+                  transform: 'translateX(-50%)',
+                  borderRadius: 2,
+                }} />
+                {/* Fill violet animé */}
+                <div style={{
+                  position: 'absolute',
+                  left: '50%',
+                  top: 32,
+                  width: 2,
+                  height: `calc(${lineProgress * 100}% - 64px)`,
+                  background: 'linear-gradient(180deg, #a855f7, #ec4899, #4ade80)',
+                  transform: 'translateX(-50%)',
+                  borderRadius: 2,
+                  transition: 'height 0.1s linear',
+                  boxShadow: '0 0 12px rgba(168,85,247,0.6)',
+                }} />
+              </>
+            )}
+
+            {/* Ligne verticale mobile (gauche) */}
+            {isMobile && (
+              <>
+                <div style={{
+                  position: 'absolute',
+                  left: 23,
+                  top: 24,
+                  bottom: 24,
+                  width: 2,
+                  background: 'rgba(255,255,255,0.08)',
+                  borderRadius: 2,
+                }} />
+                <div style={{
+                  position: 'absolute',
+                  left: 23,
+                  top: 24,
+                  width: 2,
+                  height: `calc(${lineProgress * 100}% - 48px)`,
+                  background: 'linear-gradient(180deg, #a855f7, #ec4899, #4ade80)',
+                  borderRadius: 2,
+                  transition: 'height 0.1s linear',
+                  boxShadow: '0 0 10px rgba(168,85,247,0.5)',
+                }} />
+              </>
+            )}
+
+            {/* Steps */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: isMobile ? 32 : 48 }}>
+              {steps.map((step, i) => (
+                <TimelineStep key={i} step={step} index={i} isMobile={isMobile} />
+              ))}
             </div>
-
-            {/* Carousel card */}
-            <div style={{ background: 'rgba(255,255,255,0.04)', border: `1px solid ${currentStep.color}33`, borderRadius: 24, padding: isMobile ? '32px 24px' : '48px 56px', backdropFilter: 'blur(16px)', position: 'relative', overflow: 'hidden', minHeight: isMobile ? 320 : 280 }}>
-              {/* Background glow */}
-              <div style={{ position: 'absolute', top: -60, right: -60, width: 220, height: 220, background: `radial-gradient(circle, ${currentStep.color}22 0%, transparent 70%)`, borderRadius: '50%', pointerEvents: 'none' }} />
-
-              <div style={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', alignItems: isMobile ? 'flex-start' : 'center', gap: 36, position: 'relative', zIndex: 1, animation: 'fadeIn 0.3s ease' }} key={carouselStep}>
-                {/* Icon */}
-                <div style={{ width: 96, height: 96, borderRadius: 24, background: currentStep.bg, border: `1px solid ${currentStep.color}44`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                  {currentStep.icon}
-                </div>
-
-                {/* Texte */}
-                <div style={{ flex: 1 }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12 }}>
-                    <span style={{ fontFamily: 'Comfortaa', fontWeight: 900, fontSize: 13, color: currentStep.color, letterSpacing: '1px' }}>{currentStep.num}</span>
-                    <h3 style={{ fontFamily: 'Comfortaa', fontWeight: 800, fontSize: isMobile ? 20 : 24, color: 'white' }}>{currentStep.title}</h3>
-                  </div>
-                  <p style={{ fontSize: isMobile ? 14 : 15, color: 'rgba(255,255,255,0.65)', lineHeight: 1.75, maxWidth: 480 }}>{currentStep.desc}</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Contrôles carousel */}
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 20 }}>
-              <button className="carousel-nav" onClick={() => setCarouselStep(s => s - 1)} disabled={carouselStep === 0}>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><polyline points="15 18 9 12 15 6"/></svg>
-                Précédent
-              </button>
-
-              <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-                {steps.map((s, i) => (
-                  <button key={i} className="step-dot" onClick={() => setCarouselStep(i)}
-                    style={{ background: i === carouselStep ? currentStep.color : 'rgba(255,255,255,0.20)', width: i === carouselStep ? 24 : 10, borderRadius: i === carouselStep ? 5 : '50%' }} />
-                ))}
-              </div>
-
-              <button className="carousel-nav" onClick={() => setCarouselStep(s => s + 1)} disabled={carouselStep === steps.length - 1}>
-                Suivant
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><polyline points="9 18 15 12 9 6"/></svg>
-              </button>
-            </div>
-
-            {/* Progress text */}
-            <p style={{ textAlign: 'center', fontSize: 12, color: 'rgba(255,255,255,0.25)', marginTop: 12 }}>
-              Étape {carouselStep + 1} sur {steps.length}
-            </p>
           </div>
         </section>
 
@@ -272,7 +354,7 @@ export default function CommentCaMarchePage() {
         <section style={{ borderTop: '1px solid rgba(255,255,255,0.06)', padding: isMobile ? '56px 20px' : '80px 40px', position: 'relative', zIndex: 1 }}>
           <div style={{ maxWidth: 800, margin: '0 auto' }}>
             <div style={{ textAlign: 'center', marginBottom: 36 }}>
-              <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.25)', fontWeight: 600, letterSpacing: '2px', textTransform: 'uppercase' }}>02 — Questions & Réponses</span>
+              <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.25)', fontWeight: 600, letterSpacing: '2px', textTransform: 'uppercase' }}>Questions & Réponses</span>
               <h2 style={{ fontFamily: 'Comfortaa', fontWeight: 800, fontSize: isMobile ? 22 : 28, color: 'white', letterSpacing: '-0.5px', marginTop: 8 }}>Vos questions, nos réponses</h2>
             </div>
             <div style={{ display: 'grid', gap: 10 }}>
@@ -303,6 +385,8 @@ export default function CommentCaMarchePage() {
         {/* CTA */}
         <section style={{ borderTop: '1px solid rgba(255,255,255,0.06)', padding: isMobile ? '48px 20px' : '64px 40px', textAlign: 'center', position: 'relative', zIndex: 1 }}>
           <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 400, height: 400, background: 'radial-gradient(circle, rgba(168,85,247,0.12) 0%, transparent 65%)', borderRadius: '50%', pointerEvents: 'none' }} />
+          <h2 style={{ fontFamily: 'Comfortaa', fontWeight: 800, fontSize: isMobile ? 22 : 28, color: 'white', marginBottom: 8, position: 'relative', zIndex: 1 }}>Prêt à automatiser vos relances ?</h2>
+          <p style={{ color: 'rgba(255,255,255,0.40)', fontSize: 14, marginBottom: 28, position: 'relative', zIndex: 1 }}>14 jours gratuits, sans engagement.</p>
           <button className="btn-cta" onClick={() => router.push('/souscrire')} style={{ width: isMobile ? '100%' : 'auto', position: 'relative', zIndex: 1 }}>
             Je me lance →
           </button>
@@ -312,7 +396,7 @@ export default function CommentCaMarchePage() {
         <footer style={{ borderTop: '1px solid rgba(255,255,255,0.06)', padding: isMobile ? '24px 20px' : '28px 40px', position: 'relative', zIndex: 1 }}>
           <div className="footer-inner" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: isMobile ? 16 : 0 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 20, cursor: 'pointer' }} onClick={() => router.push('/')}>
-              <Image src="/logo.png" alt="ManaFlow" width={44} height={44} style={{ height: 44, width: 'auto', objectFit: 'contain' }} />
+              <img src="/logo.png" style={{ height: 44, width: 'auto', objectFit: 'contain' }} />
               <span style={{ fontSize: 15, color: 'white' }}><span style={{ fontFamily: "'Yeseva One', serif", fontWeight: 400 }}>Mana</span><span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 700 }}>flow</span></span>
             </div>
             <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.25)', textAlign: 'center' }}>© 2026 ManaFlow — Tous droits réservés</p>
