@@ -19,7 +19,7 @@ export async function proxy(request: NextRequest) {
   // Gate active uniquement en production et si SITE_PASSWORD est défini
   if (SITE_PASSWORD && process.env.NODE_ENV !== 'development') {
     const cookie = request.cookies.get(COOKIE_NAME)
-    if (cookie?.value !== SITE_PASSWORD) {
+    if (cookie?.value?.trim() !== SITE_PASSWORD.trim()) {
       const url = request.nextUrl.clone()
       url.pathname = '/acces'
       url.searchParams.set('redirect', pathname)

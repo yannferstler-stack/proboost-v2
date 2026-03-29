@@ -24,13 +24,13 @@ export async function POST(req: NextRequest) {
 
   const { password, redirect } = await req.json()
 
-  if (String(password ?? '') !== sitePassword) {
+  if (String(password ?? '').trim() !== sitePassword.trim()) {
     return NextResponse.json({ error: 'Mot de passe incorrect' }, { status: 401 })
   }
 
   const response = NextResponse.json({ success: true, redirect: redirect ?? '/' })
 
-  response.cookies.set(COOKIE_NAME, sitePassword, {
+  response.cookies.set(COOKIE_NAME, sitePassword.trim(), {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',
