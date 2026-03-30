@@ -115,10 +115,11 @@ export function getEmailContent(params: EmailParams): { subject: string; html: s
     </div>`
 
   const paymentLink = safePaymentUrl ? `
-    <p style="margin:24px 0 8px;">
-      <a href="${safePaymentUrl}" style="color:#111;font-weight:600;text-decoration:underline;font-size:14px;">→ Régler cette facture en ligne</a>
+    <p style="margin:24px 0 6px;color:#6B7280;font-size:13px;">Pour régler :</p>
+    <p style="margin:0 0 4px;font-size:13px;word-break:break-all;">
+      <a href="${safePaymentUrl}" style="color:#111;text-decoration:underline;">${safePaymentUrl}</a>
     </p>
-    <p style="margin:0 0 24px;color:#9CA3AF;font-size:12px;">Lien sécurisé · Paiement par carte via Stripe</p>` : ''
+    <p style="margin:0 0 24px;color:#9CA3AF;font-size:12px;">(lien sécurisé · paiement par carte)</p>` : ''
 
   const invoiceBlock = `
     <p style="margin:24px 0 4px;color:#6B7280;font-size:13px;">Facture concernée :</p>
@@ -132,7 +133,7 @@ export function getEmailContent(params: EmailParams): { subject: string; html: s
 
   const bodies = [
     // ── Relance 1 : ton très doux ──
-    `<div style="font-family:Georgia,serif;max-width:560px;margin:0 auto;padding:40px 24px;color:#1a1a1a;font-size:15px;line-height:1.8;">
+    `<div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;max-width:560px;margin:0 auto;padding:40px 24px;color:#1a1a1a;font-size:15px;line-height:1.8;">
       <p style="font-weight:700;font-size:13px;color:#6B7280;text-transform:uppercase;letter-spacing:1px;margin:0 0 32px;">${safeCompanyName}</p>
       <p style="margin:0 0 16px;">Bonjour,</p>
       ${customMessage ? buildCustomBody(customMessage) : `
@@ -145,7 +146,7 @@ export function getEmailContent(params: EmailParams): { subject: string; html: s
       ${footer}</div>`,
 
     // ── Relance 2 : ton neutre ──
-    `<div style="font-family:Georgia,serif;max-width:560px;margin:0 auto;padding:40px 24px;color:#1a1a1a;font-size:15px;line-height:1.8;">
+    `<div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;max-width:560px;margin:0 auto;padding:40px 24px;color:#1a1a1a;font-size:15px;line-height:1.8;">
       <p style="font-weight:700;font-size:13px;color:#6B7280;text-transform:uppercase;letter-spacing:1px;margin:0 0 32px;">${safeCompanyName}</p>
       <p style="margin:0 0 16px;">Bonjour ${safeClientNom},</p>
       ${customMessage ? buildCustomBody(customMessage) : `
@@ -158,7 +159,7 @@ export function getEmailContent(params: EmailParams): { subject: string; html: s
       ${footer}</div>`,
 
     // ── Relance 3 : ton ferme mais sobre ──
-    `<div style="font-family:Georgia,serif;max-width:560px;margin:0 auto;padding:40px 24px;color:#1a1a1a;font-size:15px;line-height:1.8;">
+    `<div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;max-width:560px;margin:0 auto;padding:40px 24px;color:#1a1a1a;font-size:15px;line-height:1.8;">
       <p style="font-weight:700;font-size:13px;color:#6B7280;text-transform:uppercase;letter-spacing:1px;margin:0 0 32px;">${safeCompanyName}</p>
       <p style="margin:0 0 16px;">Bonjour ${safeClientNom},</p>
       ${customMessage ? buildCustomBody(customMessage) : `
