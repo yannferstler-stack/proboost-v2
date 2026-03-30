@@ -84,7 +84,7 @@ export async function POST(req: NextRequest) {
       statut: 'payé',
     }).then(null, () => {})
 
-    // Notifier l'abonné ManaFlow par email
+    // Notifier l'abonné Manaflow par email
     if (userId) {
       const { data: profile } = await supabase
         .from('profiles')
@@ -115,12 +115,12 @@ export async function POST(req: NextRequest) {
         const netPercu = Number(facture.montant) - commission
 
         await getResend().emails.send({
-          from: 'ManaFlow <noreply@manaflow.fr>',
+          from: 'Manaflow <noreply@manaflow.fr>',
           to: profile.email,
           subject: `✅ Paiement reçu — Facture ${facture.numero_facture || factureId}`,
           html: `
             <div style="font-family:Inter,sans-serif;max-width:600px;margin:0 auto;padding:40px 20px;color:#111;">
-              <p style="font-weight:800;font-size:20px;margin:0 0 32px;">ManaFlow</p>
+              <p style="font-weight:800;font-size:20px;margin:0 0 32px;">Manaflow</p>
               <div style="background:#F0FDF4;border:1px solid #BBF7D0;border-radius:12px;padding:16px 20px;margin-bottom:24px;">
                 <p style="margin:0;color:#16A34A;font-weight:700;font-size:15px;">✅ Paiement reçu avec succès</p>
               </div>
@@ -135,7 +135,7 @@ export async function POST(req: NextRequest) {
                   <td style="padding:8px 0;text-align:right;font-weight:600;color:#111;">${montantStr} €</td>
                 </tr>
                 <tr>
-                  <td style="padding:8px 0;color:#6B7280;font-size:14px;">Commission ManaFlow (${feePercent}%)</td>
+                  <td style="padding:8px 0;color:#6B7280;font-size:14px;">Commission Manaflow (${feePercent}%)</td>
                   <td style="padding:8px 0;text-align:right;font-weight:600;color:#DC2626;">− ${commission.toLocaleString('fr-FR')} €</td>
                 </tr>
                 <tr style="border-top:1px solid #E5E7EB;">
@@ -147,7 +147,7 @@ export async function POST(req: NextRequest) {
                 La facture a été automatiquement marquée comme <strong style="color:#16A34A;">payée</strong>
                 dans votre dashboard. Le virement arrivera sous 2–5 jours ouvrés.
               </p>
-              <p style="color:#6B7280;line-height:1.7;">Cordialement,<br/>L'équipe ManaFlow</p>
+              <p style="color:#6B7280;line-height:1.7;">Cordialement,<br/>L'équipe Manaflow</p>
             </div>
           `,
         }).then(null, () => {})

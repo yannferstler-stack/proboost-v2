@@ -83,7 +83,7 @@ export default function PaiementRequisPage() {
         {/* NAV */}
         <nav style={{ height: 64, display: 'flex', alignItems: 'center', padding: '0 24px', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 20, cursor: 'pointer' }} onClick={() => router.push('/')}>
-            <Image src="/logo.png" alt="ManaFlow" width={44} height={44} style={{ height: 44, width: 'auto', objectFit: 'contain' }} />
+            <Image src="/logo.png" alt="Manaflow" width={44} height={44} style={{ height: 44, width: 'auto', objectFit: 'contain' }} />
             <span style={{ fontSize: 22, color: 'white' }}><span style={{ fontFamily: "'Yeseva One', serif", fontWeight: 400 }}>Mana</span><span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 700 }}>flow</span></span>
           </div>
         </nav>
@@ -124,7 +124,7 @@ export default function PaiementRequisPage() {
                 Abonnement suspendu
               </h1>
               <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.6)', lineHeight: 1.7, marginBottom: 28 }}>
-                Un paiement a échoué sur votre abonnement ManaFlow.<br/>
+                Un paiement a échoué sur votre abonnement Manaflow.<br/>
                 Merci de régulariser votre situation pour retrouver l&apos;accès à votre espace.
               </p>
 

@@ -1,10 +1,10 @@
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Blog — ManaFlow',
+  title: 'Blog — Manaflow',
   description: 'Conseils, actualités et ressources pour les TPE et PME : gestion des impayés, trésorerie, facturation électronique.',
   openGraph: {
-    title: 'Blog ManaFlow — Conseils pour les TPE',
+    title: 'Blog Manaflow — Conseils pour les TPE',
     description: 'Conseils pratiques sur la gestion des impayés, la trésorerie et la facturation pour les indépendants et TPE.',
     type: 'website',
   },

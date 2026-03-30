@@ -142,11 +142,11 @@ export default function CommentCaMarchePage() {
   }, [])
 
   const faqs = [
-    { q: 'Je connais bien mes clients — est-ce que ManaFlow va abîmer la relation ?', r: 'Non. Nos relances sont pensées pour rester dans le registre amiable et professionnel. Le ton est adapté, jamais agressif. L\'objectif est de récupérer l\'argent sans jamais compromettre la relation humaine que vous avez construite avec vos clients.' },
-    { q: 'Je suis artisan ou indépendant — est-ce que c\'est fait pour moi ?', r: 'Absolument. ManaFlow a été conçu pour les TPE, artisans, et indépendants. Vous importez vos factures en quelques clics (CSV ou PDF), et on s\'occupe du reste. Pas besoin de compétences techniques.' },
+    { q: 'Je connais bien mes clients — est-ce que Manaflow va abîmer la relation ?', r: 'Non. Nos relances sont pensées pour rester dans le registre amiable et professionnel. Le ton est adapté, jamais agressif. L\'objectif est de récupérer l\'argent sans jamais compromettre la relation humaine que vous avez construite avec vos clients.' },
+    { q: 'Je suis artisan ou indépendant — est-ce que c\'est fait pour moi ?', r: 'Absolument. Manaflow a été conçu pour les TPE, artisans, et indépendants. Vous importez vos factures en quelques clics (CSV ou PDF), et on s\'occupe du reste. Pas besoin de compétences techniques.' },
     { q: 'Comment fonctionne la commission ?', r: 'La commission est prélevée uniquement sur les factures effectivement recouvrées. Si rien n\'est récupéré, vous ne payez rien en plus de votre abonnement mensuel. Notre intérêt est donc directement aligné avec le vôtre.' },
-    { q: 'Que se passe-t-il si une facture date de plusieurs mois ?', r: 'Plus une facture est ancienne, plus elle est difficile à récupérer — mais pas impossible. ManaFlow calcule automatiquement la première relance en fonction de la date d\'échéance, même si celle-ci est déjà dépassée.' },
-    { q: 'Quels formats de fichiers puis-je importer ?', r: 'ManaFlow accepte les fichiers CSV et les PDF. Pour les PDF, notre IA extrait automatiquement les informations : nom du client, montant, date d\'échéance. Vous n\'avez rien à ressaisir.' },
+    { q: 'Que se passe-t-il si une facture date de plusieurs mois ?', r: 'Plus une facture est ancienne, plus elle est difficile à récupérer — mais pas impossible. Manaflow calcule automatiquement la première relance en fonction de la date d\'échéance, même si celle-ci est déjà dépassée.' },
+    { q: 'Quels formats de fichiers puis-je importer ?', r: 'Manaflow accepte les fichiers CSV et les PDF. Pour les PDF, notre IA extrait automatiquement les informations : nom du client, montant, date d\'échéance. Vous n\'avez rien à ressaisir.' },
     { q: 'La facturation électronique va-t-elle changer quelque chose pour moi ?', r: 'Oui. À partir de septembre 2026, toutes les entreprises françaises devront émettre et recevoir des factures électroniques dans un format structuré. Bien gérer ses factures dès maintenant, c\'est anticiper cette obligation et avoir de meilleures habitudes de trésorerie.' },
     { q: 'Puis-je personnaliser la séquence de relances ?', r: 'Oui, à partir du plan Premium. Vous choisissez les délais entre chaque relance (J+7, J+15, J+30…) et le canal utilisé. Le plan Pro ajoute les relances par SMS en plus de l\'email.' },
     { q: 'Mes données sont-elles sécurisées ?', r: 'Toutes vos données sont chiffrées et hébergées en Europe. Nous ne partageons jamais vos informations avec des tiers. Vous restez propriétaire de vos données à tout moment.' },
@@ -179,7 +179,7 @@ export default function CommentCaMarchePage() {
     },
     {
       num: '04',
-      title: 'ManaFlow relance',
+      title: 'Manaflow relance',
       desc: 'Activez la séquence sur chaque facture. Les relances partent automatiquement au bon moment, avec le bon ton. Vous n\'avez plus à y penser.',
       icon: <svg width={isMobile ? 20 : 24} height={isMobile ? 20 : 24} viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>,
       color: '#f472b6',
@@ -399,7 +399,7 @@ export default function CommentCaMarchePage() {
               <img src="/logo.png" style={{ height: 44, width: 'auto', objectFit: 'contain' }} />
               <span style={{ fontSize: 15, color: 'white' }}><span style={{ fontFamily: "'Yeseva One', serif", fontWeight: 400 }}>Mana</span><span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 700 }}>flow</span></span>
             </div>
-            <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.25)', textAlign: 'center' }}>© 2026 ManaFlow — Tous droits réservés</p>
+            <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.25)', textAlign: 'center' }}>© 2026 Manaflow — Tous droits réservés</p>
             <div style={{ display: 'flex', gap: 20 }}>
               <span className="nav-a" onClick={() => router.push('/cgu')} style={{ fontSize: 12, cursor: 'pointer' }}>CGU</span>
               <span className="nav-a" onClick={() => router.push('/confidentialite')} style={{ fontSize: 12, cursor: 'pointer' }}>Confidentialité</span>

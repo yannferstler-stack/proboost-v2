@@ -132,7 +132,7 @@ export async function POST(request: NextRequest) {
         paymentUrl, customMessage,
       })
       const { error: emailError } = await getResend().emails.send({
-        from: `${company} via ManaFlow <noreply@manaflow.fr>`,
+        from: `${company} via Manaflow <noreply@manaflow.fr>`,
         replyTo: profile?.email || undefined,
         to: clientEmail,
         subject,

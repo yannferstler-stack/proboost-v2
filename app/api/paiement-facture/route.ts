@@ -57,7 +57,7 @@ async function getAuthContext(request: NextRequest): Promise<{
  *   montant         number   — montant en euros (ex: 1500)
  *   clientNom       string   — nom du client (libellé sur la page Stripe)
  *   numeroFacture   string   — référence facture (libellé)
- *   userId          string   — ID de l'utilisateur ManaFlow (pour récupérer son compte Connect + plan)
+ *   userId          string   — ID de l'utilisateur Manaflow (pour récupérer son compte Connect + plan)
  */
 export async function POST(request: NextRequest) {
   const auth = await getAuthContext(request)
@@ -117,7 +117,7 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // ── 2. Récupérer les infos du profil ManaFlow (Connect + plan) ──
+    // ── 2. Récupérer les infos du profil Manaflow (Connect + plan) ──
     const { data: profile } = await supabase
       .from('profiles')
       .select('stripe_connect_account_id, plan')
@@ -157,16 +157,16 @@ export async function POST(request: NextRequest) {
     }
 
     // ── 4. Direct Charges sur le compte connecté du client ──
-    // Les fonds vont directement sur le compte Stripe du client ManaFlow.
-    // ManaFlow ne détient jamais les fonds (pas de risque EP/ACPR).
-    // Stripe collecte et alloue : commission → ManaFlow, reste → client.
+    // Les fonds vont directement sur le compte Stripe du client Manaflow.
+    // Manaflow ne détient jamais les fonds (pas de risque EP/ACPR).
+    // Stripe collecte et alloue : commission → Manaflow, reste → client.
     if (profile?.stripe_connect_account_id) {
       const feePercent = getFeePercent(profile.plan)
       const feeAmount = Math.max(
         Math.round((montantCentimes * feePercent) / 100),
         500 // minimum 5€
       )
-      // application_fee_amount : commission prélevée par ManaFlow
+      // application_fee_amount : commission prélevée par Manaflow
       // stripeAccount option   : la session est créée SUR le compte connecté
       sessionParams.payment_intent_data = {
         application_fee_amount: feeAmount,

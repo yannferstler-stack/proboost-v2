@@ -20,9 +20,9 @@ function checkRateLimit(ip: string): boolean {
 
 // Montants en centimes HT — prix plein
 const PLAN_CONFIG: Record<string, { amount: number, name: string, commission: string }> = {
-  starter:  { amount: 1999,  name: 'ManaFlow Starter',  commission: '14%' },
-  premium:  { amount: 4999,  name: 'ManaFlow Premium',  commission: '12%' },
-  pro:      { amount: 14999, name: 'ManaFlow Pro',       commission: '10%' },
+  starter:  { amount: 1999,  name: 'Manaflow Starter',  commission: '14%' },
+  premium:  { amount: 4999,  name: 'Manaflow Premium',  commission: '12%' },
+  pro:      { amount: 14999, name: 'Manaflow Pro',       commission: '10%' },
 }
 
 export async function POST(req: NextRequest) {

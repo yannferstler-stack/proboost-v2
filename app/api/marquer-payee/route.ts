@@ -78,12 +78,12 @@ export async function POST(request: NextRequest) {
       const commissionStr = commission.toLocaleString('fr-FR', { minimumFractionDigits: 2 })
       const netStr = net.toLocaleString('fr-FR', { minimumFractionDigits: 2 })
       await getResend().emails.send({
-        from: 'ManaFlow <noreply@manaflow.fr>',
+        from: 'Manaflow <noreply@manaflow.fr>',
         to: profile.email,
         subject: `✅ Facture payée — ${facture.numero_facture || factureId}`,
         html: `
           <div style="font-family:Inter,sans-serif;max-width:600px;margin:0 auto;padding:40px 20px;color:#111;">
-            <p style="font-weight:800;font-size:20px;margin:0 0 32px;">ManaFlow</p>
+            <p style="font-weight:800;font-size:20px;margin:0 0 32px;">Manaflow</p>
             <div style="background:#F0FDF4;border:1px solid #BBF7D0;border-radius:12px;padding:16px 20px;margin-bottom:24px;">
               <p style="margin:0;color:#16A34A;font-weight:700;font-size:15px;">✅ Facture marquée comme payée</p>
             </div>
@@ -99,7 +99,7 @@ export async function POST(request: NextRequest) {
                 <td style="padding:10px 0;text-align:right;font-weight:600;color:#111;font-size:14px;">${montantStr} €</td>
               </tr>
               <tr style="border-bottom:1px solid #E5E7EB;">
-                <td style="padding:10px 0;color:#6B7280;font-size:14px;">Commission ManaFlow (${tauxPct}% tout compris)</td>
+                <td style="padding:10px 0;color:#6B7280;font-size:14px;">Commission Manaflow (${tauxPct}% tout compris)</td>
                 <td style="padding:10px 0;text-align:right;font-weight:600;color:#EC4899;font-size:14px;">−${commissionStr} €</td>
               </tr>
               <tr>
@@ -111,7 +111,7 @@ export async function POST(request: NextRequest) {
               Retrouvez le détail de toutes vos commissions dans la section <strong>Facturation</strong> de votre dashboard.
             </p>
             <p style="color:#6B7280;line-height:1.7;">
-              Cordialement,<br/>L'équipe ManaFlow
+              Cordialement,<br/>L'équipe Manaflow
             </p>
           </div>
         `,

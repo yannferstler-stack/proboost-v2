@@ -183,7 +183,7 @@ export default function PaiementPage() {
                 <div style={{ width: 12, height: 12, background: "white", borderRadius: 3 }} />
               </div>
               <span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 800, fontSize: 16, color: "white" }}>
-                ManaFlow
+                Manaflow
               </span>
             </div>
 

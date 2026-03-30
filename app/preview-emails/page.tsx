@@ -27,7 +27,7 @@ export default function PreviewEmails() {
           <h2 style={{ fontSize: 16, fontWeight: 700, color: '#111', marginBottom: 20 }}>📱 SMS envoyés (plan Pro)</h2>
           {[1, 2, 3].map(n => {
             const payPart = ` Payer en ligne : ${DEMO.paymentUrl}`
-            const footer = ' — ManaFlow'
+            const footer = ' — Manaflow'
             const echeance = new Date(DEMO.dateEcheance).toLocaleDateString('fr-FR')
             const texts = [
               `Bonjour, facture n°${DEMO.numeroFacture} arrivée à échéance le ${echeance} toujours en attente. Merci de confirmer sa prise en charge. ${DEMO.companyName}${payPart}${footer}`,
@@ -59,7 +59,7 @@ export default function PreviewEmails() {
             </div>
             <div style={{ background: 'white', borderRadius: 16, border: '1px solid #E5E7EB', overflow: 'hidden' }}>
               <div style={{ background: '#F9FAFB', borderBottom: '1px solid #E5E7EB', padding: '10px 20px', fontSize: 12, color: '#6B7280' }}>
-                <span style={{ marginRight: 24 }}><strong>De :</strong> {DEMO.companyName} via ManaFlow &lt;relances@manaflow.fr&gt;</span>
+                <span style={{ marginRight: 24 }}><strong>De :</strong> {DEMO.companyName} via Manaflow &lt;relances@manaflow.fr&gt;</span>
                 <span style={{ marginRight: 24 }}><strong>À :</strong> martin.leclerc@example.com</span>
                 <span><strong>Répondre à :</strong> contact@atelierdupont.fr</span>
               </div>

@@ -69,9 +69,9 @@ export async function GET(request: NextRequest) {
     try {
       const prenom = (profile.full_name || 'Utilisateur').split(' ')[0]
       await resend.emails.send({
-        from: 'ManaFlow <noreply@manaflow.fr>',
+        from: 'Manaflow <noreply@manaflow.fr>',
         to: profile.email,
-        subject: '⚠️ Votre accès ManaFlow sera suspendu demain — action requise',
+        subject: '⚠️ Votre accès Manaflow sera suspendu demain — action requise',
         html: buildWarningHtml(prenom, appUrl),
       })
       sent++
@@ -86,7 +86,7 @@ export async function GET(request: NextRequest) {
 function buildWarningHtml(prenom: string, appUrl: string): string {
   return `
 <div style="font-family:Inter,Arial,sans-serif;max-width:600px;margin:0 auto;padding:40px 20px;color:#111;">
-  <p style="font-weight:800;font-size:20px;margin:0 0 32px;">ManaFlow</p>
+  <p style="font-weight:800;font-size:20px;margin:0 0 32px;">Manaflow</p>
 
   <div style="background:#FEF2F2;border:1px solid #FECACA;border-radius:10px;padding:14px 16px;margin-bottom:24px;">
     <p style="margin:0;color:#DC2626;font-weight:700;font-size:14px;">⚠️ Accès suspendu dans moins de 24 heures</p>
@@ -95,7 +95,7 @@ function buildWarningHtml(prenom: string, appUrl: string): string {
   <h2 style="font-size:20px;margin:0 0 16px;color:#111;">Bonjour ${prenom},</h2>
 
   <p style="color:#6B7280;line-height:1.7;margin-bottom:12px;">
-    Votre abonnement ManaFlow a rencontré un problème de paiement il y a 2 jours.
+    Votre abonnement Manaflow a rencontré un problème de paiement il y a 2 jours.
     Sans régularisation, votre accès au dashboard et à l'envoi automatique de relances
     sera <strong style="color:#DC2626;">suspendu dans moins de 24 heures</strong>.
   </p>
@@ -122,7 +122,7 @@ function buildWarningHtml(prenom: string, appUrl: string): string {
 
   <hr style="border:none;border-top:1px solid #E5E7EB;margin:24px 0;">
   <p style="color:#D1D5DB;font-size:12px;text-align:center;margin:0;">
-    ManaFlow — <a href="${appUrl}" style="color:#a855f7;text-decoration:none;">manaflow.fr</a>
+    Manaflow — <a href="${appUrl}" style="color:#a855f7;text-decoration:none;">manaflow.fr</a>
   </p>
 </div>
   `

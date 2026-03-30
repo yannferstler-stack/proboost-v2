@@ -55,7 +55,7 @@ export async function POST(request: NextRequest) {
     const safeMessage = escapeHtml(String(message).slice(0, 5000))
 
     await getResend().emails.send({
-      from: 'ManaFlow <noreply@manaflow.fr>',
+      from: 'Manaflow <noreply@manaflow.fr>',
       to: 'contact@manaflow.fr',
       replyTo: email,
       subject: `[Contact] ${sujet}`,

@@ -508,7 +508,7 @@ export default function Dashboard() {
                     {welcome.euros > 0
                       ? <>Depuis votre dernière visite, vous avez récupéré <strong style={{ color: '#a855f7' }}>{welcome.euros.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</strong> supplémentaires 🎉</>
                       : welcome.isNew
-                        ? <>Bienvenue sur ManaFlow — importez vos premières factures pour commencer le recouvrement.</>
+                        ? <>Bienvenue sur Manaflow — importez vos premières factures pour commencer le recouvrement.</>
                         : <>Aucun nouveau recouvrement depuis votre dernière visite — continuez à importer vos factures.</>
                     }
                   </p>
@@ -574,7 +574,7 @@ export default function Dashboard() {
                 <span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 800, fontSize: 36, color: 'white' }}>{montantRecupere.toLocaleString('fr-FR')}</span>
                 <span style={{ fontSize: 18, color: 'rgba(255,255,255,0.8)', fontWeight: 700 }}>€</span>
               </div>
-              <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.65)', marginTop: 6 }}>grâce à ManaFlow</p>
+              <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.65)', marginTop: 6 }}>grâce à Manaflow</p>
             </div>
           </div>
 
@@ -962,14 +962,14 @@ export default function Dashboard() {
           <div className="modal" onClick={e => e.stopPropagation()} style={{ maxWidth: 480, textAlign: 'center' }}>
             <div style={{ width: 56, height: 56, background: 'linear-gradient(135deg, #a855f7, #ec4899)', borderRadius: 16, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px', fontSize: 26 }}>🚀</div>
             <h2 style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 800, fontSize: 22, color: '#111', marginBottom: 8 }}>
-              Bienvenue sur ManaFlow !
+              Bienvenue sur Manaflow !
             </h2>
             <p style={{ fontSize: 14, color: '#6B7280', marginBottom: 28, lineHeight: 1.6 }}>
               3 étapes pour automatiser votre recouvrement
             </p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 28, textAlign: 'left' }}>
               {[
-                { n: '1', icon: '📂', title: 'Importez vos factures', desc: 'Glissez un CSV ou des PDF — ManaFlow extrait tout automatiquement', color: '#F5F3FF', border: '#DDD6FE', text: '#7c3aed' },
+                { n: '1', icon: '📂', title: 'Importez vos factures', desc: 'Glissez un CSV ou des PDF — Manaflow extrait tout automatiquement', color: '#F5F3FF', border: '#DDD6FE', text: '#7c3aed' },
                 { n: '2', icon: '⚡', title: 'Activez les relances auto', desc: 'Pour chaque facture impayée, cliquez "Commencer" — les emails partent seuls', color: '#F0FDF4', border: '#BBF7D0', text: '#16A34A' },
                 { n: '3', icon: '📊', title: 'Suivez vos recouvrements', desc: 'Consultez le tableau de bord pour voir les paiements encaissés', color: '#FFF7ED', border: '#FED7AA', text: '#EA580C' },
               ].map(step => (

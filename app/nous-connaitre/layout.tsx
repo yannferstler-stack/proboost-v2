@@ -1,10 +1,10 @@
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Nous connaître — ManaFlow',
-  description: 'Découvrez l\'histoire et la mission de ManaFlow : aider les TPE françaises à récupérer leurs impayés et préserver leur trésorerie.',
+  title: 'Nous connaître — Manaflow',
+  description: 'Découvrez l\'histoire et la mission de Manaflow : aider les TPE françaises à récupérer leurs impayés et préserver leur trésorerie.',
   openGraph: {
-    title: 'Nous connaître — ManaFlow',
+    title: 'Nous connaître — Manaflow',
     description: 'Deux parcours, une conviction commune : les TPE méritent des outils aussi puissants que ceux des grandes entreprises.',
     type: 'website',
   },

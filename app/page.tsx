@@ -127,7 +127,7 @@ export default function Home() {
 
   const steps = [
     { n: '01', Icon: IconImport, title: 'Importez', desc: "Importez vos factures en CSV ou PDF. Toutes les informations sont détectées et organisées automatiquement — vous n'avez rien à saisir." },
-    { n: '02', Icon: IconBolt, title: 'ManaFlow relance', desc: "Nous prenons le relais. Les relances sont envoyées au nom de votre entreprise — au bon moment, avec le bon ton. Vos clients répondent directement à votre adresse email." },
+    { n: '02', Icon: IconBolt, title: 'Manaflow relance', desc: "Nous prenons le relais. Les relances sont envoyées au nom de votre entreprise — au bon moment, avec le bon ton. Vos clients répondent directement à votre adresse email." },
     { n: '03', Icon: IconEuro, title: 'Vous encaissez', desc: "Vous récupérez votre argent. Nous prélevons une commission uniquement sur les fonds réellement recouvrés. Zéro risque, zéro avance." },
   ]
 
@@ -192,7 +192,7 @@ export default function Home() {
         }}>
           <div style={{ height: 72, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 20px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 20, cursor: 'pointer' }} onClick={() => router.push('/')}>
-              <Image src="/logo.png" height={44} width={120} alt="ManaFlow" style={{ width: 'auto', height: 44, objectFit: 'contain' }} />
+              <Image src="/logo.png" height={44} width={120} alt="Manaflow" style={{ width: 'auto', height: 44, objectFit: 'contain' }} />
               <span className="nav-brand-text" style={{ fontSize: 22, color: 'white' }}><span style={{ fontFamily: "'Yeseva One', serif", fontWeight: 400 }}>Mana</span><span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 700 }}>flow</span></span>
             </div>
             <div className="nav-links" style={{ display: 'flex', alignItems: 'center', gap: 28 }}>
@@ -559,11 +559,11 @@ export default function Home() {
             {[
               {
                 q: 'Les relances partent-elles en mon nom ?',
-                a: "Vos relances sont envoyées au nom de votre entreprise — vos clients voient votre raison sociale comme expéditeur. Les réponses arrivent directement dans votre boîte email. Un discret « via ManaFlow » apparaît dans le champ expéditeur pour assurer la délivrabilité technique.",
+                a: "Vos relances sont envoyées au nom de votre entreprise — vos clients voient votre raison sociale comme expéditeur. Les réponses arrivent directement dans votre boîte email. Un discret « via Manaflow » apparaît dans le champ expéditeur pour assurer la délivrabilité technique.",
               },
               {
                 q: 'Quand est prélevée la commission ?',
-                a: "La commission n'est prélevée que lorsqu'une facture est effectivement réglée via ManaFlow. Si votre client ne paie pas, vous ne payez rien de plus que votre abonnement mensuel. Zéro risque.",
+                a: "La commission n'est prélevée que lorsqu'une facture est effectivement réglée via Manaflow. Si votre client ne paie pas, vous ne payez rien de plus que votre abonnement mensuel. Zéro risque.",
               },
               {
                 q: 'Pourquoi y a-t-il un minimum de 5 € de commission ?',
@@ -575,7 +575,7 @@ export default function Home() {
               },
               {
                 q: "Que se passe-t-il si une facture n'est pas recouvrée ?",
-                a: "Vous ne payez que votre abonnement mensuel. Aucune commission n'est due sur les factures non recouvrées. ManaFlow a donc tout intérêt à vous aider à récupérer vos impayés.",
+                a: "Vous ne payez que votre abonnement mensuel. Aucune commission n'est due sur les factures non recouvrées. Manaflow a donc tout intérêt à vous aider à récupérer vos impayés.",
               },
               {
                 q: "Quels formats de factures acceptez-vous ?",
@@ -618,10 +618,10 @@ export default function Home() {
         <footer style={{ borderTop: '1px solid rgba(255,255,255,0.06)', padding: isMobile ? '24px 20px' : '28px 40px' }}>
           <div className="footer-inner" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: isMobile ? 16 : 0 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 20, cursor: 'pointer' }} onClick={() => router.push('/')}>
-              <Image src="/logo.png" height={44} width={120} alt="ManaFlow" style={{ width: 'auto', height: 44, objectFit: 'contain' }} />
+              <Image src="/logo.png" height={44} width={120} alt="Manaflow" style={{ width: 'auto', height: 44, objectFit: 'contain' }} />
               <span style={{ fontSize: 15, color: 'white' }}><span style={{ fontFamily: "'Yeseva One', serif", fontWeight: 400 }}>Mana</span><span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 700 }}>flow</span></span>
             </div>
-            <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.25)', textAlign: 'center' }}>© 2026 ManaFlow — Tous droits réservés</p>
+            <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.25)', textAlign: 'center' }}>© 2026 Manaflow — Tous droits réservés</p>
             <div style={{ display: 'flex', gap: 20 }}>
               <span className="nav-a" onClick={() => router.push('/mentions-legales')} style={{ fontSize: 12, cursor: 'pointer' }}>Mentions légales</span>
               <span className="nav-a" onClick={() => router.push('/cgu')} style={{ fontSize: 12, cursor: 'pointer' }}>CGU</span>

@@ -153,7 +153,7 @@ function ConfirmationContent() {
                 fontFamily: 'Comfortaa, sans-serif', fontWeight: 800,
                 fontSize: 14, color: "#0a0a0a",
               }}>
-                ManaFlow
+                Manaflow
               </span>
             </div>
 

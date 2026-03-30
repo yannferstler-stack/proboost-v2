@@ -103,7 +103,7 @@ function ResetPasswordContent() {
       <div style={{ width: '100%', maxWidth: 420, animation: 'fadeUp 0.5s ease both' }}>
         {/* Logo */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 40, cursor: 'pointer', justifyContent: 'center' }} onClick={() => router.push('/')}>
-          <Image src="/logo.png" alt="ManaFlow" width={36} height={36} style={{ height: 36, width: 'auto', objectFit: 'contain' }} />
+          <Image src="/logo.png" alt="Manaflow" width={36} height={36} style={{ height: 36, width: 'auto', objectFit: 'contain' }} />
           <span style={{ fontSize: 20, color: 'white' }}>
             <span style={{ fontFamily: "'Yeseva One', serif", fontWeight: 400 }}>Mana</span>
             <span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 700 }}>flow</span>

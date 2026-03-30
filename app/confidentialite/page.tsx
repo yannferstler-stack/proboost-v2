@@ -6,12 +6,12 @@ import Image from 'next/image'
 const SECTIONS = [
   {
     titre: '1. Qui sommes-nous ?',
-    contenu: `ManaFlow est une plateforme d'automatisation de relances de factures impayées, éditée par ManaFlow SAS, dont le siège social est en France.
+    contenu: `Manaflow est une plateforme d'automatisation de relances de factures impayées, éditée par Manaflow SAS, dont le siège social est en France.
 
-ManaFlow intervient en deux qualités distinctes selon les traitements :
+Manaflow intervient en deux qualités distinctes selon les traitements :
 
-• Responsable de traitement : pour les données de ses propres utilisateurs (compte, abonnement, facturation ManaFlow)
-• Sous-traitant au sens de l'article 28 du RGPD : pour les données des débiteurs que vous nous confiez dans le cadre du recouvrement. Dans ce cas, vous êtes responsable de traitement et ManaFlow agit sur vos instructions.
+• Responsable de traitement : pour les données de ses propres utilisateurs (compte, abonnement, facturation Manaflow)
+• Sous-traitant au sens de l'article 28 du RGPD : pour les données des débiteurs que vous nous confiez dans le cadre du recouvrement. Dans ce cas, vous êtes responsable de traitement et Manaflow agit sur vos instructions.
 
 Pour toute question relative à vos données : contact@manaflow.fr`,
   },
@@ -34,11 +34,11 @@ Données d'utilisation de la plateforme
 Données de vos débiteurs (traitées en qualité de sous-traitant)
 • Nom, adresse email et numéro de téléphone des clients que vous renseignez pour les relances
 
-ManaFlow ne collecte aucune donnée bancaire directement — les paiements sont gérés par Stripe, certifié PCI-DSS.`,
+Manaflow ne collecte aucune donnée bancaire directement — les paiements sont gérés par Stripe, certifié PCI-DSS.`,
   },
   {
     titre: '3. Traitement automatisé par intelligence artificielle',
-    contenu: `ManaFlow utilise des outils d'intelligence artificielle pour analyser le contenu des factures importées au format PDF, afin d'en extraire automatiquement les informations nécessaires aux relances (montant, date d'échéance, coordonnées du débiteur).
+    contenu: `Manaflow utilise des outils d'intelligence artificielle pour analyser le contenu des factures importées au format PDF, afin d'en extraire automatiquement les informations nécessaires aux relances (montant, date d'échéance, coordonnées du débiteur).
 
 Ce traitement automatisé implique :
 • La transmission temporaire du contenu des factures à l'API d'Anthropic (modèle Claude)
@@ -74,14 +74,14 @@ Alternative : vous pouvez renseigner vos factures manuellement (saisie des champ
 • Données de compte : pendant toute la durée de l'abonnement + 3 ans après résiliation (prescription civile)
 • Données des débiteurs (email, téléphone) : 5 ans après règlement ou clôture du dossier de recouvrement
 • Factures et historique de relances : 5 ans à compter de leur création (prescription commerciale)
-• Données de facturation ManaFlow : 10 ans (obligation comptable — article L123-22 du Code de commerce)
+• Données de facturation Manaflow : 10 ans (obligation comptable — article L123-22 du Code de commerce)
 • Données de connexion (logs) : 12 mois
 
 À l'expiration de ces délais, vos données sont supprimées ou anonymisées de manière irréversible.`,
   },
   {
     titre: '7. Sous-traitants et transferts hors UE',
-    contenu: `ManaFlow ne vend jamais vos données personnelles. Nous faisons appel aux sous-traitants suivants, tous liés par un contrat de traitement (DPA) conforme au RGPD :
+    contenu: `Manaflow ne vend jamais vos données personnelles. Nous faisons appel aux sous-traitants suivants, tous liés par un contrat de traitement (DPA) conforme au RGPD :
 
 • Supabase — base de données, hébergement UE (AWS eu-west-1, Irlande), certifié SOC 2 Type II
 • Stripe — paiements et commissions, certifié PCI-DSS, SCC approuvées UE (États-Unis)
@@ -109,7 +109,7 @@ Vous pouvez également introduire une réclamation auprès de la CNIL (cnil.fr).
   },
   {
     titre: '10. Sécurité des données',
-    contenu: `ManaFlow met en œuvre les mesures techniques et organisationnelles appropriées pour protéger vos données :
+    contenu: `Manaflow met en œuvre les mesures techniques et organisationnelles appropriées pour protéger vos données :
 
 • Chiffrement en transit (TLS 1.3) et au repos (AES-256)
 • Accès aux données restreint aux seuls collaborateurs habilités
@@ -120,7 +120,7 @@ En cas de violation de données susceptible d'engendrer un risque pour vos droit
   },
   {
     titre: '11. Cookies',
-    contenu: `ManaFlow utilise des cookies strictement nécessaires au fonctionnement du service (authentification, session). Aucun cookie publicitaire ou de tracking tiers n'est utilisé sans votre consentement préalable.
+    contenu: `Manaflow utilise des cookies strictement nécessaires au fonctionnement du service (authentification, session). Aucun cookie publicitaire ou de tracking tiers n'est utilisé sans votre consentement préalable.
 
 Cookies utilisés :
 • Cookies de session : authentification, maintien de la connexion (durée : session)
@@ -130,7 +130,7 @@ Vous pouvez configurer votre navigateur pour refuser les cookies, ce qui peut af
   },
   {
     titre: '12. Modifications de cette politique',
-    contenu: `ManaFlow se réserve le droit de modifier la présente politique de confidentialité à tout moment. Toute modification substantielle vous sera notifiée par email et/ou via une notification dans votre tableau de bord, au moins 15 jours avant son entrée en vigueur.
+    contenu: `Manaflow se réserve le droit de modifier la présente politique de confidentialité à tout moment. Toute modification substantielle vous sera notifiée par email et/ou via une notification dans votre tableau de bord, au moins 15 jours avant son entrée en vigueur.
 
 La politique en vigueur est toujours accessible à l'adresse manaflow.fr/confidentialite.
 
@@ -177,7 +177,7 @@ export default function ConfidentialitePage() {
         <nav style={{ position: 'sticky', top: 0, zIndex: 300, background: 'rgba(13,6,32,0.90)', backdropFilter: 'blur(20px)', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
           <div style={{ height: 72, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 20px', maxWidth: 1100, margin: '0 auto' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 20, cursor: 'pointer' }} onClick={() => router.push('/')}>
-              <Image src="/logo.png" alt="ManaFlow" width={44} height={44} style={{ height: 44, width: 'auto', objectFit: 'contain' }} />
+              <Image src="/logo.png" alt="Manaflow" width={44} height={44} style={{ height: 44, width: 'auto', objectFit: 'contain' }} />
               <span style={{ fontSize: 22, color: 'white' }}><span style={{ fontFamily: "'Yeseva One', serif", fontWeight: 400 }}>Mana</span><span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 700 }}>flow</span></span>
             </div>
             <div className="nav-links" style={{ display: 'flex', alignItems: 'center', gap: 28 }}>
@@ -233,10 +233,10 @@ export default function ConfidentialitePage() {
         <footer style={{ borderTop: '1px solid rgba(255,255,255,0.06)', padding: isMobile ? '24px 20px' : '28px 40px', position: 'relative', zIndex: 1 }}>
           <div className="footer-inner" style={{ maxWidth: 1100, margin: '0 auto', gap: isMobile ? 16 : 0 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 20, cursor: 'pointer' }} onClick={() => router.push('/')}>
-              <Image src="/logo.png" alt="ManaFlow" width={44} height={44} style={{ height: 44, width: 'auto', objectFit: 'contain' }} />
+              <Image src="/logo.png" alt="Manaflow" width={44} height={44} style={{ height: 44, width: 'auto', objectFit: 'contain' }} />
               <span style={{ fontSize: 15, color: 'white' }}><span style={{ fontFamily: "'Yeseva One', serif", fontWeight: 400 }}>Mana</span><span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 700 }}>flow</span></span>
             </div>
-            <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.25)', textAlign: 'center' }}>© 2026 ManaFlow — Tous droits réservés</p>
+            <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.25)', textAlign: 'center' }}>© 2026 Manaflow — Tous droits réservés</p>
             <div style={{ display: 'flex', gap: 20 }}>
               <span className="nav-a" onClick={() => router.push('/cgu')} style={{ fontSize: 12 }}>CGU</span>
               <span className="nav-a" style={{ fontSize: 12, fontWeight: 700, color: '#c084fc' }}>Confidentialité</span>

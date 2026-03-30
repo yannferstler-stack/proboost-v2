@@ -1,10 +1,10 @@
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Contact — ManaFlow',
-  description: 'Contactez l\'équipe ManaFlow pour toute question sur notre service de relance automatique d\'impayés. Réponse sous 24–48h.',
+  title: 'Contact — Manaflow',
+  description: 'Contactez l\'équipe Manaflow pour toute question sur notre service de relance automatique d\'impayés. Réponse sous 24–48h.',
   openGraph: {
-    title: 'Contact — ManaFlow',
+    title: 'Contact — Manaflow',
     description: 'Une question ? Notre équipe répond sous 24–48h ouvrées.',
     type: 'website',
   },

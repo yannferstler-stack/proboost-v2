@@ -7,12 +7,12 @@ const SECTIONS = [
     titre: '1 — Éditeur du site',
     contenu: `Le site manaflow.fr est édité par :
 
-ManaFlow (entreprise individuelle / SAS en cours d'immatriculation)
+Manaflow (entreprise individuelle / SAS en cours d'immatriculation)
 Siège social : France
 Email : contact@manaflow.fr
 Directeur de la publication : Yann Ferstler
 
-ManaFlow est une plateforme d'automatisation des relances de factures impayées à destination des professionnels (TPE, PME, indépendants).`,
+Manaflow est une plateforme d'automatisation des relances de factures impayées à destination des professionnels (TPE, PME, indépendants).`,
   },
   {
     titre: '2 — Hébergement',
@@ -27,17 +27,17 @@ Les bases de données sont hébergées par Supabase Inc. (infrastructure AWS eu-
   },
   {
     titre: '3 — Propriété intellectuelle',
-    contenu: `L'ensemble des éléments constituant le site manaflow.fr (textes, graphismes, logo, icônes, images, code source, architecture) sont la propriété exclusive de ManaFlow et sont protégés par les lois françaises et internationales relatives à la propriété intellectuelle.
+    contenu: `L'ensemble des éléments constituant le site manaflow.fr (textes, graphismes, logo, icônes, images, code source, architecture) sont la propriété exclusive de Manaflow et sont protégés par les lois françaises et internationales relatives à la propriété intellectuelle.
 
-Toute reproduction, représentation, modification, publication ou adaptation, totale ou partielle, de ces éléments est interdite sans l'autorisation écrite préalable de ManaFlow.
+Toute reproduction, représentation, modification, publication ou adaptation, totale ou partielle, de ces éléments est interdite sans l'autorisation écrite préalable de Manaflow.
 
 Le non-respect de cette interdiction constitue une contrefaçon pouvant engager la responsabilité civile et pénale de son auteur.`,
   },
   {
     titre: '4 — Données personnelles',
-    contenu: `ManaFlow collecte et traite des données personnelles dans le cadre de la fourniture de ses services de relance de factures. Ces traitements sont effectués conformément au Règlement Général sur la Protection des Données (RGPD — UE 2016/679) et à la loi Informatique et Libertés modifiée.
+    contenu: `Manaflow collecte et traite des données personnelles dans le cadre de la fourniture de ses services de relance de factures. Ces traitements sont effectués conformément au Règlement Général sur la Protection des Données (RGPD — UE 2016/679) et à la loi Informatique et Libertés modifiée.
 
-Responsable du traitement : ManaFlow — contact@manaflow.fr
+Responsable du traitement : Manaflow — contact@manaflow.fr
 
 Données collectées : nom, email professionnel, numéro SIRET, données de facturation, informations relatives à vos débiteurs (dans le cadre du mandat de relance).
 
@@ -55,17 +55,17 @@ Vous pouvez configurer votre navigateur pour refuser les cookies. Certaines fonc
   },
   {
     titre: '6 — Limitation de responsabilité',
-    contenu: `ManaFlow s'efforce de fournir des informations aussi précises que possible sur son site. Toutefois, ManaFlow ne pourra être tenu responsable des omissions, inexactitudes ou carences dans la mise à jour des informations.
+    contenu: `Manaflow s'efforce de fournir des informations aussi précises que possible sur son site. Toutefois, Manaflow ne pourra être tenu responsable des omissions, inexactitudes ou carences dans la mise à jour des informations.
 
-ManaFlow ne saurait être tenu responsable de tout dommage direct ou indirect résultant de l'utilisation du site manaflow.fr, notamment de toute perte de données, indisponibilité temporaire du service, ou accès non autorisé à vos données malgré les mesures de sécurité mises en place.
+Manaflow ne saurait être tenu responsable de tout dommage direct ou indirect résultant de l'utilisation du site manaflow.fr, notamment de toute perte de données, indisponibilité temporaire du service, ou accès non autorisé à vos données malgré les mesures de sécurité mises en place.
 
-ManaFlow ne saurait être tenu responsable de l'indisponibilité temporaire du site, que ce soit pour des raisons de maintenance, de panne technique ou de force majeure.`,
+Manaflow ne saurait être tenu responsable de l'indisponibilité temporaire du site, que ce soit pour des raisons de maintenance, de panne technique ou de force majeure.`,
   },
   {
     titre: '7 — Liens hypertextes',
-    contenu: `Le site manaflow.fr peut contenir des liens vers d'autres sites internet. ManaFlow n'exerce aucun contrôle sur ces sites tiers et décline toute responsabilité quant à leur contenu, leurs pratiques en matière de confidentialité ou leur disponibilité.
+    contenu: `Le site manaflow.fr peut contenir des liens vers d'autres sites internet. Manaflow n'exerce aucun contrôle sur ces sites tiers et décline toute responsabilité quant à leur contenu, leurs pratiques en matière de confidentialité ou leur disponibilité.
 
-La création de liens hypertextes vers manaflow.fr est autorisée sous réserve que ces liens n'induisent pas en erreur sur la nature, les qualités ou les services proposés par ManaFlow, et qu'ils ne portent pas atteinte à son image.`,
+La création de liens hypertextes vers manaflow.fr est autorisée sous réserve que ces liens n'induisent pas en erreur sur la nature, les qualités ou les services proposés par Manaflow, et qu'ils ne portent pas atteinte à son image.`,
   },
   {
     titre: '8 — Droit applicable et juridiction compétente',
@@ -162,7 +162,7 @@ export default function MentionsLegalesPage() {
               <img src="/logo.png" style={{ height: 44, width: 'auto', objectFit: 'contain' }} />
               <span style={{ fontSize: 15, color: 'white' }}><span style={{ fontFamily: "'Yeseva One', serif", fontWeight: 400 }}>Mana</span><span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 700 }}>flow</span></span>
             </div>
-            <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.25)', textAlign: 'center' }}>© 2026 ManaFlow — Tous droits réservés</p>
+            <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.25)', textAlign: 'center' }}>© 2026 Manaflow — Tous droits réservés</p>
             <div style={{ display: 'flex', gap: 20 }}>
               <span className="nav-a" onClick={() => router.push('/cgu')} style={{ fontSize: 12 }}>CGU</span>
               <span className="nav-a" onClick={() => router.push('/confidentialite')} style={{ fontSize: 12 }}>Confidentialité</span>

@@ -108,7 +108,7 @@ export default function LoginPage() {
           <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '40px 20px', position: 'relative', zIndex: 1 }}>
             {/* Logo */}
             <div style={{ display: 'flex', alignItems: 'center', gap: 20, cursor: 'pointer', marginBottom: 40 }} onClick={() => router.push('/')}>
-              <Image src="/logo.png" alt="ManaFlow" width={44} height={44} style={{ height: 44, width: 'auto', objectFit: 'contain' }} />
+              <Image src="/logo.png" alt="Manaflow" width={44} height={44} style={{ height: 44, width: 'auto', objectFit: 'contain' }} />
               <span style={{ fontSize: 22, color: 'white' }}><span style={{ fontFamily: "'Yeseva One', serif", fontWeight: 400 }}>Mana</span><span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 700 }}>flow</span></span>
             </div>
 
@@ -119,7 +119,7 @@ export default function LoginPage() {
                   {isSignUp ? 'Créer votre compte' : 'Bon retour'}
                 </h2>
                 <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.45)' }}>
-                  {isSignUp ? 'Commencez à automatiser vos relances' : 'Connectez-vous à votre espace ManaFlow'}
+                  {isSignUp ? 'Commencez à automatiser vos relances' : 'Connectez-vous à votre espace Manaflow'}
                 </p>
               </div>
 
@@ -193,7 +193,7 @@ export default function LoginPage() {
             <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: '40px 48px', position: 'relative', zIndex: 1 }}>
               {/* Logo */}
               <div style={{ display: 'flex', alignItems: 'center', gap: 20, cursor: 'pointer' }} onClick={() => router.push('/')}>
-                <Image src="/logo.png" alt="ManaFlow" width={44} height={44} style={{ height: 44, width: 'auto', objectFit: 'contain' }} />
+                <Image src="/logo.png" alt="Manaflow" width={44} height={44} style={{ height: 44, width: 'auto', objectFit: 'contain' }} />
                 <span style={{ fontSize: 22, color: 'white' }}><span style={{ fontFamily: "'Yeseva One', serif", fontWeight: 400 }}>Mana</span><span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 700 }}>flow</span></span>
               </div>
 
@@ -251,7 +251,7 @@ export default function LoginPage() {
                 </div>
               </div>
 
-              <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.2)' }}>© 2026 ManaFlow</p>
+              <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.2)' }}>© 2026 Manaflow</p>
             </div>
 
             {/* RIGHT — formulaire */}
@@ -263,7 +263,7 @@ export default function LoginPage() {
                     {isSignUp ? 'Créer votre compte' : 'Bon retour'}
                   </h2>
                   <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.4)' }}>
-                    {isSignUp ? 'Commencez à automatiser vos relances' : 'Connectez-vous à votre espace ManaFlow'}
+                    {isSignUp ? 'Commencez à automatiser vos relances' : 'Connectez-vous à votre espace Manaflow'}
                   </p>
                 </div>
 

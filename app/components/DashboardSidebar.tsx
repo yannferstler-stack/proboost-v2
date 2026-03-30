@@ -45,7 +45,7 @@ export function DashboardSidebar({ user, title = 'Dashboard' }: Props) {
 
   const logoSection = (size: number) => (
     <div style={{ display: 'flex', alignItems: 'center', gap: 4, cursor: 'pointer' }} onClick={() => { setOpen(false); router.push('/') }}>
-      <Image src="/logo.png" alt="ManaFlow" width={size} height={size} style={{ height: size, width: 'auto', objectFit: 'contain', filter: LOGO_FILTER }} />
+      <Image src="/logo.png" alt="Manaflow" width={size} height={size} style={{ height: size, width: 'auto', objectFit: 'contain', filter: LOGO_FILTER }} />
       <span style={{ fontSize: size === 44 ? 22 : 20, color: 'white' }}>
         <span style={{ fontFamily: "'Yeseva One', serif", fontWeight: 400 }}>Mana</span>
         <span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 700 }}>flow</span>

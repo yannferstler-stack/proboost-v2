@@ -71,7 +71,7 @@ function SuccessContent() {
     setError(''); setStep('password')
   }
 
-  // Étape 2 : crée le compte ManaFlow immédiatement, puis passe à l'étape Stripe
+  // Étape 2 : crée le compte Manaflow immédiatement, puis passe à l'étape Stripe
   const handleSubmitPassword = async (e: React.FormEvent) => {
     e.preventDefault()
     if (form.password.length < 8) { setError('Le mot de passe doit contenir au moins 8 caractères.'); return }
@@ -254,7 +254,7 @@ function SuccessContent() {
         {/* NAV */}
         <nav style={{ background: 'rgba(0,0,0,0.25)', borderBottom: '1px solid rgba(255,255,255,0.08)', backdropFilter: 'blur(12px)', height: 60, display: 'flex', alignItems: 'center', padding: '0 40px', position: 'relative', zIndex: 10 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-            <Image src="/logo.png" alt="ManaFlow" width={44} height={44} style={{ height: 44, width: 'auto', objectFit: 'contain' }} />
+            <Image src="/logo.png" alt="Manaflow" width={44} height={44} style={{ height: 44, width: 'auto', objectFit: 'contain' }} />
             <span style={{ fontSize: 22, color: 'white' }}><span style={{ fontFamily: "'Yeseva One', serif", fontWeight: 400 }}>Mana</span><span style={{ fontFamily: 'Comfortaa, sans-serif', fontWeight: 700 }}>flow</span></span>
           </div>
         </nav>
@@ -435,7 +435,7 @@ function SuccessContent() {
                   <p style={{ fontSize: 13, fontWeight: 700, color: '#34d399', marginBottom: 10 }}>Comment ça fonctionne</p>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                     {[
-                      { icon: '📧', text: 'ManaFlow envoie les relances avec un bouton "Payer maintenant"' },
+                      { icon: '📧', text: 'Manaflow envoie les relances avec un bouton "Payer maintenant"' },
                       { icon: '💳', text: 'Votre client paie via une page Stripe sécurisée' },
                       { icon: '💶', text: 'Le montant arrive directement sur votre compte bancaire, moins notre commission' },
                       { icon: '✅', text: 'La facture est automatiquement marquée comme payée dans votre dashboard' },
@@ -451,7 +451,7 @@ function SuccessContent() {
                 <div style={{ background: 'rgba(251,191,36,0.08)', border: '1px solid rgba(251,191,36,0.25)', borderRadius: 10, padding: '10px 14px', marginBottom: 20, display: 'flex', gap: 8, alignItems: 'flex-start' }}>
                   <span style={{ flexShrink: 0, fontSize: 14 }}>ℹ️</span>
                   <p style={{ fontSize: 12, color: 'rgba(251,191,36,0.85)', lineHeight: 1.6 }}>
-                    La création du compte Stripe Express prend environ <strong>3 minutes</strong>. Vous aurez besoin d'une pièce d'identité et d'un RIB. C'est Stripe qui gère la conformité, pas ManaFlow.
+                    La création du compte Stripe Express prend environ <strong>3 minutes</strong>. Vous aurez besoin d'une pièce d'identité et d'un RIB. C'est Stripe qui gère la conformité, pas Manaflow.
                   </p>
                 </div>
 
@@ -488,7 +488,7 @@ function SuccessContent() {
                   <span style={{ color: 'white', fontSize: 28, fontWeight: 700 }}>✓</span>
                 </div>
                 <h2 style={{ fontFamily: 'Comfortaa', fontWeight: 900, fontSize: 22, color: 'white', marginBottom: 8 }}>Compte créé !</h2>
-                <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.60)', marginBottom: 6 }}>Bienvenue sur ManaFlow, {form.prenom}.</p>
+                <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.60)', marginBottom: 6 }}>Bienvenue sur Manaflow, {form.prenom}.</p>
                 <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.40)' }}>Redirection vers votre dashboard...</p>
                 <div style={{ marginTop: 20, width: 32, height: 32, border: '3px solid rgba(255,255,255,0.15)', borderTop: '3px solid #a855f7', borderRadius: '50%', animation: 'spin 0.8s linear infinite', margin: '20px auto 0' }} />
               </div>

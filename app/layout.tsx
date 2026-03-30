@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "ManaFlow — Relances automatiques d'impayés",
-  description: "ManaFlow automatise vos relances de factures impayées par email et SMS. Payez uniquement au succès.",
+  title: "Manaflow — Relances automatiques d'impayés",
+  description: "Manaflow automatise vos relances de factures impayées par email et SMS. Payez uniquement au succès.",
 };
 
 export default function RootLayout({

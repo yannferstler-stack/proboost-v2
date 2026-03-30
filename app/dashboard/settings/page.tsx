@@ -363,7 +363,7 @@ export default function SettingsPage() {
             {/* Canal */}
             <div style={{ marginTop: 24, paddingTop: 20, borderTop: '1px solid #EAECEF' }}>
               <p style={{ fontSize: 13, fontWeight: 600, color: '#111', marginBottom: 4 }}>Canal de relance par défaut</p>
-              <p style={{ fontSize: 12, color: '#9CA3AF', marginBottom: 12 }}>Comment ManaFlow relance vos clients par défaut</p>
+              <p style={{ fontSize: 12, color: '#9CA3AF', marginBottom: 12 }}>Comment Manaflow relance vos clients par défaut</p>
               <div className="canal-wrap" style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
                 {[
                   { value: 'email', label: 'Email uniquement', proOnly: false },

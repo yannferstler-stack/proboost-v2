@@ -18,7 +18,7 @@ export async function sendCreditAlertEmail(): Promise<void> {
 
   try {
     await getResend().emails.send({
-      from: 'ManaFlow <noreply@manaflow.fr>',
+      from: 'Manaflow <noreply@manaflow.fr>',
       to: ADMIN_EMAIL,
       subject: '⚠️ Crédits Anthropic épuisés — Action requise',
       html: `
@@ -28,7 +28,7 @@ export async function sendCreditAlertEmail(): Promise<void> {
   </div>
   <h2 style="color: #111827; margin: 0 0 12px; text-align: center; font-size: 22px;">Crédits Anthropic épuisés</h2>
   <p style="color: #6B7280; line-height: 1.7; margin-bottom: 20px; text-align: center;">
-    Le service d'analyse IA de <strong style="color: #111;">ManaFlow</strong> est actuellement indisponible.<br>
+    Le service d'analyse IA de <strong style="color: #111;">Manaflow</strong> est actuellement indisponible.<br>
     Vos clients ne peuvent plus importer leurs factures par reconnaissance automatique.
   </p>
   <div style="background: #FEF2F2; border: 1px solid #FECACA; border-radius: 10px; padding: 16px 20px; margin-bottom: 28px;">
@@ -50,7 +50,7 @@ export async function sendCreditAlertEmail(): Promise<void> {
   </div>
   <hr style="border: none; border-top: 1px solid #E5E7EB; margin: 20px 0;">
   <p style="color: #D1D5DB; font-size: 12px; text-align: center; margin: 0;">
-    ManaFlow — Alerte automatique du système · <a href="https://manaflow.fr" style="color: #a855f7; text-decoration: none;">manaflow.fr</a>
+    Manaflow — Alerte automatique du système · <a href="https://manaflow.fr" style="color: #a855f7; text-decoration: none;">manaflow.fr</a>
   </p>
 </div>
       `,

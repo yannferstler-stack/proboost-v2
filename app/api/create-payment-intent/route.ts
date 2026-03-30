@@ -21,7 +21,7 @@ export async function POST(req: NextRequest) {
 
     // Direct Charges : le PaymentIntent est créé SUR le compte connecté
     // (stripeAccount option). Les fonds vont directement au compte connecté ;
-    // ManaFlow perçoit uniquement l'application_fee_amount sans jamais détenir les fonds.
+    // Manaflow perçoit uniquement l'application_fee_amount sans jamais détenir les fonds.
     const stripe = getStripe()
     const paymentIntent = await stripe.paymentIntents.create(
       {

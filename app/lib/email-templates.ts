@@ -110,7 +110,7 @@ export function getEmailContent(params: EmailParams): { subject: string; html: s
     <div style="margin-top:28px;margin-left:-20px;margin-right:-20px;margin-bottom:-40px;background:linear-gradient(135deg,#0d0620 0%,#1a0a3e 100%);padding:18px 32px;text-align:center;border-radius:0 0 12px 12px;">
       <a href="https://manaflow.fr" style="display:inline-flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;">
         <img src="https://manaflow.fr/logo.png" alt="" height="20" style="height:20px;width:auto;display:inline-block;vertical-align:middle;opacity:0.9;" />
-        <span style="font-size:12px;color:rgba(255,255,255,0.45);vertical-align:middle;font-family:Inter,sans-serif;letter-spacing:0.01em;">Relance automatisée par&#160;<span style="color:#c084fc;font-weight:700;">ManaFlow</span></span>
+        <span style="font-size:12px;color:rgba(255,255,255,0.45);vertical-align:middle;font-family:Inter,sans-serif;letter-spacing:0.01em;">Relance automatisée par&#160;<span style="color:#c084fc;font-weight:700;">Manaflow</span></span>
       </a>
     </div>`
 
@@ -193,7 +193,7 @@ export function getSmsContent(
     : ''
   const datePart = echeanceStr ? ` arrivée à échéance le ${echeanceStr}` : ''
   const payPart = paymentUrl ? ` Payer en ligne : ${paymentUrl}` : ''
-  const footer = ' — ManaFlow'
+  const footer = ' — Manaflow'
 
   const messages = [
     `Bonjour, facture n°${ref}${datePart} toujours en attente. Merci de confirmer sa prise en charge. ${companyName}${payPart}${footer}`,

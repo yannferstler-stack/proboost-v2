@@ -8,7 +8,7 @@ export function getStripe() {
 }
 
 /**
- * Taux de commission ManaFlow selon le plan de l'utilisateur.
+ * Taux de commission Manaflow selon le plan de l'utilisateur.
  * Source unique — ne pas dupliquer dans les routes.
  *   pro      → 10 %
  *   premium  → 12 %
