@@ -114,86 +114,60 @@ export function getEmailContent(params: EmailParams): { subject: string; html: s
       </a>
     </div>`
 
-  const paymentButton = safePaymentUrl ? `
-    <div style="text-align:center;margin:28px 0;">
-      <a href="${safePaymentUrl}"
-        style="display:inline-block;background:linear-gradient(135deg,#16A34A,#15803D);color:white;text-decoration:none;border-radius:10px;padding:14px 32px;font-weight:700;font-size:16px;letter-spacing:0.01em;">
-        Payer maintenant →
-      </a>
-      <p style="margin:10px 0 0;color:#9CA3AF;font-size:12px;">Paiement sécurisé par Stripe</p>
-    </div>` : ''
+  const paymentLink = safePaymentUrl ? `
+    <p style="margin:24px 0 8px;">
+      <a href="${safePaymentUrl}" style="color:#111;font-weight:600;text-decoration:underline;font-size:14px;">→ Régler cette facture en ligne</a>
+    </p>
+    <p style="margin:0 0 24px;color:#9CA3AF;font-size:12px;">Lien sécurisé · Paiement par carte via Stripe</p>` : ''
+
+  const invoiceBlock = `
+    <p style="margin:24px 0 4px;color:#6B7280;font-size:13px;">Facture concernée :</p>
+    <p style="margin:0 0 4px;font-size:14px;color:#111;"><strong>n°${safeRefFacture}</strong> · <strong>${montantStr} €</strong> · échéance ${echeanceStr}</p>`
 
   const subjects = [
-    `Rappel de paiement — Facture ${refFacture} — ${montantStr} €`,
-    `2ème relance — Facture ${refFacture} impayée — ${montantStr} €`,
-    `Facture n°${refFacture} — Solde en attente (3ème rappel)`,
+    `Facture ${refFacture} — petit rappel`,
+    `Facture ${refFacture} — 2ème rappel`,
+    `Facture ${refFacture} — dernier rappel avant dossier`,
   ]
 
   const bodies = [
-    // ── Relance 1 : ton très doux, "simple contretemps" ──
-    `<div style="font-family:Inter,sans-serif;max-width:600px;margin:0 auto;padding:40px 20px;color:#111;">
-      <p style="font-weight:800;font-size:20px;margin:0 0 32px;">${safeCompanyName}</p>
-      <h2 style="font-size:22px;margin-bottom:20px;">Suivi de facture</h2>
-      <p style="color:#6B7280;line-height:1.7;margin-bottom:12px;">Bonjour,</p>
+    // ── Relance 1 : ton très doux ──
+    `<div style="font-family:Georgia,serif;max-width:560px;margin:0 auto;padding:40px 24px;color:#1a1a1a;font-size:15px;line-height:1.8;">
+      <p style="font-weight:700;font-size:13px;color:#6B7280;text-transform:uppercase;letter-spacing:1px;margin:0 0 32px;">${safeCompanyName}</p>
+      <p style="margin:0 0 16px;">Bonjour,</p>
       ${customMessage ? buildCustomBody(customMessage) : `
-        <p style="color:#6B7280;line-height:1.7;margin-bottom:12px;">Nous vous contactons concernant la facture <strong style="color:#111;">n°${safeRefFacture}</strong>, émise par <strong style="color:#111;">${safeCompanyName}</strong> et dont l'échéance était fixée au <strong style="color:#111;">${echeanceStr}</strong>.</p>
-        <p style="color:#6B7280;line-height:1.7;margin-bottom:12px;">Sauf erreur de notre part, son règlement ne semble pas avoir été pris en charge. Nous sommes certains qu'il s'agit d'un simple contretemps. Lorsque vous en aurez la possibilité, pourriez-vous nous confirmer que la facture est bien gérée ?</p>
-        <p style="color:#6B7280;line-height:1.7;margin-bottom:24px;">Un grand merci par avance, et au plaisir d'échanger très prochainement.</p>
+        <p style="margin:0 0 16px;">Sauf erreur de notre part, la facture <strong>n°${safeRefFacture}</strong> d'un montant de <strong>${montantStr} €</strong>, dont l'échéance était le ${echeanceStr}, ne semble pas encore avoir été réglée.</p>
+        <p style="margin:0 0 16px;">Il s'agit probablement d'un simple oubli — n'hésitez pas à nous le faire savoir si vous avez la moindre question sur cette facture.</p>
+        <p style="margin:0 0 24px;">Merci d'avance pour votre retour.</p>
       `}
-      <div style="background:#F0FDF4;border:1px solid #BBF7D0;border-radius:12px;padding:20px;margin:24px 0;">
-        <p style="margin:0;color:#6B7280;font-size:13px;">Référence facture</p>
-        <p style="margin:4px 0 8px;font-weight:700;color:#111;">${safeRefFacture}</p>
-        <p style="margin:0;color:#6B7280;font-size:13px;">Montant à régler</p>
-        <p style="margin:4px 0 0;font-weight:800;color:#16A34A;font-size:22px;">${montantStr} €</p>
-      </div>
-      ${paymentButton}
-      <p style="color:#6B7280;line-height:1.7;">Bien à vous,</p>
+      ${paymentLink}
+      <p style="margin:0 0 32px;color:#6B7280;font-size:14px;">Bien cordialement,</p>
       ${footer}</div>`,
 
-    // ── Relance 2 : ton neutre, demande date de règlement ──
-    `<div style="font-family:Inter,sans-serif;max-width:600px;margin:0 auto;padding:40px 20px;color:#111;">
-      <p style="font-weight:800;font-size:20px;margin:0 0 32px;">${safeCompanyName}</p>
-      <div style="background:#FFF7ED;border:1px solid #FED7AA;border-radius:10px;padding:14px 16px;margin-bottom:24px;">
-        <p style="margin:0;color:#EA580C;font-weight:600;font-size:14px;">⚠️ Deuxième relance — Facture n°${safeRefFacture} toujours en attente</p>
-      </div>
-      <h2 style="font-size:22px;margin-bottom:20px;">Deuxième relance</h2>
-      <p style="color:#6B7280;line-height:1.7;margin-bottom:12px;">Bonjour ${safeClientNom},</p>
+    // ── Relance 2 : ton neutre ──
+    `<div style="font-family:Georgia,serif;max-width:560px;margin:0 auto;padding:40px 24px;color:#1a1a1a;font-size:15px;line-height:1.8;">
+      <p style="font-weight:700;font-size:13px;color:#6B7280;text-transform:uppercase;letter-spacing:1px;margin:0 0 32px;">${safeCompanyName}</p>
+      <p style="margin:0 0 16px;">Bonjour ${safeClientNom},</p>
       ${customMessage ? buildCustomBody(customMessage) : `
-        <p style="color:#6B7280;line-height:1.7;margin-bottom:12px;">Je me permets de revenir vers vous concernant la facture <strong style="color:#111;">n°${safeRefFacture}</strong>, arrivée à échéance le <strong style="color:#111;">${echeanceStr}</strong>, et pour laquelle nous n'avons pas encore reçu le règlement à ce jour.</p>
-        <p style="color:#6B7280;line-height:1.7;margin-bottom:12px;">N'ayant pas eu de retour à mon précédent message, je préfère m'assurer que celui-ci vous est bien parvenu et que tout est en ordre de votre côté.</p>
-        <p style="color:#6B7280;line-height:1.7;margin-bottom:24px;">Pourriez-vous, lorsque cela vous sera possible, me confirmer la date prévue de règlement ? Je reste bien entendu à votre disposition. Si le règlement a été effectué entre-temps, merci d'ignorer ce message.</p>
+        <p style="margin:0 0 16px;">Je reviens vers vous concernant la facture <strong>n°${safeRefFacture}</strong> (${montantStr} €), dont le règlement n'a pas encore été reçu à ce jour.</p>
+        <p style="margin:0 0 16px;">Pourriez-vous me confirmer quand vous prévoyez de la régler, ou me faire signe si quelque chose bloque de votre côté ?</p>
+        <p style="margin:0 0 24px;">Si le paiement a déjà été effectué, merci d'ignorer ce message.</p>
       `}
-      <div style="background:#FEF2F2;border:1px solid #FECACA;border-radius:12px;padding:20px;margin:24px 0;">
-        <p style="margin:0;color:#6B7280;font-size:13px;">Référence facture</p>
-        <p style="margin:4px 0 8px;font-weight:700;color:#111;">${safeRefFacture}</p>
-        <p style="margin:0;color:#6B7280;font-size:13px;">Montant en attente</p>
-        <p style="margin:4px 0 0;font-weight:800;color:#DC2626;font-size:22px;">${montantStr} €</p>
-      </div>
-      ${paymentButton}
-      <p style="color:#6B7280;line-height:1.7;">Bien à vous,</p>
+      ${paymentLink}
+      <p style="margin:0 0 32px;color:#6B7280;font-size:14px;">Bien cordialement,</p>
       ${footer}</div>`,
 
-    // ── Relance 3 : ferme, ton sérieux sans rouge agressif (anti-spam) ──
-    `<div style="font-family:Inter,sans-serif;max-width:600px;margin:0 auto;padding:40px 20px;color:#111;">
-      <p style="font-weight:800;font-size:20px;margin:0 0 32px;">${safeCompanyName}</p>
-      <div style="background:#F3F4F6;border-left:3px solid #374151;border-radius:4px;padding:14px 16px;margin-bottom:24px;">
-        <p style="margin:0;color:#374151;font-weight:600;font-size:14px;">Facture n°${safeRefFacture} — Solde toujours en attente</p>
-      </div>
-      <h2 style="font-size:22px;margin-bottom:20px;">Troisième et dernier rappel</h2>
-      <p style="color:#6B7280;line-height:1.7;margin-bottom:12px;">Bonjour ${safeClientNom},</p>
+    // ── Relance 3 : ton ferme mais sobre ──
+    `<div style="font-family:Georgia,serif;max-width:560px;margin:0 auto;padding:40px 24px;color:#1a1a1a;font-size:15px;line-height:1.8;">
+      <p style="font-weight:700;font-size:13px;color:#6B7280;text-transform:uppercase;letter-spacing:1px;margin:0 0 32px;">${safeCompanyName}</p>
+      <p style="margin:0 0 16px;">Bonjour ${safeClientNom},</p>
       ${customMessage ? buildCustomBody(customMessage) : `
-        <p style="color:#6B7280;line-height:1.7;margin-bottom:12px;">Malgré mes précédents messages, la facture <strong style="color:#111;">n°${safeRefFacture}</strong>, échue le <strong style="color:#111;">${echeanceStr}</strong>, demeure impayée à ce jour.</p>
-        <p style="color:#6B7280;line-height:1.7;margin-bottom:12px;">Je vous contacte une dernière fois avant de devoir transmettre ce dossier à notre service de gestion des créances, ce que je préférerais naturellement éviter.</p>
-        <p style="color:#6B7280;line-height:1.7;margin-bottom:24px;">Si le règlement a déjà été effectué, merci d'ignorer ce message. Dans le cas contraire, je reste disponible pour convenir d'une solution adaptée.</p>
+        <p style="margin:0 0 16px;">Malgré mes deux précédents messages, la facture <strong>n°${safeRefFacture}</strong> (${montantStr} €) n'a toujours pas été réglée.</p>
+        <p style="margin:0 0 16px;">Je vous contacte une dernière fois. Si je n'ai pas de nouvelles sous 8 jours, je serai contraint de transmettre ce dossier pour suite à donner.</p>
+        <p style="margin:0 0 24px;">Je reste bien entendu disponible si vous souhaitez en discuter.</p>
       `}
-      <div style="background:#F9FAFB;border:1px solid #D1D5DB;border-radius:12px;padding:20px;margin:24px 0;">
-        <p style="margin:0;color:#6B7280;font-size:13px;">Référence facture</p>
-        <p style="margin:4px 0 8px;font-weight:700;color:#111;">${safeRefFacture}</p>
-        <p style="margin:0;color:#6B7280;font-size:13px;">Solde en attente</p>
-        <p style="margin:4px 0 0;font-weight:800;color:#111;font-size:24px;">${montantStr} €</p>
-      </div>
-      ${paymentButton}
-      <p style="color:#6B7280;line-height:1.7;">Dans l'attente de votre retour,<br/>Bien à vous,</p>
+      ${paymentLink}
+      <p style="margin:0 0 32px;color:#6B7280;font-size:14px;">Cordialement,</p>
       ${footer}</div>`,
   ]
 
