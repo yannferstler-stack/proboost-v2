@@ -11,6 +11,10 @@
     {
       "path": "/api/cron/warn-payment",
       "schedule": "0 9 * * *"
+    },
+    {
+      "path": "/api/cron/export-backup",
+      "schedule": "0 7 * * 1"
     }
   ]
 }
