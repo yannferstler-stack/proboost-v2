@@ -127,7 +127,7 @@ export default function Home() {
 
   const steps = [
     { n: '01', Icon: IconImport, title: 'Importez', desc: "Importez vos factures en CSV ou PDF. Toutes les informations sont détectées et organisées automatiquement — vous n'avez rien à saisir." },
-    { n: '02', Icon: IconBolt, title: 'ManaFlow relance', desc: "Nous prenons le relais. Les relances partent en votre nom, depuis votre email — au bon moment, avec le bon ton. Votre client ne sait même pas que vous utilisez ManaFlow." },
+    { n: '02', Icon: IconBolt, title: 'ManaFlow relance', desc: "Nous prenons le relais. Les relances sont envoyées au nom de votre entreprise — au bon moment, avec le bon ton. Vos clients répondent directement à votre adresse email." },
     { n: '03', Icon: IconEuro, title: 'Vous encaissez', desc: "Vous récupérez votre argent. Nous prélevons une commission uniquement sur les fonds réellement recouvrés. Zéro risque, zéro avance." },
   ]
 
@@ -559,7 +559,7 @@ export default function Home() {
             {[
               {
                 q: 'Les relances partent-elles en mon nom ?',
-                a: "Oui, entièrement. Vos relances sont envoyées depuis votre propre email, signées de votre nom ou de celui de votre entreprise. Vos clients ne savent pas qu'un outil automatisé est impliqué — l'expérience reste 100 % personnalisée.",
+                a: "Vos relances sont envoyées au nom de votre entreprise — vos clients voient votre raison sociale comme expéditeur. Les réponses arrivent directement dans votre boîte email. Un discret « via ManaFlow » apparaît dans le champ expéditeur pour assurer la délivrabilité technique.",
               },
               {
                 q: 'Quand est prélevée la commission ?',

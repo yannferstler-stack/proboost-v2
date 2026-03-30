@@ -106,6 +106,9 @@ export function getEmailContent(params: EmailParams): { subject: string; html: s
       <p style="margin:0;font-weight:700;color:#111;font-size:14px;">${safeCompanyName}</p>
       ${safeCompanyAddress ? `<p style="margin:4px 0 0;color:#6B7280;font-size:13px;">${safeCompanyAddress}</p>` : ''}
       ${safeCompanyPhone ? `<p style="margin:4px 0 0;color:#6B7280;font-size:13px;">Tél : ${safeCompanyPhone}</p>` : ''}
+    </div>
+    <div style="margin-top:20px;padding-top:14px;border-top:1px solid #F3F4F6;text-align:center;">
+      <p style="margin:0;font-size:11px;color:#D1D5DB;">Relance automatisée par <a href="https://manaflow.fr" style="color:#a855f7;text-decoration:none;font-weight:600;">ManaFlow</a> · <a href="https://manaflow.fr" style="color:#9CA3AF;text-decoration:none;">Gérez vos impayés sans effort</a></p>
     </div>`
 
   const paymentButton = safePaymentUrl ? `
