@@ -126,7 +126,7 @@ export function getEmailContent(params: EmailParams): { subject: string; html: s
   const subjects = [
     `Rappel de paiement — Facture ${refFacture} — ${montantStr} €`,
     `2ème relance — Facture ${refFacture} impayée — ${montantStr} €`,
-    `Dernière relance avant mise en recouvrement – facture n°${refFacture}`,
+    `Facture n°${refFacture} — Solde en attente (3ème rappel)`,
   ]
 
   const bodies = [
@@ -173,25 +173,24 @@ export function getEmailContent(params: EmailParams): { subject: string; html: s
       <p style="color:#6B7280;line-height:1.7;">Bien à vous,</p>
       ${footer}</div>`,
 
-    // ── Relance 3 : ferme, dernière relance avant recouvrement ──
+    // ── Relance 3 : ferme, ton sérieux sans rouge agressif (anti-spam) ──
     `<div style="font-family:Inter,sans-serif;max-width:600px;margin:0 auto;padding:40px 20px;color:#111;">
       <p style="font-weight:800;font-size:20px;margin:0 0 32px;">${safeCompanyName}</p>
-      <div style="background:#FEF2F2;border:1px solid #FECACA;border-radius:10px;padding:14px 16px;margin-bottom:24px;">
-        <p style="margin:0;color:#DC2626;font-weight:600;font-size:14px;">🚨 Dernière relance — Facture n°${safeRefFacture} — Action requise</p>
+      <div style="background:#F3F4F6;border-left:3px solid #374151;border-radius:4px;padding:14px 16px;margin-bottom:24px;">
+        <p style="margin:0;color:#374151;font-weight:600;font-size:14px;">Facture n°${safeRefFacture} — Solde toujours en attente</p>
       </div>
-      <h2 style="font-size:22px;margin-bottom:20px;">Dernière relance avant mise en recouvrement</h2>
+      <h2 style="font-size:22px;margin-bottom:20px;">Troisième et dernier rappel</h2>
       <p style="color:#6B7280;line-height:1.7;margin-bottom:12px;">Bonjour ${safeClientNom},</p>
       ${customMessage ? buildCustomBody(customMessage) : `
         <p style="color:#6B7280;line-height:1.7;margin-bottom:12px;">Malgré mes précédents messages, la facture <strong style="color:#111;">n°${safeRefFacture}</strong>, échue le <strong style="color:#111;">${echeanceStr}</strong>, demeure impayée à ce jour.</p>
-        <p style="color:#6B7280;line-height:1.7;margin-bottom:12px;">Sauf erreur de ma part, nous n'avons reçu aucun retour de votre part concernant ce règlement.</p>
-        <p style="color:#6B7280;line-height:1.7;margin-bottom:12px;">Je me permets donc de vous informer qu'à défaut de réponse ou de règlement sous huitaine, nous serions contraints d'engager une procédure de recouvrement, ce que je souhaiterais naturellement éviter compte tenu de la qualité de nos relations.</p>
-        <p style="color:#6B7280;line-height:1.7;margin-bottom:24px;">Je reste bien entendu disponible pour échanger si nécessaire et trouver une solution rapide. Si le règlement a été effectué entre-temps, merci d'ignorer ce message.</p>
+        <p style="color:#6B7280;line-height:1.7;margin-bottom:12px;">Je vous contacte une dernière fois avant de devoir transmettre ce dossier à notre service de gestion des créances, ce que je préférerais naturellement éviter.</p>
+        <p style="color:#6B7280;line-height:1.7;margin-bottom:24px;">Si le règlement a déjà été effectué, merci d'ignorer ce message. Dans le cas contraire, je reste disponible pour convenir d'une solution adaptée.</p>
       `}
-      <div style="background:#FEF2F2;border:2px solid #DC2626;border-radius:12px;padding:20px;margin:24px 0;">
+      <div style="background:#F9FAFB;border:1px solid #D1D5DB;border-radius:12px;padding:20px;margin:24px 0;">
         <p style="margin:0;color:#6B7280;font-size:13px;">Référence facture</p>
         <p style="margin:4px 0 8px;font-weight:700;color:#111;">${safeRefFacture}</p>
-        <p style="margin:0;color:#6B7280;font-size:13px;">Montant à régler sous huitaine</p>
-        <p style="margin:4px 0 0;font-weight:800;color:#DC2626;font-size:24px;">${montantStr} €</p>
+        <p style="margin:0;color:#6B7280;font-size:13px;">Solde en attente</p>
+        <p style="margin:4px 0 0;font-weight:800;color:#111;font-size:24px;">${montantStr} €</p>
       </div>
       ${paymentButton}
       <p style="color:#6B7280;line-height:1.7;">Dans l'attente de votre retour,<br/>Bien à vous,</p>
@@ -222,7 +221,7 @@ export function getSmsContent(
   const messages = [
     `Bonjour, facture n°${ref}${datePart} toujours en attente. Merci de confirmer sa prise en charge. ${companyName}${payPart}${footer}`,
     `Bonjour ${clientNom}, 2e relance facture n°${ref}. Règlement toujours attendu. Merci de confirmer la date prévue. ${companyName}${payPart}${footer}`,
-    `Bonjour ${clientNom}, facture n°${ref} impayée malgré nos relances. Sans réponse sous 8j, procédure de recouvrement engagée. ${companyName}${payPart}${footer}`,
+    `Bonjour ${clientNom}, facture n°${ref} — 3ème rappel. Solde toujours en attente. Merci de régulariser ou de nous contacter. ${companyName}${payPart}${footer}`,
   ]
   return messages[Math.min(numeroRelance - 1, 2)]
 }
