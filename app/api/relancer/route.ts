@@ -146,7 +146,7 @@ export async function POST(request: NextRequest) {
     // ── SMS via Twilio (Pro uniquement) ──
     let smsSkipped = false
     if (sendSms) {
-      const smsBody = getSmsContent(clientNom, montant, numeroFacture, company, numeroRelance, dateEcheance)
+      const smsBody = getSmsContent(clientNom, montant, numeroFacture, company, numeroRelance, dateEcheance, paymentUrl)
       const sid = process.env.TWILIO_ACCOUNT_SID
       const token = process.env.TWILIO_AUTH_TOKEN
       const from = process.env.TWILIO_SENDER || process.env.TWILIO_PHONE

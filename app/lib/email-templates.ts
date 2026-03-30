@@ -206,17 +206,20 @@ export function getSmsContent(
   companyName: string,
   numeroRelance: number,
   dateEcheance?: string,
+  paymentUrl?: string,
 ): string {
   const ref = numeroFacture || 'N/A'
   const echeanceStr = dateEcheance
     ? new Date(dateEcheance).toLocaleDateString('fr-FR')
     : ''
   const datePart = echeanceStr ? ` arrivée à échéance le ${echeanceStr}` : ''
+  const payPart = paymentUrl ? ` Payer en ligne : ${paymentUrl}` : ''
+  const footer = ' — ManaFlow'
 
   const messages = [
-    `Bonjour, facture n°${ref}${datePart} toujours en attente. Merci de confirmer sa prise en charge. ${companyName}`,
-    `Bonjour ${clientNom}, 2e relance facture n°${ref}. Règlement toujours attendu. Merci de confirmer la date prévue. ${companyName}`,
-    `Bonjour ${clientNom}, facture n°${ref} impayée malgré nos relances. Sans réponse sous 8j, procédure de recouvrement engagée. ${companyName}`,
+    `Bonjour, facture n°${ref}${datePart} toujours en attente. Merci de confirmer sa prise en charge. ${companyName}${payPart}${footer}`,
+    `Bonjour ${clientNom}, 2e relance facture n°${ref}. Règlement toujours attendu. Merci de confirmer la date prévue. ${companyName}${payPart}${footer}`,
+    `Bonjour ${clientNom}, facture n°${ref} impayée malgré nos relances. Sans réponse sous 8j, procédure de recouvrement engagée. ${companyName}${payPart}${footer}`,
   ]
   return messages[Math.min(numeroRelance - 1, 2)]
 }
