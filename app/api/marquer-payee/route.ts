@@ -99,7 +99,7 @@ export async function POST(request: NextRequest) {
                 <td style="padding:10px 0;text-align:right;font-weight:600;color:#111;font-size:14px;">${montantStr} €</td>
               </tr>
               <tr style="border-bottom:1px solid #E5E7EB;">
-                <td style="padding:10px 0;color:#6B7280;font-size:14px;">Commission ManaFlow (${tauxPct}% dont ~2% frais Stripe)</td>
+                <td style="padding:10px 0;color:#6B7280;font-size:14px;">Commission ManaFlow (${tauxPct}% tout compris)</td>
                 <td style="padding:10px 0;text-align:right;font-weight:600;color:#EC4899;font-size:14px;">−${commissionStr} €</td>
               </tr>
               <tr>

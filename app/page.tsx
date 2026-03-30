@@ -97,8 +97,8 @@ export default function Home() {
   const [transitioning, setTransitioning] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
-  const [montantImpaye, setMontantImpaye] = useState(0)
-  const [inputStr, setInputStr] = useState('')
+  const [montantImpaye, setMontantImpaye] = useState(5000)
+  const [inputStr, setInputStr] = useState('5 000')
   const [planManuel, setPlanManuel] = useState<string | null>(null)
 
   useEffect(() => {
@@ -127,7 +127,7 @@ export default function Home() {
 
   const steps = [
     { n: '01', Icon: IconImport, title: 'Importez', desc: "Importez vos factures en CSV ou PDF. Toutes les informations sont détectées et organisées automatiquement — vous n'avez rien à saisir." },
-    { n: '02', Icon: IconBolt, title: 'ManaFlow relance', desc: "Nous prenons le relais. Relances email et SMS automatiques, au bon moment, avec le bon ton — sans que vous ayez à intervenir." },
+    { n: '02', Icon: IconBolt, title: 'ManaFlow relance', desc: "Nous prenons le relais. Les relances partent en votre nom, depuis votre email — au bon moment, avec le bon ton. Votre client ne sait même pas que vous utilisez ManaFlow." },
     { n: '03', Icon: IconEuro, title: 'Vous encaissez', desc: "Vous récupérez votre argent. Nous prélevons une commission uniquement sur les fonds réellement recouvrés. Zéro risque, zéro avance." },
   ]
 
@@ -393,7 +393,7 @@ export default function Home() {
                           <span style={{ fontSize: 13, color: plan.couleur, fontWeight: 700, letterSpacing: '-0.3px', flexShrink: 0 }}>{plan.commission}</span>
                           <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.55)', fontWeight: 400, whiteSpace: 'nowrap' }}>au succès</span>
                         </div>
-                        <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.40)', fontWeight: 400, display: 'block', marginTop: 4 }}>dont ~2% frais bancaires Stripe — min. 5 €</span>
+                        <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.40)', fontWeight: 400, display: 'block', marginTop: 4 }}>tout compris — frais bancaires inclus · min. 5 €</span>
                       </div>
                     </div>
                     <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: 20, flex: 1, marginBottom: 20 }}>
@@ -539,13 +539,58 @@ export default function Home() {
                     Essayer gratuitement — plan {planActif.nom} →
                   </button>
                   <p style={{ fontSize: 10, color: 'rgba(255,255,255,0.30)', textAlign: 'center' as const, marginTop: 8 }}>
-                    Simulation sur taux de recouvrement moyen de 75 %. Commission dont ~2% frais bancaires Stripe, hors minimum de 5 €/facture. Résultats indicatifs.
+                    Simulation sur taux de recouvrement moyen de 75 %. Commission tout compris (frais bancaires inclus), minimum 5 €/facture. Résultats indicatifs.
                   </p>
                 </div>
               </div>
             </section>
           )
         })()}
+
+        {/* FAQ */}
+        <section style={{ borderTop: '1px solid rgba(255,255,255,0.06)', padding: isMobile ? '60px 20px' : '80px 40px' }}>
+          <div style={{ maxWidth: 720, margin: '0 auto' }}>
+            <Reveal>
+              <div style={{ textAlign: 'center', marginBottom: isMobile ? 36 : 56 }}>
+                <span style={{ fontSize: 11, color: '#a855f7', fontWeight: 700, letterSpacing: '2px', textTransform: 'uppercase' as const, display: 'block', marginBottom: 12 }}>FAQ</span>
+                <h2 style={{ fontFamily: 'Comfortaa', fontWeight: 900, fontSize: isMobile ? 26 : 36, color: 'white', letterSpacing: '-1px' }}>Questions fréquentes</h2>
+              </div>
+            </Reveal>
+            {[
+              {
+                q: 'Les relances partent-elles en mon nom ?',
+                a: "Oui, entièrement. Vos relances sont envoyées depuis votre propre email, signées de votre nom ou de celui de votre entreprise. Vos clients ne savent pas qu'un outil automatisé est impliqué — l'expérience reste 100 % personnalisée.",
+              },
+              {
+                q: 'Quand est prélevée la commission ?',
+                a: "La commission n'est prélevée que lorsqu'une facture est effectivement réglée via ManaFlow. Si votre client ne paie pas, vous ne payez rien de plus que votre abonnement mensuel. Zéro risque.",
+              },
+              {
+                q: 'Pourquoi y a-t-il un minimum de 5 € de commission ?',
+                a: "Le minimum de 5 € par facture recouvrée est appliqué pour éviter de traiter des factures de très faible montant dont le coût de traitement serait supérieur au bénéfice. Il s'applique uniquement lorsque la commission calculée serait inférieure à 5 €.",
+              },
+              {
+                q: "Puis-je annuler à tout moment ?",
+                a: "Oui. Aucun engagement, aucune pénalité. Vous pouvez annuler votre abonnement depuis votre dashboard à n'importe quel moment. L'accès reste actif jusqu'à la fin de la période en cours.",
+              },
+              {
+                q: "Que se passe-t-il si une facture n'est pas recouvrée ?",
+                a: "Vous ne payez que votre abonnement mensuel. Aucune commission n'est due sur les factures non recouvrées. ManaFlow a donc tout intérêt à vous aider à récupérer vos impayés.",
+              },
+              {
+                q: "Quels formats de factures acceptez-vous ?",
+                a: "Vous pouvez importer vos factures en CSV ou en PDF. Notre système détecte automatiquement les informations clés (montant, échéance, email client) — sans saisie manuelle de votre part.",
+              },
+            ].map((item, i) => (
+              <Reveal key={i} delay={0}>
+                <div style={{ borderBottom: '1px solid rgba(255,255,255,0.07)', padding: '20px 0' }}>
+                  <p style={{ fontWeight: 700, fontSize: 15, color: 'white', marginBottom: 8, lineHeight: 1.5 }}>{item.q}</p>
+                  <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.50)', lineHeight: 1.75 }}>{item.a}</p>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </section>
 
         {/* CTA FINAL */}
         <section style={{ padding: isMobile ? '60px 20px' : '100px 40px', borderTop: '1px solid rgba(255,255,255,0.06)', position: 'relative', overflow: 'hidden' }}>
