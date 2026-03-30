@@ -115,11 +115,13 @@ export function getEmailContent(params: EmailParams): { subject: string; html: s
     </div>`
 
   const paymentLink = safePaymentUrl ? `
-    <p style="margin:24px 0 6px;color:#6B7280;font-size:13px;">Pour régler :</p>
-    <p style="margin:0 0 4px;font-size:13px;word-break:break-all;">
-      <a href="${safePaymentUrl}" style="color:#111;text-decoration:underline;">${safePaymentUrl}</a>
-    </p>
-    <p style="margin:0 0 24px;color:#9CA3AF;font-size:12px;">(lien sécurisé · paiement par carte)</p>` : ''
+    <div style="margin:28px 0 24px;">
+      <a href="${safePaymentUrl}" style="display:inline-block;background:linear-gradient(135deg,#a855f7,#ec4899);color:white;text-decoration:none;border-radius:8px;padding:10px 22px;font-size:14px;font-weight:600;letter-spacing:0.01em;">Régler la facture →</a>
+      <p style="margin:8px 0 0;font-size:12px;word-break:break-all;color:#9CA3AF;">
+        <a href="${safePaymentUrl}" style="color:#9CA3AF;text-decoration:none;">${safePaymentUrl}</a>
+        <span> · lien sécurisé</span>
+      </p>
+    </div>` : ''
 
   const invoiceBlock = `
     <p style="margin:24px 0 4px;color:#6B7280;font-size:13px;">Facture concernée :</p>
