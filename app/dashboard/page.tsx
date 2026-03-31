@@ -90,6 +90,9 @@ export default function Dashboard() {
   const PAGE_SIZE = 200
   const [relancingId, setRelancingId] = useState<string | null>(null)
   const [relanceMsg, setRelanceMsg] = useState<{ id: string; ok: boolean; smsSkipped?: boolean; msg?: string } | null>(null)
+  const [editEmail, setEditEmail] = useState<string>('')
+  const [savingEmail, setSavingEmail] = useState(false)
+  const [emailSaved, setEmailSaved] = useState(false)
   const [markingPaidId, setMarkingPaidId] = useState<string | null>(null)
   const [welcome, setWelcome] = useState<{ prenom: string; euros: number; isNew: boolean } | null>(null)
   const [showWelcome, setShowWelcome] = useState(false)
@@ -662,7 +665,12 @@ export default function Dashboard() {
 
                         <td style={{ padding: '14px 16px' }} onClick={e => e.stopPropagation()}>
                           <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                            <span style={{ fontWeight: 700, color: '#111', fontSize: 13, fontFamily: 'Comfortaa, sans-serif' }}>{f.numero_facture || '—'}</span>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                              <span style={{ fontWeight: 700, color: '#111', fontSize: 13, fontFamily: 'Comfortaa, sans-serif' }}>{f.numero_facture || '—'}</span>
+                              {!f.client_email && f.statut !== 'payée' && (
+                                <span title="Email client manquant — cliquez pour compléter" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 18, height: 18, background: '#FEF3C7', border: '1px solid #FCD34D', borderRadius: 5, fontSize: 10, cursor: 'pointer' }}>⚠</span>
+                              )}
+                            </div>
                             <span style={{ fontSize: 11, color: '#9CA3AF' }}>{f.client_nom}</span>
                           </div>
                         </td>
@@ -821,7 +829,7 @@ export default function Dashboard() {
 
       {/* MODAL DETAIL FACTURE */}
       {selectedFacture && (
-        <div className="overlay" onClick={() => setSelectedFacture(null)}>
+        <div className="overlay" onClick={() => { setSelectedFacture(null); setEmailSaved(false); setEditEmail('') }}>
           <div className="modal" onClick={e => e.stopPropagation()}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 24 }}>
               <div>
@@ -830,7 +838,7 @@ export default function Dashboard() {
                 </h2>
                 <span style={{ fontSize: 13, color: '#9CA3AF' }}>Détails de la facture</span>
               </div>
-              <button onClick={() => setSelectedFacture(null)} style={{ background: '#F3F4F6', border: 'none', borderRadius: 8, width: 32, height: 32, cursor: 'pointer', fontSize: 16, color: '#6B7280', fontFamily: 'Inter, sans-serif' }}>×</button>
+              <button onClick={() => { setSelectedFacture(null); setEmailSaved(false); setEditEmail('') }} style={{ background: '#F3F4F6', border: 'none', borderRadius: 8, width: 32, height: 32, cursor: 'pointer', fontSize: 16, color: '#6B7280', fontFamily: 'Inter, sans-serif' }}>×</button>
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
               {[
@@ -847,13 +855,52 @@ export default function Dashboard() {
                 </div>
               ))}
             </div>
-            <div style={{ display: 'flex', gap: 10, marginTop: 20 }}>
-              <button onClick={() => { setHistoryFacture(selectedFacture); setSelectedFacture(null) }}
+
+            {/* EMAIL CLIENT — éditable */}
+            <div style={{ marginTop: 16, background: selectedFacture.client_email ? '#F9FAFB' : '#FFFBEB', border: `1.5px solid ${selectedFacture.client_email ? '#EAECEF' : '#FCD34D'}`, borderRadius: 12, padding: '14px 16px' }}>
+              <p style={{ fontSize: 11, color: selectedFacture.client_email ? '#9CA3AF' : '#D97706', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: 8 }}>
+                {selectedFacture.client_email ? 'Email client' : '⚠ Email client manquant — relance impossible'}
+              </p>
+              <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                <input
+                  type="email"
+                  placeholder={selectedFacture.client_email || 'email@client.fr'}
+                  defaultValue={selectedFacture.client_email || ''}
+                  onChange={e => setEditEmail(e.target.value)}
+                  style={{ flex: 1, border: '1.5px solid #E5E7EB', borderRadius: 8, padding: '8px 12px', fontSize: 13, fontFamily: 'Inter, sans-serif', color: '#111', outline: 'none', background: 'white' }}
+                />
+                <button
+                  disabled={savingEmail || emailSaved}
+                  onClick={async () => {
+                    if (!editEmail.trim()) return
+                    setSavingEmail(true)
+                    const { data: { session: s } } = await supabase.auth.getSession()
+                    const res = await fetch('/api/update-facture', {
+                      method: 'PATCH',
+                      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${s?.access_token ?? ''}` },
+                      body: JSON.stringify({ id: selectedFacture.id, client_email: editEmail.trim() }),
+                    })
+                    setSavingEmail(false)
+                    if (res.ok) {
+                      setEmailSaved(true)
+                      setFactures(prev => prev.map(f => f.id === selectedFacture.id ? { ...f, client_email: editEmail.trim() } : f))
+                      setSelectedFacture(prev => prev ? { ...prev, client_email: editEmail.trim() } : null)
+                      setTimeout(() => setEmailSaved(false), 3000)
+                    }
+                  }}
+                  style={{ background: emailSaved ? '#F0FDF4' : 'linear-gradient(135deg,#a855f7,#ec4899)', color: emailSaved ? '#16A34A' : 'white', border: 'none', borderRadius: 8, padding: '8px 16px', fontSize: 13, fontWeight: 600, cursor: savingEmail || emailSaved ? 'default' : 'pointer', fontFamily: 'Inter, sans-serif', whiteSpace: 'nowrap', opacity: savingEmail ? 0.7 : 1 }}>
+                  {emailSaved ? '✓ Enregistré' : savingEmail ? '...' : 'Enregistrer'}
+                </button>
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', gap: 10, marginTop: 16 }}>
+              <button onClick={() => { setHistoryFacture(selectedFacture); setSelectedFacture(null); setEmailSaved(false); setEditEmail('') }}
                 style={{ flex: 1, background: '#F5F3FF', color: '#7c3aed', border: '1.5px solid #DDD6FE', borderRadius: 10, padding: '11px', fontSize: 14, fontWeight: 600, cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}>
                 Historique →
               </button>
               {selectedFacture.statut !== 'payée' && (
-                <button onClick={() => { setPreviewFacture(selectedFacture); setSelectedFacture(null) }}
+                <button onClick={() => { setPreviewFacture(selectedFacture); setSelectedFacture(null); setEmailSaved(false); setEditEmail('') }}
                   style={{ flex: 1, background: '#F0FDF4', color: '#16A34A', border: '1.5px solid #BBF7D0', borderRadius: 10, padding: '11px', fontSize: 14, fontWeight: 600, cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}>
                   Prévisualiser l&apos;email →
                 </button>
